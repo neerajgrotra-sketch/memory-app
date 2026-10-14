@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1350" viewBox="0 0 900 1350">
+  <rect width="900" height="820" fill="#8fd3f4"/>
+  <rect y="800" width="900" height="550" fill="#7bc96f"/>
+  <circle cx="760" cy="140" r="80" fill="#ffd93b"/>
+  <g fill="#ffffff">
+    <g transform="translate(120,330)"><ellipse rx="70" ry="30"/><ellipse cx="45" cy="-20" rx="50" ry="30"/><ellipse cx="-40" cy="-15" rx="40" ry="25"/></g>
+    <g transform="translate(450,180)"><ellipse rx="80" ry="32"/><ellipse cx="50" cy="-22" rx="55" ry="32"/><ellipse cx="-45" cy="-15" rx="45" ry="26"/></g>
+    <g transform="translate(700,420)"><ellipse rx="65" ry="28"/><ellipse cx="40" cy="-18" rx="45" ry="28"/><ellipse cx="-38" cy="-12" rx="38" ry="22"/></g>
+  </g>
+  <g transform="translate(210,150)">
+    <polygon points="0,-90 70,0 0,110 -70,0" fill="#e63946"/>
+    <line x1="0" y1="-90" x2="0" y2="110" stroke="#9b1d27" stroke-width="4"/>
+    <line x1="-70" y1="0" x2="70" y2="0" stroke="#9b1d27" stroke-width="4"/>
+    <path d="M0,110 C 30,180 -30,240 20,320 C 60,390 120,470 180,560" fill="none" stroke="#333" stroke-width="3"/>
+    <g fill="#e63946"><polygon points="12,170 34,160 30,182"/><polygon points="-10,230 12,220 8,242"/><polygon points="22,300 44,290 40,312"/></g>
+  </g>
+  <g fill="none" stroke="#222" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M480,330 l18,12 l18,-12"/><path d="M545,300 l16,10 l16,-10"/><path d="M600,345 l18,12 l18,-12"/>
+    <path d="M520,390 l14,9 l14,-9"/><path d="M660,280 l16,10 l16,-10"/>
+  </g>
+  <g>
+    <rect x="95" y="620" width="40" height="230" fill="#7a4a2a"/>
+    <circle cx="115" cy="560" r="110" fill="#2f8f3a"/><circle cx="60" cy="620" r="70" fill="#2f8f3a"/><circle cx="175" cy="615" r="75" fill="#2f8f3a"/>
+    <rect x="285" y="680" width="34" height="180" fill="#7a4a2a"/>
+    <circle cx="302" cy="630" r="85" fill="#3aa346"/><circle cx="255" cy="680" r="55" fill="#3aa346"/><circle cx="350" cy="680" r="58" fill="#3aa346"/>
+  </g>
+  <defs>
+    <pattern id="check" width="80" height="80" patternUnits="userSpaceOnUse">
+      <rect width="80" height="80" fill="#ffffff"/><rect width="40" height="40" fill="#e63946"/><rect x="40" y="40" width="40" height="40" fill="#e63946"/>
+    </pattern>
+  </defs>
+  <polygon points="150,1000 750,1000 840,1260 60,1260" fill="url(#check)" stroke="#b02a35" stroke-width="4"/>
+  <g transform="translate(330,1060)">
+    <path d="M-110,0 h220 l-25,120 h-170 z" fill="#b5803f" stroke="#7a5022" stroke-width="5"/>
+    <path d="M-80,0 C -80,-90 80,-90 80,0" fill="none" stroke="#7a5022" stroke-width="12"/>
+    <g stroke="#7a5022" stroke-width="3"><line x1="-100" y1="35" x2="100" y2="35"/><line x1="-95" y1="70" x2="95" y2="70"/><line x1="-90" y1="105" x2="90" y2="105"/></g>
+  </g>
+  <g fill="#d62828">
+    <circle cx="530" cy="1110" r="34"/><circle cx="610" cy="1100" r="34"/><circle cx="570" cy="1175" r="34"/><circle cx="660" cy="1180" r="34"/>
+  </g>
+  <g stroke="#5b3a1e" stroke-width="5"><line x1="530" y1="1076" x2="535" y2="1060"/><line x1="610" y1="1066" x2="615" y2="1050"/><line x1="570" y1="1141" x2="575" y2="1125"/><line x1="660" y1="1146" x2="665" y2="1130"/></g>
+  <g transform="translate(220,1180)"><path d="M-28,-45 h56 l-8,75 h-40 z" fill="#ffd60a" stroke="#c9a400" stroke-width="4"/></g>
+  <circle cx="790" cy="930" r="55" fill="#1d70d6"/><path d="M745,905 C 780,930 800,930 838,905" fill="none" stroke="#ffffff" stroke-width="6"/>
+</svg>
