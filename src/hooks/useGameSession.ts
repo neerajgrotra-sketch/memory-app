@@ -3,7 +3,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { repository } from '@/data';
 import { LEVELS, ROUND_SIZE, levelForRound } from '@/game/difficulty';
 import { selectQuestions, shuffle, toRoundQuestion } from '@/game/selectQuestions';
+import { statsStore } from '@/stats';
 import type { Difficulty, GameImage, Question, RoundQuestion } from '@/types/game';
+import type { RoundResult } from '@/types/stats';
 
 export type Phase = 'memorise' | 'quiz' | 'result';
 
@@ -37,6 +39,39 @@ function nextDeck(images: GameImage[], currentId?: string): GameImage[] {
   return deck;
 }
 
+const makeId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+
+function toRoundResult(
+  sessionId: string,
+  mode: Difficulty,
+  image: GameImage,
+  round: Round,
+  answers: number[],
+): RoundResult {
+  const byType: RoundResult['byType'] = {};
+  let score = 0;
+  round.questions.forEach((question, i) => {
+    const correct = answers[i] === question.answerIndex;
+    const tally = (byType[question.type] ??= { correct: 0, total: 0 });
+    tally.total += 1;
+    if (correct) {
+      tally.correct += 1;
+      score += 1;
+    }
+  });
+  return {
+    id: makeId(),
+    sessionId,
+    playedAt: new Date().toISOString(),
+    mode,
+    level: round.level,
+    imageId: image.id,
+    score,
+    total: round.questions.length,
+    byType,
+  };
+}
+
 function seenIn(seenByImage: Map<string, Set<string>>, imageId: string): Set<string> {
   let seen = seenByImage.get(imageId);
   if (!seen) seenByImage.set(imageId, (seen = new Set()));
@@ -57,6 +92,7 @@ export function useGameSession(difficulty: Difficulty) {
   /** Question ids already asked, per picture, for the whole session. */
   const seenByImage = useRef(new Map<string, Set<string>>());
   const roundCount = useRef(0);
+  const sessionId = useRef(makeId());
 
   /** Loads the next picture from the deck and starts a round on it. */
   const startNextPicture = useCallback(
@@ -91,6 +127,7 @@ export function useGameSession(difficulty: Difficulty) {
         deck.current = nextDeck(images);
         seenByImage.current = new Map();
         roundCount.current = 0;
+        sessionId.current = makeId();
         setHasMorePictures(images.length > 1);
         await startNextPicture(() => cancelled);
       } catch (e) {
@@ -109,12 +146,15 @@ export function useGameSession(difficulty: Difficulty) {
 
   const answer = useCallback(
     (optionIndex: number) => {
-      if (!round) return;
+      if (!round || !image) return;
       const next = [...answers, optionIndex];
       setAnswers(next);
-      if (next.length >= round.questions.length) setPhase('result');
+      if (next.length >= round.questions.length) {
+        setPhase('result');
+        statsStore.addResult(toRoundResult(sessionId.current, difficulty, image, round, next)).catch(() => {});
+      }
     },
-    [answers, round],
+    [answers, difficulty, image, round],
   );
 
   /** Records the finished round and returns its question ids. */

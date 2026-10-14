@@ -10,6 +10,7 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="play" options={{ gestureEnabled: false, animation: 'fade' }} />
+        <Stack.Screen name="stats" />
       </Stack>
     </>
   );

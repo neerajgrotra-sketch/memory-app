@@ -1,4 +1,4 @@
-import type { Difficulty, QuestionType } from '@/types/game';
+import type { Difficulty, Level, QuestionType } from '@/types/game';
 
 export const ROUND_SIZE = 5;
 export const VIEW_SECONDS = 10;
@@ -8,13 +8,13 @@ export interface LevelConfig {
   preferredTypes: QuestionType[];
 }
 
-type Level = Exclude<Difficulty, 'progressive'>;
-
 export const LEVELS: Record<Level, LevelConfig> = {
   easy: { preferredTypes: ['object', 'colour'] },
   medium: { preferredTypes: ['object', 'count', 'colour', 'position'] },
   hard: { preferredTypes: ['count', 'position'] },
 };
+
+export const LEVEL_LABELS: Record<Level, string> = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
 
 export const DIFFICULTY_OPTIONS: { value: Difficulty; label: string; description: string }[] = [
   { value: 'easy', label: 'Easy', description: 'What and which colour' },
@@ -23,12 +23,12 @@ export const DIFFICULTY_OPTIONS: { value: Difficulty; label: string; description
   { value: 'progressive', label: 'Progressive', description: 'Starts easy, gets harder each round' },
 ];
 
-const PROGRESSION: Level[] = ['easy', 'medium', 'hard'];
+export const LEVEL_ORDER: Level[] = ['easy', 'medium', 'hard'];
 
 /** Resolves the level for a round (0-based). Progressive steps up and stays on hard. */
 export function levelForRound(difficulty: Difficulty, round: number): Level {
   if (difficulty !== 'progressive') return difficulty;
-  return PROGRESSION[Math.min(round, PROGRESSION.length - 1)];
+  return LEVEL_ORDER[Math.min(round, LEVEL_ORDER.length - 1)];
 }
 
 export function isDifficulty(value: unknown): value is Difficulty {

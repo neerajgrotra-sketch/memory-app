@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Button } from '@/components/Button';
 import { DIFFICULTY_OPTIONS, VIEW_SECONDS } from '@/game/difficulty';
 import { colors, radius } from '@/theme';
 
@@ -28,12 +29,14 @@ export default function HomeScreen() {
           </Pressable>
         ))}
       </View>
+
+      <Button label="Your progress" variant="secondary" onPress={() => router.push('/stats')} />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, justifyContent: 'center', gap: 40 },
+  container: { flex: 1, padding: 24, justifyContent: 'center', gap: 32 },
   hero: { gap: 12 },
   title: { color: colors.accent, fontSize: 56, fontWeight: '900', letterSpacing: -1 },
   tagline: { color: colors.textMuted, fontSize: 17, lineHeight: 24 },

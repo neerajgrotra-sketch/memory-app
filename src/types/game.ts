@@ -2,6 +2,9 @@ export type QuestionType = 'object' | 'count' | 'colour' | 'position';
 
 export type Difficulty = 'easy' | 'medium' | 'hard' | 'progressive';
 
+/** The level a round is actually played at (Progressive steps through these). */
+export type Level = Exclude<Difficulty, 'progressive'>;
+
 /**
  * Where an image comes from. A remote URL (e.g. Supabase Storage) is a string;
  * an asset bundled with the app is the number returned by `require()`.
