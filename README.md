@@ -17,8 +17,11 @@ Checks: `npm run typecheck` and `npm run lint`.
 
 1. **Home**: pick Easy, Medium, Hard or Progressive.
 2. **Memorise**: the picture is shown full-screen with a countdown from 10 to 1.
-3. **Quiz**: 5 questions, 4 options each, with instant right/wrong feedback.
-4. **Result**: your score out of 5 and the correct answers. **Play again** uses the same picture with 5 different questions.
+3. **Quiz**: 5 questions, 4 options each. A right answer flashes green and moves on. A wrong answer shakes red, then shows the right one in green and waits for **Next**.
+4. **Result**: your score out of 5 with a random funny message, plus the correct answers.
+   - **Next picture** moves on to another picture. Pictures come in shuffled order, with no picture twice in a row.
+   - **Play again** keeps the same picture with 5 different questions.
+   - Questions already asked are remembered per picture for the whole session.
 
 Difficulty decides which question types come first:
 
@@ -27,7 +30,7 @@ Difficulty decides which question types come first:
 | Easy        | object, colour                                       |
 | Medium      | all types                                            |
 | Hard        | count, position                                      |
-| Progressive | easy → medium → hard, stepping up each "Play again"  |
+| Progressive | easy → medium → hard, stepping up every round     |
 
 Questions you haven't seen yet always come before repeats, and the previous round's questions are never repeated back to back.
 

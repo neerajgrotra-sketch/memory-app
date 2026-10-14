@@ -18,8 +18,19 @@ function goHome() {
 export default function PlayScreen() {
   const params = useLocalSearchParams<{ difficulty?: string }>();
   const difficulty = isDifficulty(params.difficulty) ? params.difficulty : 'medium';
-  const { image, round, phase, answers, score, error, finishMemorising, answer, playAgain } =
-    useGameSession(difficulty);
+  const {
+    image,
+    round,
+    phase,
+    answers,
+    score,
+    error,
+    hasMorePictures,
+    finishMemorising,
+    answer,
+    playAgain,
+    nextPicture,
+  } = useGameSession(difficulty);
 
   if (error) {
     return (
@@ -61,6 +72,7 @@ export default function PlayScreen() {
             score={score}
             nextLevelLabel={nextLevelLabel}
             onPlayAgain={playAgain}
+            onNextPicture={hasMorePictures ? nextPicture : undefined}
             onHome={goHome}
           />
         </SafeAreaView>

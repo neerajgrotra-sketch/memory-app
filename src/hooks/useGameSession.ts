@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { repository } from '@/data';
 import { LEVELS, ROUND_SIZE, levelForRound } from '@/game/difficulty';
-import { selectQuestions, toRoundQuestion } from '@/game/selectQuestions';
+import { selectQuestions, shuffle, toRoundQuestion } from '@/game/selectQuestions';
 import type { Difficulty, GameImage, Question, RoundQuestion } from '@/types/game';
 
 export type Phase = 'memorise' | 'quiz' | 'result';
@@ -30,6 +30,19 @@ function buildRound(
   return { index, level, questions: picked.map(toRoundQuestion) };
 }
 
+/** Shuffled play order for the pictures; reshuffled when used up, never repeating back to back. */
+function nextDeck(images: GameImage[], currentId?: string): GameImage[] {
+  const deck = shuffle(images);
+  if (deck.length > 1 && deck[0].id === currentId) deck.push(deck.shift()!);
+  return deck;
+}
+
+function seenIn(seenByImage: Map<string, Set<string>>, imageId: string): Set<string> {
+  let seen = seenByImage.get(imageId);
+  if (!seen) seenByImage.set(imageId, (seen = new Set()));
+  return seen;
+}
+
 export function useGameSession(difficulty: Difficulty) {
   const [image, setImage] = useState<GameImage | null>(null);
   const [pool, setPool] = useState<Question[]>([]);
@@ -37,7 +50,33 @@ export function useGameSession(difficulty: Difficulty) {
   const [phase, setPhase] = useState<Phase>('memorise');
   const [answers, setAnswers] = useState<number[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const seenIds = useRef(new Set<string>());
+  const [hasMorePictures, setHasMorePictures] = useState(false);
+
+  const deck = useRef<GameImage[]>([]);
+  const allImages = useRef<GameImage[]>([]);
+  /** Question ids already asked, per picture, for the whole session. */
+  const seenByImage = useRef(new Map<string, Set<string>>());
+  const roundCount = useRef(0);
+
+  /** Loads the next picture from the deck and starts a round on it. */
+  const startNextPicture = useCallback(
+    async (isCancelled: () => boolean = () => false) => {
+      if (deck.current.length === 0) deck.current = nextDeck(allImages.current, image?.id);
+      const picked = deck.current.shift()!;
+
+      setRound(null);
+      const questions = await repository.getQuestions(picked.id);
+      if (questions.length < ROUND_SIZE) throw new Error(`"${picked.title}" does not have enough questions yet.`);
+      if (isCancelled()) return;
+
+      setImage(picked);
+      setPool(questions);
+      setRound(buildRound(difficulty, roundCount.current, questions, seenIn(seenByImage.current, picked.id), new Set()));
+      setAnswers([]);
+      setPhase('memorise');
+    },
+    [difficulty, image?.id],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -46,17 +85,14 @@ export function useGameSession(difficulty: Difficulty) {
       try {
         const images = await repository.listImages();
         if (images.length === 0) throw new Error('No pictures are available yet.');
-        const picked = images[Math.floor(Math.random() * images.length)];
-        const questions = await repository.getQuestions(picked.id);
-        if (questions.length < ROUND_SIZE) throw new Error('This picture does not have enough questions yet.');
         if (cancelled) return;
 
-        seenIds.current = new Set();
-        setImage(picked);
-        setPool(questions);
-        setRound(buildRound(difficulty, 0, questions, seenIds.current, new Set()));
-        setAnswers([]);
-        setPhase('memorise');
+        allImages.current = images;
+        deck.current = nextDeck(images);
+        seenByImage.current = new Map();
+        roundCount.current = 0;
+        setHasMorePictures(images.length > 1);
+        await startNextPicture(() => cancelled);
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : 'Something went wrong.');
       }
@@ -65,6 +101,8 @@ export function useGameSession(difficulty: Difficulty) {
     return () => {
       cancelled = true;
     };
+    // Restart only when the difficulty changes, not when the current picture does.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [difficulty]);
 
   const finishMemorising = useCallback(() => setPhase('quiz'), []);
@@ -79,18 +117,43 @@ export function useGameSession(difficulty: Difficulty) {
     [answers, round],
   );
 
+  /** Records the finished round and returns its question ids. */
+  const finishRound = useCallback(() => {
+    if (!round || !image) return new Set<string>();
+    const ids = new Set(round.questions.map((question) => question.id));
+    ids.forEach((id) => seenIn(seenByImage.current, image.id).add(id));
+    roundCount.current = round.index + 1;
+    return ids;
+  }, [image, round]);
+
   const playAgain = useCallback(() => {
-    if (!round) return;
-    const previousIds = new Set(round.questions.map((question) => question.id));
-    previousIds.forEach((id) => seenIds.current.add(id));
-    setRound(buildRound(difficulty, round.index + 1, pool, seenIds.current, previousIds));
+    if (!image) return;
+    const previousIds = finishRound();
+    setRound(buildRound(difficulty, roundCount.current, pool, seenIn(seenByImage.current, image.id), previousIds));
     setAnswers([]);
     setPhase('memorise');
-  }, [difficulty, pool, round]);
+  }, [difficulty, finishRound, image, pool]);
+
+  const nextPicture = useCallback(() => {
+    finishRound();
+    startNextPicture().catch((e) => setError(e instanceof Error ? e.message : 'Something went wrong.'));
+  }, [finishRound, startNextPicture]);
 
   const score = round
     ? answers.filter((choice, i) => choice === round.questions[i]?.answerIndex).length
     : 0;
 
-  return { image, round, phase, answers, score, error, finishMemorising, answer, playAgain };
+  return {
+    image,
+    round,
+    phase,
+    answers,
+    score,
+    error,
+    hasMorePictures,
+    finishMemorising,
+    answer,
+    playAgain,
+    nextPicture,
+  };
 }
