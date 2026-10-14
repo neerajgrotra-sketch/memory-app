@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Animated, { FadeInRight } from 'react-native-reanimated';
+import { StyleSheet, Text, View } from 'react-native';
+import Animated, { FadeIn, FadeInRight } from 'react-native-reanimated';
 
+import { AnswerOption, type OptionStatus } from '@/components/AnswerOption';
+import { Button } from '@/components/Button';
 import { colors, radius } from '@/theme';
 import type { QuestionType, RoundQuestion } from '@/types/game';
 
-const FEEDBACK_MS = 700;
+/** How long a correct answer stays green before moving on by itself. */
+const CORRECT_ADVANCE_MS = 700;
 
 const TYPE_LABELS: Record<QuestionType, string> = {
   object: 'Object',
@@ -13,6 +16,12 @@ const TYPE_LABELS: Record<QuestionType, string> = {
   colour: 'Colour',
   position: 'Position',
 };
+
+/**
+ * choosing → (right) correct → auto-advance
+ *          → (wrong) shaking → revealed → player taps Next
+ */
+type Feedback = 'choosing' | 'correct' | 'shaking' | 'revealed';
 
 interface QuizStageProps {
   questions: RoundQuestion[];
@@ -24,19 +33,45 @@ interface QuizStageProps {
 export function QuizStage({ questions, answeredCount, onAnswer }: QuizStageProps) {
   const question = questions[answeredCount];
   const [selected, setSelected] = useState<number | null>(null);
+  const [feedback, setFeedback] = useState<Feedback>('choosing');
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => () => clearTimeout(timer.current), []);
 
   if (!question) return null;
 
+  const isLast = answeredCount === questions.length - 1;
+
+  const advance = (index: number) => {
+    setSelected(null);
+    setFeedback('choosing');
+    onAnswer(index);
+  };
+
   const choose = (index: number) => {
-    if (selected !== null) return;
+    if (feedback !== 'choosing') return;
     setSelected(index);
-    timer.current = setTimeout(() => {
-      setSelected(null);
-      onAnswer(index);
-    }, FEEDBACK_MS);
+    if (index === question.answerIndex) {
+      setFeedback('correct');
+      timer.current = setTimeout(() => advance(index), CORRECT_ADVANCE_MS);
+    } else {
+      setFeedback('shaking');
+    }
+  };
+
+  const statusFor = (index: number): OptionStatus => {
+    const isAnswer = index === question.answerIndex;
+    switch (feedback) {
+      case 'choosing':
+        return 'idle';
+      case 'correct':
+        return isAnswer ? 'correct' : 'muted';
+      case 'shaking':
+        return index === selected ? 'wrong' : 'idle';
+      case 'revealed':
+        if (index === selected) return 'wrong';
+        return isAnswer ? 'correct' : 'muted';
+    }
   };
 
   return (
@@ -51,29 +86,29 @@ export function QuizStage({ questions, answeredCount, onAnswer }: QuizStageProps
       <Animated.View key={question.id} entering={FadeInRight.duration(250)} style={styles.body}>
         <Text style={styles.prompt}>{question.prompt}</Text>
         <View style={styles.options}>
-          {question.options.map((option, index) => {
-            const revealed = selected !== null;
-            const isAnswer = index === question.answerIndex;
-            const isSelected = index === selected;
-            return (
-              <Pressable
-                key={option}
-                accessibilityRole="button"
-                disabled={revealed}
-                onPress={() => choose(index)}
-                style={({ pressed }) => [
-                  styles.option,
-                  pressed && styles.optionPressed,
-                  revealed && isAnswer && styles.optionCorrect,
-                  revealed && isSelected && !isAnswer && styles.optionWrong,
-                ]}
-              >
-                <Text style={styles.optionText}>{option}</Text>
-              </Pressable>
-            );
-          })}
+          {question.options.map((option, index) => (
+            <AnswerOption
+              key={option}
+              label={option}
+              status={statusFor(index)}
+              disabled={feedback !== 'choosing'}
+              onPress={() => choose(index)}
+              onShakeEnd={() => setFeedback('revealed')}
+            />
+          ))}
         </View>
       </Animated.View>
+
+      <View style={styles.footer}>
+        {feedback === 'revealed' && selected !== null && (
+          <Animated.View entering={FadeIn.duration(200)} style={styles.footerContent}>
+            <Text style={styles.hint}>
+              Not quite. The answer was <Text style={styles.hintAnswer}>{question.options[question.answerIndex]}</Text>.
+            </Text>
+            <Button label={isLast ? 'See my score' : 'Next question'} onPress={() => advance(selected)} />
+          </Animated.View>
+        )}
+      </View>
     </View>
   );
 }
@@ -98,16 +133,9 @@ const styles = StyleSheet.create({
   body: { flex: 1, justifyContent: 'center', gap: 32 },
   prompt: { color: colors.text, fontSize: 26, fontWeight: '800', lineHeight: 32 },
   options: { gap: 12 },
-  option: {
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: radius.md,
-    paddingVertical: 18,
-    paddingHorizontal: 20,
-  },
-  optionPressed: { backgroundColor: colors.surfaceRaised },
-  optionCorrect: { borderColor: colors.correct, backgroundColor: 'rgba(46,194,126,0.15)' },
-  optionWrong: { borderColor: colors.wrong, backgroundColor: 'rgba(229,72,77,0.15)' },
-  optionText: { color: colors.text, fontSize: 18, fontWeight: '600' },
+  // Fixed height so the options don't jump when the Next button appears.
+  footer: { minHeight: 110, justifyContent: 'flex-end' },
+  footerContent: { gap: 14 },
+  hint: { color: colors.textMuted, fontSize: 15, textAlign: 'center' },
+  hintAnswer: { color: colors.correct, fontWeight: '700' },
 });
