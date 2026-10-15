@@ -23,7 +23,7 @@ Every change bumps the version (shown on the home screen). See [CHANGELOG.md](CH
    - **Skip for now** moves to the next unanswered question. Skipped questions come back round once the end is reached, marked "You skipped this one".
    - The numbered dots show every question (filled = answered, dashed = skipped, ringed = current); tap an unanswered dot to jump to it.
    - Skip is hidden on the last unanswered question, and the round ends when every question has an answer.
-4. **Result**: your score out of 5 with a random funny message, plus every answer (for a wrong one, what you said and the right answer). Tap the picture to see it full size and check your answers.
+4. **Result**: your score out of 5 with a random funny message, plus every question with all its options: the right answer in green and your wrong pick in red. Tap the picture to see it full size and check your answers.
    - **Next picture** generates a new picture in a different setting.
    - **Play again** keeps the same picture with 5 different questions.
 

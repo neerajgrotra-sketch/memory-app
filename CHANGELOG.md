@@ -10,6 +10,15 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.3.3 (2026-10-15)
+
+- **The result screen shows every option for every question:**
+  - the right answer in green, with ✓
+  - your pick, if it was wrong, in red and struck through, labelled "your answer"
+  - the other options dimmed.
+
+  You can see exactly what you chose between. Screen readers hear the options too.
+
 ## 3.3.2 (2026-10-15)
 
 - **"Which of these was (NOT) in the picture?"** replaces "…on the beach / in the street / in the room?". Players read "on the beach" as "on the sand", so a dolphin in the sea or a plane in the sky looked like a trick. The setting's name is no longer used in questions.

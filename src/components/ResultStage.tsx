@@ -67,6 +67,7 @@ export function ResultStage({ scene, title, questions, answers, score, nextLevel
                     ? `${question.prompt} Right: ${answer}.`
                     : `${question.prompt} Wrong. You said ${chosen === null ? 'nothing' : question.options[chosen]}. The answer was ${answer}.`
                 }
+                accessibilityHint={`The options were ${question.options.join(', ')}.`}
               >
                 {/* Drawn badges, so the marks look the same on every device and font. */}
                 <View style={[styles.badge, { backgroundColor: correct ? colors.correct : colors.wrong }]}>
@@ -74,20 +75,28 @@ export function ResultStage({ scene, title, questions, answers, score, nextLevel
                 </View>
                 <View style={styles.reviewText}>
                   <Text style={styles.reviewPrompt}>{question.prompt}</Text>
-                  {correct ? (
-                    <Text style={styles.reviewAnswer}>{answer}</Text>
-                  ) : (
-                    <>
-                      {chosen !== null && (
-                        <Text style={styles.yours}>
-                          You said <Text style={styles.yoursValue}>{question.options[chosen]}</Text>
-                        </Text>
-                      )}
-                      <Text style={styles.rightAnswer}>
-                        Answer <Text style={styles.rightValue}>{answer}</Text>
-                      </Text>
-                    </>
-                  )}
+                  {/* Every option, so you can see what you chose between: the answer in green, your wrong pick in red. */}
+                  <View style={styles.options}>
+                    {question.options.map((option, o) => {
+                      const isAnswer = o === question.answerIndex;
+                      const isWrongPick = o === chosen && !correct;
+                      return (
+                        <View key={option} style={[styles.option, isAnswer && styles.optionAnswer, isWrongPick && styles.optionWrong]}>
+                          <Text
+                            style={[
+                              styles.optionText,
+                              isAnswer && styles.optionAnswerText,
+                              isWrongPick && styles.optionWrongText,
+                            ]}
+                          >
+                            {isAnswer ? '✓ ' : isWrongPick ? '✕ ' : ''}
+                            {option}
+                          </Text>
+                          {isWrongPick && <Text style={styles.yourPick}>your answer</Text>}
+                        </View>
+                      );
+                    })}
+                  </View>
                 </View>
               </View>
             );
@@ -137,11 +146,23 @@ const styles = StyleSheet.create({
   badgeText: { color: colors.background, fontSize: 13, fontWeight: '900', lineHeight: 16 },
   reviewText: { flex: 1, gap: 2 },
   reviewPrompt: { color: colors.textMuted, fontSize: 14 },
-  reviewAnswer: { color: colors.text, fontSize: 16, fontWeight: '600' },
-  yours: { color: colors.textMuted, fontSize: 15 },
-  yoursValue: { color: colors.wrong, fontWeight: '600', textDecorationLine: 'line-through' },
-  rightAnswer: { color: colors.textMuted, fontSize: 15 },
-  rightValue: { color: colors.correct, fontWeight: '700' },
+  options: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 4 },
+  option: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    gap: 6,
+    borderRadius: radius.sm,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  optionAnswer: { borderColor: colors.correct, backgroundColor: '#163d2c' },
+  optionWrong: { borderColor: colors.wrong, backgroundColor: '#3d1a1c' },
+  optionText: { color: colors.textMuted, fontSize: 14 },
+  optionAnswerText: { color: colors.correct, fontWeight: '700' },
+  optionWrongText: { color: colors.wrong, fontWeight: '600', textDecorationLine: 'line-through' },
+  yourPick: { color: colors.wrong, fontSize: 11, fontWeight: '700', textTransform: 'uppercase' },
   actions: {
     gap: 12,
     paddingHorizontal: 24,
