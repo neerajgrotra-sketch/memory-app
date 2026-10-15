@@ -10,6 +10,26 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.3.0 (2026-10-15)
+
+- **Profile:**
+  - After your first round (never before the first picture), a card asks "What should we call you?" and your age band (Under 18, 18–34, 35–54, 55+ or Prefer not to say). Both are optional, with a "Not now" button.
+  - Saving or skipping means it never asks again. Your details are remembered on this phone every time the app opens.
+- **Profile icon** on the home screen (your initial, or 👤) opens the profile screen:
+  - edit your name and age band
+  - "More time to look"
+  - About, with "glance is a memory game, not a medical test"
+  - "Clear my details".
+  The screen is built in sections, so account and subscription settings can be added later.
+- **Greeting:** the home screen says "Hi, Priya" once you've given a name.
+- **More time to look:** every picture stays 3 seconds longer. It turns on when you pick 55+, and you can switch it on or off in the profile. The home screen says when it's on.
+- **Your practice**, on the progress screen. These compare you only with yourself:
+  - days played and your day streak
+  - how steady your scores are (how much your last 10 rounds vary)
+  - each question type's accuracy over your last 10 rounds against the 10 before, e.g. "Counting 50% → 70% ↑".
+  - A note says it's a memory game, not a medical test.
+- Your profile has a random id from first launch, and is kept behind a `ProfileStore` interface (like scores), ready to move to Supabase with accounts.
+
 ## 3.2.0 (2026-10-15)
 
 - **Tap the picture on the result screen to see it full size**, so you can check your answers against it. It's exactly the picture you memorised, as large as the screen allows. Tap anywhere or ✕ to close. The thumbnail now has the picture's own shape and a "Tap to enlarge" hint.

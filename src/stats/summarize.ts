@@ -41,6 +41,23 @@ export interface SessionSummary {
   average: number;
 }
 
+/** How one question type is going: the latest rounds against the ones before. */
+export interface TypeChange {
+  type: QuestionType;
+  before: number;
+  after: number;
+}
+
+/** Practice habits and personal trends, always compared with the player's own earlier rounds. */
+export interface PracticeSummary {
+  daysPlayed: number;
+  /** Days in a row with at least one round, ending today (or yesterday, if not played yet today). */
+  streak: number;
+  /** How much scores vary over the last rounds (standard deviation, out of 5); null until enough rounds. */
+  spread: number | null;
+  typeChanges: TypeChange[];
+}
+
 export interface StatsSummary {
   rounds: number;
   sessions: number;
@@ -53,6 +70,7 @@ export interface StatsSummary {
   recentSessions: SessionSummary[];
   /** Oldest first, for the chart. */
   recentRounds: RoundResult[];
+  practice: PracticeSummary;
 }
 
 const QUESTION_TYPES: QuestionType[] = ['object', 'count', 'colour', 'position'];
@@ -68,6 +86,48 @@ export function trendOf(results: RoundResult[]): Trend | null {
   const delta = recentAverage - previousAverage;
   const direction = delta >= TREND_THRESHOLD ? 'up' : delta <= -TREND_THRESHOLD ? 'down' : 'steady';
   return { direction, recentAverage, previousAverage, window };
+}
+
+/** Rounds compared on each side of a type change, and the least questions per side to say anything. */
+const CHANGE_WINDOW = 10;
+const CHANGE_MIN_QUESTIONS = 5;
+const SPREAD_WINDOW = 10;
+
+/** Local calendar day, e.g. "2026-10-15". */
+const dayOf = (iso: string) => {
+  const d = new Date(iso);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
+
+/** Practice summary from rounds sorted oldest first. `now` is injectable for tests. */
+export function practiceOf(results: RoundResult[], now = new Date()): PracticeSummary {
+  const days = new Set(results.map((r) => dayOf(r.playedAt)));
+  let streak = 0;
+  const cursor = new Date(now);
+  if (!days.has(dayOf(cursor.toISOString()))) cursor.setDate(cursor.getDate() - 1);
+  while (days.has(dayOf(cursor.toISOString()))) {
+    streak++;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  const last = results.slice(-SPREAD_WINDOW).map((r) => r.score);
+  const mean = average(last);
+  const spread = last.length >= 5 ? Math.sqrt(average(last.map((x) => (x - mean) ** 2))) : null;
+
+  const accuracy = (rounds: RoundResult[], type: QuestionType) => {
+    const correct = rounds.reduce((n, r) => n + (r.byType[type]?.correct ?? 0), 0);
+    const total = rounds.reduce((n, r) => n + (r.byType[type]?.total ?? 0), 0);
+    return total >= CHANGE_MIN_QUESTIONS ? correct / total : null;
+  };
+  const recent = results.slice(-CHANGE_WINDOW);
+  const earlier = results.slice(-2 * CHANGE_WINDOW, -CHANGE_WINDOW);
+  const typeChanges = QUESTION_TYPES.flatMap((type): TypeChange[] => {
+    const before = accuracy(earlier, type);
+    const after = accuracy(recent, type);
+    return before === null || after === null ? [] : [{ type, before, after }];
+  });
+
+  return { daysPlayed: days.size, streak, spread, typeChanges };
 }
 
 export function summarize(
@@ -127,5 +187,6 @@ export function summarize(
     types,
     recentSessions: sessions.slice(0, sessionCount),
     recentRounds: results.slice(-chartRounds),
+    practice: practiceOf(results),
   };
 }

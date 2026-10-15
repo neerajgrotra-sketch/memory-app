@@ -3,6 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { PictureViewer } from '@/components/PictureViewer';
+import { ProfilePrompt } from '@/components/ProfilePrompt';
 import type { Answers } from '@/game/quizNavigation';
 import { randomScoreMessage } from '@/game/scoreMessages';
 import { colors, radius } from '@/theme';
@@ -29,12 +30,14 @@ export function ResultStage({ scene, title, questions, answers, score, nextLevel
 
   return (
     <View style={styles.screen}>
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.container}>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <Text style={styles.message}>{message}</Text>
         <Text style={styles.score}>
           {score}
           <Text style={styles.outOf}> / {questions.length}</Text>
         </Text>
+
+        <ProfilePrompt />
 
         {/* Tap the picture to see it full size and check the answers against it. */}
         <Pressable

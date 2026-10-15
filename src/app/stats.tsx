@@ -151,6 +151,29 @@ export default function StatsScreen() {
             <WeakSpot summary={summary} />
           </Section>
 
+          <Section title="Your practice">
+            <View style={styles.tiles}>
+              <Tile label="Days played" value={String(summary.practice.daysPlayed)} />
+              <Tile label="Day streak" value={String(summary.practice.streak)} />
+            </View>
+            <Text style={styles.note}>{steadiness(summary.practice.spread)}</Text>
+            {summary.practice.typeChanges.length > 0 && (
+              <View style={styles.types}>
+                {summary.practice.typeChanges.map((c) => (
+                  <View key={c.type} style={styles.typeHead}>
+                    <Text style={styles.td}>{TYPE_LABELS[c.type]}</Text>
+                    <Text style={styles.tdMuted}>
+                      {Math.round(c.before * 100)}% → <Text style={styles.td}>{Math.round(c.after * 100)}%</Text>
+                      {'  '}
+                      {changeArrow(c.after - c.before)}
+                    </Text>
+                  </View>
+                ))}
+                <Text style={styles.note}>Your last 10 rounds compared with the 10 before.</Text>
+              </View>
+            )}
+          </Section>
+
           <Section title="Recent sessions">
             <View style={styles.sessions}>
               {summary.recentSessions.map((s, i) => (
@@ -170,6 +193,8 @@ export default function StatsScreen() {
             </View>
           </Section>
 
+          <Text style={styles.disclaimer}>glance is a memory game, not a medical test. These numbers compare you only with yourself.</Text>
+
           <Pressable accessibilityRole="button" onPress={reset} onBlur={() => setConfirmReset(false)} style={styles.reset}>
             <Text style={[styles.resetText, confirmReset && styles.resetConfirm]}>
               {confirmReset ? 'Tap again to delete all progress' : 'Reset progress'}
@@ -179,6 +204,18 @@ export default function StatsScreen() {
       )}
     </SafeAreaView>
   );
+}
+
+function steadiness(spread: number | null) {
+  if (spread === null) return 'Play 5 rounds to see how steady your scores are.';
+  const how = spread < 0.6 ? 'Very steady' : spread < 1.1 ? 'Fairly steady' : 'Up and down';
+  return `${how}: your last rounds vary by about ±${fmt(spread)} points.`;
+}
+
+function changeArrow(delta: number) {
+  if (delta >= 0.05) return '↑';
+  if (delta <= -0.05) return '↓';
+  return '→';
 }
 
 function WeakSpot({ summary }: { summary: StatsSummary }) {
@@ -238,6 +275,7 @@ const styles = StyleSheet.create({
   heroTitle: { color: colors.accent, fontSize: 28, fontWeight: '900' },
   heroDetail: { color: colors.textMuted, fontSize: 16, lineHeight: 22 },
   tiles: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+  disclaimer: { color: colors.textMuted, fontSize: 12, lineHeight: 17, textAlign: 'center' },
   tile: {
     flexGrow: 1,
     flexBasis: '40%',

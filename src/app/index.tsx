@@ -4,12 +4,27 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/Button';
 import { DIFFICULTY_OPTIONS } from '@/game/difficulty';
+import { EXTRA_SECONDS, initialOf, useProfile } from '@/profile';
 import { colors, radius } from '@/theme';
 import { APP_VERSION } from '@/version';
 
 export default function HomeScreen() {
+  const { profile } = useProfile();
+  const initial = initialOf(profile);
   return (
     <SafeAreaView style={styles.screen}>
+      <View style={styles.topBar}>
+        {profile?.name ? <Text style={styles.greeting}>Hi, {profile.name}</Text> : <View />}
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Profile"
+          onPress={() => router.push('/profile')}
+          hitSlop={8}
+          style={({ pressed }) => [styles.profileButton, pressed && styles.cardPressed]}
+        >
+          <Text style={initial ? styles.profileInitial : styles.profileIcon}>{initial ?? '👤'}</Text>
+        </Pressable>
+      </View>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.hero}>
           <Text style={styles.title}>glance</Text>
@@ -32,6 +47,8 @@ export default function HomeScreen() {
           ))}
         </View>
 
+        {profile?.moreTime && <Text style={styles.moreTime}>More time to look is on: every picture stays {EXTRA_SECONDS} seconds longer.</Text>}
+
         <Button label="Your progress" variant="secondary" onPress={() => router.push('/stats')} />
 
         <Text style={styles.version}>Version {APP_VERSION}</Text>
@@ -42,6 +59,20 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
+  topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingTop: 8 },
+  greeting: { color: colors.text, fontSize: 17, fontWeight: '700' },
+  profileButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  profileInitial: { color: colors.accent, fontSize: 18, fontWeight: '900' },
+  profileIcon: { fontSize: 20 },
   container: { flexGrow: 1, padding: 24, justifyContent: 'center', gap: 32 },
   hero: { gap: 12 },
   title: { color: colors.accent, fontSize: 56, fontWeight: '900', letterSpacing: -1 },
@@ -59,5 +90,6 @@ const styles = StyleSheet.create({
   cardPressed: { backgroundColor: colors.surfaceRaised, transform: [{ scale: 0.99 }] },
   cardTitle: { color: colors.text, fontSize: 20, fontWeight: '800' },
   cardDescription: { color: colors.textMuted, fontSize: 14 },
+  moreTime: { color: colors.accent, fontSize: 14, textAlign: 'center', marginTop: -16 },
   version: { color: colors.textMuted, fontSize: 12, textAlign: 'center', marginTop: -16 },
 });

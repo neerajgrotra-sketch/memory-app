@@ -27,12 +27,20 @@ Every change bumps the version (shown on the home screen). See [CHANGELOG.md](CH
    - **Next picture** generates a new picture in a different setting.
    - **Play again** keeps the same picture with 5 different questions.
 
-5. **Your progress** (from the home screen):
+5. **Profile** (the icon at the top right of the home screen):
+   - After your first round, a card asks once for a name and an age band. Both are optional; saving or skipping means it never asks again.
+   - Your details are remembered on this phone.
+   - The profile screen edits them, has "More time to look" (+3 s per picture, on by default for 55+) and "Clear my details".
+   - It's built in sections, so account and subscription settings can be added later.
+   - glance is a memory game, not a medical test: nothing compares you with other people or claims to measure brain health.
+
+6. **Your progress** (from the home screen):
    - Whether you're improving: your last 5 rounds compared with the 5 before.
    - Totals: rounds, sessions, average score and perfect rounds.
    - A chart of your last 20 rounds, coloured by level.
    - Rounds, average, best and trend for Easy, Medium and Hard.
    - Accuracy per question type, recent sessions, and a reset.
+   - Your practice: days played, day streak, how steady your scores are, and each question type's accuracy now against before. It always compares you with yourself.
 
    Every finished round is saved on the device. Progressive rounds count under the level they were played at. A session runs from picking a mode until you go home.
 
@@ -143,6 +151,9 @@ src/
     generateQuestions.ts  Writes every question a scene can answer
     createStage.ts     Recipe + level → playable picture and question pool
     SceneView.tsx      Draws a scene, filling any screen shape
+  profile/
+    profileStore.ts    ProfileStore interface + on-device (AsyncStorage) store
+    index.tsx          ProfileProvider / useProfile, age bands, "More time to look"
   stats/
     statsStore.ts      StatsStore interface + on-device (AsyncStorage) store
     index.ts           The one place the active stats store is chosen
@@ -151,5 +162,7 @@ src/
 ```
 
 ## Moving to Supabase
+
+The profile is stored behind a `ProfileStore` interface (`src/profile/profileStore.ts`), shaped like `Profile` in `src/types/profile.ts`. It has a random `id` from first launch, so a future account can claim it.
 
 Progress is stored behind a `StatsStore` interface. To sync across devices,: implement `StatsStore` against a `round_results` table shaped like `RoundResult` in `src/types/stats.ts`, and point `statsStore` at it in `src/stats/index.ts`.
