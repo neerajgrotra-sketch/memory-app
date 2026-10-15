@@ -129,8 +129,9 @@ function Tile({ label, value }: { label: string; value: string }) {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
-  content: { paddingBottom: 40 },
-  art: { height: 220 },
+  // Phone-width column, centred on tablets and wide windows so the art isn't blown up.
+  content: { paddingBottom: 40, width: '100%', maxWidth: 520, alignSelf: 'center' },
+  art: { height: 180 },
   backWrap: { position: 'absolute', top: 0, left: 0 },
   back: {
     margin: 16,

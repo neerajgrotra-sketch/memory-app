@@ -17,7 +17,7 @@ Every change bumps the version (shown on the Games tab). See [CHANGELOG.md](CHAN
 
 Three tabs:
 
-- **Games**: a big card to carry on where you left off (your level ring and **Play level N**), then games grouped by skill. A skill only appears once it has a game, so today there's **Memory** with Look & Remember. Tapping a game opens its page.
+- **Games**: once you've played, a slim **Continue** strip (your level ring and **Play**), then games grouped by skill. A skill only appears once it has a game, so today there's **Memory** with Look & Remember. Tapping a game opens its page.
 - **Progress**: each game's level, best level, high score and a chart of your level over time, then your scores, accuracy per question type, practice habits and recent sessions.
 - **Profile**: name and age band (optional, asked once after the first round), "More time to look" (+3 s per picture, on by default for 55+), the temporary testing filter, and "Clear my details". glance is a game, not a medical test: nothing compares you with other people or claims to measure brain health.
 

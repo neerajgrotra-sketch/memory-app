@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.2 (2026-10-15)
+
+- **Calmer Games tab.** The big "Start here" card with a large street picture is gone: it repeated the game card below it and was oversized, worst on wide screens.
+  - New players see a one-line intro and the game cards; tapping one opens its page with how to play.
+  - Once you've played, a slim **Continue** strip shows your level ring, the game and a **Play** button.
+- **Wide screens and tablets:** the Games, Progress and Profile tabs and game pages stay a phone-width column in the middle, so pictures and text aren't blown up.
+
 ## 4.0.0-beta.1 (2026-10-15)
 
 On the `claude/glance-games-hub` branch for testing; it becomes 4.0.0 if kept.

@@ -150,9 +150,9 @@ function Section({ title, footer, children }: { title: string; footer?: string; 
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
-  topBar: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 4 },
+  topBar: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 4, width: '100%', maxWidth: 520, alignSelf: 'center' },
   title: { color: colors.text, fontSize: 28, fontWeight: '900' },
-  content: { paddingHorizontal: 24, paddingTop: 8, paddingBottom: 40, gap: 24 },
+  content: { paddingHorizontal: 24, paddingTop: 8, paddingBottom: 40, gap: 24, width: '100%', maxWidth: 520, alignSelf: 'center' },
   hero: { alignItems: 'center', gap: 10 },
   avatar: { width: 80, height: 80, borderRadius: 40, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },
   avatarText: { color: colors.accentText, fontSize: 34, fontWeight: '900' },

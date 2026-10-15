@@ -283,7 +283,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
-  topBar: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 4 },
+  topBar: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 4, width: '100%', maxWidth: 520, alignSelf: 'center' },
   title: { color: colors.text, fontSize: 28, fontWeight: '900' },
   gameCard: { backgroundColor: colors.surface, borderRadius: radius.md, padding: 16, gap: 16 },
   gameHead: { flexDirection: 'row', alignItems: 'center', gap: 14 },
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
   empty: { flex: 1, justifyContent: 'center', padding: 24, gap: 16 },
   emptyTitle: { color: colors.text, fontSize: 24, fontWeight: '800' },
   emptyText: { color: colors.textMuted, fontSize: 16, lineHeight: 22 },
-  content: { paddingHorizontal: 24, paddingTop: 8, paddingBottom: 40, gap: 28 },
+  content: { paddingHorizontal: 24, paddingTop: 8, paddingBottom: 40, gap: 28, width: '100%', maxWidth: 520, alignSelf: 'center' },
   hero: { gap: 6 },
   heroTitle: { color: colors.accent, fontSize: 28, fontWeight: '900' },
   heroDetail: { color: colors.textMuted, fontSize: 16, lineHeight: 22 },

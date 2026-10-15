@@ -2,7 +2,6 @@ import { router } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Button } from '@/components/Button';
 import { GameArt } from '@/components/GameArt';
 import { LevelRing } from '@/components/LevelRing';
 import { titleFor } from '@/games/lookRemember/ladder';
@@ -30,21 +29,30 @@ export default function GamesScreen() {
           <Text style={styles.greeting}>{profile?.name ? `Hi, ${profile.name}` : 'Brain games, one glance at a time'}</Text>
         </View>
 
-        {/* The one thing to do next: carry on where you left off, or start the first game. */}
-        <View style={styles.hero}>
-          <Pressable accessibilityRole="button" accessibilityLabel={`${featured.title}, about this game`} onPress={() => openGame(featured)}>
-            <GameArt style={styles.heroArt} />
-          </Pressable>
-          <View style={styles.heroBody}>
-            {progress && <LevelRing ladder={progress.ladder} size={72} />}
-            <View style={styles.heroText}>
-              <Text style={styles.kicker}>{played ? 'Continue' : 'Start here'}</Text>
-              <Text style={styles.heroTitle}>{featured.title}</Text>
-              {progress && <Text style={styles.heroMeta}>{titleFor(progress.ladder.level)}</Text>}
+        {/* Once you've played, a slim strip to carry on at your level. New players start from the game card below. */}
+        {played && progress && (
+          <View style={styles.continue}>
+            <LevelRing ladder={progress.ladder} size={52} />
+            <View style={styles.continueText}>
+              <Text style={styles.kicker}>Continue</Text>
+              <Text style={styles.continueTitle} numberOfLines={1}>
+                {featured.title}
+              </Text>
+              <Text style={styles.continueMeta} numberOfLines={1}>
+                {titleFor(progress.ladder.level)}
+              </Text>
             </View>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`Play ${featured.title}, level ${progress.ladder.level}`}
+              onPress={() => playLevels(featured)}
+              style={({ pressed }) => [styles.playPill, pressed && styles.pressed]}
+            >
+              <Text style={styles.playPillText}>Play</Text>
+            </Pressable>
           </View>
-          <Button label={played ? `Play level ${progress?.ladder.level ?? ''}` : 'Play'} onPress={() => playLevels(featured)} />
-        </View>
+        )}
+        {progress && !played && <Text style={styles.intro}>New here? Tap a game to see how it works, then play.</Text>}
 
         {!!profile?.recipeFilter?.length && (
           <Pressable accessibilityRole="button" onPress={() => router.push('/profile')} style={styles.noteWrap}>
@@ -100,17 +108,28 @@ function GameCard({ game }: { game: GameDef }) {
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  container: { padding: 16, paddingBottom: 32, gap: 24 },
+  // Phone-width column, centred on tablets and wide windows so nothing is blown up.
+  container: { padding: 16, paddingBottom: 32, gap: 24, width: '100%', maxWidth: 520, alignSelf: 'center' },
   header: { gap: 2, paddingHorizontal: 4 },
   brand: { color: colors.accent, fontSize: 34, fontWeight: '900', letterSpacing: -0.5 },
   greeting: { color: colors.textMuted, fontSize: 16 },
-  hero: { backgroundColor: colors.surface, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, overflow: 'hidden', paddingBottom: 16, gap: 14 },
-  heroArt: { height: 170 },
-  heroBody: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 16 },
-  heroText: { flex: 1, gap: 2 },
-  kicker: { color: colors.accent, fontSize: 12, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 1 },
-  heroTitle: { color: colors.text, fontSize: 24, fontWeight: '900' },
-  heroMeta: { color: colors.textMuted, fontSize: 14 },
+  continue: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 12,
+  },
+  continueText: { flex: 1, gap: 1 },
+  kicker: { color: colors.accent, fontSize: 11, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 1 },
+  continueTitle: { color: colors.text, fontSize: 16, fontWeight: '800' },
+  continueMeta: { color: colors.textMuted, fontSize: 13 },
+  playPill: { backgroundColor: colors.accent, borderRadius: radius.pill, paddingHorizontal: 20, minHeight: 44, justifyContent: 'center' },
+  playPillText: { color: colors.accentText, fontSize: 16, fontWeight: '800' },
+  intro: { color: colors.textMuted, fontSize: 15, lineHeight: 21, paddingHorizontal: 4, marginBottom: -8 },
   noteWrap: { minHeight: 44, justifyContent: 'center', marginVertical: -12 },
   testing: { color: colors.wrong, fontSize: 14, fontWeight: '700', textAlign: 'center' },
   moreTime: { color: colors.accent, fontSize: 14, textAlign: 'center', marginVertical: -8 },
@@ -119,9 +138,9 @@ const styles = StyleSheet.create({
   sectionTitle: { color: colors.text, fontSize: 20, fontWeight: '900' },
   sectionBlurb: { color: colors.textMuted, fontSize: 14 },
   cards: { gap: 12, paddingRight: 16 },
-  card: { width: 200, backgroundColor: colors.surface, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
+  card: { width: 220, backgroundColor: colors.surface, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
   pressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
-  cardArt: { height: 110 },
+  cardArt: { height: 120 },
   cardBody: { padding: 12, gap: 2 },
   cardTitle: { color: colors.text, fontSize: 16, fontWeight: '800' },
   cardMeta: { color: colors.textMuted, fontSize: 13 },
