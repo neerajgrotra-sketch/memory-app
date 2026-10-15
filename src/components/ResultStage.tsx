@@ -54,13 +54,40 @@ export function ResultStage({ scene, title, questions, answers, score, nextLevel
 
         <View style={styles.review}>
           {questions.map((question, i) => {
-            const correct = answers[i] === question.answerIndex;
+            const chosen = answers[i];
+            const correct = chosen === question.answerIndex;
+            const answer = question.options[question.answerIndex];
             return (
-              <View key={question.id} style={styles.reviewRow}>
-                <Text style={[styles.mark, { color: correct ? colors.correct : colors.wrong }]}>{correct ? '✓' : '✗'}</Text>
+              <View
+                key={question.id}
+                style={styles.reviewRow}
+                accessible
+                accessibilityLabel={
+                  correct
+                    ? `${question.prompt} Right: ${answer}.`
+                    : `${question.prompt} Wrong. You said ${chosen === null ? 'nothing' : question.options[chosen]}. The answer was ${answer}.`
+                }
+              >
+                {/* Drawn badges, so the marks look the same on every device and font. */}
+                <View style={[styles.badge, { backgroundColor: correct ? colors.correct : colors.wrong }]}>
+                  <Text style={styles.badgeText}>{correct ? '✓' : '✕'}</Text>
+                </View>
                 <View style={styles.reviewText}>
                   <Text style={styles.reviewPrompt}>{question.prompt}</Text>
-                  <Text style={styles.reviewAnswer}>{question.options[question.answerIndex]}</Text>
+                  {correct ? (
+                    <Text style={styles.reviewAnswer}>{answer}</Text>
+                  ) : (
+                    <>
+                      {chosen !== null && (
+                        <Text style={styles.yours}>
+                          You said <Text style={styles.yoursValue}>{question.options[chosen]}</Text>
+                        </Text>
+                      )}
+                      <Text style={styles.rightAnswer}>
+                        Answer <Text style={styles.rightValue}>{answer}</Text>
+                      </Text>
+                    </>
+                  )}
                 </View>
               </View>
             );
@@ -106,10 +133,15 @@ const styles = StyleSheet.create({
   thumbHint: { color: colors.accent, fontSize: 13, fontWeight: '700' },
   review: { backgroundColor: colors.surface, borderRadius: radius.md, padding: 16, gap: 14 },
   reviewRow: { flexDirection: 'row', gap: 12 },
-  mark: { fontSize: 18, fontWeight: '800', width: 18 },
+  badge: { width: 22, height: 22, borderRadius: 11, alignItems: 'center', justifyContent: 'center', marginTop: 1 },
+  badgeText: { color: colors.background, fontSize: 13, fontWeight: '900', lineHeight: 16 },
   reviewText: { flex: 1, gap: 2 },
   reviewPrompt: { color: colors.textMuted, fontSize: 14 },
   reviewAnswer: { color: colors.text, fontSize: 16, fontWeight: '600' },
+  yours: { color: colors.textMuted, fontSize: 15 },
+  yoursValue: { color: colors.wrong, fontWeight: '600', textDecorationLine: 'line-through' },
+  rightAnswer: { color: colors.textMuted, fontSize: 15 },
+  rightValue: { color: colors.correct, fontWeight: '700' },
   actions: {
     gap: 12,
     paddingHorizontal: 24,

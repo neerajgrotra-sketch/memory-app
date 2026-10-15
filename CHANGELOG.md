@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.3.1 (2026-10-15)
+
+- **Wrong answers show both answers on the result screen:** "You said ~~4~~" in red, then "Answer 2" in green. Right answers show a tick and the answer, as before. Screen readers hear "Wrong. You said 4. The answer was 2."
+- The right and wrong marks are drawn badges instead of ✓ / ✗ characters, which looked different on some devices and fonts.
+
 ## 3.3.0 (2026-10-15)
 
 - **Profile:**
