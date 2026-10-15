@@ -8,52 +8,48 @@ export interface ColourDef {
 }
 
 /**
- * What a band of the picture is, which decides what may go there and how big it is drawn:
- * - `air`: floats in the sky. Sky things are far away, so their `height` is how big they look
- *   (the band's `pxPerCm`, usually 1).
- * - `wall`: hangs on a wall or facade, at the camera scale of the wall's base (`plane`).
- * - `ground`: stands on a floor, sand, pavement, road or water. The band is where feet go;
- *   size follows the camera's perspective at that spot.
+ * How things sit in a band:
+ * - `air`: floats anywhere in its slot (sky things).
+ * - `wall`: hangs anywhere in its slot (pictures, clocks, windows).
+ * - `ground`: stands on the bottom of its slot row (furniture, sand toys, boats on the water).
  */
 export type Surface = 'air' | 'wall' | 'ground';
 
-/** A horizontal band of the picture. Positions are fractions of the picture height. */
+/**
+ * A horizontal band of the picture, as fractions of the picture height (0 = top, 1 = bottom).
+ * Every band is split into a slot grid of 3 columns (left / middle / right) × `rows` rows.
+ */
 export interface ZoneDef {
   id: string;
   /** Used in questions and answers: "In the sky". */
   label: string;
   surface: Surface;
-  /** Air and wall: the whole thing fits between these. Ground: where feet may stand. */
   top: number;
   bottom: number;
-  /** Air only: scale for sky things (see `Surface`). */
-  pxPerCm?: number;
-  /** Wall only: where the wall meets the ground; hung things use the camera scale there. */
-  plane?: number;
-  /** Ground only: one row side by side (furniture against a wall), never several rows deep. */
-  singleRow?: boolean;
+  /** Slot rows in the band (e.g. back and front of the sand). Bands without things use 0. */
+  rows: number;
   /** At least this many kinds of thing go here (e.g. a room wall is never bare). */
   minGroups?: number;
   /**
-   * Wall only: the wall is really separate panels (one per building), given as x ranges.
-   * Anything hung here stays entirely on one panel, so nothing hangs over a gap or a lower roof.
+   * Things here stay inside their own third (one building front per third in the city), instead of
+   * being allowed slightly over the line between thirds.
    */
-  panels?: [number, number][];
+  panels?: boolean;
 }
 
 /**
- * How centimetres become picture units, like a real camera: things standing lower in the
- * picture are nearer and bigger. Scale at height y (fraction) is
- * `pxPerCm × (y − horizon) / (ref − horizon)`, measured for a picture 1600 tall.
+ * Width of everything, as a fraction of the picture width. Things of one kind are always the same size.
+ * - `large` anchors (umbrella, sailboat, bookshelf): 0.20–0.28
+ * - `medium` (plane, kite, lamp, mirror, clock): 0.13–0.18
+ * - `small` countables (ball, starfish, buoy, bird): 0.10–0.13, and never under 44 pt on screen.
  */
-export interface Camera {
-  /** The horizon, as a fraction of the height (may be above the picture, i.e. negative). */
-  horizon: number;
-  /** A reference line (fraction), e.g. where the floor meets the back wall. */
-  ref: number;
-  /** Picture units per real centimetre on the reference line. */
-  pxPerCm: number;
-}
+export type SizeTier = 'large' | 'medium' | 'small';
+
+export const TIERS: Record<SizeTier, [number, number]> = {
+  large: [0.2, 0.28],
+  medium: [0.13, 0.18],
+  small: [0.1, 0.13],
+};
 
 /** Something that can appear in a scene and be asked about. Drawn in its own w × h design box. */
 export interface ItemDef {
@@ -61,11 +57,12 @@ export interface ItemDef {
   singular: string;
   plural: string;
   article: 'a' | 'an';
-  /** Design box the `draw` function uses; its shape sets the width. */
+  /** Design box the `draw` function uses; its shape sets the height from the width. */
   w: number;
   h: number;
-  /** Real-world height in cm as drawn (sky things: how big they look, see `Surface`). */
-  height: number;
+  tier: SizeTier;
+  /** Width as a fraction of the picture width; must be inside the tier's range. */
+  size: number;
   zones: string[];
   /** The most you'd plausibly see: one sofa, one mirror, several cushions. */
   maxCount: number;
@@ -75,61 +72,42 @@ export interface ItemDef {
   colourPrompt?: (plural: boolean) => string;
   /** False for one-off things like the sun, where "how many" makes no sense. */
   countable?: boolean;
-  /** Wall only: where it normally hangs, as the height of its centre above the wall's base, in cm. */
-  hangAt?: [number, number];
   /**
-   * Wall only: fixed to one of the recipe's mounting points instead of anywhere on the wall:
-   * `corner` = a building's corner on a bracket (a street clock); `roof` = standing on a rooftop (flags, dishes).
+   * A tall anchor (palm tree, bookshelf, street lamp): stands in the back row of its band and may
+   * rise above the band, on purpose. Nothing else may cross out of its band.
    */
-  mount?: MountKind;
-  /**
-   * Air only: each copy is placed on its own, at a different height and size and sometimes facing
-   * the other way, never lined up in a row (planes and balloons don't fly in formation).
-   */
-  scatter?: boolean;
-  /** Fixtures it never stands on (plants and lamps stay off the rug). */
-  avoid?: FixtureKind[];
-  /**
-   * For things with a fixed colour: the colour that defines its outline (a clock's dark rim,
-   * a window's blue glass). It must stand out from whatever surface it is drawn on.
-   */
+  tall?: boolean;
+  /** Never touches the rug (sofas, plants, lamps). Everything else is either fully on the rug or off it. */
+  avoidRug?: boolean;
+  /** For things with a fixed colour: their main colour, used for the contrast rules and the outline. */
   tone?: string;
+  /**
+   * Draws the thing in its w × h box. Shapes without their own `stroke` get the outline: 2–3 pt in a
+   * darker shade of the thing's own colour. Small details set `stroke="none"`.
+   */
   draw: (colour: string) => ReactElement;
 }
 
+/** An oval on the floor; things are either fully on it or clear of it. Fractions of width (x) and height (y). */
+export interface Rug {
+  cx: number;
+  cy: number;
+  rx: number;
+  ry: number;
+}
+
 /**
- * Parts of the backdrop that placement must respect:
- * - `opening`: a window or door; nothing is hung over it.
- * - `rug`: an oval on the floor; things with `avoid: ['rug']` never stand on it.
+ * A faint backdrop detail (a wave, a floorboard line, a building window). Never asked about,
+ * never inside a thing's box, and at most 0.35 opaque so it can't be mistaken for one.
+ * Box in design units (picture 900 wide).
  */
-export type FixtureKind = 'opening' | 'rug';
-
-export type MountKind = 'corner' | 'roof';
-
-/** Where mounted things attach, for a picture of a given height. */
-export type Mount =
-  | { kind: 'corner'; panel: number; side: 'left' | 'right'; x: number; y: number }
-  | { kind: 'roof'; panel: number; x0: number; x1: number; y: number };
-
-export type Fixture =
-  | { kind: 'opening'; x0: number; y0: number; x1: number; y1: number }
-  | { kind: 'rug'; cx: number; cy: number; rx: number; ry: number };
-
-/** Scenery spread across a band (clouds in the sky). Never asked about, drawn behind everything else. */
-export interface DecorDef {
-  kind: string;
-  w: number;
-  h: number;
-  /** How tall it looks, in picture units. */
-  size: number;
-  /** Its main colour: nothing in the sky may overlap it, and anything passing in front must stand out from it. */
-  colour: string;
-  /** Fractions of the picture height to spread across. */
-  top: number;
-  bottom: number;
-  min: number;
-  max: number;
-  draw: () => ReactElement;
+export interface Mark {
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+  opacity: number;
+  el: ReactElement;
 }
 
 export interface VariantDef {
@@ -137,44 +115,58 @@ export interface VariantDef {
   /** The colour of each surface the recipe's `surfaceAt` can name, used for contrast rules. */
   palette: Record<string, string>;
   /**
-   * Draws the backdrop for a picture `height` tall and 900 wide. It should spill
-   * well past those edges (x −600…1500, y −600…height+600) so any screen is filled.
+   * Draws the background bands for a picture 900 wide and `height` tall (design units). It should
+   * spill well past those edges (x −600…1500, y −600…height+600) so a screen of another shape is filled.
    */
   background: (height: number) => ReactElement;
 }
 
-/** A setting: its camera, backdrop, bands, scenery and the things that belong in it. */
+/** A setting: its bands, backdrop and the things that belong in it. */
 export interface Recipe {
   id: string;
   title: string;
   /** Used in "Which of these was on the beach?". */
   place: string;
-  camera: Camera;
   zones: ZoneDef[];
   items: ItemDef[];
-  decor?: DecorDef[];
-  /** Windows, doors and rugs in the backdrop for a picture `height` tall; the backdrop draws them from the same data. */
-  fixtures?: (height: number) => Fixture[];
-  /** Which surface (a key of each variant's palette) is behind the point (x, y) of a picture `height` tall. */
-  surfaceAt: (x: number, y: number, height: number) => string;
-  /** Backdrop details that must stand out from the surface they sit on, in every variant (the ceiling lamp, clouds). */
-  accents?: { name: string; colour: string; on: string }[];
-  /** Mounting points for things with `mount` (building corners, rooftops) for a picture `height` tall. */
-  mounts?: (height: number) => Mount[];
-  /** Least space between any two things hung on a wall, in cm. */
-  wallGapCm?: number;
+  rug?: Rug;
+  /** Which surface (a key of each variant's palette) is behind the point (x, y), as fractions of width and height. */
+  surfaceAt: (x: number, y: number) => string;
+  /**
+   * Faint details drawn over the background for a picture `height` tall (design units), kept out of
+   * `boxes` (design units). `random` is seeded, so the same scene always gets the same marks.
+   */
+  marks?: (height: number, boxes: Rect[], random: () => number, variant: VariantDef) => Mark[];
   variants: VariantDef[];
 }
 
+export interface Rect {
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+}
+
+/**
+ * Where one thing is drawn, in normalized units: `x` and `w` are fractions of the picture width,
+ * `y` (the top) is a fraction of the picture height. The height follows from the design box's shape.
+ */
 export interface Box {
   x: number;
   y: number;
-  scale: number;
-  /** Drawn mirrored (a corner bracket on the right-hand edge of a building). */
+  w: number;
+  /** Drawn mirrored, for variety (a plane flying the other way). */
   flip?: boolean;
 }
 
-/** One kind of thing in a scene: all the same colour, all in one spot. */
+/** The slot-grid cells a group was placed in (for the debug overlay). */
+export interface Slot {
+  col: number;
+  row: number;
+  span: number;
+}
+
+/** One kind of thing in a scene: all the same colour, in one slot. */
 export interface PlacedGroup {
   kind: string;
   count: number;
@@ -182,33 +174,35 @@ export interface PlacedGroup {
   zoneId: string;
   /** Which third of the picture the group's centre is in. */
   region: Region;
+  slot: Slot;
   boxes: Box[];
 }
 
-export interface PlacedDecor {
-  kind: string;
-  box: Box;
+/** Picture size in points (the measured area below the header). */
+export interface SceneSize {
+  width: number;
+  height: number;
 }
 
-/** Everything needed to redraw a scene and ask about it. */
+/**
+ * Everything needed to redraw a scene and ask about it. The groups (kind, count, colour, band, side)
+ * are the single source of truth for the questions; laying the scene out again for another screen
+ * size moves boxes but never changes them.
+ */
 export interface SceneSpec {
   id: string;
   seed: number;
   recipeId: string;
   variantId: string;
-  /** Picture height in scene units (width is always 900); matches the screen it was made for. */
-  height: number;
+  /** The size the boxes were laid out for. */
+  size: SceneSize;
   groups: PlacedGroup[];
-  decor: PlacedDecor[];
 }
 
+/** Design width that drawings and backdrops use; the screen scales it to fit. */
 export const SCENE_WIDTH = 900;
-export const MIN_SCENE_HEIGHT = 1350;
-export const MAX_SCENE_HEIGHT = 2000;
-/** Camera scales are measured for a picture this tall and stretch with the actual height… */
-export const REFERENCE_HEIGHT = 1600;
-/** …up to this height. Taller (narrower) screens get more space, not bigger things, so the width never gets crowded. */
-export const MAX_SCALE_HEIGHT = 1700;
+/** Layouts are made for pictures between these shapes (height ÷ width); other screens get the backdrop extended. */
+export const MIN_RATIO = 1.3;
+export const MAX_RATIO = 2.2;
 
-/** How much camera scales stretch for a picture `height` tall. */
-export const heightFactor = (height: number) => Math.min(height, MAX_SCALE_HEIGHT) / REFERENCE_HEIGHT;
+export const ratioOf = (size: SceneSize) => Math.min(MAX_RATIO, Math.max(MIN_RATIO, size.height / Math.max(1, size.width)));

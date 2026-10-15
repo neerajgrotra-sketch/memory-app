@@ -6,6 +6,8 @@
 
 /** Least difference for something to stand out at a glance from what it is drawn on. */
 export const MIN_CONTRAST = 18;
+/** Least lightness difference (OKLab L ×100) between a thing's fill or outline and what it sits on. */
+export const MIN_LIGHTNESS = 15;
 
 const toLinear = (c: number) => {
   const v = c / 255;
@@ -38,4 +40,24 @@ export function blend(base: string, top: string, alpha: number): string {
   const b = channels(base);
   const t = channels(top);
   return `#${b.map((v, i) => Math.round(v + (t[i] - v) * alpha).toString(16).padStart(2, '0')).join('')}`;
+}
+
+/** Lightness, 0 (black) to 100 (white). */
+export const lightness = (hex: string) => 100 * toOklab(hex)[0];
+
+/** The darker shade of a colour used for a thing's outline: same hue, much darker. */
+export function shade(hex: string, amount = 0.5): string {
+  return `#${channels(hex).map((v) => Math.round(v * amount).toString(16).padStart(2, '0')).join('')}`;
+}
+
+/**
+ * True if a thing drawn in `fill` (with its darker outline) stands out from `surface`: clearly
+ * different colours, and either the fill or the outline clearly lighter or darker than the surface.
+ */
+export function standsOut(fill: string, surface: string): boolean {
+  const l = lightness(surface);
+  return (
+    contrast(fill, surface) >= MIN_CONTRAST &&
+    Math.max(Math.abs(lightness(fill) - l), Math.abs(lightness(shade(fill)) - l)) >= MIN_LIGHTNESS
+  );
 }

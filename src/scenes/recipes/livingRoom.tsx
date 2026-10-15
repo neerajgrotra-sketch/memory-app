@@ -2,12 +2,18 @@ import { Circle, Ellipse, G, Line, Path, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
 import { ball, dog, plantPot } from '../items/common';
-import { blend } from '../contrast';
-import { heightFactor, type Fixture, type ItemDef, type Recipe } from '../types';
+import { lineMarks } from '../marks';
+import type { ItemDef, Mark, Recipe, Rect as Box, Rug } from '../types';
+
+/** Band edges, as fractions of the picture height: a thin ceiling, the wall, then the floor. */
+const CEILING = 0.1;
+const FLOOR = 0.55;
 
 const WALL = ['wall'];
-const BACK = ['back'];
-const FRONT = ['front'];
+const FLOOR_ZONE = ['floor'];
+
+/** The rug, shared by the drawing, the contrast rules and placement: things are fully on it or off it. */
+const RUG: Rug = { cx: 0.5, cy: 0.8, rx: 0.36, ry: 0.09 };
 
 const items: ItemDef[] = [
   {
@@ -17,18 +23,20 @@ const items: ItemDef[] = [
     article: 'a',
     w: 110,
     h: 90,
-    height: 45,
+    tier: 'medium',
+    size: 0.14,
     zones: WALL,
     maxCount: 4,
-    hangAt: [135, 165],
     colours: [C.red, C.blue, C.yellow, C.green, C.black, C.white, C.purple],
     colourPrompt: (plural) => (plural ? 'What colour were the picture frames?' : 'What colour was the picture frame?'),
     draw: (colour) => (
       <G>
-        <Rect x={0} y={0} width={110} height={90} fill={colour} stroke="#00000044" strokeWidth={2} />
-        <Rect x={12} y={12} width={86} height={66} fill="#cfe9ff" />
-        <Path d="M12,78 L40,45 L60,65 L75,52 L98,78 Z" fill="#74c69d" />
-        <Circle cx={80} cy={28} r={8} fill="#ffd93b" />
+        <Rect x={0} y={0} width={110} height={90} fill={colour} />
+        <G stroke="none">
+          <Rect x={12} y={12} width={86} height={66} fill="#cfe9ff" />
+          <Path d="M12,78 L40,45 L60,65 L75,52 L98,78 Z" fill="#74c69d" />
+          <Circle cx={80} cy={28} r={8} fill="#ffd93b" />
+        </G>
       </G>
     ),
   },
@@ -39,11 +47,11 @@ const items: ItemDef[] = [
     article: 'a',
     w: 100,
     h: 100,
-    height: 45,
+    tier: 'medium',
+    size: 0.13,
     zones: WALL,
     maxCount: 1,
     tone: '#343a40',
-    hangAt: [175, 200],
     countable: false,
     draw: () => (
       <G>
@@ -60,15 +68,15 @@ const items: ItemDef[] = [
     article: 'a',
     w: 90,
     h: 130,
-    height: 90,
+    tier: 'medium',
+    size: 0.15,
     zones: WALL,
     maxCount: 1,
     tone: '#b08d57',
-    hangAt: [135, 160],
     draw: () => (
       <G>
-        <Ellipse cx={45} cy={65} rx={44} ry={64} fill="#b08d57" />
-        <Ellipse cx={45} cy={65} rx={34} ry={54} fill="#dbe9f4" />
+        <Ellipse cx={45} cy={65} rx={43} ry={63} fill="#b08d57" />
+        <Ellipse cx={45} cy={65} rx={33} ry={53} fill="#dbe9f4" stroke="none" />
         <Line x1={30} y1={40} x2={50} y2={20} stroke="#ffffff" strokeWidth={5} strokeLinecap="round" />
       </G>
     ),
@@ -80,17 +88,21 @@ const items: ItemDef[] = [
     article: 'a',
     w: 150,
     h: 175,
-    height: 140,
+    tier: 'large',
+    size: 0.22,
     zones: WALL,
-    maxCount: 2,
+    // One window: two would end up one above the other on a single wall.
+    maxCount: 1,
     tone: '#5aa9e6',
-    // Centre at 140–155 cm puts the sill at about 70–85 cm, like a real window.
-    hangAt: [140, 155],
     draw: () => (
       <G>
-        <Rect x={0} y={0} width={150} height={175} fill="#5aa9e6" stroke="#ffffff" strokeWidth={12} />
-        <Line x1={75} y1={0} x2={75} y2={175} stroke="#ffffff" strokeWidth={10} />
-        <Line x1={0} y1={88} x2={150} y2={88} stroke="#ffffff" strokeWidth={10} />
+        <Rect x={0} y={0} width={150} height={175} fill="#ffffff" />
+        <G fill="#5aa9e6" stroke="none">
+          <Rect x={11} y={11} width={58} height={71} />
+          <Rect x={81} y={11} width={58} height={71} />
+          <Rect x={11} y={94} width={58} height={70} />
+          <Rect x={81} y={94} width={58} height={70} />
+        </G>
       </G>
     ),
   },
@@ -101,18 +113,20 @@ const items: ItemDef[] = [
     article: 'a',
     w: 230,
     h: 120,
-    height: 85,
-    zones: BACK,
+    tier: 'large',
+    size: 0.28,
+    zones: FLOOR_ZONE,
     maxCount: 1,
+    avoidRug: true,
     colours: [C.red, C.blue, C.green, C.grey, C.yellow, C.purple, C.brown],
     draw: (colour) => (
-      <G stroke="#00000033" strokeWidth={2}>
+      <G>
         <Rect x={20} y={0} width={190} height={70} rx={16} fill={colour} />
         <Rect x={0} y={40} width={40} height={70} rx={12} fill={colour} />
         <Rect x={190} y={40} width={40} height={70} rx={12} fill={colour} />
         <Rect x={30} y={62} width={170} height={40} rx={8} fill={colour} />
-        <Rect x={10} y={108} width={12} height={12} fill="#5c3d1e" />
-        <Rect x={208} y={108} width={12} height={12} fill="#5c3d1e" />
+        <Rect x={10} y={108} width={12} height={12} fill="#5c3d1e" stroke="none" />
+        <Rect x={208} y={108} width={12} height={12} fill="#5c3d1e" stroke="none" />
       </G>
     ),
   },
@@ -123,18 +137,20 @@ const items: ItemDef[] = [
     article: 'an',
     w: 120,
     h: 120,
-    height: 95,
-    zones: BACK,
+    tier: 'large',
+    size: 0.2,
+    zones: FLOOR_ZONE,
     maxCount: 2,
+    avoidRug: true,
     colours: [C.red, C.blue, C.green, C.yellow, C.orange, C.pink],
     draw: (colour) => (
-      <G stroke="#00000033" strokeWidth={2}>
+      <G>
         <Rect x={18} y={0} width={84} height={70} rx={14} fill={colour} />
         <Rect x={0} y={42} width={30} height={66} rx={10} fill={colour} />
         <Rect x={90} y={42} width={30} height={66} rx={10} fill={colour} />
         <Rect x={26} y={64} width={68} height={38} rx={8} fill={colour} />
-        <Rect x={8} y={108} width={10} height={12} fill="#5c3d1e" />
-        <Rect x={102} y={108} width={10} height={12} fill="#5c3d1e" />
+        <Rect x={8} y={108} width={10} height={12} fill="#5c3d1e" stroke="none" />
+        <Rect x={102} y={108} width={10} height={12} fill="#5c3d1e" stroke="none" />
       </G>
     ),
   },
@@ -145,17 +161,19 @@ const items: ItemDef[] = [
     article: 'a',
     w: 80,
     h: 230,
-    height: 160,
-    zones: BACK,
+    tier: 'medium',
+    size: 0.13,
+    tall: true,
+    zones: FLOOR_ZONE,
     maxCount: 2,
-    avoid: ['rug'],
+    avoidRug: true,
     colours: [C.red, C.blue, C.yellow, C.green, C.white, C.orange],
     colourPrompt: (plural) => (plural ? 'What colour were the lampshades?' : 'What colour was the lampshade?'),
     draw: (colour) => (
       <G>
-        <Rect x={36} y={60} width={8} height={160} fill="#495057" />
-        <Ellipse cx={40} cy={224} rx={30} ry={6} fill="#495057" />
-        <Path d="M14,0 H66 L80,64 H0 Z" fill={colour} stroke="#00000044" strokeWidth={2} />
+        <Rect x={36} y={60} width={8} height={160} fill="#495057" stroke="none" />
+        <Ellipse cx={40} cy={224} rx={30} ry={6} fill="#495057" stroke="none" />
+        <Path d="M14,0 H66 L80,64 H0 Z" fill={colour} />
       </G>
     ),
   },
@@ -166,21 +184,23 @@ const items: ItemDef[] = [
     article: 'a',
     w: 170,
     h: 140,
-    height: 115,
-    zones: BACK,
+    tier: 'large',
+    size: 0.22,
+    zones: FLOOR_ZONE,
     maxCount: 1,
+    avoidRug: true,
     tone: '#212529',
     countable: false,
     draw: () => (
       <G>
+        <Rect x={20} y={100} width={130} height={40} fill="#8b5a2b" stroke="#4a2f16" />
         <Rect x={0} y={0} width={170} height={100} rx={6} fill="#212529" />
-        <Rect x={8} y={8} width={154} height={84} fill="#4dabf7" />
-        <Rect x={20} y={100} width={130} height={40} fill="#8b5a2b" />
+        <Rect x={8} y={8} width={154} height={84} fill="#4dabf7" stroke="none" />
       </G>
     ),
   },
   // Plants stand along the wall, never out in the room or on the rug.
-  { ...plantPot, height: 80, zones: BACK, maxCount: 3, avoid: ['rug'] },
+  { ...plantPot, zones: FLOOR_ZONE, maxCount: 3, avoidRug: true },
   {
     kind: 'bookshelf',
     singular: 'bookshelf',
@@ -188,21 +208,26 @@ const items: ItemDef[] = [
     article: 'a',
     w: 120,
     h: 200,
-    height: 190,
-    zones: BACK,
+    tier: 'large',
+    size: 0.2,
+    tall: true,
+    zones: FLOOR_ZONE,
     maxCount: 2,
+    avoidRug: true,
     tone: '#8b5a2b',
     draw: () => (
       <G>
         <Rect x={0} y={0} width={120} height={200} fill="#8b5a2b" />
-        {[0, 1, 2].map((shelf) => (
-          <G key={shelf}>
-            <Rect x={8} y={8 + shelf * 64} width={104} height={56} fill="#5c3d1e" />
-            <Rect x={14} y={20 + shelf * 64} width={14} height={44} fill={['#e63946', '#1d70d6', '#2b9348'][shelf]} />
-            <Rect x={30} y={26 + shelf * 64} width={12} height={38} fill="#ffd60a" />
-            <Rect x={44} y={18 + shelf * 64} width={16} height={46} fill={['#7b2cbf', '#f77f00', '#e63946'][shelf]} />
-          </G>
-        ))}
+        <G stroke="none">
+          {[0, 1, 2].map((shelf) => (
+            <G key={shelf}>
+              <Rect x={8} y={8 + shelf * 64} width={104} height={56} fill="#5c3d1e" />
+              <Rect x={14} y={20 + shelf * 64} width={14} height={44} fill={['#e63946', '#1d70d6', '#2b9348'][shelf]} />
+              <Rect x={30} y={26 + shelf * 64} width={12} height={38} fill="#ffd60a" />
+              <Rect x={44} y={18 + shelf * 64} width={16} height={46} fill={['#7b2cbf', '#f77f00', '#e63946'][shelf]} />
+            </G>
+          ))}
+        </G>
       </G>
     ),
   },
@@ -213,12 +238,13 @@ const items: ItemDef[] = [
     article: 'a',
     w: 90,
     h: 75,
-    height: 30,
-    zones: [...FRONT, ...BACK],
+    tier: 'small',
+    size: 0.12,
+    zones: FLOOR_ZONE,
     maxCount: 3,
     colours: [C.orange, C.black, C.grey, C.white],
     draw: (colour) => (
-      <G stroke="#00000044" strokeWidth={2}>
+      <G>
         <Path d="M72,60 C95,55 92,25 80,20" fill="none" stroke={colour} strokeWidth={9} strokeLinecap="round" />
         <Ellipse cx={45} cy={56} rx={32} ry={19} fill={colour} />
         <Circle cx={22} cy={32} r={19} fill={colour} />
@@ -228,8 +254,8 @@ const items: ItemDef[] = [
       </G>
     ),
   },
-  { ...dog, zones: FRONT, maxCount: 2 },
-  { ...ball, zones: FRONT, maxCount: 3 },
+  { ...dog, zones: FLOOR_ZONE, maxCount: 2 },
+  { ...ball, zones: FLOOR_ZONE, maxCount: 3 },
   {
     kind: 'cushion',
     singular: 'cushion',
@@ -237,13 +263,12 @@ const items: ItemDef[] = [
     article: 'a',
     w: 75,
     h: 60,
-    height: 40,
-    zones: FRONT,
+    tier: 'medium',
+    size: 0.13,
+    zones: FLOOR_ZONE,
     maxCount: 4,
     colours: [C.red, C.blue, C.yellow, C.green, C.pink, C.purple, C.orange],
-    draw: (colour) => (
-      <Path d="M6,6 Q37,14 69,6 Q62,30 69,54 Q37,46 6,54 Q13,30 6,6 Z" fill={colour} stroke="#00000044" strokeWidth={2} />
-    ),
+    draw: (colour) => <Path d="M6,6 Q37,14 69,6 Q62,30 69,54 Q37,46 6,54 Q13,30 6,6 Z" fill={colour} />,
   },
   {
     kind: 'teddy',
@@ -252,17 +277,18 @@ const items: ItemDef[] = [
     article: 'a',
     w: 75,
     h: 90,
-    height: 35,
-    zones: FRONT,
+    tier: 'small',
+    size: 0.11,
+    zones: FLOOR_ZONE,
     maxCount: 3,
     tone: '#a0612b',
     draw: () => (
-      <G fill="#a0612b" stroke="#00000033" strokeWidth={2}>
+      <G fill="#a0612b">
         <Circle cx={18} cy={12} r={11} />
         <Circle cx={57} cy={12} r={11} />
         <Ellipse cx={37.5} cy={66} rx={26} ry={24} />
         <Circle cx={37.5} cy={30} r={23} />
-        <Ellipse cx={37.5} cy={38} rx={10} ry={7} fill="#e9c46a" />
+        <Ellipse cx={37.5} cy={38} rx={10} ry={7} fill="#e9c46a" stroke="none" />
         <Circle cx={29} cy={26} r={3} fill="#111" stroke="none" />
         <Circle cx={46} cy={26} r={3} fill="#111" stroke="none" />
       </G>
@@ -275,15 +301,16 @@ const items: ItemDef[] = [
     article: 'a',
     w: 85,
     h: 45,
-    height: 20,
-    zones: FRONT,
+    tier: 'small',
+    size: 0.11,
+    zones: FLOOR_ZONE,
     maxCount: 4,
     colours: [C.red, C.blue, C.yellow, C.green, C.orange],
     draw: (colour) => (
       <G>
-        <Path d="M2,32 V20 C2,16 6,14 10,14 H22 L32,2 H58 L70,14 H76 C80,14 83,17 83,21 V32 Z" fill={colour} stroke="#00000044" strokeWidth={2} />
-        <Circle cx={21} cy={34} r={9} fill="#222" />
-        <Circle cx={65} cy={34} r={9} fill="#222" />
+        <Path d="M2,32 V20 C2,16 6,14 10,14 H22 L32,2 H58 L70,14 H76 C80,14 83,17 83,21 V32 Z" fill={colour} />
+        <Circle cx={21} cy={34} r={9} fill="#222" stroke="none" />
+        <Circle cx={65} cy={34} r={9} fill="#222" stroke="none" />
       </G>
     ),
   },
@@ -294,13 +321,14 @@ const items: ItemDef[] = [
     article: 'a',
     w: 90,
     h: 60,
-    height: 22,
-    zones: FRONT,
+    tier: 'small',
+    size: 0.12,
+    zones: FLOOR_ZONE,
     maxCount: 3,
     tone: '#1d70d6',
-    avoid: ['rug'],
+    avoidRug: true,
     draw: () => (
-      <G stroke="#00000033" strokeWidth={2}>
+      <G>
         <Rect x={0} y={40} width={90} height={20} fill="#e63946" />
         <Rect x={8} y={20} width={76} height={20} fill="#1d70d6" />
         <Rect x={4} y={0} width={80} height={20} fill="#2b9348" />
@@ -309,91 +337,60 @@ const items: ItemDef[] = [
   },
 ];
 
-/** Floor meets back wall here; the camera's scale is set on this line. */
-const FLOOR = 0.6;
-/** Back wall: 4.3 m wide (900 units) and 3 m tall at 2.1 units per cm on a 1600-tall picture. */
-const CAMERA = { horizon: -0.07, ref: FLOOR, pxPerCm: 2.1 };
-const WALL_CM = 300;
-/** Lowest the top of the wall gets on any screen; things are only hung below this. */
-const WALL_TOP_MAX = 0.245;
+type Palette = Record<'wall' | 'ceiling' | 'floor' | 'plank' | 'rug' | 'rugEdge', string>;
 
-/** The rug, shared by the drawing and the placement rules. */
-const rugOf = (height: number) => ({ kind: 'rug' as const, cx: 450, cy: height * 0.82, rx: 330, ry: height * 0.075 });
-
-function fixtures(height: number): Fixture[] {
-  return [rugOf(height)];
-}
-
-/** Where the wall meets the ceiling. */
-const wallTopAt = (height: number) => height * FLOOR - WALL_CM * CAMERA.pxPerCm * heightFactor(height);
-
-const LAMP = '#e07a1f';
-
-function backdrop(height: number, palette: Palette) {
-  const { wall, ceiling, floor, plank, rugTint } = palette;
-  const r = rugOf(height);
+/** Background bands: ceiling, wall, skirting, floor and the rug. Floorboards are faint marks drawn around the things. */
+function backdrop(height: number, { wall, ceiling, floor, rug, rugEdge }: Palette) {
+  const ceilingLine = height * CEILING;
   const floorLine = height * FLOOR;
-  const wallTop = wallTopAt(height);
-  // Floorboard lines get further apart towards the front (perspective).
-  const planks = [0.63, 0.67, 0.72, 0.78, 0.85, 0.93, 1.02].map((f) => height * f);
   return (
     <G>
-      <Rect x={-600} y={-600} width={2100} height={wallTop + 600} fill={ceiling} />
-      <Rect x={-600} y={wallTop} width={2100} height={floorLine - wallTop} fill={wall} />
-      <Rect x={-600} y={wallTop} width={2100} height={14} fill="#ffffff" fillOpacity={0.6} />
-      <Line x1={450} y1={-600} x2={450} y2={wallTop * 0.55} stroke="#495057" strokeWidth={4} />
-      <Path d={`M400,${wallTop * 0.55 + 55} L420,${wallTop * 0.55} H480 L500,${wallTop * 0.55 + 55} Z`} fill={LAMP} stroke="#343a40" strokeWidth={4} />
-      <Ellipse cx={450} cy={wallTop * 0.55 + 55} rx={50} ry={8} fill="#fff3bf" stroke="#343a40" strokeWidth={3} />
-      <Rect x={-600} y={floorLine - 22} width={2100} height={22} fill="#ffffff" fillOpacity={0.7} />
+      <Rect x={-600} y={-600} width={2100} height={ceilingLine + 600} fill={ceiling} />
+      <Rect x={-600} y={ceilingLine} width={2100} height={floorLine - ceilingLine} fill={wall} />
+      <Rect x={-600} y={ceilingLine} width={2100} height={10} fill="#000000" fillOpacity={0.06} />
       <Rect x={-600} y={floorLine} width={2100} height={height - floorLine + 600} fill={floor} />
-      <G stroke={plank} strokeWidth={3}>
-        {planks.map((y) => (
-          <Line key={y} x1={-600} y1={y} x2={1500} y2={y} />
-        ))}
-      </G>
-      <Ellipse cx={r.cx} cy={r.cy} rx={r.rx} ry={r.ry} fill={rugTint} fillOpacity={RUG_OPACITY} />
-      <Ellipse cx={r.cx} cy={r.cy} rx={r.rx - 40} ry={r.ry * 0.75} fill="none" stroke="#ffffff" strokeOpacity={0.4} strokeWidth={5} />
+      <Rect x={-600} y={floorLine - 14} width={2100} height={14} fill="#ffffff" fillOpacity={0.7} />
+      <Ellipse cx={RUG.cx * 900} cy={RUG.cy * height} rx={RUG.rx * 900} ry={RUG.ry * height} fill={rug} stroke={rugEdge} strokeOpacity={0.35} strokeWidth={8} />
     </G>
   );
 }
 
-type Palette = Record<'wall' | 'ceiling' | 'floor' | 'plank' | 'rugTint' | 'rug', string>;
-
-const RUG_OPACITY = 0.3;
-
-/** Light oak floors so brown pets and teddies stand out; the rug's colour is its tint over the floor. */
-function palette(wall: string, ceiling: string, floor: string, plank: string, rugTint: string): Palette {
-  return { wall, ceiling, floor, plank, rugTint, rug: blend(floor, rugTint, RUG_OPACITY) };
+function marks(height: number, boxes: Box[], _random: () => number, variant: { palette: Record<string, string> }): Mark[] {
+  // Floorboard lines, broken around anything standing on them and kept off the rug.
+  const rugTop = (RUG.cy - RUG.ry) * height - 10;
+  const rugBottom = (RUG.cy + RUG.ry) * height + 10;
+  return [0.62, 0.69, 0.93].flatMap((f) => {
+    const y = f * height;
+    const rugBlock = y > rugTop && y < rugBottom ? [{ x0: (RUG.cx - RUG.rx) * 900, y0: rugTop, x1: (RUG.cx + RUG.rx) * 900, y1: rugBottom }] : [];
+    return lineMarks(y, -600, 1500, [...boxes, ...rugBlock], variant.palette.plank, 3, 0.3);
+  });
 }
 
+/** Light oak floors so brown pets and teddies stand out; pale solid rugs so every toy colour shows on them. */
 const PALETTES: Record<string, Palette> = {
-  cream: palette('#f3e9d2', '#faf6ec', '#d9b98c', '#b8956a', '#9d4edd'),
-  blue: palette('#cfe0ec', '#eef4f8', '#d4b48c', '#b39068', '#c1121f'),
-  sage: palette('#dce5d1', '#f1f5ec', '#c9a47a', '#a8845c', '#1d3557'),
+  cream: { wall: '#f3e9d2', ceiling: '#faf6ec', floor: '#d9b98c', plank: '#8a6a43', rug: '#e4ecf4', rugEdge: '#3d5a80' },
+  blue: { wall: '#cfe0ec', ceiling: '#eef4f8', floor: '#d4b48c', plank: '#86663f', rug: '#f6efe0', rugEdge: '#9c6644' },
+  sage: { wall: '#dce5d1', ceiling: '#f1f5ec', floor: '#c9a47a', plank: '#7d5d38', rug: '#f4e6ea', rugEdge: '#9d4e6a' },
 };
 
-function surfaceAt(x: number, y: number, height: number): string {
-  if (y < wallTopAt(height)) return 'ceiling';
-  if (y < height * FLOOR) return 'wall';
-  const r = rugOf(height);
-  return ((x - r.cx) / r.rx) ** 2 + ((y - r.cy) / r.ry) ** 2 <= 1 ? 'rug' : 'floor';
+function surfaceAt(x: number, y: number): string {
+  if (y < CEILING) return 'ceiling';
+  if (y < FLOOR) return 'wall';
+  return ((x - RUG.cx) / RUG.rx) ** 2 + ((y - RUG.cy) / RUG.ry) ** 2 <= 1 ? 'rug' : 'floor';
 }
 
 export const livingRoom: Recipe = {
   id: 'living-room',
   title: 'Living room',
   place: 'in the room',
-  camera: CAMERA,
   zones: [
-    { id: 'wall', label: 'On the wall', surface: 'wall', top: WALL_TOP_MAX + 0.02, bottom: FLOOR - 0.03, plane: FLOOR, minGroups: 2 },
-    { id: 'back', label: 'At the back', surface: 'ground', top: FLOOR, bottom: FLOOR + 0.045, singleRow: true },
-    { id: 'front', label: 'At the front', surface: 'ground', top: 0.71, bottom: 0.97 },
+    { id: 'ceiling', label: 'On the ceiling', surface: 'air', top: 0, bottom: CEILING, rows: 0 },
+    { id: 'wall', label: 'On the wall', surface: 'wall', top: CEILING, bottom: FLOOR, rows: 2, minGroups: 2 },
+    { id: 'floor', label: 'On the floor', surface: 'ground', top: FLOOR, bottom: 1, rows: 2 },
   ],
   items,
-  fixtures,
+  rug: RUG,
   surfaceAt,
-  accents: [{ name: 'ceiling lamp', colour: LAMP, on: 'ceiling' }],
-  // Pictures, mirrors, clocks and windows keep at least 35 cm apart.
-  wallGapCm: 35,
+  marks,
   variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number) => backdrop(h, p) })),
 };

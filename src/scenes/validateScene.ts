@@ -1,0 +1,183 @@
+import { standsOut } from './contrast';
+import {
+  BOTTOM_CLEAR,
+  EDGE,
+  GAP,
+  MIN_POINTS,
+  THIRDS,
+  THIRD_MARGIN,
+  TOP_CLEAR,
+  boundsOf,
+  centreOf,
+  columnBounds,
+  duplicatesOk,
+  gapBetween,
+  rectOf,
+  regionOf,
+  rowsOf,
+  rugOk,
+  samplePoints,
+  zoneBounds,
+} from './layout';
+import { createRng } from './random';
+import { getRecipe } from './recipes';
+import { SCENE_WIDTH, TIERS, ratioOf, type ItemDef, type Mark, type PlacedGroup, type Recipe, type Rect, type SceneSpec } from './types';
+
+export type Rule =
+  | 'overlap'
+  | 'size'
+  | 'duplicates'
+  | 'edges'
+  | 'zone'
+  | 'thirds'
+  | 'side'
+  | 'rug'
+  | 'contrast'
+  | 'marks'
+  | 'count'
+  | 'bare';
+
+export interface SceneIssue {
+  rule: Rule;
+  message: string;
+  /** Kinds of thing involved, so the debug overlay can mark them. */
+  kinds: string[];
+}
+
+/** Opacity limit for backdrop marks, so they can't be mistaken for things. */
+export const MAX_MARK_OPACITY = 0.35;
+
+const EPS = 1e-6;
+
+/** The faint backdrop marks of a scene, in design units, kept clear of every thing. Same scene, same marks. */
+export function marksFor(spec: SceneSpec, recipe: Recipe, ratio: number): Mark[] {
+  const variant = recipe.variants.find((v) => v.id === spec.variantId) ?? recipe.variants[0];
+  const boxes = spec.groups.flatMap((g) => {
+    const item = recipe.items.find((i) => i.kind === g.kind)!;
+    return g.boxes.map((b) => {
+      const r = rectOf(item, b, ratio);
+      return { x0: r.x0 * SCENE_WIDTH, y0: r.y0 * SCENE_WIDTH, x1: r.x1 * SCENE_WIDTH, y1: r.y1 * SCENE_WIDTH };
+    });
+  });
+  const rng = createRng(spec.seed ^ 0x51ed27);
+  return recipe.marks?.(ratio * SCENE_WIDTH, boxes, rng.next, variant) ?? [];
+}
+
+/**
+ * Checks a laid-out scene against every layout rule for a picture `width` × `height` points.
+ * An empty list means the scene is fine to show.
+ */
+export function validateScene(spec: SceneSpec, width: number, height: number): SceneIssue[] {
+  const recipe = getRecipe(spec.recipeId);
+  const ratio = ratioOf({ width, height });
+  const variant = recipe.variants.find((v) => v.id === spec.variantId) ?? recipe.variants[0];
+  const issues: SceneIssue[] = [];
+  const add = (rule: Rule, message: string, ...kinds: string[]) => {
+    if (!issues.some((i) => i.message === message)) issues.push({ rule, message, kinds });
+  };
+
+  const itemOf = (kind: string) => recipe.items.find((i) => i.kind === kind)!;
+  const placed: { group: PlacedGroup; item: ItemDef; rect: Rect }[] = spec.groups.flatMap((group) => {
+    const item = itemOf(group.kind);
+    return group.boxes.map((b) => ({ group, item, rect: rectOf(item, b, ratio) }));
+  });
+
+  for (const group of spec.groups) {
+    const item = itemOf(group.kind);
+    const zone = recipe.zones.find((z) => z.id === group.zoneId);
+    const rects = placed.filter((p) => p.group === group).map((p) => p.rect);
+    const name = item.plural;
+
+    // Counts: the boxes are the facts the questions ask about.
+    if (group.boxes.length !== group.count) add('count', `${name}: ${group.boxes.length} drawn but ${group.count} recorded`, item.kind);
+    if (group.count > item.maxCount) add('count', `more ${name} than is realistic`, item.kind);
+    if (!zone || !item.zones.includes(zone.id)) {
+      add('zone', `${name} in a band they don't belong in`, item.kind);
+      continue;
+    }
+
+    // Size: every copy the same size, inside its tier, never under 44 pt.
+    const widths = group.boxes.map((b) => b.w);
+    if (Math.max(...widths) - Math.min(...widths) > EPS) add('size', `${name} drawn at different sizes`, item.kind);
+    const [lo, hi] = TIERS[item.tier];
+    const minW = MIN_POINTS / width;
+    for (const w of widths) {
+      if (w * width < MIN_POINTS - 0.01) add('size', `${item.singular} under ${MIN_POINTS} pt wide`, item.kind);
+      if (w < lo - EPS || (w > hi + EPS && w > minW + EPS)) add('size', `${item.singular} outside its ${item.tier} size`, item.kind);
+    }
+
+    // Copies apart, or staggered.
+    for (let a = 0; a < rects.length; a++) {
+      for (let b = a + 1; b < rects.length; b++) {
+        if (!duplicatesOk(rects[a], rects[b])) add('duplicates', `${name} too close together`, item.kind);
+      }
+    }
+
+    // Band membership, edges, side.
+    const { top, bottom } = zoneBounds(zone, ratio);
+    const backRow = rowsOf(zone, ratio)[0];
+    for (const r of rects) {
+      if (r.x0 < EDGE - EPS || r.x1 > 1 - EDGE + EPS) add('edges', `${item.singular} too near the side`, item.kind);
+      if (r.y1 > (1 - BOTTOM_CLEAR) * ratio + EPS) add('edges', `${item.singular} in the bottom 4%`, item.kind);
+      if (r.y0 < TOP_CLEAR * ratio - EPS) add('edges', `${item.singular} touching the top`, item.kind);
+      if (item.tall) {
+        if (!backRow || r.y1 < backRow.top - EPS || r.y1 > backRow.bottom + EPS) add('zone', `${item.singular} not standing in the back of ${zone.id}`, item.kind);
+      } else if (r.y0 < top - EPS || r.y1 > bottom + EPS) {
+        add('zone', `${item.singular} crosses out of ${zone.id}`, item.kind);
+      }
+      if (zone.panels) {
+        const col = columnBounds(zone, ['left', 'centre', 'right'].indexOf(group.region));
+        if (r.x0 < col.x0 - EPS || r.x1 > col.x1 + EPS) add('zone', `${item.singular} crosses a building edge`, item.kind);
+      }
+      if (!rugOk(item, r, recipe, ratio)) add('rug', `${item.singular} half on the rug`, item.kind);
+
+      const colour = group.colour?.hex ?? item.tone;
+      if (colour) {
+        for (const [x, y] of samplePoints(r, ratio)) {
+          const surface = recipe.surfaceAt(x, y);
+          if (!standsOut(colour, variant.palette[surface])) add('contrast', `${group.colour?.name ?? ''} ${item.singular} blends into the ${surface}`.trim(), item.kind);
+        }
+      }
+    }
+    const centre = centreOf(boundsOf(rects)).x;
+    if (regionOf(centre) !== group.region) add('side', `${name} recorded ${group.region} but drawn ${regionOf(centre)}`, item.kind);
+    if (Math.abs(centre - THIRDS[0]) < THIRD_MARGIN - EPS || Math.abs(centre - THIRDS[1]) < THIRD_MARGIN - EPS) {
+      add('side', `${name} on the line between two sides`, item.kind);
+    }
+  }
+
+  // No two things overlap or touch (copies of one thing follow the duplicate rule above).
+  for (let a = 0; a < placed.length; a++) {
+    for (let b = a + 1; b < placed.length; b++) {
+      const p = placed[a];
+      const q = placed[b];
+      if (p.group === q.group) continue;
+      if (gapBetween(p.rect, q.rect) < GAP - EPS) add('overlap', `${p.item.singular} too close to ${q.item.singular}`, p.item.kind, q.item.kind);
+    }
+  }
+
+  // Every third of the picture's height has something to remember in it.
+  for (let t = 0; t < 3; t++) {
+    const has = placed.some((p) => {
+      const cy = centreOf(p.rect).y / ratio;
+      return cy >= t / 3 && cy < (t + 1) / 3;
+    });
+    if (!has) add('thirds', `nothing in the ${['top', 'middle', 'bottom'][t]} third`);
+  }
+
+  for (const zone of recipe.zones) {
+    if ((zone.minGroups ?? 0) > spec.groups.filter((g) => g.zoneId === zone.id).length) add('bare', `${zone.id} left bare`);
+  }
+
+  // Backdrop marks stay faint and never inside a thing's box.
+  for (const mark of marksFor(spec, recipe, ratio)) {
+    if (mark.opacity > MAX_MARK_OPACITY + EPS) add('marks', `a backdrop mark is too strong (${mark.opacity})`);
+    for (const p of placed) {
+      const r = p.rect;
+      const scaled = { x0: r.x0 * SCENE_WIDTH, y0: r.y0 * SCENE_WIDTH, x1: r.x1 * SCENE_WIDTH, y1: r.y1 * SCENE_WIDTH };
+      if (gapBetween(mark, scaled) < 0) add('marks', `a backdrop mark inside the ${p.item.singular}`, p.item.kind);
+    }
+  }
+
+  return issues;
+}

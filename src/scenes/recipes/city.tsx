@@ -1,8 +1,14 @@
 import { Circle, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
-import { balloon, bird, clouds, dog, person, plane, tree } from '../items/common';
-import { heightFactor, type Fixture, type ItemDef, type Mount, type Recipe } from '../types';
+import { balloon, bird, cloudShape, dog, person, plane, tree } from '../items/common';
+import { markIfClear, scatterMarks } from '../marks';
+import type { ItemDef, Mark, Recipe, Rect as Box, VariantDef } from '../types';
+
+/** Band edges, as fractions of the picture height. */
+const ROOF = 0.26;
+const GROUND_LINE = 0.56;
+const KERB = 0.78;
 
 const SKY = ['sky'];
 const WALLS = ['buildings'];
@@ -10,7 +16,7 @@ const PAVEMENT = ['pavement'];
 const ROAD = ['road'];
 
 const wheel = (cx: number, cy: number, r: number) => (
-  <G>
+  <G stroke="none">
     <Circle cx={cx} cy={cy} r={r} fill="#222" />
     <Circle cx={cx} cy={cy} r={r * 0.45} fill="#adb5bd" />
   </G>
@@ -26,19 +32,19 @@ const items: ItemDef[] = [
     singular: 'flag',
     plural: 'flags',
     article: 'a',
-    w: 80,
-    h: 160,
-    height: 300,
+    w: 100,
+    h: 90,
+    tier: 'medium',
+    size: 0.14,
     zones: WALLS,
     maxCount: 2,
-    mount: 'roof',
     colours: [C.red, C.blue, C.yellow, C.green, C.purple, C.orange],
-    // A flagpole standing on the roof.
+    // A flag on a short pole sticking out from the building front.
     draw: (colour) => (
       <G>
-        <Rect x={4} y={152} width={14} height={8} rx={2} fill="#343a40" />
-        <Line x1={11} y1={2} x2={11} y2={154} stroke="#495057" strokeWidth={5} strokeLinecap="round" />
-        <Path d="M13,8 C35,2 52,18 78,10 V52 C52,60 35,44 13,50 Z" fill={colour} stroke="#00000033" strokeWidth={2} />
+        <Rect x={0} y={70} width={12} height={20} rx={2} fill="#343a40" stroke="none" />
+        <Line x1={8} y1={80} x2={60} y2={8} stroke="#495057" strokeWidth={5} strokeLinecap="round" />
+        <Path d="M60,8 C72,14 84,2 98,8 V50 C84,44 72,56 60,50 Z" fill={colour} />
       </G>
     ),
   },
@@ -49,13 +55,13 @@ const items: ItemDef[] = [
     article: 'a',
     w: 120,
     h: 110,
-    height: 72,
+    tier: 'medium',
+    size: 0.14,
     zones: WALLS,
     maxCount: 1,
     tone: '#343a40',
     countable: false,
-    mount: 'corner',
-    // A street clock on a bracket fixed to a building's corner (bracket on the left; mirrored on right-hand corners).
+    // A street clock on a bracket fixed to the building front.
     draw: () => (
       <G>
         <Rect x={0} y={20} width={14} height={40} rx={3} fill="#343a40" />
@@ -73,18 +79,18 @@ const items: ItemDef[] = [
     article: 'a',
     w: 80,
     h: 80,
-    height: 90,
+    tier: 'medium',
+    size: 0.13,
     zones: WALLS,
     maxCount: 3,
-    tone: '#6c757d',
-    mount: 'roof',
+    tone: '#e9ecef',
     draw: () => (
       <G>
-        <Line x1={40} y1={50} x2={40} y2={74} stroke="#495057" strokeWidth={6} />
-        <Rect x={28} y={70} width={24} height={10} rx={2} fill="#343a40" />
-        <Path d="M8,10 C0,45 40,65 70,50 Z" fill="#6c757d" stroke="#343a40" strokeWidth={3} />
-        <Line x1={39} y1={30} x2={62} y2={12} stroke="#343a40" strokeWidth={4} />
-        <Circle cx={63} cy={11} r={5} fill="#343a40" />
+        <Rect x={2} y={34} width={12} height={30} rx={2} fill="#495057" stroke="none" />
+        <Line x1={10} y1={50} x2={34} y2={46} stroke="#495057" strokeWidth={5} />
+        <Path d="M30,6 C10,40 40,74 76,60 Z" fill="#e9ecef" />
+        <Line x1={44} y1={40} x2={66} y2={22} stroke="#495057" strokeWidth={4} />
+        <Circle cx={67} cy={21} r={5} fill="#495057" stroke="none" />
       </G>
     ),
   },
@@ -95,29 +101,29 @@ const items: ItemDef[] = [
     article: 'a',
     w: 180,
     h: 160,
-    height: 230,
+    tier: 'large',
+    size: 0.26,
     zones: PAVEMENT,
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.orange, C.purple, C.yellow],
     colourPrompt: (plural) => (plural ? 'What colour were the awnings on the market stalls?' : 'What colour was the awning on the market stall?'),
     draw: (colour) => (
       <G>
-        <Rect x={12} y={50} width={7} height={110} fill="#5c3d1e" />
-        <Rect x={161} y={50} width={7} height={110} fill="#5c3d1e" />
-        <Rect x={8} y={105} width={164} height={55} fill="#a0612b" stroke="#00000033" strokeWidth={2} />
-        <G>
+        <Rect x={12} y={50} width={7} height={110} fill="#5c3d1e" stroke="none" />
+        <Rect x={161} y={50} width={7} height={110} fill="#5c3d1e" stroke="none" />
+        <Rect x={8} y={105} width={164} height={55} fill="#a0612b" stroke="#5c3d1e" />
+        <G stroke="none">
           <Circle cx={40} cy={100} r={12} fill="#e63946" />
           <Circle cx={64} cy={100} r={12} fill="#f77f00" />
           <Circle cx={88} cy={100} r={12} fill="#ffd60a" />
           <Circle cx={112} cy={100} r={12} fill="#2b9348" />
           <Circle cx={136} cy={100} r={12} fill="#e63946" />
         </G>
-        <Polygon points="10,0 170,0 180,45 0,45" fill={colour} stroke="#00000033" strokeWidth={2} />
-        <G fill="#ffffff" fillOpacity={0.75}>
+        <Path d="M10,0 H170 L180,45 Q165,62 150,45 Q135,62 120,45 Q105,62 90,45 Q75,62 60,45 Q45,62 30,45 Q15,62 0,45 Z" fill={colour} />
+        <G fill="#ffffff" fillOpacity={0.75} stroke="none">
           <Polygon points="42,0 62,0 64,45 40,45" />
           <Polygon points="106,0 126,0 132,45 108,45" />
         </G>
-        <Path d="M0,45 Q15,62 30,45 Q45,62 60,45 Q75,62 90,45 Q105,62 120,45 Q135,62 150,45 Q165,62 180,45" fill={colour} />
       </G>
     ),
   },
@@ -131,16 +137,17 @@ const items: ItemDef[] = [
     article: 'a',
     w: 140,
     h: 75,
-    height: 85,
+    tier: 'medium',
+    size: 0.17,
     zones: PAVEMENT,
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.brown, C.yellow],
     draw: (colour) => (
       <G>
-        <Rect x={14} y={45} width={8} height={30} fill="#343a40" />
-        <Rect x={118} y={45} width={8} height={30} fill="#343a40" />
-        <Rect x={4} y={8} width={132} height={14} rx={3} fill={colour} stroke="#00000033" strokeWidth={2} />
-        <Rect x={0} y={36} width={140} height={14} rx={3} fill={colour} stroke="#00000033" strokeWidth={2} />
+        <Rect x={14} y={45} width={8} height={30} fill="#343a40" stroke="none" />
+        <Rect x={118} y={45} width={8} height={30} fill="#343a40" stroke="none" />
+        <Rect x={4} y={8} width={132} height={14} rx={3} fill={colour} />
+        <Rect x={0} y={36} width={140} height={14} rx={3} fill={colour} />
       </G>
     ),
   },
@@ -151,14 +158,15 @@ const items: ItemDef[] = [
     article: 'a',
     w: 55,
     h: 85,
-    height: 100,
+    tier: 'small',
+    size: 0.1,
     zones: PAVEMENT,
     maxCount: 3,
     colours: [C.green, C.black, C.blue, C.orange],
     draw: (colour) => (
       <G>
-        <Path d="M6,14 H49 L44,85 H11 Z" fill={colour} stroke="#00000044" strokeWidth={2} />
-        <Rect x={2} y={4} width={51} height={12} rx={4} fill={colour} stroke="#00000044" strokeWidth={2} />
+        <Path d="M6,14 H49 L44,85 H11 Z" fill={colour} />
+        <Rect x={2} y={4} width={51} height={12} rx={4} fill={colour} />
         <Line x1={20} y1={28} x2={22} y2={74} stroke="#00000033" strokeWidth={3} />
         <Line x1={35} y1={28} x2={33} y2={74} stroke="#00000033" strokeWidth={3} />
       </G>
@@ -171,7 +179,8 @@ const items: ItemDef[] = [
     article: 'a',
     w: 115,
     h: 75,
-    height: 100,
+    tier: 'medium',
+    size: 0.16,
     zones: PAVEMENT,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.black, C.pink],
@@ -193,12 +202,13 @@ const items: ItemDef[] = [
     article: 'a',
     w: 50,
     h: 75,
-    height: 75,
+    tier: 'small',
+    size: 0.1,
     zones: PAVEMENT,
     maxCount: 2,
     colours: [C.red, C.yellow],
     draw: (colour) => (
-      <G stroke="#00000044" strokeWidth={2}>
+      <G>
         <Rect x={10} y={20} width={30} height={50} rx={5} fill={colour} />
         <Rect x={0} y={34} width={50} height={12} rx={4} fill={colour} />
         <Path d="M10,22 C10,4 40,4 40,22 Z" fill={colour} />
@@ -213,7 +223,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 60,
     h: 240,
-    height: 450,
+    tier: 'small',
+    size: 0.1,
+    tall: true,
     zones: PAVEMENT,
     maxCount: 2,
     tone: '#343a40',
@@ -221,7 +233,7 @@ const items: ItemDef[] = [
       <G>
         <Rect x={26} y={40} width={8} height={200} fill="#343a40" />
         <Rect x={12} y={0} width={36} height={44} rx={6} fill="#343a40" />
-        <Rect x={18} y={6} width={24} height={30} fill="#fff3b0" />
+        <Rect x={18} y={6} width={24} height={30} fill="#fff3b0" stroke="none" />
       </G>
     ),
   },
@@ -232,14 +244,15 @@ const items: ItemDef[] = [
     article: 'a',
     w: 175,
     h: 85,
-    height: 145,
+    tier: 'large',
+    size: 0.22,
     zones: ROAD,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.white, C.black, C.orange],
     draw: (colour) => (
       <G>
-        <Path d="M5,62 V42 C5,34 12,30 20,30 H40 L62,6 H122 L145,30 H158 C166,30 172,36 172,44 V62 Z" fill={colour} stroke="#00000044" strokeWidth={2} />
-        <Path d="M70,12 H95 V30 H50 Z M101,12 H118 L136,30 H101 Z" fill="#cfe9ff" />
+        <Path d="M5,62 V42 C5,34 12,30 20,30 H40 L62,6 H122 L145,30 H158 C166,30 172,36 172,44 V62 Z" fill={colour} />
+        <Path d="M70,12 H95 V30 H50 Z M101,12 H118 L136,30 H101 Z" fill="#cfe9ff" stroke="none" />
         {wheel(42, 64, 18)}
         {wheel(134, 64, 18)}
       </G>
@@ -252,14 +265,15 @@ const items: ItemDef[] = [
     article: 'a',
     w: 230,
     h: 115,
-    height: 280,
+    tier: 'large',
+    size: 0.28,
     zones: ROAD,
     maxCount: 1,
     colours: [C.red, C.blue, C.yellow, C.green, C.white],
     draw: (colour) => (
       <G>
-        <Rect x={2} y={2} width={226} height={88} rx={12} fill={colour} stroke="#00000044" strokeWidth={2} />
-        <G fill="#cfe9ff">
+        <Rect x={2} y={2} width={226} height={88} rx={12} fill={colour} />
+        <G fill="#cfe9ff" stroke="none">
           <Rect x={14} y={14} width={36} height={30} rx={4} />
           <Rect x={58} y={14} width={36} height={30} rx={4} />
           <Rect x={102} y={14} width={36} height={30} rx={4} />
@@ -278,14 +292,15 @@ const items: ItemDef[] = [
     article: 'a',
     w: 95,
     h: 75,
-    height: 115,
+    tier: 'medium',
+    size: 0.15,
     zones: ROAD,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.pink, C.white],
     draw: (colour) => (
       <G>
-        <Path d="M20,52 C22,34 45,30 62,36 L70,52 Z" fill={colour} stroke="#00000044" strokeWidth={2} />
-        <Rect x={30} y={26} width={30} height={9} rx={4} fill="#222" />
+        <Path d="M20,52 C22,34 45,30 62,36 L70,52 Z" fill={colour} />
+        <Rect x={30} y={26} width={30} height={9} rx={4} fill="#222" stroke="none" />
         <Path d="M70,52 L78,10 H90" fill="none" stroke="#343a40" strokeWidth={6} strokeLinecap="round" />
         {wheel(18, 58, 15)}
         {wheel(78, 58, 15)}
@@ -299,14 +314,15 @@ const items: ItemDef[] = [
     article: 'a',
     w: 190,
     h: 100,
-    height: 230,
+    tier: 'large',
+    size: 0.24,
     zones: ROAD,
     maxCount: 2,
     colours: [C.white, C.blue, C.red, C.green, C.yellow],
     draw: (colour) => (
       <G>
-        <Path d="M4,78 V14 C4,8 8,4 14,4 H130 L170,38 C180,40 186,46 186,54 V78 Z" fill={colour} stroke="#00000044" strokeWidth={2} />
-        <Path d="M134,12 L162,38 H134 Z" fill="#cfe9ff" />
+        <Path d="M4,78 V14 C4,8 8,4 14,4 H130 L170,38 C180,40 186,46 186,54 V78 Z" fill={colour} />
+        <Path d="M134,12 L162,38 H134 Z" fill="#cfe9ff" stroke="none" />
         {wheel(42, 80, 18)}
         {wheel(150, 80, 18)}
       </G>
@@ -314,154 +330,97 @@ const items: ItemDef[] = [
   },
 ];
 
-/**
- * The three main buildings line up with the left, middle and right thirds, so
- * anything on "the buildings" is always on exactly one building.
- */
-const FACADES: [number, number][] = [
-  [0, 305],
-  [305, 595],
-  [595, 900],
-];
+type Palette = Record<string, string>;
 
-const BUILDINGS = [
-  { x: -600, w: 600, rise: 0.01 },
-  { x: FACADES[0][0], w: FACADES[0][1] - FACADES[0][0], rise: 0.03, facade: 0 },
-  { x: FACADES[1][0], w: FACADES[1][1] - FACADES[1][0], rise: 0, facade: 1 },
-  { x: FACADES[2][0], w: FACADES[2][1] - FACADES[2][0], rise: 0.02, facade: 2 },
-  { x: 900, w: 600, rise: 0.005 },
-];
+/** One building front per third of the picture, so anything "on the buildings" is on exactly one. */
+const FACADES = [0, 1, 2];
 
-/** Where the building fronts meet the pavement, and the roofline (fractions of the height). */
-const GROUND_LINE = 0.6;
-const ROOF = 0.31;
-/** Picture units per cm on the building fronts; the same scale as the camera at the pavement line. */
-const unitFor = (height: number) => 1.03 * heightFactor(height);
-
-/**
- * Each building's real layout, shared by the drawing and the placement rules: two upper-floor
- * windows (sill at 290 cm, 110 cm tall) and an 85 cm door (215 cm tall), all centred, which leaves the
- * corners clear for a bracket clock at 240 cm.
- */
-function facadeLayout(height: number) {
-  const unit = unitFor(height);
-  const ground = height * GROUND_LINE;
-  const winW = 70 * unit;
-  const winH = 110 * unit;
-  const doorW = 85 * unit;
-  const doorH = 215 * unit;
-  return BUILDINGS.map((b) => {
-    const centre = b.x + b.w / 2;
-    const sill = ground - 290 * unit;
-    return {
-      ...b,
-      top: height * (ROOF - b.rise),
-      windows: [
-        { x0: centre - 20 * unit - winW, y0: sill - winH, x1: centre - 20 * unit, y1: sill },
-        { x0: centre + 20 * unit, y0: sill - winH, x1: centre + 20 * unit + winW, y1: sill },
-      ],
-      door: { x0: centre - doorW / 2, y0: ground - doorH, x1: centre + doorW / 2, y1: ground },
-    };
-  });
-}
-
-/** Building fronts in order (extension left, the three main buildings, extension right). */
 function cityPalette(sky: string, facades: string[], window: string): Palette {
   return {
     sky,
     window,
     pavement: '#ced4da',
-    road: '#495057',
-    ...Object.fromEntries(BUILDINGS.map((_, i) => [`facade${i}`, facades[i % facades.length]])),
+    road: '#3a4046',
+    ...Object.fromEntries(FACADES.map((i) => [`facade${i}`, facades[i]])),
   };
 }
 
 const PALETTES: Record<string, Palette> = {
-  day: cityPalette('#8cc8f5', ['#e9c46a', '#f4a261', '#b5838d', '#90be6d'], '#e7f5ff'),
-  sunset: cityPalette('#ffa98a', ['#c9ada7', '#9a8c98', '#e5989b', '#b5c99a'], '#fff3bf'),
+  day: cityPalette('#8cc8f5', ['#e9c46a', '#f4a261', '#b5838d'], '#e7f5ff'),
+  sunset: cityPalette('#ffa98a', ['#c9ada7', '#9a8c98', '#e5989b'], '#fff3bf'),
 };
 
-function surfaceAt(x: number, y: number, height: number): string {
-  if (y >= height * 0.73) return 'road';
-  if (y >= height * GROUND_LINE) return 'pavement';
-  const i = BUILDINGS.findIndex((b) => x >= b.x && x < b.x + b.w);
-  if (i < 0 || y < height * (ROOF - BUILDINGS[i].rise)) return 'sky';
-  return `facade${i}`;
+function surfaceAt(x: number, y: number): string {
+  if (y < ROOF) return 'sky';
+  if (y < GROUND_LINE) return `facade${Math.min(2, Math.max(0, Math.floor(x * 3)))}`;
+  if (y < KERB) return 'pavement';
+  return 'road';
 }
 
-function fixtures(height: number): Fixture[] {
-  return facadeLayout(height)
-    .filter((b) => b.facade !== undefined)
-    .flatMap((b) => [...b.windows, b.door].map((r) => ({ kind: 'opening' as const, ...r })));
-}
-
-function mounts(height: number): Mount[] {
-  const clockAt = height * GROUND_LINE - 240 * unitFor(height);
-  return facadeLayout(height).flatMap((b): Mount[] =>
-    b.facade === undefined
-      ? []
-      : [
-          { kind: 'corner', panel: b.facade, side: 'left', x: b.x + 2, y: clockAt },
-          { kind: 'corner', panel: b.facade, side: 'right', x: b.x + b.w - 2, y: clockAt },
-          { kind: 'roof', panel: b.facade, x0: b.x + 16, x1: b.x + b.w - 16, y: b.top },
-        ],
-  );
-}
-
-type Palette = Record<string, string>;
-
+/** Background bands: sky, three building fronts (the outer ones run on past the picture's edges), pavement, kerb, road. */
 function backdrop(height: number, palette: Palette) {
-  const { sky, window } = palette;
-  const pavement = height * GROUND_LINE;
-  const kerb = height * 0.73;
+  const roof = height * ROOF;
+  const ground = height * GROUND_LINE;
+  const kerb = height * KERB;
+  const spans: [number, number][] = [
+    [-600, 300],
+    [300, 600],
+    [600, 1500],
+  ];
   return (
     <G>
-      <Rect x={-600} y={-600} width={2100} height={pavement + 600} fill={sky} />
-      {facadeLayout(height).map((b, i) => (
-        <G key={b.x}>
-          <Rect x={b.x} y={b.top} width={b.w} height={pavement - b.top} fill={palette[`facade${i}`]} />
-          <Rect x={b.x} y={b.top} width={b.w} height={10} fill="#000000" fillOpacity={0.12} />
-          {b.windows.map((w) => (
-            <Rect key={w.x0} x={w.x0} y={w.y0} width={w.x1 - w.x0} height={w.y1 - w.y0} fill={window} fillOpacity={0.6} />
-          ))}
-          <Rect x={b.door.x0} y={b.door.y0} width={b.door.x1 - b.door.x0} height={b.door.y1 - b.door.y0} fill="#5c3d1e" fillOpacity={0.85} />
-        </G>
+      <Rect x={-600} y={-600} width={2100} height={roof + 600} fill={palette.sky} />
+      {spans.map(([x0, x1], i) => (
+        <Rect key={x0} x={x0} y={roof} width={x1 - x0} height={ground - roof} fill={palette[`facade${i}`]} />
       ))}
-      <Rect x={-600} y={pavement} width={2100} height={kerb - pavement} fill={palette.pavement} />
-      <G stroke="#b8bfc6" strokeWidth={3}>
-        {[-300, 0, 150, 300, 450, 600, 750, 900, 1200].map((x) => (
-          <Line key={x} x1={x} y1={pavement} x2={x - 40} y2={kerb} />
-        ))}
-      </G>
-      <Rect x={-600} y={kerb} width={2100} height={14} fill="#868e96" />
-      <Rect x={-600} y={kerb + 14} width={2100} height={height - kerb + 600} fill={palette.road} />
-      <G fill="#f8f9fa">
-        {[-200, 40, 280, 520, 760, 1000].map((x) => (
-          <Rect key={x} x={x} y={height * 0.88} width={110} height={8} />
-        ))}
-      </G>
+      <Rect x={-600} y={roof} width={2100} height={10} fill="#000000" fillOpacity={0.15} />
+      {[300, 600].map((x) => (
+        <Rect key={x} x={x - 2} y={roof} width={4} height={ground - roof} fill="#000000" fillOpacity={0.15} />
+      ))}
+      <Rect x={-600} y={ground} width={2100} height={kerb - ground} fill={palette.pavement} />
+      <Rect x={-600} y={kerb} width={2100} height={height - kerb + 600} fill={palette.road} />
+      <Rect x={-600} y={kerb} width={2100} height={12} fill="#868e96" />
     </G>
   );
+}
+
+/** Faint windows, doors, road markings and clouds, each left out wherever it would touch a thing. */
+function marks(height: number, boxes: Box[], random: () => number, variant: VariantDef): Mark[] {
+  const roof = height * ROOF;
+  const ground = height * GROUND_LINE;
+  const wallH = ground - roof;
+  const out: Mark[] = [];
+  for (const i of FACADES) {
+    const centre = i * 300 + 150;
+    for (const dx of [-75, 25]) {
+      const x0 = centre + dx;
+      const y0 = roof + wallH * 0.18;
+      const r = { x0, y0, x1: x0 + 50, y1: y0 + wallH * 0.24 };
+      out.push(...markIfClear(r, boxes, 0.3, <Rect key={`w${i}${dx}`} x={r.x0} y={r.y0} width={r.x1 - r.x0} height={r.y1 - r.y0} fill={variant.palette.window} fillOpacity={0.3} />));
+    }
+    const door = { x0: centre - 28, y0: ground - wallH * 0.36, x1: centre + 28, y1: ground };
+    out.push(...markIfClear(door, boxes, 0.3, <Rect key={`d${i}`} x={door.x0} y={door.y0} width={56} height={door.y1 - door.y0} fill="#3d2412" fillOpacity={0.3} />));
+  }
+  const dashY = height * 0.885;
+  for (const x of [40, 280, 520, 760]) {
+    out.push(...markIfClear({ x0: x, y0: dashY - 4, x1: x + 100, y1: dashY + 4 }, boxes, 0.35, <Rect key={`r${x}`} x={x} y={dashY - 4} width={100} height={8} fill="#f8f9fa" fillOpacity={0.35} />));
+  }
+  out.push(...scatterMarks({ x0: -100, y0: height * 0.03, x1: 1000, y1: roof - 20 }, 150, 66, 3, boxes, random, 0.35, (x, y) => cloudShape(x, y, 150 / 170)));
+  return out;
 }
 
 export const city: Recipe = {
   id: 'city',
   title: 'City street',
   place: 'in the street',
-  // A slightly raised camera: gentle perspective, with buildings drawn at the same scale as people.
-  camera: { horizon: -0.6, ref: 0.6, pxPerCm: 1.03 },
   zones: [
-    { id: 'sky', label: 'In the sky', surface: 'air', top: 0.04, bottom: 0.25 },
-    { id: 'buildings', label: 'On the buildings', surface: 'wall', top: 0.05, bottom: 0.5, plane: GROUND_LINE, panels: FACADES, minGroups: 1 },
-    { id: 'pavement', label: 'On the pavement', surface: 'ground', top: 0.63, bottom: 0.72, singleRow: true },
-    { id: 'road', label: 'On the road', surface: 'ground', top: 0.79, bottom: 0.97 },
+    { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: ROOF, rows: 2 },
+    { id: 'buildings', label: 'On the buildings', surface: 'wall', top: ROOF, bottom: GROUND_LINE, rows: 2, panels: true, minGroups: 1 },
+    { id: 'pavement', label: 'On the pavement', surface: 'ground', top: GROUND_LINE, bottom: KERB, rows: 2 },
+    { id: 'road', label: 'On the road', surface: 'ground', top: KERB, bottom: 1, rows: 1 },
   ],
   items,
-  fixtures,
-  mounts,
-  wallGapCm: 30,
-  decor: [{ ...clouds, top: 0.02, bottom: 0.2 }],
   surfaceAt,
-  accents: [{ name: 'clouds', colour: '#ffffff', on: 'sky' }],
+  marks,
   variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number) => backdrop(h, p) })),
 };

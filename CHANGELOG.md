@@ -10,6 +10,40 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.0.0 (2026-10-15)
+
+A new layout engine, so every picture lays out cleanly on iPhone portrait screens (SE to Pro Max).
+
+- **Same thing, same size.** The real-world camera and perspective scaling are gone. Every thing has a fixed size tier, measured against the picture's width:
+  - large anchors (umbrella, sailboat, palm tree, bookshelf, sofa, window): 20–28%
+  - medium (plane, kite, lamp, plant, mirror, clock, dolphin, cushion): 13–18%
+  - small countables (ball, starfish, buoy, bird, toy car, bucket): 10–13%, and never under 44 pt.
+- **Measured, normalized coordinates.** Positions and sizes are stored as fractions of the picture, which is measured with onLayout below the header and down to the bottom safe-area inset. If the measured area differs from the estimate, the same contents are laid out again (same kinds, counts, colours, bands and sides).
+- **Bands and a slot grid:**
+  - Beach: sky 0–35%, sea 35–60%, sand 60–100%.
+  - Room: ceiling 0–10% (much thinner), wall 10–55%, floor 55–100%.
+  - City: sky, building fronts, pavement, road.
+  - Each band is split into 3 columns × rows. Every group of things gets its own slot, emptiest parts of the picture first.
+  - Every band gets a share of the things in proportion to its height, and every third of the screen has something to remember.
+- **Placement rules:**
+  - Copies of a thing are staggered (zigzag, diagonal, arc) or kept 0.6× their width apart, never touching in a line.
+  - Nothing comes within 4% of anything else.
+  - Things stay 5% from the sides and out of the bottom 4% (home indicator).
+  - Nothing crosses out of its band except tall anchors (palm trees, bookshelves, street lamps, floor lamps), which do so on purpose.
+  - Toy cars and other things are either fully on the rug or off it.
+- **Draw order:** background bands, then faint marks (clouds, waves, floorboards, building windows, road markings), then things from back to front. Marks are at most 35% opaque and are left out wherever they would touch a thing.
+- **Contrast:**
+  - Every thing has a 2.5 pt outline in a darker shade of its own colour.
+  - A thing's fill or outline must differ clearly in lightness from what it sits on.
+  - Buoys get a bold red or white band.
+  - The room's rugs are now solid pale colours, so toy cars show clearly.
+  - City roads are darker.
+- **`validateScene()`** checks overlaps, sizes, duplicate gaps, edge margins, band membership, rug rule, contrast, marks and that each third has content. A scene that fails is placed again (up to 12 tries) before it is shown.
+- **Layout overlay (development builds only):** a ▦ button in the header draws every box, its 4% clearance, the slot grid, the bands and the thirds, with a green or red banner from `validateScene`. The timer waits while it's on.
+- **Header:** the timer ring now sits on the left next to ✕, so nothing floating in the top-right corner (like Expo Go's tools button) can cover it. ✕ and the Back button on the progress screen are 44 pt.
+- City: flags and satellite dishes hang on the building fronts. The room has at most one window. Question answers use the new band names ("On the sand", "On the floor").
+- `npm run check:scenes` checks 5,400 scenes (3 iPhone sizes × 3 settings × 3 levels × 200) with `validateScene`, and checks that laying a scene out again never changes its facts.
+
 ## 2.6.1 (2026-10-15)
 
 - Fix for Expo Go on iPhone failing to start with "Cannot find native module 'ExpoAsset'": `expo-asset` is now a direct dependency at the SDK 57 version, so it is installed at the top level as Expo expects.

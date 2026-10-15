@@ -22,7 +22,8 @@ interface CountdownProps {
 
 /**
  * Counts down from `seconds` to 1 on the UI thread, then calls `onComplete` at 0.
- * Renders inline as a shrinking bar and a number badge, side by side.
+ * Renders inline as a number in a ring followed by a shrinking bar. The ring comes first (on the left)
+ * so it is never hidden by anything floating in the top-right corner.
  */
 export function Countdown({ seconds, running, onComplete }: CountdownProps) {
   const remaining = useSharedValue(seconds);
@@ -58,12 +59,12 @@ export function Countdown({ seconds, running, onComplete }: CountdownProps) {
 
   return (
     <View style={styles.row}>
-      <View style={styles.track}>
-        <Animated.View style={[styles.bar, barStyle]} />
-      </View>
       <Animated.View style={[styles.badge, badgeStyle]} accessibilityLabel={`${display} seconds left`}>
         <Text style={styles.number}>{display}</Text>
       </Animated.View>
+      <View style={styles.track}>
+        <Animated.View style={[styles.bar, barStyle]} />
+      </View>
     </View>
   );
 }
@@ -82,5 +83,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  number: { color: colors.text, fontSize: 24, fontWeight: '800', fontVariant: ['tabular-nums'] },
+  number: { color: colors.text, fontSize: 24, fontWeight: '800', fontVariant: ['tabular-nums'], textAlign: 'center', includeFontPadding: false },
 });

@@ -53,43 +53,62 @@ A round never asks two questions about the same thing, and Play again never repe
 Every picture is built on the device from a **recipe** in a fraction of a second. No network or AI service is involved.
 
 1. Pick a recipe (beach, city street, living room), never the same as the last picture.
-2. Fill it: pick which things appear, how many, what colour and where, following the placement rules below.
+2. Fill it: pick which things appear, how many, what colour and where, following the layout rules below.
 3. Record every fact: kind, count, colour, band and side.
 4. Draw the picture from those facts (`react-native-svg`).
 5. Write the questions from the same facts, so every answer is right by construction. Wrong options come from the same recipe so they're believable. A picture that can't give enough questions is quietly replaced.
 
-### Placement rules
+### Layout rules
 
-- **One real-world scale per setting.** Every item has a real `height` in centimetres (sofa 85, armchair 95, cat 30, mirror 90, bus 280). Each recipe has a `camera` that turns centimetres into picture units, like a real photo: `pxPerCm × (y − horizon) / (ref − horizon)`. Things standing lower in the picture are nearer and bigger, from one horizon for the whole scene. At the beach the horizon is the sea line; the room's back wall is 4.3 m wide at 2.1 units per cm. Sky things are far away, so their `height` is simply how big they look.
-- **Realistic counts.** `maxCount` is the most you'd plausibly see: one sofa, one mirror, one TV, one clock; several cushions, frames, cats or cars.
-- **Placement habits.** Items carry the habits people follow:
-  - `hangAt`: hanging height of the centre above the floor, in cm. Clock 175–200; pictures and mirrors at eye level; windows 140–155, which puts the sill at about 80 cm.
-  - `wallGapCm`: a recipe's least gap between things on a wall (35 cm in the room).
-  - `avoid: ['rug']`: things that never sit over a rug or stand in front of it (plants, floor lamps, piles of books). Plants only stand along the back wall.
-  - `mount`: things fixed to a recipe's mounting points instead of anywhere. A street clock goes on a building corner on a bracket (mirrored on right-hand corners); flags and dishes stand on rooftops.
-- **Contrast.** Everything must stand out from the surface behind it: a perceptual colour difference (OKLab, which counts hue as well as lightness) of at least 18, in `src/scenes/contrast.ts`.
-  - Each variant has a `palette`, and each recipe has a `surfaceAt(x, y)` that says which surface is behind a point: wall, ceiling, floor, rug, sky, sea, sand, a building, pavement or road.
-  - Coloured things only get colours that pass where they stand. Fixed-colour things declare a `tone` and are never placed where it would blend in.
-  - Backdrop details (`accents`, such as the ceiling lamp and clouds) must pass in every variant.
-- **A clear sky.** Clouds (`decor`) are placed first, and nothing flying may overlap one; anything else passing in front of a cloud must stand out against it.
-  - Things marked `scatter` (balloons, kites) are placed one by one in a third of the sky, each at its own height, size and direction, never in a line. Birds may fly in a line.
-  - Only one plane appears at a time.
-- **Fixtures.** A recipe's `fixtures(height)` lists the windows, doors and rug in its backdrop, and the backdrop draws them from the same data. Nothing is hung over a window or door. City buildings have a fixed layout (upper-floor windows, a centred door) that leaves the corners clear for clocks.
-- **Surfaces.** Every band is `air` (things float), `wall` (things hang, at the scale of the wall's base) or `ground` (the band is where feet go). An item lists the bands it may go in, so a plant pot only stands on a floor and a flag only hangs on a building.
-- **Wall panels.** A wall band can be split into `panels` (one per building). Anything hung there stays entirely on one panel. City buildings line up with the left, middle and right thirds.
-- **Free placement, no overlaps.** Groups are placed at random spots in their band, biggest first, so small things fill the gaps. Nothing may touch anything else; rows of the same thing have a gap between them.
-- **Never bare.** `minGroups` guarantees some zones get things (a room wall always has at least two).
-- **Visible or not at all.** Anything smaller than 42 units where it would stand is moved nearer or left out, never drawn as a speck.
-- **Clear sides.** A group's left / middle / right is the third its centre is in, and centres stay clear of the lines between thirds. "What was on the left of the wall?" is only asked when exactly one kind of thing is there.
-- **Screen shape.** The picture is 900 wide and as tall as the space below the countdown bar needs (1350–2000). Scales stretch with the height up to 1700, then taller screens just get more space. The controls sit in their own bar, never on top of the picture.
+Every picture is laid out for the space it is shown in: the area below the header, down to the bottom safe-area inset, measured with `onLayout`. Positions and sizes are stored as fractions of that area (`x` and `w` of the width, `y` of the height) and converted when drawn, so nothing assumes a fixed or square canvas. If the measured area differs from the estimate the scene was made for, the same contents are laid out again: same kinds, counts, colours, bands and sides, so the questions stay right.
 
-Run `npm run check:scenes` after any change to recipes or placement. It generates 8,100 scenes (every recipe, level and screen height) and fails if anything blends into its background, flies over a cloud, flies in a line with its copies, overlaps, covers a window or door, hangs at the wrong height, sits too close to another thing on a wall, is over a rug it should avoid, isn't on its mounting point, is too small to see, leaves its band, crosses a building edge, isn't standing in its area, sits on the line between two sides, exceeds its realistic count, leaves a must-fill zone bare, never fits anywhere, or if scenes come up short of things or questions.
+- **Size tiers, measured against the width.** Things of one kind are always the same size:
+  - large anchors (umbrella, sailboat, palm tree, bookshelf, sofa, window): 20–28% of the width
+  - medium (plane, kite, lamp, plant, mirror, clock, dolphin, cushion): 13–18%
+  - small countables (ball, starfish, buoy, bird, toy car, bucket): 10–13%, and never under 44 pt.
+- **Bands.** Each setting is split into horizontal bands, and each thing lists the bands it belongs in:
+  - Beach: sky 0–35%, sea 35–60%, sand 60–100%.
+  - Room: ceiling 0–10%, wall 10–55%, floor 55–100%.
+  - City: sky, building fronts (one per third), pavement, road.
+- **Slot grid.** Each band is split into 3 columns (left / middle / right) × a few rows. Every group of things gets its own slot, preferring the emptiest parts of the picture. Positions are jittered only a little inside the slot.
+- **Spread out.**
+  - Each band gets a share of the kinds in proportion to its height.
+  - Every third of the screen (top, middle, bottom) has something to remember.
+- **Copies.** 2–4 of the same thing are staggered (zigzag, diagonal or arc) or kept at least 0.6× their width apart. They never touch or sit in a tight line.
+- **No overlaps.** Nothing comes within 4% of the width of anything else.
+- **Margins.** Things stay 5% from the left and right edges, and the bottom 4% stays clear for the home indicator.
+- **Bands are respected.** Nothing crosses out of its band. Tall anchors (palm trees, bookshelves, street and floor lamps) are the exception: they stand in the back row of their band and rise above it on purpose.
+- **Rugs.** Anything touching the rug is fully on it (toy cars); furniture and plants stay off it.
+- **Draw order.**
+  1. Background bands.
+  2. Faint marks (clouds, waves, floorboards, building windows, road markings), at most 35% opaque and never inside a thing's box.
+  3. Things, back to front by their bottom edge.
+- **Contrast.** Every thing has a 2–3 pt outline in a darker shade of its own colour. Its colour must differ clearly from what it sits on, in colour (OKLab difference ≥ 18) and in lightness (fill or outline ≥ 15 lighter or darker). Coloured things only get colours that pass wherever they are drawn.
+- **Sides.** A group's left / middle / right is the third its centre is in, and centres stay clear of the lines between thirds. "What was on the left of the wall?" is only asked when exactly one kind of thing is there.
+
+`validateScene(scene, width, height)` (`src/scenes/validateScene.ts`) checks all of this: overlaps, sizes, duplicate gaps, edge margins, band membership, the rug rule, contrast, marks and that each third has content. A generated scene that fails is placed again (up to 12 tries) before it is shown.
+
+**Checking layouts on a phone.** In a development build (Expo Go), the ▦ button in the memorise header turns on the layout overlay:
+- every box, with its 4% clearance dashed around it
+- the slot grid and band edges in blue
+- the thirds in pink
+- the margins shaded
+- a banner that is green ("layout OK") or red with the first problem.
+
+The timer waits while the overlay is on.
+
+Run `npm run check:scenes` after any change to recipes or layout. It generates 5,400 scenes (iPhone SE, 15 and Pro Max picture sizes × every setting × every level × 200) and fails if any scene breaks a rule, or if any of these happen:
+- a size is outside its tier
+- a thing can't stand out anywhere
+- laying a scene out again changes its facts
+- scenes come up short of kinds or questions.
 
 ### Adding a recipe
 
 1. Copy a file in `src/scenes/recipes/` and give it an id, title, bands (`zones`), backdrop variants and items. Reuse shared items from `src/scenes/items/common.tsx` where you can.
-2. Set the recipe's `camera` and draw the backdrop at the same scale. Each item has a name, plural, design box (`w`, `h`), real `height` in cm, the bands it may go in, a realistic maximum count, optional colours and a `draw` function. Each band has a surface type; backdrops take the picture height.
-3. List the recipe in `src/scenes/recipes/index.ts`.
+2. Define the bands (`zones`: top and bottom as fractions of the height, a surface type and slot rows) and a backdrop that draws only the background bands for a picture 900 wide and any height. Faint details go in `marks`, which are kept clear of every thing.
+3. Give each item a name, plural, design box (`w`, `h`), a size `tier` and `size` (fraction of the width), the bands it may go in, a realistic maximum count, optional colours and a `draw` function. Shapes without their own stroke get the outline; small details use `stroke="none"`.
+4. List the recipe in `src/scenes/recipes/index.ts`, then run `npm run check:scenes`.
 
 Aim for 12+ items per recipe, so harder levels have enough to fill the picture and enough absent things for "Which of these was NOT…" questions.
 
@@ -104,7 +123,10 @@ src/
   scenes/
     recipes/           One file per setting (beach, city, livingRoom) + the registry
     items/common.tsx   Things shared across settings (people, dogs, birds, trees…)
-    generateScene.ts   Fills a recipe with random, fair contents
+    layout.ts          Layout rules and geometry: tiers, margins, slot grid, duplicate arrangements
+    generateScene.ts   Fills a recipe with random, fair contents and lays them out (and lays them out again for another size)
+    validateScene.ts   Checks a laid-out scene against every layout rule
+    LayoutOverlay.tsx  Dev-only overlay of boxes, slot grid, bands and thirds
     generateQuestions.ts  Writes every question a scene can answer
     createStage.ts     Recipe + level → playable picture and question pool
     SceneView.tsx      Draws a scene, filling any screen shape

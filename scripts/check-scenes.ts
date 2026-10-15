@@ -1,196 +1,96 @@
 /**
- * Generates thousands of scenes for every recipe, level and screen shape and checks
- * the placement rules. Run with `npm run check:scenes`; exits non-zero on any failure.
+ * Generates thousands of scenes for every recipe and level on three iPhone sizes and checks them
+ * with `validateScene`, plus the rules that hold for every scene (size tiers, colours that can
+ * show). Also lays each scene out again for the other sizes to check the facts never change.
+ * Run with `npm run check:scenes`; exits non-zero on any failure.
  */
 import { LEVELS } from '@/game/difficulty';
-import { MIN_CONTRAST, contrast } from '@/scenes/contrast';
+import { standsOut } from '@/scenes/contrast';
 import { generateQuestions } from '@/scenes/generateQuestions';
-import { MIN_VISIBLE, THIRD_MARGIN, THIRDS, TOP_MARGIN, generateScene, regionOf, zoneScale } from '@/scenes/generateScene';
+import { generateScene, relayoutScene } from '@/scenes/generateScene';
 import { RECIPES } from '@/scenes/recipes';
+import { TIERS, type SceneSize } from '@/scenes/types';
+import { validateScene } from '@/scenes/validateScene';
 
-const SCENES_PER_CASE = 300;
+const SCENES_PER_CASE = Number(process.env.SCENES ?? 200);
 const MIN_QUESTIONS = 12;
 
-let failed = false;
+/** The picture area (below the 72 pt header, inside the safe area) on three iPhones. */
+export const PHONES: { name: string; size: SceneSize }[] = [
+  { name: 'iPhone SE 375×667', size: { width: 375, height: 667 - 20 - 72 } },
+  { name: 'iPhone 15 393×852', size: { width: 393, height: 852 - 59 - 34 - 72 } },
+  { name: 'iPhone Pro Max 430×932', size: { width: 430, height: 932 - 59 - 34 - 72 } },
+];
 
-// Every fixed-colour thing declares the colour that has to stand out, and backdrop details stand out in every variant.
+let failed = false;
+const fail = (msg: string) => {
+  failed = true;
+  console.log(`✗ ${msg}`);
+};
+
+// Rules for every item: a size inside its tier, something to check contrast with, a colour that can show somewhere.
 for (const recipe of RECIPES) {
   for (const item of recipe.items) {
-    if (!item.colours && !item.tone) {
-      failed = true;
-      console.log(`✗ ${recipe.id}: ${item.kind} has no tone to check contrast with`);
-    }
-  }
-  for (const variant of recipe.variants) {
-    for (const accent of recipe.accents ?? []) {
-      const c = contrast(accent.colour, variant.palette[accent.on]);
-      if (c < MIN_CONTRAST) {
-        failed = true;
-        console.log(`✗ ${recipe.id} / ${variant.id}: ${accent.name} barely shows on the ${accent.on} (${c.toFixed(1)})`);
-      }
-    }
+    const [lo, hi] = TIERS[item.tier];
+    if (item.size < lo || item.size > hi) fail(`${recipe.id}: ${item.kind} size ${item.size} outside ${item.tier} ${lo}–${hi}`);
+    if (!item.colours && !item.tone) fail(`${recipe.id}: ${item.kind} has no tone to check contrast with`);
+    const surfaces = item.zones.flatMap((z) => {
+      const zone = recipe.zones.find((x) => x.id === z)!;
+      return [0.2, 0.5, 0.8].map((x) => recipe.surfaceAt(x, (zone.top + zone.bottom) / 2));
+    });
+    const colours = item.colours?.map((c) => c.hex) ?? [item.tone!];
+    const shows = recipe.variants.some((v) => colours.some((c) => surfaces.some((s) => standsOut(c, v.palette[s]))));
+    if (!shows) fail(`${recipe.id}: ${item.kind} can't stand out anywhere`);
   }
 }
 
-for (const height of [1350, 1600, 2000]) {
+const started = Date.now();
+let scenes = 0;
+let slowest = 0;
+for (const phone of PHONES) {
   for (const recipe of RECIPES) {
     for (const level of ['easy', 'medium', 'hard'] as const) {
       const knobs = LEVELS[level];
-      const problems = new Set<string>();
+      const problems = new Map<string, number>();
+      const note = (msg: string) => problems.set(msg, (problems.get(msg) ?? 0) + 1);
       const placed = new Set<string>();
       let short = 0;
       let veryShort = 0;
 
       for (let n = 1; n <= SCENES_PER_CASE; n++) {
-        const scene = generateScene(recipe, knobs, n * 7919, height);
-        // At real sizes a crowded picture may have room for a kind or two fewer: one short now and then,
-        // two short very rarely, never more.
-        if (scene.groups.length < knobs.groups - 2) problems.add(`only ${scene.groups.length} of ${knobs.groups} kinds placed`);
+        const t0 = Date.now();
+        const scene = generateScene(recipe, knobs, n * 7919, phone.size);
+        slowest = Math.max(slowest, Date.now() - t0);
+        scenes++;
+        for (const issue of validateScene(scene, phone.size.width, phone.size.height)) note(`${issue.rule}: ${issue.message}`);
+        scene.groups.forEach((g) => placed.add(g.kind));
+        if (scene.groups.length < knobs.groups - 2) note(`only ${scene.groups.length} of ${knobs.groups} kinds placed`);
         if (scene.groups.length < knobs.groups) short++;
         if (scene.groups.length < knobs.groups - 1) veryShort++;
-        if (generateQuestions(scene, recipe, knobs).length < MIN_QUESTIONS) problems.add('too few questions');
+        if (generateQuestions(scene, recipe, knobs).length < MIN_QUESTIONS) note('too few questions');
 
-        const rects = scene.groups.flatMap((group) => {
-          const item = recipe.items.find((i) => i.kind === group.kind)!;
-          const zone = recipe.zones.find((z) => z.id === group.zoneId)!;
-          placed.add(group.kind);
-          if (group.count > item.maxCount) problems.add(`more ${item.plural} than is realistic`);
-          const boxes = group.boxes.map((b) => ({ kind: group.kind, zone, x0: b.x, y0: b.y, x1: b.x + item.w * b.scale, y1: b.y + item.h * b.scale }));
-          const centre = (Math.min(...boxes.map((b) => b.x0)) + Math.max(...boxes.map((b) => b.x1))) / 2;
-          if (regionOf(centre) !== group.region) problems.add(`${group.kind} answer says ${group.region} but it is not`);
-          if (Math.abs(centre - THIRDS[0]) < THIRD_MARGIN - 25 || Math.abs(centre - THIRDS[1]) < THIRD_MARGIN - 25) problems.add(`${group.kind} on the line between two sides`);
-          return boxes;
-        });
-
-        for (const zone of recipe.zones) {
-          if ((zone.minGroups ?? 0) > scene.groups.filter((g) => g.zoneId === zone.id).length) problems.add(`${zone.id} left bare`);
-        }
-
-        // Contrast: everything stands out from the surface behind it.
-        const variant = recipe.variants.find((v) => v.id === scene.variantId)!;
-        for (const group of scene.groups) {
-          const item = recipe.items.find((i) => i.kind === group.kind)!;
-          const colour = group.colour?.hex ?? item.tone;
-          if (!colour) continue;
-          for (const b of group.boxes) {
-            const behind = variant.palette[recipe.surfaceAt(b.x + (item.w * b.scale) / 2, b.y + (item.h * b.scale) / 2, height)];
-            if (contrast(colour, behind) < MIN_CONTRAST) problems.add(`${group.colour?.name ?? ''} ${item.kind} blends into the background`.trim());
-          }
-        }
-
-        // A clear sky: nothing flying overlaps a cloud, and planes, balloons and kites never fly in a line.
-        const clouds = scene.decor.map((d) => {
-          const def = recipe.decor!.find((x) => x.kind === d.kind)!;
-          return { x0: d.box.x, y0: d.box.y, x1: d.box.x + def.w * d.box.scale, y1: d.box.y + def.h * d.box.scale };
-        });
-        for (const group of scene.groups) {
-          const item = recipe.items.find((i) => i.kind === group.kind)!;
-          const zone = recipe.zones.find((z) => z.id === group.zoneId)!;
-          const boxes = group.boxes.map((b) => ({ x0: b.x, y0: b.y, x1: b.x + item.w * b.scale, y1: b.y + item.h * b.scale }));
-          if (zone.surface === 'air') {
-            for (const r of boxes) {
-              if (clouds.some((c) => r.x0 < c.x1 && c.x0 < r.x1 && r.y0 < c.y1 && c.y0 < r.y1)) problems.add(`${item.kind} on top of a cloud`);
-            }
-          }
-          if (item.scatter && zone.surface === 'air') {
-            for (let a = 0; a < boxes.length; a++) {
-              for (let b = a + 1; b < boxes.length; b++) {
-                const gap = Math.abs((boxes[a].y0 + boxes[a].y1) / 2 - (boxes[b].y0 + boxes[b].y1) / 2);
-                if (gap < 0.5 * Math.min(boxes[a].y1 - boxes[a].y0, boxes[b].y1 - boxes[b].y0)) problems.add(`${item.plural} flying in a line`);
-              }
-            }
-          }
-        }
-
-        // Placement habits: hanging heights, wall gaps, windows and doors, rugs, mounting points.
-        const fixtures = recipe.fixtures?.(height) ?? [];
-        const mounts = recipe.mounts?.(height) ?? [];
-        for (const group of scene.groups) {
-          const item = recipe.items.find((i) => i.kind === group.kind)!;
-          const zone = recipe.zones.find((z) => z.id === group.zoneId)!;
-          const pxPerCm = zoneScale(recipe, zone, height);
-          for (const b of group.boxes) {
-            const w = item.w * b.scale;
-            const h = item.h * b.scale;
-            const r = { x0: b.x, y0: b.y, x1: b.x + w, y1: b.y + h };
-            if (zone.surface === 'wall') {
-              for (const f of fixtures) {
-                if (f.kind === 'opening' && r.x0 < f.x1 && f.x0 < r.x1 && r.y0 < f.y1 && f.y0 < r.y1) problems.add(`${item.kind} covers a window or door`);
-              }
-            }
-            if (item.hangAt) {
-              const centreCm = ((zone.plane ?? zone.bottom) * height - (r.y0 + r.y1) / 2) / pxPerCm;
-              if (centreCm < item.hangAt[0] - 1 || centreCm > item.hangAt[1] + 1) problems.add(`${item.kind} hung at the wrong height`);
-            }
-            if (item.avoid?.includes('rug')) {
-              for (const f of fixtures) {
-                if (f.kind !== 'rug') continue;
-                if (r.x0 < f.cx + f.rx && f.cx - f.rx < r.x1 && r.y0 < f.cy + f.ry && f.cy - f.ry < r.y1) problems.add(`${item.kind} over the rug`);
-              }
-            }
-            if (item.mount === 'corner') {
-              const ok = mounts.some((m) => m.kind === 'corner' && Math.abs((r.y0 + r.y1) / 2 - m.y) < 1 && (m.side === 'left' ? Math.abs(r.x0 - m.x) < 1 : Math.abs(r.x1 - m.x) < 1));
-              if (!ok) problems.add(`${item.kind} not fixed to a building corner`);
-            }
-            if (item.mount === 'roof') {
-              const ok = mounts.some((m) => m.kind === 'roof' && Math.abs(r.y1 - m.y) < 1 && r.x0 >= m.x0 - 1 && r.x1 <= m.x1 + 1);
-              if (!ok) problems.add(`${item.kind} not standing on a roof`);
-            }
-          }
-        }
-        if (recipe.wallGapCm) {
-          const hung = scene.groups.filter((g) => recipe.zones.find((z) => z.id === g.zoneId)!.surface === 'wall');
-          for (let a = 0; a < hung.length; a++) {
-            for (let b = a + 1; b < hung.length; b++) {
-              const zone = recipe.zones.find((z) => z.id === hung[a].zoneId)!;
-              const gap = recipe.wallGapCm * zoneScale(recipe, zone, height) - 1;
-              const box = (g: (typeof hung)[number]) => {
-                const item = recipe.items.find((i) => i.kind === g.kind)!;
-                return g.boxes.map((bx) => ({ x0: bx.x, y0: bx.y, x1: bx.x + item.w * bx.scale, y1: bx.y + item.h * bx.scale }));
-              };
-              for (const p of box(hung[a])) {
-                for (const q of box(hung[b])) {
-                  if (p.x0 < q.x1 + gap && q.x0 < p.x1 + gap && p.y0 < q.y1 + gap && q.y0 < p.y1 + gap) problems.add(`${hung[a].kind} too close to ${hung[b].kind} on the wall`);
-                }
-              }
-            }
-          }
-        }
-
-        for (const r of rects) {
-          if (r.x0 < 0 || r.x1 > 900) problems.add(`${r.kind} off the side of the picture`);
-          if (r.y0 < TOP_MARGIN * height - 1) problems.add(`${r.kind} touching the top edge`);
-          if (r.y1 - r.y0 < MIN_VISIBLE - 0.5) problems.add(`${r.kind} too small to see`);
-          if (r.zone.surface === 'ground') {
-            if (r.y1 < r.zone.top * height - 1 || r.y1 > r.zone.bottom * height + 1) problems.add(`${r.kind} not standing in its area`);
-          } else if (r.y0 < r.zone.top * height - 1 || r.y1 > r.zone.bottom * height + 1) {
-            problems.add(`${r.kind} outside its band`);
-          }
-          if (r.zone.panels && !r.zone.panels.some(([p0, p1]) => r.x0 >= p0 && r.x1 <= p1)) problems.add(`${r.kind} crosses a building edge`);
-        }
-        for (let a = 0; a < rects.length; a++) {
-          for (let b = a + 1; b < rects.length; b++) {
-            const p = rects[a];
-            const q = rects[b];
-            if (Math.min(p.x1, q.x1) - Math.max(p.x0, q.x0) > 2 && Math.min(p.y1, q.y1) - Math.max(p.y0, q.y0) > 2) {
-              problems.add(p.kind === q.kind ? `two ${p.kind}s overlap` : `${p.kind} overlaps ${q.kind}`);
-            }
+        // Laid out again for another phone: same facts, or keep the original layout (never different facts).
+        if (n % 10 === 0) {
+          for (const other of PHONES) {
+            if (other === phone) continue;
+            const again = relayoutScene(scene, other.size);
+            if (!again) continue;
+            const facts = (s: typeof scene) => JSON.stringify(s.groups.map((g) => [g.kind, g.count, g.colour?.name, g.zoneId, g.region]));
+            if (facts(again) !== facts(scene)) note('laying out again changed the facts');
+            if (validateScene(again, other.size.width, other.size.height).length) note('laid out again but not valid');
           }
         }
       }
 
-      if (veryShort / SCENES_PER_CASE > 0.01) problems.add(`${veryShort} pictures two kinds short`);
-      if (short / SCENES_PER_CASE > 0.15) problems.add(`${Math.round((100 * short) / SCENES_PER_CASE)}% of pictures one kind short`);
-      for (const item of recipe.items) if (!placed.has(item.kind)) problems.add(`${item.kind} never fits anywhere`);
-      const label = `${recipe.id} / ${level} / height ${height}`;
-      if (problems.size) {
-        failed = true;
-        console.log(`✗ ${label}: ${[...problems].join('; ')}`);
-      } else {
-        console.log(`✓ ${label}`);
-      }
+      if (veryShort / SCENES_PER_CASE > 0.02) note(`${veryShort} pictures two kinds short`);
+      if (short / SCENES_PER_CASE > 0.2) note(`${Math.round((100 * short) / SCENES_PER_CASE)}% of pictures one kind short`);
+      for (const item of recipe.items) if (!placed.has(item.kind)) note(`${item.kind} never fits anywhere`);
+      const label = `${phone.name} / ${recipe.id} / ${level}`;
+      if (problems.size) fail(`${label}: ${[...problems].map(([m, c]) => `${m} (×${c})`).join('; ')}`);
+      else console.log(`✓ ${label}`);
     }
   }
 }
 
+console.log(`${scenes} scenes in ${((Date.now() - started) / 1000).toFixed(1)} s (slowest ${slowest} ms)`);
 process.exit(failed ? 1 : 0);

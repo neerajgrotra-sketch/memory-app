@@ -1,11 +1,11 @@
 import { Circle, Ellipse, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
-import type { DecorDef, ItemDef } from '../types';
+import type { ItemDef } from '../types';
 
 /**
- * Things that turn up in several settings. `height` is real-world cm (sky things: how big they
- * look). Each recipe sets which bands they may go in and may adjust height or counts.
+ * Things that turn up in several settings. Each recipe sets which bands they may go in and may
+ * adjust counts. Shapes without their own stroke get the thing's outline; details use `stroke="none"`.
  */
 type CommonItem = Omit<ItemDef, 'zones' | 'maxCount'>;
 
@@ -16,40 +16,32 @@ export const bird: CommonItem = {
   article: 'a',
   w: 60,
   h: 30,
-  height: 52,
+  tier: 'small',
+  size: 0.1,
   tone: '#222222',
   draw: () => (
     <Path d="M5,12 Q17,0 30,16 Q43,0 55,12" fill="none" stroke="#222" strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" />
   ),
 };
 
-/** Clouds are scenery: spread across the sky and never asked about. Recipes set the band. */
-export const clouds: Omit<DecorDef, 'top' | 'bottom'> = {
-  kind: 'cloud',
-  colour: '#ffffff',
-  w: 170,
-  h: 75,
-  size: 80,
-  min: 2,
-  max: 4,
-  draw: () => (
-    <G fill="#ffffff" fillOpacity={0.95}>
-      <Ellipse cx={85} cy={50} rx={80} ry={25} />
-      <Ellipse cx={110} cy={32} rx={45} ry={28} />
-      <Ellipse cx={60} cy={36} rx={38} ry={24} />
-    </G>
-  ),
-};
+/** A faint cloud for a recipe's backdrop marks: never asked about. Drawn in a 170 × 75 box. */
+export const cloudShape = (x: number, y: number, scale: number) => (
+  <G transform={`translate(${x} ${y}) scale(${scale})`} fill="#ffffff">
+    <Ellipse cx={85} cy={50} rx={80} ry={25} />
+    <Ellipse cx={110} cy={32} rx={45} ry={28} />
+    <Ellipse cx={60} cy={36} rx={38} ry={24} />
+  </G>
+);
 
 export const balloon: CommonItem = {
   kind: 'balloon',
-  scatter: true,
   singular: 'hot-air balloon',
   plural: 'hot-air balloons',
   article: 'a',
   w: 90,
   h: 135,
-  height: 150,
+  tier: 'medium',
+  size: 0.14,
   colours: [C.red, C.blue, C.purple, C.green, C.orange, C.pink],
   draw: (colour) => (
     <G>
@@ -64,13 +56,13 @@ export const balloon: CommonItem = {
 
 export const kite: CommonItem = {
   kind: 'kite',
-  scatter: true,
   singular: 'kite',
   plural: 'kites',
   article: 'a',
   w: 80,
   h: 160,
-  height: 150,
+  tier: 'medium',
+  size: 0.13,
   colours: [C.red, C.blue, C.yellow, C.green, C.purple, C.orange],
   draw: (colour) => (
     <G>
@@ -84,21 +76,21 @@ export const kite: CommonItem = {
 
 export const plane: CommonItem = {
   kind: 'plane',
-  scatter: true,
   singular: 'plane',
   plural: 'planes',
   article: 'a',
   w: 170,
   h: 60,
-  height: 55,
+  tier: 'medium',
+  size: 0.18,
   tone: '#ffffff',
   draw: () => (
     <G>
-      <Path d="M10,30 C10,22 20,20 30,20 H140 C160,20 168,30 168,30 C168,30 160,40 140,40 H30 C20,40 10,38 10,30 Z" fill="#ffffff" stroke="#6c757d" strokeWidth={3} />
       <Polygon points="70,30 100,30 75,2 62,2" fill="#adb5bd" />
       <Polygon points="70,32 100,32 75,58 62,58" fill="#adb5bd" />
       <Polygon points="14,28 30,20 22,4 12,4" fill="#adb5bd" />
-      <G fill="#4dabf7">
+      <Path d="M10,30 C10,22 20,20 30,20 H140 C160,20 168,30 168,30 C168,30 160,40 140,40 H30 C20,40 10,38 10,30 Z" fill="#ffffff" />
+      <G fill="#4dabf7" stroke="none">
         <Circle cx={120} cy={29} r={4} />
         <Circle cx={105} cy={29} r={4} />
         <Circle cx={45} cy={29} r={4} />
@@ -114,16 +106,17 @@ export const person: CommonItem = {
   article: 'a',
   w: 50,
   h: 125,
-  height: 170,
+  tier: 'small',
+  size: 0.1,
   colours: [C.red, C.blue, C.yellow, C.green, C.orange, C.purple, C.pink, C.white],
   colourPrompt: (plural) => (plural ? 'What colour were the people’s shirts?' : 'What colour was the person’s shirt?'),
   draw: (colour) => (
     <G>
-      <Rect x={14} y={78} width={9} height={47} rx={4} fill="#343a40" />
-      <Rect x={27} y={78} width={9} height={47} rx={4} fill="#343a40" />
-      <Rect x={8} y={32} width={34} height={52} rx={10} fill={colour} stroke="#00000033" strokeWidth={2} />
-      <Circle cx={25} cy={16} r={15} fill="#e0ac69" />
-      <Path d="M10,14 C12,0 38,0 40,14 C32,8 18,8 10,14 Z" fill="#4a2c17" />
+      <Rect x={14} y={78} width={9} height={47} rx={4} fill="#343a40" stroke="none" />
+      <Rect x={27} y={78} width={9} height={47} rx={4} fill="#343a40" stroke="none" />
+      <Rect x={8} y={32} width={34} height={52} rx={10} fill={colour} />
+      <Circle cx={25} cy={16} r={15} fill="#e0ac69" stroke="none" />
+      <Path d="M10,14 C12,0 38,0 40,14 C32,8 18,8 10,14 Z" fill="#4a2c17" stroke="none" />
     </G>
   ),
 };
@@ -135,10 +128,11 @@ export const dog: CommonItem = {
   article: 'a',
   w: 100,
   h: 75,
-  height: 55,
+  tier: 'medium',
+  size: 0.14,
   colours: [C.brown, C.black, C.white],
   draw: (colour) => (
-    <G stroke="#00000044" strokeWidth={2}>
+    <G>
       <Rect x={18} y={48} width={10} height={27} rx={4} fill={colour} />
       <Rect x={62} y={48} width={10} height={27} rx={4} fill={colour} />
       <Ellipse cx={45} cy={45} rx={36} ry={20} fill={colour} />
@@ -158,7 +152,9 @@ export const tree: CommonItem = {
   article: 'a',
   w: 120,
   h: 200,
-  height: 450,
+  tier: 'large',
+  size: 0.2,
+  tall: true,
   tone: '#2f8f3a',
   draw: () => (
     <G>
@@ -177,15 +173,16 @@ export const plantPot: CommonItem = {
   article: 'a',
   w: 80,
   h: 110,
-  height: 75,
+  tier: 'medium',
+  size: 0.13,
   colours: [C.orange, C.blue, C.white, C.yellow, C.pink, C.purple],
   colourPrompt: (plural) => (plural ? 'What colour were the plant pots?' : 'What colour was the plant pot?'),
   draw: (colour) => (
     <G>
-      <Path d="M40,62 C20,40 5,30 8,8 C25,15 35,35 40,62 Z" fill="#2b9348" />
-      <Path d="M40,62 C60,40 75,30 72,8 C55,15 45,35 40,62 Z" fill="#40a85a" />
-      <Path d="M40,62 C38,35 40,15 40,0 C46,20 46,40 40,62 Z" fill="#2b9348" />
-      <Path d="M14,60 H66 L58,110 H22 Z" fill={colour} stroke="#00000044" strokeWidth={3} />
+      <Path d="M40,62 C20,40 5,30 8,8 C25,15 35,35 40,62 Z" fill="#2b9348" stroke="none" />
+      <Path d="M40,62 C60,40 75,30 72,8 C55,15 45,35 40,62 Z" fill="#40a85a" stroke="none" />
+      <Path d="M40,62 C38,35 40,15 40,0 C46,20 46,40 40,62 Z" fill="#2b9348" stroke="none" />
+      <Path d="M14,60 H66 L58,110 H22 Z" fill={colour} />
     </G>
   ),
 };
@@ -197,11 +194,12 @@ export const ball: CommonItem = {
   article: 'a',
   w: 55,
   h: 55,
-  height: 25,
+  tier: 'small',
+  size: 0.1,
   colours: [C.red, C.blue, C.yellow, C.green, C.orange, C.purple, C.pink],
   draw: (colour) => (
     <G>
-      <Circle cx={27.5} cy={27.5} r={26} fill={colour} stroke="#00000044" strokeWidth={2} />
+      <Circle cx={27.5} cy={27.5} r={26} fill={colour} />
       <Path d="M4,22 C18,32 38,32 51,22" fill="none" stroke="#ffffff" strokeWidth={6} />
     </G>
   ),

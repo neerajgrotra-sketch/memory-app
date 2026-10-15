@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -76,12 +76,15 @@ function toRoundResult(
  * remount (e.g. with `key={difficulty}`) to start over with another difficulty.
  */
 export function useGameSession(difficulty: Difficulty) {
-  // Pictures are built to the shape of the space below the countdown bar, so they fill it.
+  // Pictures are laid out for the space below the countdown bar, down to the bottom safe-area inset.
+  // (The picture measures itself too and lays the same contents out again if the space differs.)
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const aspect = width / Math.max(1, height - insets.top - insets.bottom - layout.memoriseBarHeight);
+  const sceneWidth = Math.max(1, width - insets.left - insets.right);
+  const sceneHeight = Math.max(1, height - insets.top - insets.bottom - layout.memoriseBarHeight);
+  const size = useMemo(() => ({ width: sceneWidth, height: sceneHeight }), [sceneWidth, sceneHeight]);
   const [first] = useState(() => {
-    const firstStage = createStage(levelForRound(difficulty, 0), aspect);
+    const firstStage = createStage(levelForRound(difficulty, 0), size);
     return { stage: firstStage, round: buildRound(difficulty, 0, firstStage.questions, new Set(), new Set()) };
   });
   const [stage, setStage] = useState<Stage>(first.stage);
@@ -97,7 +100,7 @@ export function useGameSession(difficulty: Difficulty) {
   /** Builds a brand-new picture for round `index`, in a different setting from the last one. */
   const startStage = useCallback(
     (index: number, previousRecipeId?: string) => {
-      const next = createStage(levelForRound(difficulty, index), aspect, previousRecipeId);
+      const next = createStage(levelForRound(difficulty, index), size, previousRecipeId);
       seenIds.current = new Set();
       setStage(next);
       const nextRound = buildRound(difficulty, index, next.questions, seenIds.current, new Set());
@@ -105,7 +108,7 @@ export function useGameSession(difficulty: Difficulty) {
       setAnswers(emptyAnswers(nextRound.questions.length));
       setPhase('memorise');
     },
-    [aspect, difficulty],
+    [size, difficulty],
   );
 
   const finishMemorising = useCallback(() => setPhase('quiz'), []);

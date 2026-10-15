@@ -1,12 +1,17 @@
 import { Circle, Ellipse, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
-import { balloon, ball, bird, clouds, kite, person, plane } from '../items/common';
-import type { ItemDef, Recipe } from '../types';
+import { ball, balloon, bird, cloudShape, kite, person, plane } from '../items/common';
+import { lineMarks, markIfClear, scatterMarks } from '../marks';
+import type { ItemDef, Mark, Recipe, Rect as Box, VariantDef } from '../types';
+
+/** Band edges, as fractions of the picture height. */
+const HORIZON = 0.35;
+const SHORE = 0.6;
 
 const SKY = ['sky'];
 const SEA = ['sea'];
-const SAND = ['shore', 'front'];
+const SAND = ['sand'];
 
 const items: ItemDef[] = [
   {
@@ -16,7 +21,8 @@ const items: ItemDef[] = [
     article: 'a',
     w: 140,
     h: 140,
-    height: 150,
+    tier: 'medium',
+    size: 0.16,
     zones: SKY,
     maxCount: 1,
     tone: '#ffd93b',
@@ -35,7 +41,8 @@ const items: ItemDef[] = [
     article: 'a',
     w: 130,
     h: 150,
-    height: 700,
+    tier: 'large',
+    size: 0.22,
     zones: SEA,
     maxCount: 3,
     colours: [C.red, C.yellow, C.white, C.orange, C.purple],
@@ -43,9 +50,9 @@ const items: ItemDef[] = [
     draw: (colour) => (
       <G>
         <Line x1={65} y1={5} x2={65} y2={118} stroke="#5c3d1e" strokeWidth={5} />
-        <Polygon points="68,8 68,110 120,110" fill={colour} stroke="#00000033" strokeWidth={2} />
-        <Polygon points="62,20 62,110 18,110" fill={colour} fillOpacity={0.85} stroke="#00000033" strokeWidth={2} />
-        <Path d="M5,118 H125 L108,145 H22 Z" fill="#7a4a2a" />
+        <Polygon points="68,8 68,110 120,110" fill={colour} />
+        <Polygon points="62,20 62,110 18,110" fill={colour} fillOpacity={0.85} />
+        <Path d="M5,118 H125 L108,145 H22 Z" fill="#7a4a2a" stroke="#3d2412" />
       </G>
     ),
   },
@@ -56,16 +63,17 @@ const items: ItemDef[] = [
     article: 'a',
     w: 50,
     h: 65,
-    height: 120,
+    tier: 'small',
+    size: 0.1,
     zones: SEA,
     maxCount: 4,
     colours: [C.red, C.yellow, C.orange, C.white],
+    // A bold band so even a white or yellow buoy reads clearly on the water.
     draw: (colour) => (
       <G>
-        <Path d="M10,60 C10,25 15,10 25,10 C35,10 40,25 40,60 Z" fill={colour} stroke="#00000044" strokeWidth={2} />
-        <Rect x={11} y={34} width={28} height={8} fill="#ffffff" fillOpacity={0.8} />
+        <Path d="M10,60 C10,25 15,10 25,10 C35,10 40,25 40,60 Z" fill={colour} />
+        <Rect x={11} y={32} width={28} height={11} fill={colour === C.white.hex || colour === C.yellow.hex ? '#d62828' : '#ffffff'} stroke="none" />
         <Line x1={25} y1={10} x2={25} y2={0} stroke="#333" strokeWidth={3} />
-        <Ellipse cx={25} cy={61} rx={24} ry={4} fill="#ffffff" fillOpacity={0.6} />
       </G>
     ),
   },
@@ -76,17 +84,17 @@ const items: ItemDef[] = [
     article: 'a',
     w: 130,
     h: 75,
-    height: 120,
+    tier: 'medium',
+    size: 0.16,
     zones: SEA,
     maxCount: 3,
     tone: '#ced4da',
     draw: () => (
       <G>
-        <Path d="M8,62 C20,15 85,2 118,30 C108,30 100,36 98,40 C80,22 40,25 22,62 Z" fill="#ced4da" stroke="#6c757d" strokeWidth={2} />
-        <Polygon points="62,14 75,0 80,18" fill="#ced4da" stroke="#6c757d" strokeWidth={2} />
-        <Polygon points="8,62 0,50 16,56" fill="#ced4da" stroke="#6c757d" strokeWidth={2} />
-        <Circle cx={104} cy={30} r={3} fill="#222" />
-        <Path d="M0,70 Q30,62 60,70 T120,70" fill="none" stroke="#ffffff" strokeWidth={4} />
+        <Polygon points="62,14 75,0 80,18" fill="#ced4da" />
+        <Polygon points="8,62 0,50 16,56" fill="#ced4da" />
+        <Path d="M8,62 C20,15 85,2 118,30 C108,30 100,36 98,40 C80,22 40,25 22,62 Z" fill="#ced4da" />
+        <Circle cx={104} cy={30} r={3} fill="#222" stroke="none" />
       </G>
     ),
   },
@@ -97,15 +105,16 @@ const items: ItemDef[] = [
     article: 'a',
     w: 160,
     h: 180,
-    height: 230,
+    tier: 'large',
+    size: 0.24,
     zones: SAND,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.orange, C.purple, C.pink],
     draw: (colour) => (
       <G>
         <Line x1={80} y1={60} x2={80} y2={180} stroke="#5c3d1e" strokeWidth={6} />
-        <Path d="M2,62 C10,10 150,10 158,62 Z" fill={colour} stroke="#00000033" strokeWidth={2} />
-        <Path d="M80,18 C60,30 50,45 48,62 L80,62 Z M80,18 C100,30 110,45 112,62 L80,62 Z" fill="#ffffff" fillOpacity={0.55} />
+        <Path d="M2,62 C10,10 150,10 158,62 Z" fill={colour} />
+        <Path d="M80,18 C60,30 50,45 48,62 L80,62 Z M80,18 C100,30 110,45 112,62 L80,62 Z" fill="#ffffff" fillOpacity={0.55} stroke="none" />
       </G>
     ),
   },
@@ -116,18 +125,19 @@ const items: ItemDef[] = [
     article: 'a',
     w: 60,
     h: 65,
-    height: 32,
+    tier: 'small',
+    size: 0.11,
     zones: SAND,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.pink, C.purple],
     draw: (colour) => (
       <G>
         <Path d="M10,22 C10,0 50,0 50,22" fill="none" stroke="#555" strokeWidth={3} />
-        <Path d="M4,22 H56 L48,65 H12 Z" fill={colour} stroke="#00000044" strokeWidth={2} />
+        <Path d="M4,22 H56 L48,65 H12 Z" fill={colour} />
       </G>
     ),
   },
-  { ...ball, singular: 'beach ball', plural: 'beach balls', height: 35, zones: SAND, maxCount: 3 },
+  { ...ball, singular: 'beach ball', plural: 'beach balls', zones: SAND, maxCount: 3 },
   {
     kind: 'crab',
     singular: 'crab',
@@ -135,18 +145,21 @@ const items: ItemDef[] = [
     article: 'a',
     w: 80,
     h: 50,
-    height: 32,
+    tier: 'small',
+    size: 0.12,
     zones: SAND,
     maxCount: 4,
     tone: '#e63946',
     draw: () => (
-      <G stroke="#9d0208" strokeWidth={4} strokeLinecap="round">
-        <Line x1={22} y1={34} x2={8} y2={46} />
-        <Line x1={28} y1={38} x2={20} y2={50} />
-        <Line x1={58} y1={34} x2={72} y2={46} />
-        <Line x1={52} y1={38} x2={60} y2={50} />
-        <Path d="M20,24 C10,20 6,10 10,4" fill="none" />
-        <Path d="M60,24 C70,20 74,10 70,4" fill="none" />
+      <G>
+        <G stroke="#9d0208" strokeWidth={4} strokeLinecap="round" fill="none">
+          <Line x1={22} y1={34} x2={8} y2={46} />
+          <Line x1={28} y1={38} x2={20} y2={50} />
+          <Line x1={58} y1={34} x2={72} y2={46} />
+          <Line x1={52} y1={38} x2={60} y2={50} />
+          <Path d="M20,24 C10,20 6,10 10,4" />
+          <Path d="M60,24 C70,20 74,10 70,4" />
+        </G>
         <Ellipse cx={40} cy={30} rx={24} ry={15} fill="#e63946" />
         <Circle cx={10} cy={4} r={6} fill="#e63946" />
         <Circle cx={70} cy={4} r={6} fill="#e63946" />
@@ -162,15 +175,16 @@ const items: ItemDef[] = [
     article: 'a',
     w: 160,
     h: 70,
-    height: 40,
+    tier: 'medium',
+    size: 0.17,
     zones: SAND,
     maxCount: 3,
     colours: [C.red, C.blue, C.green, C.orange, C.purple, C.pink],
     draw: (colour) => (
       <G>
-        <Polygon points="20,0 160,0 140,70 0,70" fill={colour} stroke="#00000033" strokeWidth={2} />
-        <Polygon points="50,0 70,0 50,70 30,70" fill="#ffffff" fillOpacity={0.7} />
-        <Polygon points="110,0 130,0 110,70 90,70" fill="#ffffff" fillOpacity={0.7} />
+        <Polygon points="20,0 160,0 140,70 0,70" fill={colour} />
+        <Polygon points="50,0 70,0 50,70 30,70" fill="#ffffff" fillOpacity={0.7} stroke="none" />
+        <Polygon points="110,0 130,0 110,70 90,70" fill="#ffffff" fillOpacity={0.7} stroke="none" />
       </G>
     ),
   },
@@ -181,13 +195,16 @@ const items: ItemDef[] = [
     article: 'a',
     w: 160,
     h: 270,
-    height: 450,
-    zones: ['shore'],
+    tier: 'large',
+    size: 0.24,
+    // Tall on purpose: it stands at the back of the sand and its leaves rise over the sea.
+    tall: true,
+    zones: SAND,
     maxCount: 2,
     tone: '#2b9348',
     draw: () => (
       <G>
-        <Path d="M70,270 C75,200 70,120 88,55 L100,58 C88,120 92,200 92,270 Z" fill="#8b5a2b" />
+        <Path d="M70,270 C75,200 70,120 88,55 L100,58 C88,120 92,200 92,270 Z" fill="#8b5a2b" stroke="#5c3a1b" />
         <G fill="#2b9348">
           <Path d="M94,55 C60,20 20,30 0,60 C30,45 60,45 94,55 Z" />
           <Path d="M94,55 C120,15 150,20 160,50 C135,40 115,42 94,55 Z" />
@@ -195,8 +212,8 @@ const items: ItemDef[] = [
           <Path d="M94,55 C60,60 35,85 30,110 C55,85 75,72 94,55 Z" />
           <Path d="M94,55 C125,60 145,85 150,110 C128,85 112,72 94,55 Z" />
         </G>
-        <Circle cx={88} cy={62} r={8} fill="#6b3e1f" />
-        <Circle cx={100} cy={64} r={8} fill="#6b3e1f" />
+        <Circle cx={88} cy={62} r={8} fill="#6b3e1f" stroke="none" />
+        <Circle cx={100} cy={64} r={8} fill="#6b3e1f" stroke="none" />
       </G>
     ),
   },
@@ -207,19 +224,20 @@ const items: ItemDef[] = [
     article: 'a',
     w: 130,
     h: 115,
-    height: 50,
+    tier: 'medium',
+    size: 0.17,
     zones: SAND,
     maxCount: 2,
     tone: '#b07d3a',
     draw: () => (
-      <G fill="#b07d3a" stroke="#7a5426" strokeWidth={2}>
+      <G fill="#b07d3a">
         <Rect x={10} y={55} width={110} height={60} />
         <Rect x={0} y={30} width={36} height={85} />
         <Rect x={94} y={30} width={36} height={85} />
         <Rect x={47} y={20} width={36} height={95} />
-        <Line x1={65} y1={20} x2={65} y2={0} stroke="#555" />
+        <Line x1={65} y1={20} x2={65} y2={0} stroke="#555" strokeWidth={3} />
         <Polygon points="65,0 85,6 65,12" fill="#e63946" stroke="none" />
-        <Path d="M55,115 V95 C55,85 75,85 75,95 V115 Z" fill="#7a5426" />
+        <Path d="M55,115 V95 C55,85 75,85 75,95 V115 Z" fill="#7a5426" stroke="none" />
       </G>
     ),
   },
@@ -230,45 +248,51 @@ const items: ItemDef[] = [
     article: 'a',
     w: 55,
     h: 55,
-    height: 30,
+    tier: 'small',
+    size: 0.1,
     zones: SAND,
     maxCount: 4,
     colours: [C.orange, C.pink, C.red, C.purple],
-    draw: (colour) => (
-      <Polygon
-        points="27.5,0 34,19 54,20 38,32 44,52 27.5,40 11,52 17,32 1,20 21,19"
-        fill={colour}
-        stroke="#00000044"
-        strokeWidth={2}
-        strokeLinejoin="round"
-      />
-    ),
+    draw: (colour) => <Polygon points="27.5,0 34,19 54,20 38,32 44,52 27.5,40 11,52 17,32 1,20 21,19" fill={colour} />,
   },
   { ...person, zones: SAND, maxCount: 4 },
 ];
 
 type Palette = Record<'sky' | 'sea' | 'sand' | 'foam', string>;
 
-const HORIZON = 0.33;
-const SHORE = 0.55;
-
-function backdrop(height: number, { sky, sea, sand, foam }: Palette) {
+/** Background bands only: sky, sea and sand. Details are faint marks drawn around the things. */
+function backdrop(height: number, { sky, sea, sand }: Palette) {
   const horizon = height * HORIZON;
   const shore = height * SHORE;
   return (
     <G>
-      <Rect x={-600} y={-600} width={2100} height={horizon + 610} fill={sky} />
-      <Path d={`M-600,${horizon} H0 Q120,${horizon - 30} 240,${horizon} H1500 V${horizon + 4} H-600 Z`} fill="#6c9a8b" fillOpacity={0.6} />
-      <Rect x={-600} y={horizon} width={2100} height={shore - horizon + 20} fill={sea} />
-      <G stroke={foam} strokeWidth={4} fill="none" strokeOpacity={0.5}>
-        {[0.37, 0.42, 0.47, 0.52].map((f, i) => (
-          <Path key={f} d={`M${60 + i * 190},${height * f} q30,-12 60,0 M${520 - i * 110},${height * f + 30} q30,-12 60,0`} />
-        ))}
-      </G>
-      <Path d={`M-600,${shore} H0 Q225,${shore - 20} 450,${shore} T900,${shore} H1500 V${height + 600} H-600 Z`} fill={sand} />
-      <Path d={`M-600,${shore} H0 Q225,${shore - 20} 450,${shore} T900,${shore} H1500`} fill="none" stroke="#ffffff" strokeOpacity={0.7} strokeWidth={6} />
+      <Rect x={-600} y={-600} width={2100} height={horizon + 600} fill={sky} />
+      <Rect x={-600} y={horizon} width={2100} height={shore - horizon} fill={sea} />
+      <Rect x={-600} y={shore} width={2100} height={height - shore + 600} fill={sand} />
     </G>
   );
+}
+
+function marks(height: number, boxes: Box[], random: () => number, variant: VariantDef): Mark[] {
+  const { foam } = variant.palette;
+  const horizon = height * HORIZON;
+  const shore = height * SHORE;
+  const wave = (x: number, y: number) => <Path d={`M${x},${y + 10} q15,-10 30,0 t30,0`} fill="none" stroke={foam} strokeWidth={4} strokeLinecap="round" />;
+  return [
+    ...scatterMarks({ x0: -100, y0: height * 0.03, x1: 1000, y1: horizon - 20 }, 150, 66, 3, boxes, random, 0.35, (x, y) => cloudShape(x, y, 150 / 170)),
+    ...scatterMarks({ x0: 20, y0: horizon + 20, x1: 880, y1: shore - 10 }, 60, 20, 6, boxes, random, 0.3, wave),
+    ...lineMarks(shore, -600, 1500, boxes, foam, 5, 0.35),
+    ...[0.2, 0.5, 0.8].flatMap((fx) => {
+      const x = fx * 900 + (random() - 0.5) * 200;
+      const y = shore + (height - shore) * (0.2 + 0.6 * random());
+      return markIfClear(
+        { x0: x - 4, y0: y - 4, x1: x + 30, y1: y + 4 },
+        boxes,
+        0.25,
+        <Line key={`r${fx}`} x1={x} y1={y} x2={x + 26} y2={y} stroke="#a07a45" strokeWidth={4} strokeOpacity={0.25} strokeLinecap="round" />,
+      );
+    }),
+  ];
 }
 
 const PALETTES: Record<string, Palette> = {
@@ -276,23 +300,17 @@ const PALETTES: Record<string, Palette> = {
   sunset: { sky: '#ffb38a', sea: '#3d6fa8', sand: '#e9c46a', foam: '#ffd6a5' },
 };
 
-const surfaceAt = (_x: number, y: number, height: number) => (y < height * HORIZON ? 'sky' : y < height * SHORE ? 'sea' : 'sand');
-
 export const beach: Recipe = {
   id: 'beach',
   title: 'At the beach',
   place: 'on the beach',
-  // The sea horizon is the camera's horizon: true perspective, so far boats are small and near ones big.
-  camera: { horizon: 0.33, ref: 0.9, pxPerCm: 1.6 },
   zones: [
-    { id: 'sky', label: 'In the sky', surface: 'air', top: 0.04, bottom: 0.31 },
-    { id: 'sea', label: 'In the sea', surface: 'ground', top: 0.38, bottom: 0.545 },
-    { id: 'shore', label: 'Near the water', surface: 'ground', top: 0.58, bottom: 0.75 },
-    { id: 'front', label: 'At the front', surface: 'ground', top: 0.78, bottom: 0.97 },
+    { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: HORIZON, rows: 2 },
+    { id: 'sea', label: 'In the sea', surface: 'ground', top: HORIZON, bottom: SHORE, rows: 1 },
+    { id: 'sand', label: 'On the sand', surface: 'ground', top: SHORE, bottom: 1, rows: 2 },
   ],
   items,
-  decor: [{ ...clouds, top: 0.02, bottom: 0.28 }],
-  surfaceAt,
-  accents: [{ name: 'clouds', colour: '#ffffff', on: 'sky' }],
+  surfaceAt: (_x, y) => (y < HORIZON ? 'sky' : y < SHORE ? 'sea' : 'sand'),
+  marks,
   variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number) => backdrop(h, p) })),
 };

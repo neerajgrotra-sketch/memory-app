@@ -46,6 +46,8 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   const present = spec.groups.map((g) => itemOf(g.kind));
   const absent = recipe.items.filter((i) => !spec.groups.some((g) => g.kind === i.kind));
   const questions: Question[] = [];
+  // Only bands things can go in make believable wrong answers (not the room's bare ceiling).
+  const zones = recipe.zones.filter((z) => z.rows > 0);
 
   const add = (template: string, group: PlacedGroup | null, q: Omit<Question, 'id' | 'sceneId' | 'answerIndex'>) =>
     questions.push({ ...q, id: `${spec.id}-${template}-${group?.kind ?? q.subject}`, sceneId: spec.id, answerIndex: 0 });
@@ -78,10 +80,10 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       });
     }
 
-    const sameZoneCells = recipe.zones
+    const sameZoneCells = zones
       .filter((z) => item.zones.includes(z.id))
       .flatMap((z) => (['left', 'centre', 'right'] as Region[]).map((r) => cellLabel(z, r)));
-    const otherCells = recipe.zones.flatMap((z) => (['left', 'centre', 'right'] as Region[]).map((r) => cellLabel(z, r)));
+    const otherCells = zones.flatMap((z) => (['left', 'centre', 'right'] as Region[]).map((r) => cellLabel(z, r)));
     add('where', group, {
       type: 'position',
       subject: item.kind,
