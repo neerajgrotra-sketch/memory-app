@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   cards: { gap: 12, paddingRight: 16 },
   card: { width: 220, backgroundColor: colors.surface, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
   pressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
-  cardArt: { height: 120 },
+  cardArt: { width: '100%' },
   cardBody: { padding: 12, gap: 2 },
   cardTitle: { color: colors.text, fontSize: 16, fontWeight: '800' },
   cardMeta: { color: colors.textMuted, fontSize: 13 },

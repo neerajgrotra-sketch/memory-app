@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
   // Phone-width column, centred on tablets and wide windows so the art isn't blown up.
   content: { paddingBottom: 40, width: '100%', maxWidth: 520, alignSelf: 'center' },
-  art: { height: 180 },
+  art: { width: '100%' },
   backWrap: { position: 'absolute', top: 0, left: 0 },
   back: {
     margin: 16,
