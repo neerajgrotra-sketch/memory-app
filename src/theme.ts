@@ -19,3 +19,8 @@ export const levelColors = {
 };
 
 export const radius = { sm: 10, md: 16, lg: 24, pill: 999 };
+
+export const layout = {
+  /** Height of the bar above the picture holding the quit button and countdown. */
+  memoriseBarHeight: 72,
+};

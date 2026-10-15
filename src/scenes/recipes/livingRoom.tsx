@@ -318,7 +318,7 @@ export const livingRoom: Recipe = {
   title: 'Living room',
   place: 'in the room',
   zones: [
-    { id: 'wall', label: 'On the wall', surface: 'wall', top: 0.12, bottom: 0.38 },
+    { id: 'wall', label: 'On the wall', surface: 'wall', top: 0.05, bottom: 0.38 },
     {
       id: 'back',
       label: 'At the back',

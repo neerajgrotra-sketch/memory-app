@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   Easing,
   cancelAnimation,
@@ -21,12 +20,14 @@ interface CountdownProps {
   onComplete: () => void;
 }
 
-/** Counts down from `seconds` to 1 on the UI thread, then calls `onComplete` at 0. */
+/**
+ * Counts down from `seconds` to 1 on the UI thread, then calls `onComplete` at 0.
+ * Renders inline as a shrinking bar and a number badge, side by side.
+ */
 export function Countdown({ seconds, running, onComplete }: CountdownProps) {
   const remaining = useSharedValue(seconds);
   const pulse = useSharedValue(1);
   const [display, setDisplay] = useState(seconds);
-  const insets = useSafeAreaInsets();
 
   const onCompleteRef = useRef(onComplete);
   useEffect(() => {
@@ -56,14 +57,11 @@ export function Countdown({ seconds, running, onComplete }: CountdownProps) {
   const barStyle = useAnimatedStyle(() => ({ width: `${(remaining.value / seconds) * 100}%` }));
 
   return (
-    <View style={StyleSheet.absoluteFill} pointerEvents="none">
-      <View style={[styles.track, { top: insets.top }]}>
+    <View style={styles.row}>
+      <View style={styles.track}>
         <Animated.View style={[styles.bar, barStyle]} />
       </View>
-      <Animated.View
-        style={[styles.badge, { top: insets.top + 16, right: insets.right + 16 }, badgeStyle]}
-        accessibilityLabel={`${display} seconds left`}
-      >
+      <Animated.View style={[styles.badge, badgeStyle]} accessibilityLabel={`${display} seconds left`}>
         <Text style={styles.number}>{display}</Text>
       </Animated.View>
     </View>
@@ -71,24 +69,18 @@ export function Countdown({ seconds, running, onComplete }: CountdownProps) {
 }
 
 const styles = StyleSheet.create({
-  track: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    height: 4,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-  },
+  row: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 14 },
+  track: { flex: 1, height: 6, borderRadius: 3, overflow: 'hidden', backgroundColor: colors.surfaceRaised },
   bar: { height: '100%', backgroundColor: colors.accent },
   badge: {
-    position: 'absolute',
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: 'rgba(15,17,21,0.75)',
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: colors.surface,
     borderWidth: 3,
     borderColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  number: { color: colors.text, fontSize: 28, fontWeight: '800', fontVariant: ['tabular-nums'] },
+  number: { color: colors.text, fontSize: 24, fontWeight: '800', fontVariant: ['tabular-nums'] },
 });

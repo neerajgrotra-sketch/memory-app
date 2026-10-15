@@ -378,7 +378,7 @@ export const city: Recipe = {
   title: 'City street',
   place: 'in the street',
   zones: [
-    { id: 'sky', label: 'In the sky', surface: 'air', top: 0.12, bottom: 0.27 },
+    { id: 'sky', label: 'In the sky', surface: 'air', top: 0.04, bottom: 0.27 },
     { id: 'buildings', label: 'On the buildings', surface: 'wall', top: 0.33, bottom: 0.5, panels: FACADES },
     {
       id: 'pavement',
@@ -394,7 +394,7 @@ export const city: Recipe = {
     { id: 'road', label: 'On the road', surface: 'ground', top: 0.75, bottom: 0.98, farScale: 0.9, nearScale: 1 },
   ],
   items,
-  decor: [{ ...clouds, top: 0.03, bottom: 0.2 }],
+  decor: [{ ...clouds, top: 0.02, bottom: 0.2 }],
   variants: [
     { id: 'day', background: (h) => backdrop(h, '#a5d8ff', ['#e9c46a', '#f4a261', '#b5838d', '#90be6d'], '#e7f5ff') },
     { id: 'sunset', background: (h) => backdrop(h, '#ffc9a9', ['#c9ada7', '#9a8c98', '#e5989b', '#b5c99a'], '#fff3bf') },

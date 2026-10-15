@@ -63,7 +63,7 @@ Every picture is built on the device from a **recipe** in a fraction of a second
 - **Real sizes.** Every item has a `size`: its real-world height relative to the others (sofa 150, cat 60, toy car 38). Everything is drawn 35% larger than that so small things are easy to spot. Big things may shrink to at most 75% to fit a cell; otherwise fewer of them are placed.
 - **Perspective.** Ground bands have `farScale` and `nearScale`. Things stand in rows, each row further back a little higher and smaller, with a small gap between rows so nothing overlaps.
 - **Scenery.** `decor` (such as clouds) is spread across a band, drawn behind everything, and never asked about.
-- **Screen shape.** The picture is 900 wide and as tall as the screen's shape needs (1350–2000), so it fills the phone.
+- **Screen shape.** The picture is 900 wide and as tall as the space below the countdown bar needs (1350–2000), so it fills the phone. The controls sit in that bar, never on top of the picture.
 
 Generation is seeded, so the same seed always rebuilds the same picture (handy for a future daily challenge).
 

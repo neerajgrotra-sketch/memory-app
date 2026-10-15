@@ -1,8 +1,9 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { MemoriseStage } from '@/components/MemoriseStage';
+import { QuitButton } from '@/components/QuitButton';
 import { QuizStage } from '@/components/QuizStage';
 import { ResultStage } from '@/components/ResultStage';
 import { DIFFICULTY_OPTIONS, isDifficulty, levelForRound } from '@/game/difficulty';
@@ -32,7 +33,13 @@ function Game({ difficulty }: { difficulty: Difficulty }) {
   return (
     <View style={styles.container}>
       {phase === 'memorise' && (
-        <MemoriseStage key={round.index} scene={stage.scene} seconds={round.viewSeconds} onDone={finishMemorising} />
+        <MemoriseStage
+          key={round.index}
+          scene={stage.scene}
+          seconds={round.viewSeconds}
+          onDone={finishMemorising}
+          onQuit={goHome}
+        />
       )}
 
       {phase === 'quiz' && (
@@ -57,11 +64,11 @@ function Game({ difficulty }: { difficulty: Difficulty }) {
         </SafeAreaView>
       )}
 
-      {phase !== 'result' && (
+      {phase === 'quiz' && (
         <SafeAreaView style={styles.closeWrap} pointerEvents="box-none">
-          <Pressable accessibilityRole="button" accessibilityLabel="Quit" onPress={goHome} hitSlop={12} style={styles.close}>
-            <Text style={styles.closeText}>✕</Text>
-          </Pressable>
+          <View style={styles.close}>
+            <QuitButton onPress={goHome} />
+          </View>
         </SafeAreaView>
       )}
     </View>
@@ -71,14 +78,5 @@ function Game({ difficulty }: { difficulty: Difficulty }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   closeWrap: { position: 'absolute', top: 0, left: 0 },
-  close: {
-    margin: 16,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(15,17,21,0.75)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  closeText: { color: colors.text, fontSize: 18, fontWeight: '700' },
+  close: { margin: 16 },
 });

@@ -265,13 +265,13 @@ export const beach: Recipe = {
   title: 'At the beach',
   place: 'on the beach',
   zones: [
-    { id: 'sky', label: 'In the sky', surface: 'air', top: 0.12, bottom: 0.31 },
+    { id: 'sky', label: 'In the sky', surface: 'air', top: 0.04, bottom: 0.31 },
     { id: 'sea', label: 'In the sea', surface: 'ground', top: 0.34, bottom: 0.54, farScale: 0.7, nearScale: 0.85 },
     { id: 'shore', label: 'Near the water', surface: 'ground', top: 0.56, bottom: 0.75, farScale: 0.8, nearScale: 0.9 },
     { id: 'front', label: 'At the front', surface: 'ground', top: 0.76, bottom: 0.97, farScale: 0.92, nearScale: 1.05 },
   ],
   items,
-  decor: [{ ...clouds, top: 0.04, bottom: 0.28 }],
+  decor: [{ ...clouds, top: 0.02, bottom: 0.28 }],
   variants: [
     { id: 'day', background: (h) => backdrop(h, '#8fd3f4', '#2a9fd6', '#f2d49b', '#ffffff') },
     { id: 'sunset', background: (h) => backdrop(h, '#ffb38a', '#3d6fa8', '#e9c46a', '#ffd6a5') },

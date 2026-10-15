@@ -1,10 +1,12 @@
 import { useCallback, useRef, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { LEVELS, ROUND_SIZE, levelForRound } from '@/game/difficulty';
 import { selectQuestions, toRoundQuestion } from '@/game/selectQuestions';
 import { createStage, type Stage } from '@/scenes/createStage';
 import { statsStore } from '@/stats';
+import { layout } from '@/theme';
 import type { Difficulty, Level, Question, RoundQuestion } from '@/types/game';
 import type { RoundResult } from '@/types/stats';
 
@@ -73,9 +75,10 @@ function toRoundResult(
  * remount (e.g. with `key={difficulty}`) to start over with another difficulty.
  */
 export function useGameSession(difficulty: Difficulty) {
-  // Pictures are built to the screen's shape so they fill it.
+  // Pictures are built to the shape of the space below the countdown bar, so they fill it.
   const { width, height } = useWindowDimensions();
-  const aspect = width / height;
+  const insets = useSafeAreaInsets();
+  const aspect = width / Math.max(1, height - insets.top - insets.bottom - layout.memoriseBarHeight);
   const [first] = useState(() => {
     const firstStage = createStage(levelForRound(difficulty, 0), aspect);
     return { stage: firstStage, round: buildRound(difficulty, 0, firstStage.questions, new Set(), new Set()) };

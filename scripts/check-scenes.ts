@@ -7,8 +7,8 @@ import { generateQuestions } from '@/scenes/generateQuestions';
 import { generateScene } from '@/scenes/generateScene';
 import { RECIPES } from '@/scenes/recipes';
 
-/** The ✕ button and countdown cover roughly the top 11% of the screen. */
-const CONTROLS = 0.11;
+/** Keep a little sky or wall above the top-most things. */
+const TOP_MARGIN = 0.03;
 const SCENES_PER_CASE = 300;
 const MIN_QUESTIONS = 12;
 
@@ -35,7 +35,7 @@ for (const height of [1350, 1600, 2000]) {
 
         for (const r of rects) {
           if (r.x0 < 0 || r.x1 > 900) problems.add(`${r.kind} off the side of the picture`);
-          if (r.y0 < CONTROLS * height) problems.add(`${r.kind} under the on-screen controls`);
+          if (r.y0 < TOP_MARGIN * height) problems.add(`${r.kind} touching the top edge`);
           if (r.y0 < r.zone.top * height - 1 || r.y1 > r.zone.bottom * height + 1) problems.add(`${r.kind} outside its band`);
           if (r.zone.panels && !r.zone.panels.some(([p0, p1]) => r.x0 >= p0 && r.x1 <= p1)) problems.add(`${r.kind} crosses a building edge`);
           if (r.zone.surface === 'ground' && r.y1 < (r.zone.floor ?? r.zone.top) * height - 1) problems.add(`${r.kind} not standing on the floor`);
