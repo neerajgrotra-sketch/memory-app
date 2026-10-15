@@ -10,6 +10,26 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.1 (2026-10-15)
+
+On the `claude/glance-games-hub` branch for testing; it becomes 4.0.0 if kept.
+
+- **glance is now a games app.** Three tabs at the bottom:
+  - **Games**: a big card to carry on (your level ring and **Play level N**), then games grouped by skill. Today that's **Memory** with **Look & Remember**, the picture game. A skill appears only once it has a game.
+  - **Progress**: each game's level, title, best level, high score and a chart of your level over time, then everything that was on the progress screen.
+  - **Profile**: what was behind the profile icon.
+- **A page for each game**: art drawn by the game itself, your level ring and title, how many good rounds to the next level and the next big unlock, high score, best level, rounds played, perfect rounds, **Play level N**, **Practice** (Easy, Medium, Hard) and how to play.
+- **Levels that adjust themselves**, 1 to 30:
+  - 3 good rounds (4 or 5 right) take you up a level. 2 very poor rounds in a row (0 or 1 right) take you back one. Your best level never goes down.
+  - Each level adds a little: more kinds of thing, more of each, less time, the living room at Level 3, the city street at 6, house numbers at 8, mixed-colour hydrants at 12, closer counting choices at 14.
+  - A **level-up screen** shows your new level, a title every 5 levels (Fresh Eyes, Sharp Eyes, Keen Observer, Detail Spotter, Eagle Eye, Total Recall, Photographic Memory) and exactly what's new.
+  - Players from before levels start at a level worked out from their earlier rounds.
+- **Points** for every round: right answers (100 at Level 1, +10 per level), a bonus for right answers in a row, and one for tapping **I'm ready** early. Slow answers never cost points. The result screen shows how the points were earned, **New high score!**, and how the round moved your level.
+- **Practice** replaces picking Easy / Medium / Hard on the home screen. It earns points but never changes your level, and keeps **Play again**. Progressive is gone: levels do its job. Levelled play has no Play again, so the same picture can't be used twice to go up.
+- Rounds are saved with the game, the level and points, so each game keeps its own progress.
+- **Checks:** `npm run check:scenes` now checks the level rules and points, and plays levels 1, 4, 6, 8, 12, 14, 17 and 30 with the places each has reached (18,000 scenes).
+- **Docs:** new [levels and scoring](docs/levels-and-scoring.md) and [adding a game](docs/adding-a-game.md) pages, a generated table of all 30 levels in `docs/recipes/reference.md`, and updates to the README, testing, recipes and design decisions.
+
 ## 3.6.1 (2026-10-15)
 
 - **Documentation:**

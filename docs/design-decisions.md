@@ -46,6 +46,16 @@ Why the rules are what they are. Most came from play-testing: a screenshot showe
 - **No giveaway questions.** "How many mirrors?" was always 1, because a room never has two, so things that can only appear once aren't counted. Plural wrong options only use things that can come in groups (never "Suns"). Both were found by reading the generated [question examples](questions-examples.md).
 - **House numbers** add Medium and Hard questions that test detail. They rise along the street with uneven gaps, so remembering one doesn't give away the others.
 
+## Games, levels and points
+
+- **A games app, not one game.** The Games tab groups games by skill, like the brain-training apps people know, but a skill shows only when it has a game. Empty "coming soon" rows make an app feel unfinished.
+- **Levels that adjust themselves** replaced picking Easy / Medium / Hard. Picking your own difficulty is a guess; a level that follows how you play keeps every round at the edge of what you can do, and the level ring makes progress visible. Easy / Medium / Hard stay as Practice, which never moves your level.
+- **Up is earned, down is rare.** 3 good rounds go up; only 2 very poor rounds in a row go down, and best level never drops. One unlucky picture should never cost a level.
+- **"What's new" is worked out, never written.** The level-up screen lists exactly what changed between the two levels' settings, so it can't promise something that isn't there. An early version said "trickier questions" on a level where nothing changed.
+- **Points reward accuracy, not speed.** Right answers (worth more at higher levels), runs of right answers, and being ready early score; slow answers never cost points. A score that punished slowness would push players to guess and put off older players.
+- **No overall "brain score" and no comparing with other people.** Level, points and trends compare you only with yourself. A single brain index would read as a health measure, which glance isn't.
+- **Our own look.** The layout borrows a familiar structure (a big "carry on" card, games by skill, a game page with records), but keeps glance's dark theme and amber accent, and the art is drawn by the game itself.
+
 ## The player
 
 - **The profile is asked for after the first round, not before**, and is optional. Every screen before the first picture loses players.

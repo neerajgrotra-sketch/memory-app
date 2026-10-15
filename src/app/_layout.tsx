@@ -9,10 +9,9 @@ export default function RootLayout() {
     <ProfileProvider>
       <StatusBar style="light" />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }}>
-        <Stack.Screen name="index" />
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="game/[id]" />
         <Stack.Screen name="play" options={{ gestureEnabled: false, animation: 'fade' }} />
-        <Stack.Screen name="stats" />
-        <Stack.Screen name="profile" />
       </Stack>
     </ProfileProvider>
   );

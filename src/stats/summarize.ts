@@ -1,5 +1,5 @@
 import { LEVEL_ORDER } from '@/game/difficulty';
-import type { Difficulty, Level, QuestionType } from '@/types/game';
+import type { Difficulty, Level, PlayMode, QuestionType } from '@/types/game';
 import type { RoundResult } from '@/types/stats';
 
 const TREND_WINDOW = 5;
@@ -34,7 +34,7 @@ export interface TypeSummary {
 export interface SessionSummary {
   id: string;
   startedAt: string;
-  mode: Difficulty;
+  mode: PlayMode | Difficulty;
   rounds: number;
   correct: number;
   total: number;

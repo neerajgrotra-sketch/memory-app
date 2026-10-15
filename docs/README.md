@@ -1,6 +1,6 @@
 # glance documentation
 
-How the game builds its pictures and questions, in enough detail to review the logic or rebuild it from scratch. The code is the source of truth; these pages explain it and point to it.
+How glance's first game, Look & Remember, builds its pictures and questions, how its levels and points work, in enough detail to review the logic or rebuild it from scratch. The code is the source of truth; these pages explain it and point to it.
 
 | Page | What it covers |
 | --- | --- |
@@ -12,6 +12,8 @@ How the game builds its pictures and questions, in enough detail to review the l
 | [Recipes](recipes/) | One page per setting: [beach](recipes/beach.md), [city street](recipes/city.md), [living room](recipes/living-room.md), plus the generated [reference tables](recipes/reference.md) |
 | [Adding a recipe](adding-a-recipe.md) | Step by step, with a checklist |
 | [Testing and reviewing](testing.md) | The scene checker, the gallery, the overlay in Expo Go |
+| [Levels and scoring](levels-and-scoring.md) | Look & Remember's 30 levels, how your level moves, what each level changes, points |
+| [Adding a game](adding-a-game.md) | The game registry, skills, and what a new game needs |
 | [Design decisions](design-decisions.md) | Why the rules are what they are (most came from play-testing feedback) |
 
 ## In one paragraph

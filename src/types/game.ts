@@ -1,9 +1,13 @@
 export type QuestionType = 'object' | 'count' | 'colour' | 'position' | 'number';
 
+/** Modes saved by older versions; 'progressive' is no longer offered but old rounds keep it. */
 export type Difficulty = 'easy' | 'medium' | 'hard' | 'progressive';
 
-/** The level a round is actually played at (Progressive steps through these). */
+/** The fixed bands: Practice modes, and how charts group levelled rounds. */
 export type Level = Exclude<Difficulty, 'progressive'>;
+
+/** How a round is played: on your own level (which moves), or as Practice at a fixed band. */
+export type PlayMode = 'levels' | Level;
 
 /** A question about a picture, before it is prepared for a round. */
 export interface Question {

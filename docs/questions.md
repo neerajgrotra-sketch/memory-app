@@ -87,11 +87,13 @@ House numbers rise left to right with uneven gaps, so remembering one doesn't gi
 1. **Not the last round's questions.** Questions from the round just played (Play again) are left out, as long as at least 5 others remain.
 2. **Rank** each question: +2 if it was already asked about this picture, +1 if its type isn't one the level prefers. Lower is better, ties broken at random.
 
-   | Level | Preferred types |
+   | Practice | Preferred types |
    | --- | --- |
    | Easy | object, colour |
    | Medium | object, count, colour, position |
    | Hard | count, position, number |
+
+   Levelled play moves through the same lists as you go up: see [Levels and scoring](levels-and-scoring.md#what-each-level-changes).
 
 3. **One question per subject.** Every question has a `subject`: the thing's kind, or `house-<number>` for a house. A round never asks two questions about the same subject (e.g. not both the count and the colour of the kites). If that leaves fewer than 5, a second pass fills the gap.
 4. **Shuffle each question's options** (`toRoundQuestion`) and point the answer at its new position.

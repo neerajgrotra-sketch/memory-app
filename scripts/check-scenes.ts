@@ -4,7 +4,9 @@
  * show). Also lays each scene out again for the other sizes to check the facts never change.
  * Run with `npm run check:scenes`; exits non-zero on any failure.
  */
-import { LEVELS } from '@/game/difficulty';
+import { LEVELS, type LevelConfig } from '@/game/difficulty';
+import { FIRST_STATE, MAX_LEVEL, applyRound, knobsForLevel, recipesForLevel } from '@/games/lookRemember/ladder';
+import { pointsFor } from '@/games/lookRemember/points';
 import { standsOut } from '@/scenes/contrast';
 import { generateQuestions } from '@/scenes/generateQuestions';
 import { generateScene, relayoutScene } from '@/scenes/generateScene';
@@ -58,13 +60,50 @@ for (const i of [0, 1, 2]) {
   });
 }
 
+// Levels: the rules for moving up and down, and that every level's knobs are ones the pictures can meet.
+{
+  let state = FIRST_STATE;
+  for (let i = 0; i < 3; i++) state = applyRound(state, 4, 5);
+  if (state.level !== 2 || state.progress !== 0) fail('levels: 3 good rounds should take you to level 2');
+  state = applyRound(state, 1, 5);
+  if (state.level !== 2) fail('levels: one poor round should not drop a level');
+  state = applyRound(state, 3, 5);
+  state = applyRound(state, 0, 5);
+  if (state.level !== 2) fail('levels: an average round should break a run of poor rounds');
+  state = applyRound(state, 0, 5);
+  if (state.level !== 1 || state.best !== 2) fail('levels: 2 poor rounds in a row should drop one level and keep the best');
+  if (applyRound(FIRST_STATE, 0, 5).level !== 1 || applyRound(applyRound(FIRST_STATE, 0, 5), 0, 5).level !== 1) fail('levels: never below 1');
+  let top = { ...FIRST_STATE, level: MAX_LEVEL, best: MAX_LEVEL };
+  top = applyRound(top, 5, 5);
+  if (top.level !== MAX_LEVEL) fail('levels: never above the top');
+  let previous: LevelConfig | null = null;
+  for (let level = 1; level <= MAX_LEVEL; level++) {
+    const k = knobsForLevel(level);
+    if (k.groups > LEVELS.hard.groups || k.maxCount > LEVELS.hard.maxCount) fail(`levels: level ${level} asks for more than Hard`);
+    if (previous && (k.groups < previous.groups || k.viewSeconds > previous.viewSeconds || k.maxCount < previous.maxCount)) {
+      fail(`levels: level ${level} is easier than level ${level - 1}`);
+    }
+    previous = k;
+  }
+  const p = pointsFor({ correct: [true, true, false, true, true], level: 1, viewSeconds: 10, lookedSeconds: 6.5 });
+  if (p.answers !== 400 || p.streak !== 40 || p.ready !== 60 || p.total !== 500) fail(`points: unexpected ${JSON.stringify(p)}`);
+  if (pointsFor({ correct: [true], level: 1, viewSeconds: 10, lookedSeconds: 10 }).ready !== 0) fail('points: no bonus when the time ran out');
+  console.log(failed ? '✗ levels and points' : '✓ levels and points');
+}
+
+/** Practice bands, plus levels where the knobs change, for the settings each level has reached. */
+const CASES: { label: string; knobs: LevelConfig; recipes?: string[] }[] = [
+  ...(['easy', 'medium', 'hard'] as const).map((level) => ({ label: level, knobs: LEVELS[level] })),
+  ...[1, 4, 6, 8, 12, 14, 17, 30].map((level) => ({ label: `level ${level}`, knobs: knobsForLevel(level), recipes: recipesForLevel(level) })),
+];
+
 const started = Date.now();
 let scenes = 0;
 let slowest = 0;
 for (const phone of PHONES) {
   for (const recipe of RECIPES) {
-    for (const level of ['easy', 'medium', 'hard'] as const) {
-      const knobs = LEVELS[level];
+    for (const { label: level, knobs, recipes } of CASES) {
+      if (recipes && !recipes.includes(recipe.id)) continue;
       const problems = new Map<string, number>();
       const note = (msg: string) => problems.set(msg, (problems.get(msg) ?? 0) + 1);
       const placed = new Set<string>();
@@ -103,7 +142,8 @@ for (const phone of PHONES) {
       if (fewQuestions / SCENES_PER_CASE > 0.1) note(`${fewQuestions} pictures with too few questions`);
       if (veryShort / SCENES_PER_CASE > 0.02) note(`${veryShort} pictures two kinds short`);
       if (short / SCENES_PER_CASE > 0.2) note(`${Math.round((100 * short) / SCENES_PER_CASE)}% of pictures one kind short`);
-      for (const item of recipe.items) if (!placed.has(item.kind)) note(`${item.kind} never fits anywhere`);
+      // Small pictures (few kinds) may never pick some things; the check is that every thing fits somewhere.
+      if (!recipes) for (const item of recipe.items) if (!placed.has(item.kind)) note(`${item.kind} never fits anywhere`);
       const label = `${phone.name} / ${recipe.id} / ${level}`;
       if (problems.size) fail(`${label}: ${[...problems].map(([m, c]) => `${m} (×${c})`).join('; ')}`);
       else console.log(`✓ ${label}`);

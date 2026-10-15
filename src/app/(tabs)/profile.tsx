@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import { useState, type ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,11 +7,6 @@ import { EXTRA_SECONDS, initialOf, useProfile } from '@/profile';
 import { RECIPES } from '@/scenes/recipes';
 import { colors, radius } from '@/theme';
 import { APP_VERSION } from '@/version';
-
-function goBack() {
-  if (router.canGoBack()) router.back();
-  else router.replace('/');
-}
 
 /**
  * The player's profile. Built as sections so account and subscription settings can be added as new
@@ -53,11 +47,8 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <SafeAreaView style={styles.screen} edges={['top', 'left', 'right']}>
       <View style={styles.topBar}>
-        <Pressable accessibilityRole="button" accessibilityLabel="Back" onPress={goBack} hitSlop={12} style={styles.back}>
-          <Text style={styles.backText}>←</Text>
-        </Pressable>
         <Text style={styles.title}>Profile</Text>
       </View>
 
@@ -159,10 +150,8 @@ function Section({ title, footer, children }: { title: string; footer?: string; 
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, paddingVertical: 12 },
-  back: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center' },
-  backText: { color: colors.text, fontSize: 20, fontWeight: '700' },
-  title: { color: colors.text, fontSize: 22, fontWeight: '800' },
+  topBar: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 4 },
+  title: { color: colors.text, fontSize: 28, fontWeight: '900' },
   content: { paddingHorizontal: 24, paddingTop: 8, paddingBottom: 40, gap: 24 },
   hero: { alignItems: 'center', gap: 10 },
   avatar: { width: 80, height: 80, borderRadius: 40, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },

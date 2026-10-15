@@ -1,4 +1,4 @@
-import type { Difficulty, Level, QuestionType } from '@/types/game';
+import type { Difficulty, Level, PlayMode, QuestionType } from '@/types/game';
 
 export const ROUND_SIZE = 5;
 
@@ -35,21 +35,24 @@ export const LEVELS: Record<Level, LevelConfig> = {
 
 export const LEVEL_LABELS: Record<Level, string> = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
 
-export const DIFFICULTY_OPTIONS: { value: Difficulty; label: string; description: string }[] = [
+/** Practice: a fixed band that never changes your level. */
+export const PRACTICE_OPTIONS: { value: Level; label: string; description: string }[] = [
   { value: 'easy', label: 'Easy', description: '10 seconds · a few things to spot' },
   { value: 'medium', label: 'Medium', description: '8 seconds · busier pictures' },
   { value: 'hard', label: 'Hard', description: '6 seconds · crowded pictures, close answers' },
-  { value: 'progressive', label: 'Progressive', description: 'Starts easy, gets harder each round' },
 ];
 
 export const LEVEL_ORDER: Level[] = ['easy', 'medium', 'hard'];
 
-/** Resolves the level for a round (0-based). Progressive steps up and stays on hard. */
-export function levelForRound(difficulty: Difficulty, round: number): Level {
-  if (difficulty !== 'progressive') return difficulty;
-  return LEVEL_ORDER[Math.min(round, LEVEL_ORDER.length - 1)];
-}
+/** Names for every mode, including ones only older saved rounds have. */
+export const MODE_LABELS: Record<PlayMode | Difficulty, string> = {
+  levels: 'Levels',
+  easy: 'Practice · Easy',
+  medium: 'Practice · Medium',
+  hard: 'Practice · Hard',
+  progressive: 'Progressive',
+};
 
-export function isDifficulty(value: unknown): value is Difficulty {
-  return DIFFICULTY_OPTIONS.some((option) => option.value === value);
+export function isPlayMode(value: unknown): value is PlayMode {
+  return value === 'levels' || LEVEL_ORDER.includes(value as Level);
 }

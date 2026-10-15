@@ -1,0 +1,129 @@
+import { router } from 'expo-router';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { Button } from '@/components/Button';
+import { GameArt } from '@/components/GameArt';
+import { LevelRing } from '@/components/LevelRing';
+import { titleFor } from '@/games/lookRemember/ladder';
+import { GAMES, SKILLS, SKILL_ORDER, type GameDef } from '@/games/registry';
+import { useGameProgress } from '@/hooks/useGameProgress';
+import { EXTRA_SECONDS, useProfile } from '@/profile';
+import { RECIPES } from '@/scenes/recipes';
+import { colors, radius } from '@/theme';
+import { APP_VERSION } from '@/version';
+
+const playLevels = (game: GameDef) => router.push({ pathname: '/play', params: { game: game.id, mode: 'levels' } });
+const openGame = (game: GameDef) => router.push({ pathname: '/game/[id]', params: { id: game.id } });
+
+export default function GamesScreen() {
+  const { profile } = useProfile();
+  const featured = GAMES[0];
+  const progress = useGameProgress(featured.id);
+  const played = (progress?.plays ?? 0) > 0;
+
+  return (
+    <SafeAreaView style={styles.screen} edges={['top', 'left', 'right']}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.brand}>glance</Text>
+          <Text style={styles.greeting}>{profile?.name ? `Hi, ${profile.name}` : 'Brain games, one glance at a time'}</Text>
+        </View>
+
+        {/* The one thing to do next: carry on where you left off, or start the first game. */}
+        <View style={styles.hero}>
+          <Pressable accessibilityRole="button" accessibilityLabel={`${featured.title}, about this game`} onPress={() => openGame(featured)}>
+            <GameArt style={styles.heroArt} />
+          </Pressable>
+          <View style={styles.heroBody}>
+            {progress && <LevelRing ladder={progress.ladder} size={72} />}
+            <View style={styles.heroText}>
+              <Text style={styles.kicker}>{played ? 'Continue' : 'Start here'}</Text>
+              <Text style={styles.heroTitle}>{featured.title}</Text>
+              {progress && <Text style={styles.heroMeta}>{titleFor(progress.ladder.level)}</Text>}
+            </View>
+          </View>
+          <Button label={played ? `Play level ${progress?.ladder.level ?? ''}` : 'Play'} onPress={() => playLevels(featured)} />
+        </View>
+
+        {!!profile?.recipeFilter?.length && (
+          <Pressable accessibilityRole="button" onPress={() => router.push('/profile')} style={styles.noteWrap}>
+            <Text style={styles.testing}>
+              Testing: only {RECIPES.filter((r) => profile.recipeFilter!.includes(r.id)).map((r) => r.title).join(', ')}. Change in your profile.
+            </Text>
+          </Pressable>
+        )}
+        {profile?.moreTime && <Text style={styles.moreTime}>More time to look is on: every picture stays {EXTRA_SECONDS} seconds longer.</Text>}
+
+        {/* Games grouped by skill. A skill only shows once it has a game. */}
+        {SKILL_ORDER.map((skill) => {
+          const games = GAMES.filter((g) => g.skill === skill);
+          if (!games.length) return null;
+          return (
+            <View key={skill} style={styles.section}>
+              <View style={styles.sectionHead}>
+                <Text style={styles.sectionTitle}>{SKILLS[skill].title}</Text>
+                <Text style={styles.sectionBlurb}>{SKILLS[skill].blurb}</Text>
+              </View>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.cards}>
+                {games.map((game) => (
+                  <GameCard key={game.id} game={game} />
+                ))}
+              </ScrollView>
+            </View>
+          );
+        })}
+
+        <Text style={styles.version}>Version {APP_VERSION}</Text>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function GameCard({ game }: { game: GameDef }) {
+  const progress = useGameProgress(game.id);
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`${game.title}${progress ? `, level ${progress.ladder.level}` : ''}`}
+      onPress={() => openGame(game)}
+      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+    >
+      <GameArt style={styles.cardArt} />
+      <View style={styles.cardBody}>
+        <Text style={styles.cardTitle}>{game.title}</Text>
+        <Text style={styles.cardMeta}>{progress ? `Level ${progress.ladder.level}` : ' '}</Text>
+      </View>
+    </Pressable>
+  );
+}
+
+const styles = StyleSheet.create({
+  screen: { flex: 1 },
+  container: { padding: 16, paddingBottom: 32, gap: 24 },
+  header: { gap: 2, paddingHorizontal: 4 },
+  brand: { color: colors.accent, fontSize: 34, fontWeight: '900', letterSpacing: -0.5 },
+  greeting: { color: colors.textMuted, fontSize: 16 },
+  hero: { backgroundColor: colors.surface, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, overflow: 'hidden', paddingBottom: 16, gap: 14 },
+  heroArt: { height: 170 },
+  heroBody: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 16 },
+  heroText: { flex: 1, gap: 2 },
+  kicker: { color: colors.accent, fontSize: 12, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 1 },
+  heroTitle: { color: colors.text, fontSize: 24, fontWeight: '900' },
+  heroMeta: { color: colors.textMuted, fontSize: 14 },
+  noteWrap: { minHeight: 44, justifyContent: 'center', marginVertical: -12 },
+  testing: { color: colors.wrong, fontSize: 14, fontWeight: '700', textAlign: 'center' },
+  moreTime: { color: colors.accent, fontSize: 14, textAlign: 'center', marginVertical: -8 },
+  section: { gap: 12 },
+  sectionHead: { paddingHorizontal: 4, gap: 2 },
+  sectionTitle: { color: colors.text, fontSize: 20, fontWeight: '900' },
+  sectionBlurb: { color: colors.textMuted, fontSize: 14 },
+  cards: { gap: 12, paddingRight: 16 },
+  card: { width: 200, backgroundColor: colors.surface, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
+  pressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
+  cardArt: { height: 110 },
+  cardBody: { padding: 12, gap: 2 },
+  cardTitle: { color: colors.text, fontSize: 16, fontWeight: '800' },
+  cardMeta: { color: colors.textMuted, fontSize: 13 },
+  version: { color: colors.textMuted, fontSize: 12, textAlign: 'center' },
+});

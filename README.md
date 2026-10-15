@@ -1,8 +1,6 @@
 # glance
 
-A picture memory game built with Expo (React Native + TypeScript), Expo Router and Reanimated.
-
-Study a picture for 10 seconds (or tap **I'm ready** sooner), then answer 5 multiple-choice questions about it from memory.
+Brain games built with Expo (React Native + TypeScript), Expo Router and Reanimated. The first game is **Look & Remember**: study a picture for a few seconds (or tap **I'm ready** sooner), then answer 5 multiple-choice questions about it from memory. Your level adjusts itself as you play.
 
 ## Run it
 
@@ -11,53 +9,36 @@ npm install
 npx expo start --tunnel   # scan the QR code with Expo Go
 ```
 
-Checks: `npm run typecheck`, `npm run lint` and `npm run check:scenes` (5,400 generated pictures against every layout rule). Review pictures by eye with `npm run gallery` (writes `gallery.html`). After changing a recipe, run `npm run docs:recipes`. See [docs/testing.md](docs/testing.md).
+Checks: `npm run typecheck`, `npm run lint` and `npm run check:scenes` (the level rules, points, and 18,000 generated pictures against every layout rule). Review pictures by eye with `npm run gallery` (writes `gallery.html`). After changing a recipe or the levels, run `npm run docs:recipes`. See [docs/testing.md](docs/testing.md).
 
-Every change bumps the version (shown on the home screen). See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
+Every change bumps the version (shown on the Games tab). See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
 
-## How it plays
+## The app
 
-1. **Home**: pick Easy, Medium, Hard or Progressive.
-2. **Memorise**: a brand-new picture is generated and shown full-screen with a countdown (10 s on Easy, 8 s on Medium, 6 s on Hard). Tap **I'm ready** to go to the questions early (it ignores taps in the first second).
-3. **Quiz**: 5 questions, 4 options each. A right answer flashes green and moves on. A wrong answer shakes red, then shows the right one in green and waits for **Next**.
-   - **Skip for now** moves to the next unanswered question. Skipped questions come back round once the end is reached, marked "You skipped this one".
-   - The numbered dots show every question (filled = answered, dashed = skipped, ringed = current); tap an unanswered dot to jump to it.
-   - Skip is hidden on the last unanswered question, and the round ends when every question has an answer.
-4. **Result**: your score out of 5 with a random funny message, plus every question with all its options: the right answer in green and your wrong pick in red. Tap the picture to see it full size and check your answers.
-   - **Next picture** generates a new picture in a different setting.
-   - **Play again** keeps the same picture with 5 different questions.
+Three tabs:
 
-5. **Profile** (the icon at the top right of the home screen):
-   - After your first round, a card asks once for a name and an age band. Both are optional; saving or skipping means it never asks again.
-   - Your details are remembered on this phone.
-   - The profile screen edits them, has "More time to look" (+3 s per picture, on by default for 55+) and "Clear my details".
-   - **Testing (temporary)**: switch settings on or off to play only the ones you're tuning. The home screen shows a reminder while it's on.
-   - It's built in sections, so account and subscription settings can be added later.
-   - glance is a memory game, not a medical test: nothing compares you with other people or claims to measure brain health.
+- **Games**: a big card to carry on where you left off (your level ring and **Play level N**), then games grouped by skill. A skill only appears once it has a game, so today there's **Memory** with Look & Remember. Tapping a game opens its page.
+- **Progress**: each game's level, best level, high score and a chart of your level over time, then your scores, accuracy per question type, practice habits and recent sessions.
+- **Profile**: name and age band (optional, asked once after the first round), "More time to look" (+3 s per picture, on by default for 55+), the temporary testing filter, and "Clear my details". glance is a game, not a medical test: nothing compares you with other people or claims to measure brain health.
 
-6. **Your progress** (from the home screen):
-   - Whether you're improving: your last 5 rounds compared with the 5 before.
-   - Totals: rounds, sessions, average score and perfect rounds.
-   - A chart of your last 20 rounds, coloured by level.
-   - Rounds, average, best and trend for Easy, Medium and Hard.
-   - Accuracy per question type, recent sessions, and a reset.
-   - Your practice: days played, day streak, how steady your scores are, and each question type's accuracy now against before. It always compares you with yourself.
+## Look & Remember
 
-   Every finished round is saved on the device. Progressive rounds count under the level they were played at. A session runs from picking a mode until you go home.
+**The game page** shows your level ring and title, what's coming next, your high score, best level, rounds played and perfect rounds, then **Play level N**, **Practice** (Easy, Medium, Hard) and how to play.
 
-Difficulty changes the picture and the questions:
+A round:
 
-| Mode        | View time | Kinds of thing | Most of one kind | Wrong counts      | Questions asked first |
-| ----------- | --------- | -------------- | ---------------- | ----------------- | --------------------- |
-| Easy        | 10 s      | 5              | 3                | spread out        | object, colour        |
-| Medium      | 8 s       | 7              | 4                | spread out        | all types             |
-| Hard        | 6 s       | 9              | 6                | right next to it  | count, position, number |
+1. **Memorise**: a brand-new picture with a countdown. Tap **I'm ready** to go to the questions early (it ignores taps in the first second).
+2. **Quiz**: 5 questions, 4 options each. A right answer flashes green and moves on. A wrong answer shakes red, then shows the right one and waits for **Next**. **Skip for now** moves on; skipped questions come back at the end.
+3. **Level up** (when you go up a level): your new level, its title at every 5th level, and exactly what's new.
+4. **Result**: your points with how they were earned, how the round moved your level, and every question with all its options (the right answer in green, your wrong pick in red). Tap the picture to see it full size. **Next picture** plays on at your level. Practice also has **Play again** (same picture, different questions).
 
-Medium and Hard also ask about house numbers and house colours in the street. On Hard, fire hydrants can differ in colour.
+**Levels** run from 1 to 30. 3 good rounds (4 or 5 right) take you up a level; 2 very poor rounds in a row (0 or 1 right) take you back one. Your best level never goes down. Each level adds a little: more kinds of thing, more of each, less time, new places (living room at 3, city street at 6), house numbers (8), mixed-colour hydrants (12) and closer counting choices (14). Players from before levels start at a level worked out from their earlier rounds.
 
-**Progressive** plays Easy, then Medium, then Hard, stepping up every round.
+**Points**: each right answer scores 100 at Level 1, plus 10 per level. Right answers in a row add a bonus (+20, +40, +60…), and so does tapping **I'm ready** early (5 points per spare second per right answer). Slow answers never cost points.
 
-A round never asks two questions about the same thing, and Play again never repeats the previous round's questions.
+**Practice** plays a fixed Easy, Medium or Hard round. It earns points but never changes your level.
+
+Full details: [docs/levels-and-scoring.md](docs/levels-and-scoring.md).
 
 ## How pictures are generated
 
@@ -88,6 +69,8 @@ Every picture is generated on the device from a **recipe** in a few milliseconds
 | [Recipes](docs/recipes/README.md) | One page per setting, plus generated reference tables |
 | [Adding a recipe](docs/adding-a-recipe.md) | Step by step, with a checklist |
 | [Testing and reviewing](docs/testing.md) | Scene checker, gallery, overlay in Expo Go |
+| [Levels and scoring](docs/levels-and-scoring.md) | Look & Remember's 30 levels, moving up and down, points |
+| [Adding a game](docs/adding-a-game.md) | The game registry and what a new game needs |
 | [Design decisions](docs/design-decisions.md) | Why the rules are what they are |
 
 ## Project layout
@@ -96,14 +79,20 @@ Every picture is generated on the device from a **recipe** in a few milliseconds
 docs/                  How pictures and questions are made (start at docs/README.md)
   recipes/             One page per setting + reference.md (generated)
 scripts/
-  check-scenes.ts      npm run check:scenes: 5,400 scenes against every rule
+  check-scenes.ts      npm run check:scenes: level rules, points, 18,000 scenes against every rule
   gallery.tsx          npm run gallery: pictures to gallery.html for reviewing by eye
   recipe-reference.ts  npm run docs:recipes: regenerates docs/recipes/reference.md
 src/
-  app/                 Expo Router screens: _layout, index (home), play, stats (progress), profile
-  components/          Countdown (Reanimated), Memorise/Quiz/Result stages, picture viewer, profile prompt, buttons
-  game/                Pure game logic: difficulty, question selection, option shuffling, quiz navigation, score messages
-  hooks/useGameSession Game state machine: memorise → quiz → result → play again / next picture
+  app/                 Expo Router screens
+    (tabs)/            The tab bar: index (Games), progress, profile
+    game/[id].tsx      A game's page: level, records, Play, Practice, how to play
+    play.tsx           A session of Look & Remember (levels or practice)
+  components/          Countdown (Reanimated), Memorise/Quiz/Result stages, level ring, level-up screen, charts, game art
+  games/
+    registry.ts        Every game and skill; the Games tab is built from it
+    lookRemember/      ladder.ts (levels 1–30, moving up and down, unlocks, titles) and points.ts
+  game/                Pure game logic: practice bands, question selection, option shuffling, quiz navigation, score messages
+  hooks/               useGameSession (memorise → quiz → result → next picture, scoring and levels), useGameProgress
   scenes/
     recipes/           One file per setting (beach, city, livingRoom) + the registry
     items/common.tsx   Things shared across settings (people, dogs, birds, trees…)

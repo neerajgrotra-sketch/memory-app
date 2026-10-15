@@ -2,14 +2,18 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
+import { LevelRing } from '@/components/LevelRing';
 import { PictureViewer } from '@/components/PictureViewer';
 import { ProfilePrompt } from '@/components/ProfilePrompt';
 import type { Answers } from '@/game/quizNavigation';
 import { randomScoreMessage } from '@/game/scoreMessages';
+import { MAX_LEVEL, ROUNDS_TO_LEVEL_UP, isGoodRound, isPoorRound, type LadderState } from '@/games/lookRemember/ladder';
+import { formatPoints } from '@/games/lookRemember/points';
+import type { RoundOutcome } from '@/hooks/useGameSession';
 import { colors, radius } from '@/theme';
 import { SceneView } from '@/scenes/SceneView';
 import type { SceneSpec } from '@/scenes/types';
-import type { RoundQuestion } from '@/types/game';
+import type { PlayMode, RoundQuestion } from '@/types/game';
 
 interface ResultStageProps {
   scene: SceneSpec;
@@ -17,13 +21,17 @@ interface ResultStageProps {
   questions: RoundQuestion[];
   answers: Answers;
   score: number;
-  nextLevelLabel?: string;
-  onPlayAgain: () => void;
+  mode: PlayMode;
+  outcome: RoundOutcome;
+  /** Your level for the next picture. */
+  nextLevel: number;
+  /** Same picture, other questions (Practice only). */
+  onPlayAgain?: () => void;
   onNextPicture: () => void;
   onHome: () => void;
 }
 
-export function ResultStage({ scene, title, questions, answers, score, nextLevelLabel, onPlayAgain, onNextPicture, onHome }: ResultStageProps) {
+export function ResultStage({ scene, title, questions, answers, score, mode, outcome, nextLevel, onPlayAgain, onNextPicture, onHome }: ResultStageProps) {
   // Picked once per result screen so it doesn't change on re-render.
   const [message] = useState(() => randomScoreMessage(score));
   const [enlarged, setEnlarged] = useState(false);
@@ -32,10 +40,24 @@ export function ResultStage({ scene, title, questions, answers, score, nextLevel
     <View style={styles.screen}>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <Text style={styles.message}>{message}</Text>
-        <Text style={styles.score}>
-          {score}
-          <Text style={styles.outOf}> / {questions.length}</Text>
-        </Text>
+        <View style={styles.pointsBlock} accessible accessibilityLabel={`${outcome.points.total} points. ${score} out of ${questions.length} right.`}>
+          {outcome.newHighScore && <Text style={styles.highScore}>New high score!</Text>}
+          <Text style={styles.points}>{formatPoints(outcome.points.total)}</Text>
+          <Text style={styles.pointsLabel}>
+            points · {score} of {questions.length} right
+          </Text>
+        </View>
+        <View style={styles.breakdown}>
+          <Chip label={`${score} × ${outcome.points.perAnswer}`} value={outcome.points.answers} />
+          {outcome.points.streak > 0 && <Chip label="In a row" value={outcome.points.streak} />}
+          {outcome.points.ready > 0 && <Chip label="Ready early" value={outcome.points.ready} />}
+        </View>
+
+        {outcome.ladder ? (
+          <LevelPanel before={outcome.ladder.before} after={outcome.ladder.after} score={score} total={questions.length} />
+        ) : (
+          <Text style={styles.practice}>Practice round · your level stays the same</Text>
+        )}
 
         <ProfilePrompt />
 
@@ -108,22 +130,46 @@ export function ResultStage({ scene, title, questions, answers, score, nextLevel
 
       {/* Pinned to the bottom so the next step is always visible without scrolling. */}
       <View style={styles.actions}>
-        {nextLevelLabel && <Text style={styles.next}>Next round: {nextLevelLabel}</Text>}
-        <Button label="Next picture" onPress={onNextPicture} />
+        <Button label={mode === 'levels' ? `Next picture · Level ${nextLevel}` : 'Next picture'} onPress={onNextPicture} />
         <View style={styles.row}>
+          {onPlayAgain && (
+            <View style={styles.rowItem}>
+              <Button label="Play again" variant="secondary" onPress={onPlayAgain} accessibilityHint="Same picture, different questions" />
+            </View>
+          )}
           <View style={styles.rowItem}>
-            <Button
-              label="Play again"
-              variant="secondary"
-              onPress={onPlayAgain}
-              accessibilityHint="Same picture, different questions"
-            />
-          </View>
-          <View style={styles.rowItem}>
-            <Button label="Home" variant="secondary" onPress={onHome} />
+            <Button label="Done" variant="secondary" onPress={onHome} />
           </View>
         </View>
       </View>
+    </View>
+  );
+}
+
+function Chip({ label, value }: { label: string; value: number }) {
+  return (
+    <View style={styles.chip}>
+      <Text style={styles.chipLabel}>{label}</Text>
+      <Text style={styles.chipValue}>+{formatPoints(value)}</Text>
+    </View>
+  );
+}
+
+/** How the round moved your level, in kind words. Best level is never shown going down. */
+function LevelPanel({ before, after, score, total }: { before: LadderState; after: LadderState; score: number; total: number }) {
+  let line: string;
+  if (after.level > before.level) line = `Level ${after.level} reached!`;
+  else if (after.level < before.level) line = `Back to Level ${after.level} for now. Take your time looking, you’ll climb back.`;
+  else if (after.level >= MAX_LEVEL && isGoodRound(score, total)) line = 'Top level, and still on top.';
+  else if (isGoodRound(score, total)) {
+    const left = ROUNDS_TO_LEVEL_UP - after.progress;
+    line = `Good round! ${left} more to Level ${after.level + 1}.`;
+  } else if (isPoorRound(score)) line = 'A tricky one. Shake it off, the next picture is new.';
+  else line = `Rounds with ${total - 1} or ${total} right move you up.`;
+  return (
+    <View style={styles.levelPanel}>
+      <LevelRing ladder={after} size={64} />
+      <Text style={styles.levelLine}>{line}</Text>
     </View>
   );
 }
@@ -135,8 +181,17 @@ const styles = StyleSheet.create({
   scroll: { flex: 1 },
   container: { padding: 24, paddingTop: 72, paddingBottom: 24, gap: 20 },
   message: { color: colors.textMuted, fontSize: 18, fontWeight: '600', textAlign: 'center' },
-  score: { color: colors.text, fontSize: 72, fontWeight: '900', textAlign: 'center' },
-  outOf: { color: colors.textMuted, fontSize: 36, fontWeight: '700' },
+  pointsBlock: { alignItems: 'center', gap: 2 },
+  highScore: { color: colors.accentText, backgroundColor: colors.accent, fontSize: 13, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 1, paddingHorizontal: 10, paddingVertical: 4, borderRadius: radius.pill, overflow: 'hidden', marginBottom: 6 },
+  points: { color: colors.text, fontSize: 60, fontWeight: '900', fontVariant: ['tabular-nums'] },
+  pointsLabel: { color: colors.textMuted, fontSize: 16, fontWeight: '600' },
+  breakdown: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginTop: -6 },
+  chip: { flexDirection: 'row', gap: 6, alignItems: 'baseline', backgroundColor: colors.surface, borderRadius: radius.pill, paddingHorizontal: 12, paddingVertical: 6 },
+  chipLabel: { color: colors.textMuted, fontSize: 13 },
+  chipValue: { color: colors.accent, fontSize: 14, fontWeight: '800', fontVariant: ['tabular-nums'] },
+  levelPanel: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: colors.surface, borderRadius: radius.md, padding: 14 },
+  levelLine: { flex: 1, color: colors.text, fontSize: 16, fontWeight: '700', lineHeight: 22 },
+  practice: { color: colors.textMuted, fontSize: 14, textAlign: 'center' },
   thumbWrap: { alignSelf: 'center', alignItems: 'center', gap: 6 },
   thumb: { width: THUMB_WIDTH, borderRadius: radius.sm, overflow: 'hidden' },
   thumbHint: { color: colors.accent, fontSize: 13, fontWeight: '700' },
@@ -174,5 +229,4 @@ const styles = StyleSheet.create({
   },
   row: { flexDirection: 'row', gap: 12 },
   rowItem: { flex: 1 },
-  next: { color: colors.textMuted, textAlign: 'center', fontSize: 14 },
 });

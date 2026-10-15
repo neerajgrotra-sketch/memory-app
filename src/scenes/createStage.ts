@@ -1,5 +1,5 @@
-import { LEVELS } from '@/game/difficulty';
-import type { Level, Question } from '@/types/game';
+import type { LevelConfig } from '@/game/difficulty';
+import type { Question } from '@/types/game';
 
 import { generateQuestions } from './generateQuestions';
 import { generateScene } from './generateScene';
@@ -18,22 +18,30 @@ export interface Stage {
 const MIN_QUESTIONS = 12;
 
 /**
- * Builds a new stage at the given level for a picture `size` points (the area below the header),
+ * Builds a new stage with the given knobs for a picture `size` points (the area below the header),
  * never in the same setting as `previousRecipeId`.
  */
 export function createStage(
-  level: Level,
+  knobs: LevelConfig,
   size: SceneSize,
   previousRecipeId?: string,
   seed = randomSeed(),
-  /** Only these recipe ids (the profile's testing filter); all recipes when null or empty. */
-  allowed?: string[] | null,
+  {
+    unlocked,
+    testing,
+  }: {
+    /** Settings this level has reached (all when missing). */
+    unlocked?: string[];
+    /** The profile's testing filter. When set it wins, so a setting can be tuned at any level. */
+    testing?: string[] | null;
+  } = {},
 ): Stage {
-  const filtered = allowed?.length ? RECIPES.filter((r) => allowed.includes(r.id)) : [];
-  const pool = filtered.length ? filtered : RECIPES;
+  const pick = (ids: string[] | null | undefined) => (ids?.length ? RECIPES.filter((r) => ids.includes(r.id)) : []);
+  const tested = pick(testing);
+  const reached = pick(unlocked);
+  const pool = tested.length ? tested : reached.length ? reached : RECIPES;
   const choices = pool.length > 1 ? pool.filter((r) => r.id !== previousRecipeId) : pool;
   const recipe = choices[seed % choices.length];
-  const knobs = LEVELS[level];
 
   // A scene that can't produce enough questions is quietly replaced with another.
   for (let attempt = 0; ; attempt++) {

@@ -11,11 +11,50 @@ Sizes are the thing's width as a fraction of the picture width (never under 44 p
 | medium | 13% – 18% |
 | small | 10% – 13% |
 
-| Level | Kinds | Most of one kind | View time | Asks about house numbers | Mixed colours |
+### Practice
+
+| Band | Kinds | Most of one kind | View time | Asks about house numbers | Mixed colours |
 | --- | --- | --- | --- | --- | --- |
 | easy | 5 | 3 | 10 s | no | no |
 | medium | 7 | 4 | 8 s | yes | no |
 | hard | 9 | 6 | 6 s | yes | yes |
+
+### Levels
+
+See [Levels and scoring](../levels-and-scoring.md).
+
+| Level | Title | Places | Kinds | Most | View time | House numbers | Mixed colours | Close counts | Asked first | Points per answer |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Fresh Eyes | beach | 5 | 3 | 10 s |  |  |  | object, colour | 100 |
+| 2 | Fresh Eyes | beach | 5 | 3 | 10 s |  |  |  | object, colour | 110 |
+| 3 | Fresh Eyes | beach, living-room | 5 | 3 | 10 s |  |  |  | object, colour | 120 |
+| 4 | Fresh Eyes | beach, living-room | 5 | 4 | 9 s |  |  |  | object, colour | 130 |
+| 5 | Sharp Eyes | beach, living-room | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 140 |
+| 6 | Sharp Eyes | beach, living-room, city | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 150 |
+| 7 | Sharp Eyes | beach, living-room, city | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 160 |
+| 8 | Sharp Eyes | beach, living-room, city | 6 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 170 |
+| 9 | Sharp Eyes | beach, living-room, city | 7 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 180 |
+| 10 | Keen Observer | beach, living-room, city | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 190 |
+| 11 | Keen Observer | beach, living-room, city | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 200 |
+| 12 | Keen Observer | beach, living-room, city | 7 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 210 |
+| 13 | Keen Observer | beach, living-room, city | 8 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 220 |
+| 14 | Keen Observer | beach, living-room, city | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 230 |
+| 15 | Detail Spotter | beach, living-room, city | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 240 |
+| 16 | Detail Spotter | beach, living-room, city | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
+| 17 | Detail Spotter | beach, living-room, city | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
+| 18 | Detail Spotter | beach, living-room, city | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
+| 19 | Detail Spotter | beach, living-room, city | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
+| 20 | Eagle Eye | beach, living-room, city | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
+| 21 | Eagle Eye | beach, living-room, city | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
+| 22 | Eagle Eye | beach, living-room, city | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
+| 23 | Eagle Eye | beach, living-room, city | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
+| 24 | Eagle Eye | beach, living-room, city | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
+| 25 | Total Recall | beach, living-room, city | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
+| 26 | Total Recall | beach, living-room, city | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
+| 27 | Total Recall | beach, living-room, city | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
+| 28 | Total Recall | beach, living-room, city | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
+| 29 | Total Recall | beach, living-room, city | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
+| 30 | Photographic Memory | beach, living-room, city | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
 
 ## At the beach (`beach`)
 

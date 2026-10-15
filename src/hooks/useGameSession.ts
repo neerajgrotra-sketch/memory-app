@@ -2,85 +2,110 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { LEVELS, ROUND_SIZE, levelForRound } from '@/game/difficulty';
+import { LEVELS, ROUND_SIZE, type LevelConfig } from '@/game/difficulty';
 import { emptyAnswers, type Answers } from '@/game/quizNavigation';
 import { selectQuestions, toRoundQuestion } from '@/game/selectQuestions';
+import {
+  PRACTICE_LEVEL,
+  applyRound,
+  bandOf,
+  knobsForLevel,
+  recipesForLevel,
+  type LadderState,
+} from '@/games/lookRemember/ladder';
+import { pointsFor, type PointsBreakdown } from '@/games/lookRemember/points';
 import { EXTRA_SECONDS, useProfile } from '@/profile';
 import { createStage, type Stage } from '@/scenes/createStage';
 import { statsStore } from '@/stats';
 import { layout } from '@/theme';
-import type { Difficulty, Level, Question, RoundQuestion } from '@/types/game';
+import type { Level, PlayMode, Question, RoundQuestion } from '@/types/game';
 import type { RoundResult } from '@/types/stats';
 
 export type Phase = 'memorise' | 'quiz' | 'result';
 
 export interface Round {
   index: number;
-  level: Level;
+  /** The band (for charts and the practice table). */
+  band: Level;
+  /** The level played: your level, or the level a Practice band plays like (for points). */
+  level: number;
   viewSeconds: number;
   questions: RoundQuestion[];
 }
 
+/** What happened in the round just finished, for the result screen. */
+export interface RoundOutcome {
+  points: PointsBreakdown;
+  /** Beat the previous high score (never on the very first round with points). */
+  newHighScore: boolean;
+  highScore: number;
+  /** Levels only: before and after this round. */
+  ladder?: { before: LadderState; after: LadderState };
+}
+
+interface Setup {
+  band: Level;
+  level: number;
+  knobs: LevelConfig;
+  /** Settings this round may use (levels only). */
+  unlocked?: string[];
+}
+
+function setupFor(mode: PlayMode, ladderLevel: number): Setup {
+  if (mode === 'levels') {
+    return { band: bandOf(ladderLevel), level: ladderLevel, knobs: knobsForLevel(ladderLevel), unlocked: recipesForLevel(ladderLevel) };
+  }
+  return { band: mode, level: PRACTICE_LEVEL[mode], knobs: LEVELS[mode] };
+}
+
 function buildRound(
-  difficulty: Difficulty,
+  setup: Setup,
   index: number,
   pool: Question[],
   seenIds: ReadonlySet<string>,
   previousIds: ReadonlySet<string>,
   extraSeconds = 0,
 ): Round {
-  const level = levelForRound(difficulty, index);
   const picked = selectQuestions(pool, {
     count: ROUND_SIZE,
-    preferredTypes: LEVELS[level].preferredTypes,
+    preferredTypes: setup.knobs.preferredTypes,
     seenIds,
     previousIds,
   });
-  return { index, level, viewSeconds: LEVELS[level].viewSeconds + extraSeconds, questions: picked.map(toRoundQuestion) };
+  return {
+    index,
+    band: setup.band,
+    level: setup.level,
+    viewSeconds: setup.knobs.viewSeconds + extraSeconds,
+    questions: picked.map(toRoundQuestion),
+  };
 }
 
 const makeId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 
-function toRoundResult(
-  sessionId: string,
-  mode: Difficulty,
-  stage: Stage,
-  round: Round,
-  answers: Answers,
-  lookedSeconds: number,
-): RoundResult {
+function byTypeOf(round: Round, answers: Answers) {
   const byType: RoundResult['byType'] = {};
-  let score = 0;
   round.questions.forEach((question, i) => {
-    const correct = answers[i] === question.answerIndex;
     const tally = (byType[question.type] ??= { correct: 0, total: 0 });
     tally.total += 1;
-    if (correct) {
-      tally.correct += 1;
-      score += 1;
-    }
+    if (answers[i] === question.answerIndex) tally.correct += 1;
   });
-  return {
-    id: makeId(),
-    sessionId,
-    playedAt: new Date().toISOString(),
-    mode,
-    level: round.level,
-    recipeId: stage.scene.recipeId,
-    sceneId: stage.scene.id,
-    score,
-    total: round.questions.length,
-    viewSeconds: round.viewSeconds,
-    lookedSeconds,
-    byType,
-  };
+  return byType;
+}
+
+export interface SessionStart {
+  mode: PlayMode;
+  /** Your level when the session starts (levels mode). */
+  ladder: LadderState;
+  /** The best points so far, for "New high score". */
+  highScore: number;
 }
 
 /**
- * Runs one game for a difficulty. The first picture is built on first render;
- * remount (e.g. with `key={difficulty}`) to start over with another difficulty.
+ * Runs one session of Look & Remember. The first picture is built on first render;
+ * remount (e.g. with a `key`) to start over in another mode.
  */
-export function useGameSession(difficulty: Difficulty) {
+export function useGameSession({ mode, ladder: startLadder, highScore: startHighScore }: SessionStart) {
   // Pictures are laid out for the space below the countdown bar, down to the bottom safe-area inset.
   // (The picture measures itself too and lays the same contents out again if the space differs.)
   const { width, height } = useWindowDimensions();
@@ -92,15 +117,21 @@ export function useGameSession(difficulty: Difficulty) {
   const { profile } = useProfile();
   const extra = profile?.moreTime ? EXTRA_SECONDS : 0;
   // Temporary testing filter from the profile: only these settings.
-  const recipeFilter = profile?.recipeFilter ?? null;
+  const testing = profile?.recipeFilter ?? null;
+
+  const [ladder, setLadder] = useState<LadderState>(startLadder);
+  const highScore = useRef(startHighScore);
+
   const [first] = useState(() => {
-    const firstStage = createStage(levelForRound(difficulty, 0), size, undefined, undefined, recipeFilter);
-    return { stage: firstStage, round: buildRound(difficulty, 0, firstStage.questions, new Set(), new Set(), extra) };
+    const setup = setupFor(mode, startLadder.level);
+    const firstStage = createStage(setup.knobs, size, undefined, undefined, { unlocked: setup.unlocked, testing });
+    return { stage: firstStage, round: buildRound(setup, 0, firstStage.questions, new Set(), new Set(), extra) };
   });
   const [stage, setStage] = useState<Stage>(first.stage);
   const [round, setRound] = useState<Round>(first.round);
   const [phase, setPhase] = useState<Phase>('memorise');
   const [answers, setAnswers] = useState<Answers>(() => emptyAnswers(first.round.questions.length));
+  const [outcome, setOutcome] = useState<RoundOutcome | null>(null);
 
   /** Question ids already asked about the current picture. */
   const seenIds = useRef(new Set<string>());
@@ -109,16 +140,18 @@ export function useGameSession(difficulty: Difficulty) {
 
   /** Builds a brand-new picture for round `index`, in a different setting from the last one. */
   const startStage = useCallback(
-    (index: number, previousRecipeId?: string) => {
-      const next = createStage(levelForRound(difficulty, index), size, previousRecipeId, undefined, recipeFilter);
+    (index: number, ladderLevel: number, previousRecipeId?: string) => {
+      const setup = setupFor(mode, ladderLevel);
+      const next = createStage(setup.knobs, size, previousRecipeId, undefined, { unlocked: setup.unlocked, testing });
       seenIds.current = new Set();
       setStage(next);
-      const nextRound = buildRound(difficulty, index, next.questions, seenIds.current, new Set(), extra);
+      const nextRound = buildRound(setup, index, next.questions, seenIds.current, new Set(), extra);
       setRound(nextRound);
       setAnswers(emptyAnswers(nextRound.questions.length));
+      setOutcome(null);
       setPhase('memorise');
     },
-    [size, difficulty, extra, recipeFilter],
+    [size, mode, extra, testing],
   );
 
   /** How long the player looked at the current picture before answering. */
@@ -128,17 +161,55 @@ export function useGameSession(difficulty: Difficulty) {
     setPhase('quiz');
   }, []);
 
+  /** Scores the round, moves the level, and saves it. */
+  const finish = useCallback(
+    (final: Answers) => {
+      const correct = round.questions.map((q, i) => final[i] === q.answerIndex);
+      const score = correct.filter(Boolean).length;
+      const points = pointsFor({ correct, level: round.level, viewSeconds: round.viewSeconds, lookedSeconds: looked.current });
+      const newHighScore = highScore.current > 0 && points.total > highScore.current;
+      highScore.current = Math.max(highScore.current, points.total);
+      const after = mode === 'levels' ? applyRound(ladder, score, round.questions.length) : undefined;
+      if (after) setLadder(after);
+      setOutcome({
+        points,
+        newHighScore,
+        highScore: highScore.current,
+        ladder: after ? { before: ladder, after } : undefined,
+      });
+      const result: RoundResult = {
+        id: makeId(),
+        sessionId: sessionId.current,
+        gameId: 'look-remember',
+        playedAt: new Date().toISOString(),
+        mode,
+        level: round.band,
+        ladder: after ? { level: round.level, after } : undefined,
+        points: points.total,
+        recipeId: stage.scene.recipeId,
+        sceneId: stage.scene.id,
+        score,
+        total: round.questions.length,
+        viewSeconds: round.viewSeconds,
+        lookedSeconds: looked.current,
+        byType: byTypeOf(round, final),
+      };
+      statsStore.addResult(result).catch(() => {});
+    },
+    [ladder, mode, round, stage],
+  );
+
   /** Records the answer to question `questionIndex` (questions can be answered in any order after skipping). */
   const answer = useCallback(
     (questionIndex: number, optionIndex: number) => {
       const next = answers.map((a, i) => (i === questionIndex ? optionIndex : a));
       setAnswers(next);
       if (next.every((a) => a !== null)) {
+        finish(next);
         setPhase('result');
-        statsStore.addResult(toRoundResult(sessionId.current, difficulty, stage, round, next, looked.current)).catch(() => {});
       }
     },
-    [answers, difficulty, round, stage],
+    [answers, finish],
   );
 
   /** Records the finished round and returns its question ids. */
@@ -149,20 +220,22 @@ export function useGameSession(difficulty: Difficulty) {
     return ids;
   }, [round]);
 
+  /** Same picture, other questions. Practice only: on levels it would make levelling up too easy. */
   const playAgain = useCallback(() => {
     const previousIds = finishRound();
-    const nextRound = buildRound(difficulty, roundCount.current, stage.questions, seenIds.current, previousIds, extra);
+    const nextRound = buildRound(setupFor(mode, ladder.level), roundCount.current, stage.questions, seenIds.current, previousIds, extra);
     setRound(nextRound);
     setAnswers(emptyAnswers(nextRound.questions.length));
+    setOutcome(null);
     setPhase('memorise');
-  }, [difficulty, extra, finishRound, stage]);
+  }, [extra, finishRound, ladder.level, mode, stage]);
 
   const nextPicture = useCallback(() => {
     finishRound();
-    startStage(roundCount.current, stage.scene.recipeId);
-  }, [finishRound, startStage, stage]);
+    startStage(roundCount.current, ladder.level, stage.scene.recipeId);
+  }, [finishRound, ladder.level, startStage, stage]);
 
   const score = answers.filter((choice, i) => choice === round.questions[i]?.answerIndex).length;
 
-  return { stage, round, phase, answers, score, finishMemorising, answer, playAgain, nextPicture };
+  return { stage, round, phase, answers, score, outcome, ladder, finishMemorising, answer, playAgain, nextPicture };
 }

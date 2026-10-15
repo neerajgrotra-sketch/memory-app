@@ -4,8 +4,14 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/Button';
+import { LevelChart } from '@/components/LevelChart';
+import { LevelRing } from '@/components/LevelRing';
 import { ScoreChart } from '@/components/ScoreChart';
-import { DIFFICULTY_OPTIONS, LEVEL_LABELS } from '@/game/difficulty';
+import { LEVEL_LABELS, MODE_LABELS } from '@/game/difficulty';
+import { titleFor } from '@/games/lookRemember/ladder';
+import { formatPoints } from '@/games/lookRemember/points';
+import { GAMES } from '@/games/registry';
+import { progressOf, type GameProgress } from '@/hooks/useGameProgress';
 import { statsStore } from '@/stats';
 import { summarize, type StatsSummary, type Trend } from '@/stats/summarize';
 import { colors, levelColors, radius } from '@/theme';
@@ -47,17 +53,16 @@ function formatDate(iso: string) {
   return `${date.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' })}, ${date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}`;
 }
 
-function goBack() {
-  if (router.canGoBack()) router.back();
-  else router.replace('/');
-}
-
-export default function StatsScreen() {
+export default function ProgressScreen() {
   const [summary, setSummary] = useState<StatsSummary | null>(null);
+  const [games, setGames] = useState<GameProgress[]>([]);
   const [confirmReset, setConfirmReset] = useState(false);
 
   const load = useCallback(() => {
-    statsStore.listResults().then((results) => setSummary(summarize(results)));
+    statsStore.listResults().then((results) => {
+      setSummary(summarize(results));
+      setGames(GAMES.map((g) => progressOf(results, g.id)));
+    });
   }, []);
 
   useFocusEffect(load);
@@ -73,12 +78,9 @@ export default function StatsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <SafeAreaView style={styles.screen} edges={['top', 'left', 'right']}>
       <View style={styles.topBar}>
-        <Pressable accessibilityRole="button" accessibilityLabel="Back" onPress={goBack} hitSlop={12} style={styles.back}>
-          <Text style={styles.backText}>←</Text>
-        </Pressable>
-        <Text style={styles.title}>Your progress</Text>
+        <Text style={styles.title}>Progress</Text>
       </View>
 
       {!summary ? (
@@ -87,12 +89,28 @@ export default function StatsScreen() {
         <View style={styles.empty}>
           <Text style={styles.emptyTitle}>No rounds yet</Text>
           <Text style={styles.emptyText}>
-            Finish a round and your scores, sessions and progress per difficulty will show up here.
+            Finish a round and your level, points and how you’re doing on each kind of question will show up here.
           </Text>
-          <Button label="Play a round" onPress={() => router.replace({ pathname: '/play', params: { difficulty: 'easy' } })} />
+          <Button label="Play Look & Remember" onPress={() => router.push({ pathname: '/play', params: { game: 'look-remember', mode: 'levels' } })} />
         </View>
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
+          {games.map((g, i) => (
+            <View key={GAMES[i].id} style={styles.gameCard}>
+              <View style={styles.gameHead}>
+                <LevelRing ladder={g.ladder} size={72} />
+                <View style={styles.gameText}>
+                  <Text style={styles.gameTitle}>{GAMES[i].title}</Text>
+                  <Text style={styles.gameMeta}>
+                    {titleFor(g.ladder.level)} · best level {g.ladder.best}
+                  </Text>
+                  <Text style={styles.gameMeta}>High score {g.highScore ? formatPoints(g.highScore) : '–'}</Text>
+                </View>
+              </View>
+              <LevelChart rounds={g.results.filter((r) => r.ladder).slice(-30)} />
+            </View>
+          ))}
+
           <View style={styles.hero}>
             <Text style={styles.heroTitle}>{headline(summary.trend).title}</Text>
             <Text style={styles.heroDetail}>{headline(summary.trend).detail}</Text>
@@ -109,7 +127,7 @@ export default function StatsScreen() {
             <ScoreChart rounds={summary.recentRounds} />
           </Section>
 
-          <Section title="By difficulty">
+          <Section title="By band (levels and practice)">
             <View style={styles.table}>
               <View style={[styles.tableRow, styles.tableHead]}>
                 <Text style={[styles.th, styles.colName]}>Level</Text>
@@ -181,7 +199,7 @@ export default function StatsScreen() {
               {summary.recentSessions.map((s, i) => (
                 <View key={s.id} style={[styles.sessionRow, i > 0 && styles.sessionDivider]}>
                   <View style={styles.sessionMain}>
-                    <Text style={styles.td}>{DIFFICULTY_OPTIONS.find((o) => o.value === s.mode)?.label ?? s.mode}</Text>
+                    <Text style={styles.td}>{MODE_LABELS[s.mode] ?? s.mode}</Text>
                     <Text style={styles.sessionMeta}>
                       {formatDate(s.startedAt)} · {s.rounds} {s.rounds === 1 ? 'round' : 'rounds'}
                     </Text>
@@ -265,17 +283,13 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, paddingVertical: 12 },
-  back: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backText: { color: colors.text, fontSize: 20, fontWeight: '700' },
-  title: { color: colors.text, fontSize: 22, fontWeight: '800' },
+  topBar: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 4 },
+  title: { color: colors.text, fontSize: 28, fontWeight: '900' },
+  gameCard: { backgroundColor: colors.surface, borderRadius: radius.md, padding: 16, gap: 16 },
+  gameHead: { flexDirection: 'row', alignItems: 'center', gap: 14 },
+  gameText: { flex: 1, gap: 2 },
+  gameTitle: { color: colors.text, fontSize: 20, fontWeight: '900' },
+  gameMeta: { color: colors.textMuted, fontSize: 14 },
   loading: { marginTop: 80 },
   empty: { flex: 1, justifyContent: 'center', padding: 24, gap: 16 },
   emptyTitle: { color: colors.text, fontSize: 24, fontWeight: '800' },

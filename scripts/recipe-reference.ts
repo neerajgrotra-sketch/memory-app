@@ -7,6 +7,8 @@
 import { writeFileSync } from 'fs';
 
 import { LEVELS } from '@/game/difficulty';
+import { MAX_LEVEL, knobsForLevel, recipesForLevel, titleFor } from '@/games/lookRemember/ladder';
+import { pointsPerAnswer } from '@/games/lookRemember/points';
 import { generateQuestions } from '@/scenes/generateQuestions';
 import { generateScene } from '@/scenes/generateScene';
 import { RECIPES } from '@/scenes/recipes';
@@ -52,9 +54,24 @@ const out: string[] = [
   '| --- | --- |',
   ...Object.entries(TIERS).map(([tier, [lo, hi]]) => `| ${tier} | ${pct(lo)} – ${pct(hi)} |`),
   '',
-  '| Level | Kinds | Most of one kind | View time | Asks about house numbers | Mixed colours |',
+  '### Practice',
+  '',
+  '| Band | Kinds | Most of one kind | View time | Asks about house numbers | Mixed colours |',
   '| --- | --- | --- | --- | --- | --- |',
   ...Object.entries(LEVELS).map(([level, k]) => `| ${level} | ${k.groups} | ${k.maxCount} | ${k.viewSeconds} s | ${k.houseNumbers ? 'yes' : 'no'} | ${k.mixedColours ? 'yes' : 'no'} |`),
+  '',
+  '### Levels',
+  '',
+  'See [Levels and scoring](../levels-and-scoring.md).',
+  '',
+  '| Level | Title | Places | Kinds | Most | View time | House numbers | Mixed colours | Close counts | Asked first | Points per answer |',
+  '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |',
+  ...Array.from({ length: MAX_LEVEL }, (_, i) => {
+    const level = i + 1;
+    const k = knobsForLevel(level);
+    const yes = (b: boolean) => (b ? 'yes' : '');
+    return `| ${level} | ${titleFor(level)} | ${recipesForLevel(level).join(', ')} | ${k.groups} | ${k.maxCount} | ${k.viewSeconds} s | ${yes(k.houseNumbers)} | ${yes(k.mixedColours)} | ${yes(k.closeCounts)} | ${k.preferredTypes.join(', ')} | ${pointsPerAnswer(level)} |`;
+  }),
   '',
 ];
 
