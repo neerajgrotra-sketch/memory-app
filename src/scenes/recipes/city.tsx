@@ -45,17 +45,20 @@ const items: ItemDef[] = [
     singular: 'clock',
     plural: 'clocks',
     article: 'a',
-    w: 100,
-    h: 100,
-    size: 100,
+    w: 120,
+    h: 110,
+    size: 105,
     zones: WALLS,
     maxCount: 1,
     countable: false,
+    // A street clock on a bracket fixed to the wall.
     draw: () => (
       <G>
-        <Circle cx={50} cy={50} r={46} fill="#ffffff" stroke="#343a40" strokeWidth={8} />
-        <Line x1={50} y1={50} x2={50} y2={18} stroke="#343a40" strokeWidth={6} strokeLinecap="round" />
-        <Line x1={50} y1={50} x2={72} y2={60} stroke="#343a40" strokeWidth={6} strokeLinecap="round" />
+        <Rect x={0} y={20} width={14} height={40} rx={3} fill="#343a40" />
+        <Rect x={10} y={34} width={28} height={10} fill="#343a40" />
+        <Circle cx={76} cy={58} r={42} fill="#ffffff" stroke="#343a40" strokeWidth={8} />
+        <Line x1={76} y1={58} x2={76} y2={28} stroke="#343a40" strokeWidth={6} strokeLinecap="round" />
+        <Line x1={76} y1={58} x2={96} y2={68} stroke="#343a40" strokeWidth={6} strokeLinecap="round" />
       </G>
     ),
   },
@@ -304,13 +307,22 @@ const items: ItemDef[] = [
   },
 ];
 
+/**
+ * The three main buildings line up with the left, middle and right cells, so
+ * anything hung "on the buildings" is always on exactly one building.
+ */
+const FACADES: [number, number][] = [
+  [0, 305],
+  [305, 595],
+  [595, 900],
+];
+
 const BUILDINGS = [
-  { x: -600, w: 600, rise: 0 },
-  { x: 0, w: 240, rise: 0.03 },
-  { x: 240, w: 210, rise: 0 },
-  { x: 450, w: 230, rise: 0.025 },
-  { x: 680, w: 220, rise: 0.005 },
-  { x: 900, w: 600, rise: 0.02 },
+  { x: -600, w: 600, rise: 0.01 },
+  { x: FACADES[0][0], w: FACADES[0][1] - FACADES[0][0], rise: 0.03 },
+  { x: FACADES[1][0], w: FACADES[1][1] - FACADES[1][0], rise: 0 },
+  { x: FACADES[2][0], w: FACADES[2][1] - FACADES[2][0], rise: 0.02 },
+  { x: 900, w: 600, rise: 0.005 },
 ];
 
 function backdrop(height: number, sky: string, walls: string[], window: string) {
@@ -323,16 +335,18 @@ function backdrop(height: number, sky: string, walls: string[], window: string) 
       {BUILDINGS.map((b, i) => {
         const top = roof - b.rise * height;
         const rows = Math.floor((pavement - top - 30) / 90);
+        const cols = Math.max(3, Math.round(b.w / 95));
         return (
           <G key={b.x}>
             <Rect x={b.x} y={top} width={b.w} height={pavement - top} fill={walls[i % walls.length]} />
+            <Rect x={b.x} y={top} width={b.w} height={10} fill="#000000" fillOpacity={0.12} />
             {Array.from({ length: rows }, (_, row) =>
-              [0, 1, 2].map((col) => (
+              Array.from({ length: cols }, (_, col) => (
                 <Rect
                   key={`${row}-${col}`}
-                  x={b.x + 22 + col * ((b.w - 44) / 3)}
+                  x={b.x + 22 + col * ((b.w - 44) / cols)}
                   y={top + 28 + row * 90}
-                  width={(b.w - 44) / 3 - 18}
+                  width={(b.w - 44) / cols - 18}
                   height={54}
                   fill={window}
                   fillOpacity={0.55}
@@ -365,7 +379,7 @@ export const city: Recipe = {
   place: 'in the street',
   zones: [
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0.12, bottom: 0.27 },
-    { id: 'buildings', label: 'On the buildings', surface: 'wall', top: 0.33, bottom: 0.5 },
+    { id: 'buildings', label: 'On the buildings', surface: 'wall', top: 0.33, bottom: 0.5, panels: FACADES },
     {
       id: 'pavement',
       label: 'On the pavement',

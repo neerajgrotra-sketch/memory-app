@@ -35,6 +35,12 @@ export interface ZoneDef {
   nearScale?: number;
   /** Ground only: one row side by side (furniture against a wall), never several rows deep. */
   singleRow?: boolean;
+  /**
+   * Wall only: the wall is really separate panels (one per building), given as x ranges.
+   * Anything hung here stays entirely on one panel, so nothing hangs over a gap or a lower roof.
+   * Omit for one continuous wall.
+   */
+  panels?: [number, number][];
 }
 
 /** Something that can appear in a scene and be asked about. Drawn in its own w × h design box. */

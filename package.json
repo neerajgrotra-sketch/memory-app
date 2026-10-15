@@ -1,6 +1,6 @@
 {
   "name": "glance",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "main": "expo-router/entry",
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "esbuild": "^0.24.2",
     "eslint": "^9.39.5",
     "eslint-config-expo": "~57.0.2",
     "typescript": "~6.0.3"
@@ -30,7 +31,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "check:scenes": "esbuild scripts/check-scenes.ts --bundle --platform=node --outfile=node_modules/.cache/check-scenes.js --alias:react-native-svg=./scripts/svg-stub.js --jsx=automatic --log-level=error && node node_modules/.cache/check-scenes.js"
   },
   "private": true
 }

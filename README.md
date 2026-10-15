@@ -57,14 +57,17 @@ Every picture is built on the device from a **recipe** in a fraction of a second
 
 ### Placement rules
 
+- **Wall panels.** A wall band can be split into `panels` (one per building). Anything hung there stays entirely on one panel, so nothing hangs over a gap or a lower roof. City buildings line up with the left, middle and right cells.
 - **Bands and cells.** A recipe has bands (sky, sea, near the water, at the front…) given as fractions of the picture height. Each band is split into left / middle / right cells with clear gaps between them. Each cell holds at most one kind of thing, so nothing overlaps and nothing sits on a boundary.
 - **Surfaces.** Every band is `air` (things float), `wall` (things hang) or `ground` (things stand). An item lists the bands it may go in, so a plant pot can only stand on a floor and a flag can only hang on a building. Ground bands can set a `floor` line (where the floor meets the wall) that feet must stay below.
 - **Real sizes.** Every item has a `size`: its real-world height relative to the others (sofa 150, cat 60, toy car 38). Everything is drawn 35% larger than that so small things are easy to spot. Big things may shrink to at most 75% to fit a cell; otherwise fewer of them are placed.
-- **Perspective.** Ground bands have `farScale` and `nearScale`. Things stand in rows, each row further back a little higher and smaller, and only the bottom 10% of a back-row thing may tuck behind the row in front.
+- **Perspective.** Ground bands have `farScale` and `nearScale`. Things stand in rows, each row further back a little higher and smaller, with a small gap between rows so nothing overlaps.
 - **Scenery.** `decor` (such as clouds) is spread across a band, drawn behind everything, and never asked about.
 - **Screen shape.** The picture is 900 wide and as tall as the screen's shape needs (1350–2000), so it fills the phone.
 
 Generation is seeded, so the same seed always rebuilds the same picture (handy for a future daily challenge).
+
+Run `npm run check:scenes` after any change to recipes or placement. It generates 8,100 scenes (every recipe, level and screen height) and fails if anything overlaps, leaves its band, crosses a building edge, isn't standing on the floor, sits under the on-screen controls, never fits anywhere, or if a scene has too few questions.
 
 ### Adding a recipe
 

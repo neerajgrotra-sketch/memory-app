@@ -21,13 +21,27 @@ const SPACING = 1.15;
 const SIZE_BOOST = 1.35;
 /** Big things may shrink to this fraction of their size to fit a cell, so they still look bigger than small things. */
 const MIN_FIT = 0.7;
-/** How much of a back-row thing's base may tuck behind the row in front. Small, so everything stays countable. */
-const ROW_TUCK = 0.1;
+/** Gap between a row and the row behind it (fraction of the front row's height), so every one stays countable. */
+const ROW_GAP = 0.08;
 
 type Cell = (typeof REGIONS)[number];
 
+/** Keeps a little wall showing around anything hung on a panel. */
+const PANEL_MARGIN = 14;
+
+/** The part of a cell that is on a single wall panel (the panel under the cell's centre). */
+function onPanel(zone: ZoneDef, cell: Cell): Cell | null {
+  if (!zone.panels) return cell;
+  const mid = (cell.x0 + cell.x1) / 2;
+  const panel = zone.panels.find(([x0, x1]) => mid >= x0 && mid <= x1);
+  if (!panel) return null;
+  return { id: cell.id, x0: Math.max(cell.x0, panel[0] + PANEL_MARGIN), x1: Math.min(cell.x1, panel[1] - PANEL_MARGIN) };
+}
+
 /** Air and wall bands: things keep their size and are spread over the cell. */
-function layoutFloating(item: ItemDef, count: number, zone: ZoneDef, cell: Cell, height: number, rng: Rng): Box[] | null {
+function layoutFloating(item: ItemDef, count: number, zone: ZoneDef, fullCell: Cell, height: number, rng: Rng): Box[] | null {
+  const cell = onPanel(zone, fullCell);
+  if (!cell) return null;
   const full = (item.size * SIZE_BOOST) / item.h;
   const top = zone.top * height;
   const cellW = cell.x1 - cell.x0;
@@ -59,7 +73,7 @@ function layoutFloating(item: ItemDef, count: number, zone: ZoneDef, cell: Cell,
 
 /**
  * Ground bands: things stand on the floor in rows, front row lowest and biggest,
- * each row further back a little higher and smaller (perspective).
+ * each row further back a little higher and smaller (perspective), with a small gap between rows.
  */
 function layoutGround(item: ItemDef, count: number, zone: ZoneDef, cell: Cell, height: number, rng: Rng): Box[] | null {
   const top = zone.top * height;
@@ -84,7 +98,7 @@ function layoutGround(item: ItemDef, count: number, zone: ZoneDef, cell: Cell, h
       const h = item.h * scale;
       if (baseline < floorTop || baseline - h < top) return null;
       result.push({ baseline, scale });
-      baseline -= h * (1 - ROW_TUCK);
+      baseline -= h * (1 + ROW_GAP);
     }
     return result;
   };
