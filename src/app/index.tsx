@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/Button';
 import { DIFFICULTY_OPTIONS } from '@/game/difficulty';
 import { colors, radius } from '@/theme';
+import { APP_VERSION } from '@/version';
 
 export default function HomeScreen() {
   return (
@@ -31,6 +32,8 @@ export default function HomeScreen() {
       </View>
 
       <Button label="Your progress" variant="secondary" onPress={() => router.push('/stats')} />
+
+      <Text style={styles.version}>Version {APP_VERSION}</Text>
     </SafeAreaView>
   );
 }
@@ -53,4 +56,5 @@ const styles = StyleSheet.create({
   cardPressed: { backgroundColor: colors.surfaceRaised, transform: [{ scale: 0.99 }] },
   cardTitle: { color: colors.text, fontSize: 20, fontWeight: '800' },
   cardDescription: { color: colors.textMuted, fontSize: 14 },
+  version: { color: colors.textMuted, fontSize: 12, textAlign: 'center', marginTop: -16 },
 });

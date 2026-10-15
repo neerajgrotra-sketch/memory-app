@@ -13,6 +13,8 @@ npx expo start --tunnel   # scan the QR code with Expo Go
 
 Checks: `npm run typecheck` and `npm run lint`.
 
+Every change bumps the version (shown on the home screen). See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
+
 ## How it plays
 
 1. **Home**: pick Easy, Medium, Hard or Progressive.
