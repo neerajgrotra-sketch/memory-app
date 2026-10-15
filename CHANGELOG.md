@@ -10,6 +10,14 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.6.0 (2026-10-15)
+
+- **Testing (temporary)** section in the profile:
+  - Switch settings (At the beach, City street, Living room) on or off. Only the ones on are played, in every mode, so you can focus on one while tuning it. With one on, every picture comes from it.
+  - At least one always stays on, and "Use all settings" resets it.
+  - The home screen shows a red reminder ("Testing: only City street") while it's on.
+  - It's saved with your profile on this phone, and kept separate so it's easy to remove later.
+
 ## 3.5.1 (2026-10-15)
 
 - **Documentation:** a new `docs/` folder explains how pictures and questions are made, in enough detail to review the logic or rebuild it:

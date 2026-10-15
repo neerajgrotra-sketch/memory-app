@@ -21,8 +21,17 @@ const MIN_QUESTIONS = 12;
  * Builds a new stage at the given level for a picture `size` points (the area below the header),
  * never in the same setting as `previousRecipeId`.
  */
-export function createStage(level: Level, size: SceneSize, previousRecipeId?: string, seed = randomSeed()): Stage {
-  const choices = RECIPES.length > 1 ? RECIPES.filter((r) => r.id !== previousRecipeId) : RECIPES;
+export function createStage(
+  level: Level,
+  size: SceneSize,
+  previousRecipeId?: string,
+  seed = randomSeed(),
+  /** Only these recipe ids (the profile's testing filter); all recipes when null or empty. */
+  allowed?: string[] | null,
+): Stage {
+  const filtered = allowed?.length ? RECIPES.filter((r) => allowed.includes(r.id)) : [];
+  const pool = filtered.length ? filtered : RECIPES;
+  const choices = pool.length > 1 ? pool.filter((r) => r.id !== previousRecipeId) : pool;
   const recipe = choices[seed % choices.length];
   const knobs = LEVELS[level];
 

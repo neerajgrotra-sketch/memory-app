@@ -14,6 +14,10 @@ export interface Profile {
   moreTime: boolean;
   /** The "what should we call you?" card has been answered or skipped, so it never shows again. */
   asked: boolean;
+  /**
+   * Temporary, for testing and tuning: only these recipes (ids) are played. Null means all of them.
+   */
+  recipeFilter: string[] | null;
   createdAt: string;
   updatedAt: string;
 }

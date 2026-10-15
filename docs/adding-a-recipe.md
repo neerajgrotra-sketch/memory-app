@@ -41,6 +41,7 @@ A recipe is one file in `src/scenes/recipes/` that exports a `Recipe` (`src/scen
 ## Checklist before shipping
 
 - [ ] `npm run check:scenes` passes (5,400 scenes on three iPhone sizes, every level)
+- [ ] Played on a phone with only this setting switched on (Profile → Testing), on Easy, Medium and Hard, reading every question against the picture
 - [ ] `npm run gallery` reviewed by eye, with and without `OVERLAY=0`. Ask of every thing: is it where it would really be, the right size next to its neighbours, and not floating, bunched, or covering something it shouldn't?
 - [ ] At least 12 things, so Hard has enough to fill the picture and enough absent things for "NOT in the picture" questions
 - [ ] Every thing can stand out somewhere (the checker reports any that can't)

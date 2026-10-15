@@ -31,6 +31,7 @@ Every change bumps the version (shown on the home screen). See [CHANGELOG.md](CH
    - After your first round, a card asks once for a name and an age band. Both are optional; saving or skipping means it never asks again.
    - Your details are remembered on this phone.
    - The profile screen edits them, has "More time to look" (+3 s per picture, on by default for 55+) and "Clear my details".
+   - **Testing (temporary)**: switch settings on or off to play only the ones you're tuning. The home screen shows a reminder while it's on.
    - It's built in sections, so account and subscription settings can be added later.
    - glance is a memory game, not a medical test: nothing compares you with other people or claims to measure brain health.
 

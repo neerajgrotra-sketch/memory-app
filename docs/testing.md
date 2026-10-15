@@ -48,4 +48,5 @@ npx expo start --tunnel --clear
 
 - **Layout overlay:** in the memorise header, ▦ turns it on. The timer waits while it's on, so you can check the layout on the real screen.
 - **"I'm ready"** skips to the questions, so you can check them quickly.
+- **Profile → Testing (temporary):** switch off the other settings to play only the one you're tuning, in every mode. The home screen shows a red reminder while it's on.
 - **Fresh install:** to see the first-round profile prompt again, use a private browser window (web), or clear the app's data.

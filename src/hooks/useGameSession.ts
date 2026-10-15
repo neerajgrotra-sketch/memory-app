@@ -91,8 +91,10 @@ export function useGameSession(difficulty: Difficulty) {
   // "More time to look" (profile) adds a few seconds to every picture.
   const { profile } = useProfile();
   const extra = profile?.moreTime ? EXTRA_SECONDS : 0;
+  // Temporary testing filter from the profile: only these settings.
+  const recipeFilter = profile?.recipeFilter ?? null;
   const [first] = useState(() => {
-    const firstStage = createStage(levelForRound(difficulty, 0), size);
+    const firstStage = createStage(levelForRound(difficulty, 0), size, undefined, undefined, recipeFilter);
     return { stage: firstStage, round: buildRound(difficulty, 0, firstStage.questions, new Set(), new Set(), extra) };
   });
   const [stage, setStage] = useState<Stage>(first.stage);
@@ -108,7 +110,7 @@ export function useGameSession(difficulty: Difficulty) {
   /** Builds a brand-new picture for round `index`, in a different setting from the last one. */
   const startStage = useCallback(
     (index: number, previousRecipeId?: string) => {
-      const next = createStage(levelForRound(difficulty, index), size, previousRecipeId);
+      const next = createStage(levelForRound(difficulty, index), size, previousRecipeId, undefined, recipeFilter);
       seenIds.current = new Set();
       setStage(next);
       const nextRound = buildRound(difficulty, index, next.questions, seenIds.current, new Set(), extra);
@@ -116,7 +118,7 @@ export function useGameSession(difficulty: Difficulty) {
       setAnswers(emptyAnswers(nextRound.questions.length));
       setPhase('memorise');
     },
-    [size, difficulty, extra],
+    [size, difficulty, extra, recipeFilter],
   );
 
   /** How long the player looked at the current picture before answering. */

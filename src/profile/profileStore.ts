@@ -17,7 +17,7 @@ const makeId = () => `${Date.now().toString(36)}-${Math.random().toString(36).sl
 
 export function newProfile(): Profile {
   const now = new Date().toISOString();
-  return { id: makeId(), name: null, ageBand: null, moreTime: false, asked: false, createdAt: now, updatedAt: now };
+  return { id: makeId(), name: null, ageBand: null, moreTime: false, asked: false, recipeFilter: null, createdAt: now, updatedAt: now };
 }
 
 export function createDeviceProfileStore(): ProfileStore {

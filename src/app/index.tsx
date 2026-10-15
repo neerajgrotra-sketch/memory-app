@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/Button';
 import { DIFFICULTY_OPTIONS } from '@/game/difficulty';
 import { EXTRA_SECONDS, initialOf, useProfile } from '@/profile';
+import { RECIPES } from '@/scenes/recipes';
 import { colors, radius } from '@/theme';
 import { APP_VERSION } from '@/version';
 
@@ -46,6 +47,14 @@ export default function HomeScreen() {
             </Pressable>
           ))}
         </View>
+
+        {!!profile?.recipeFilter?.length && (
+          <Pressable accessibilityRole="button" onPress={() => router.push('/profile')} style={styles.testingWrap}>
+            <Text style={styles.testing}>
+              Testing: only {RECIPES.filter((r) => profile.recipeFilter!.includes(r.id)).map((r) => r.title).join(', ')}. Change in your profile.
+            </Text>
+          </Pressable>
+        )}
 
         {profile?.moreTime && <Text style={styles.moreTime}>More time to look is on: every picture stays {EXTRA_SECONDS} seconds longer.</Text>}
 
@@ -90,6 +99,8 @@ const styles = StyleSheet.create({
   cardPressed: { backgroundColor: colors.surfaceRaised, transform: [{ scale: 0.99 }] },
   cardTitle: { color: colors.text, fontSize: 20, fontWeight: '800' },
   cardDescription: { color: colors.textMuted, fontSize: 14 },
+  testingWrap: { marginTop: -16, minHeight: 44, justifyContent: 'center' },
+  testing: { color: colors.wrong, fontSize: 14, fontWeight: '700', textAlign: 'center' },
   moreTime: { color: colors.accent, fontSize: 14, textAlign: 'center', marginTop: -16 },
   version: { color: colors.textMuted, fontSize: 12, textAlign: 'center', marginTop: -16 },
 });
