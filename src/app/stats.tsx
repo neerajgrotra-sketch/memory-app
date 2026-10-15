@@ -157,6 +157,7 @@ export default function StatsScreen() {
               <Tile label="Day streak" value={String(summary.practice.streak)} />
             </View>
             <Text style={styles.note}>{steadiness(summary.practice.spread)}</Text>
+            {summary.practice.earlyFinish && <Text style={styles.note}>{earlyText(summary.practice.earlyFinish)}</Text>}
             {summary.practice.typeChanges.length > 0 && (
               <View style={styles.types}>
                 {summary.practice.typeChanges.map((c) => (
@@ -210,6 +211,14 @@ function steadiness(spread: number | null) {
   if (spread === null) return 'Play 5 rounds to see how steady your scores are.';
   const how = spread < 0.6 ? 'Very steady' : spread < 1.1 ? 'Fairly steady' : 'Up and down';
   return `${how}: your last rounds vary by about ±${fmt(spread)} points.`;
+}
+
+function earlyText({ recent, before }: { recent: number; before: number | null }) {
+  const now = recent < 0.3 ? 'You use the whole time to look at each picture' : `You’re ready ${fmt(recent)} s early on average`;
+  if (before === null) return `${now} (last rounds).`;
+  const diff = recent - before;
+  if (Math.abs(diff) < 0.3) return `${now}, about the same as before.`;
+  return `${now}, ${diff > 0 ? 'sooner' : 'later'} than before (${fmt(before)} s).`;
 }
 
 function changeArrow(delta: number) {

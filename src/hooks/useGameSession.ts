@@ -47,6 +47,7 @@ function toRoundResult(
   stage: Stage,
   round: Round,
   answers: Answers,
+  lookedSeconds: number,
 ): RoundResult {
   const byType: RoundResult['byType'] = {};
   let score = 0;
@@ -69,6 +70,8 @@ function toRoundResult(
     sceneId: stage.scene.id,
     score,
     total: round.questions.length,
+    viewSeconds: round.viewSeconds,
+    lookedSeconds,
     byType,
   };
 }
@@ -116,7 +119,12 @@ export function useGameSession(difficulty: Difficulty) {
     [size, difficulty, extra],
   );
 
-  const finishMemorising = useCallback(() => setPhase('quiz'), []);
+  /** How long the player looked at the current picture before answering. */
+  const looked = useRef(0);
+  const finishMemorising = useCallback((lookedSeconds: number) => {
+    looked.current = lookedSeconds;
+    setPhase('quiz');
+  }, []);
 
   /** Records the answer to question `questionIndex` (questions can be answered in any order after skipping). */
   const answer = useCallback(
@@ -125,7 +133,7 @@ export function useGameSession(difficulty: Difficulty) {
       setAnswers(next);
       if (next.every((a) => a !== null)) {
         setPhase('result');
-        statsStore.addResult(toRoundResult(sessionId.current, difficulty, stage, round, next)).catch(() => {});
+        statsStore.addResult(toRoundResult(sessionId.current, difficulty, stage, round, next, looked.current)).catch(() => {});
       }
     },
     [answers, difficulty, round, stage],

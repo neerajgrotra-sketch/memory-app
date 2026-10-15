@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -11,9 +12,13 @@ import { colors, layout } from '@/theme';
 interface MemoriseStageProps {
   scene: SceneSpec;
   seconds: number;
-  onDone: () => void;
+  /** Called when the time is up or the player taps "I'm ready", with how many seconds they looked. */
+  onDone: (lookedSeconds: number) => void;
   onQuit: () => void;
 }
+
+/** "I'm ready" ignores taps this soon after the picture appears, so a stray tap can't skip it unseen. */
+const READY_DELAY_MS = 1000;
 
 /**
  * The controls sit in a bar above the picture, never on top of it. The timer is on the left next to
@@ -22,6 +27,21 @@ interface MemoriseStageProps {
  */
 export function MemoriseStage({ scene, seconds, onDone, onQuit }: MemoriseStageProps) {
   const overlay = useLayoutOverlay();
+  const shownAt = useRef(0);
+  const [armed, setArmed] = useState(false);
+  const done = useRef(false);
+
+  useEffect(() => {
+    shownAt.current = Date.now();
+    const t = setTimeout(() => setArmed(true), READY_DELAY_MS);
+    return () => clearTimeout(t);
+  }, []);
+
+  const finish = (lookedSeconds: number) => {
+    if (done.current) return;
+    done.current = true;
+    onDone(Math.min(seconds, Math.round(lookedSeconds * 10) / 10));
+  };
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right', 'bottom']}>
       <View style={styles.bar}>
@@ -38,7 +58,18 @@ export function MemoriseStage({ scene, seconds, onDone, onQuit }: MemoriseStageP
           </Pressable>
         )}
         {/* While the layout overlay is on, the timer waits so the layout can be checked. */}
-        <Countdown seconds={seconds} running={!overlay} onComplete={onDone} />
+        <Countdown seconds={seconds} running={!overlay} onComplete={() => finish(seconds)} />
+        {/* Ready before the time is up: a deliberate button, never a tap on the picture itself. */}
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="I'm ready, go to the questions"
+          accessibilityState={{ disabled: !armed }}
+          disabled={!armed}
+          onPress={() => finish((Date.now() - shownAt.current) / 1000)}
+          style={({ pressed }) => [styles.ready, !armed && styles.readyWaiting, pressed && styles.readyPressed]}
+        >
+          <Text style={styles.readyText}>I’m ready</Text>
+        </Pressable>
       </View>
       <View style={styles.picture}>
         <SceneView spec={scene} fitToBox overlay={overlay} />
@@ -56,6 +87,18 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingHorizontal: 16,
   },
+  ready: {
+    minHeight: 44,
+    paddingHorizontal: 14,
+    borderRadius: 22,
+    borderWidth: 2,
+    borderColor: colors.accent,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  readyWaiting: { opacity: 0.4 },
+  readyPressed: { backgroundColor: colors.surfaceRaised },
+  readyText: { color: colors.accent, fontSize: 15, fontWeight: '800' },
   devButton: {
     width: 44,
     height: 44,

@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.4.0 (2026-10-15)
+
+- **"I'm ready" button** in the header while you study the picture: go to the questions as soon as you're ready instead of waiting for the countdown.
+  - It's a deliberate button, not a tap on the picture, because people touch the picture while studying it.
+  - It ignores taps for the first second, so a stray tap can't skip a picture you haven't seen.
+- **How long you looked is recorded** with each round. "Your practice" on the progress screen shows how many seconds early you're ready on average, compared with your earlier rounds.
+
 ## 3.3.3 (2026-10-15)
 
 - **The result screen shows every option for every question:**

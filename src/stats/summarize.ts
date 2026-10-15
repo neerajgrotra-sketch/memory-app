@@ -56,6 +56,11 @@ export interface PracticeSummary {
   /** How much scores vary over the last rounds (standard deviation, out of 5); null until enough rounds. */
   spread: number | null;
   typeChanges: TypeChange[];
+  /**
+   * Seconds left on the clock when you started answering, on average: your last rounds and the ones
+   * before (null until there are enough rounds that recorded it).
+   */
+  earlyFinish: { recent: number; before: number | null } | null;
 }
 
 export interface StatsSummary {
@@ -127,7 +132,14 @@ export function practiceOf(results: RoundResult[], now = new Date()): PracticeSu
     return before === null || after === null ? [] : [{ type, before, after }];
   });
 
-  return { daysPlayed: days.size, streak, spread, typeChanges };
+  const timed = results.filter((r) => r.viewSeconds !== undefined && r.lookedSeconds !== undefined);
+  const spare = (rounds: RoundResult[]) => average(rounds.map((r) => r.viewSeconds! - r.lookedSeconds!));
+  const recentTimed = timed.slice(-CHANGE_WINDOW);
+  const earlierTimed = timed.slice(-2 * CHANGE_WINDOW, -CHANGE_WINDOW);
+  const earlyFinish =
+    recentTimed.length >= 3 ? { recent: spare(recentTimed), before: earlierTimed.length >= 3 ? spare(earlierTimed) : null } : null;
+
+  return { daysPlayed: days.size, streak, spread, typeChanges, earlyFinish };
 }
 
 export function summarize(

@@ -21,5 +21,8 @@ export interface RoundResult {
   sceneId: string;
   score: number;
   total: number;
+  /** Seconds the picture could be shown, and how long the player actually looked (they can finish early). */
+  viewSeconds?: number;
+  lookedSeconds?: number;
   byType: Partial<Record<QuestionType, TypeTally>>;
 }

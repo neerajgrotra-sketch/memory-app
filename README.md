@@ -18,7 +18,7 @@ Every change bumps the version (shown on the home screen). See [CHANGELOG.md](CH
 ## How it plays
 
 1. **Home**: pick Easy, Medium, Hard or Progressive.
-2. **Memorise**: a brand-new picture is generated and shown full-screen with a countdown (10 s on Easy, 8 s on Medium, 6 s on Hard).
+2. **Memorise**: a brand-new picture is generated and shown full-screen with a countdown (10 s on Easy, 8 s on Medium, 6 s on Hard). Tap **I'm ready** to go to the questions early (it ignores taps in the first second).
 3. **Quiz**: 5 questions, 4 options each. A right answer flashes green and moves on. A wrong answer shakes red, then shows the right one in green and waits for **Next**.
    - **Skip for now** moves to the next unanswered question. Skipped questions come back round once the end is reached, marked "You skipped this one".
    - The numbered dots show every question (filled = answered, dashed = skipped, ringed = current); tap an unanswered dot to jump to it.
