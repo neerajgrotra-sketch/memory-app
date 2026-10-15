@@ -1,9 +1,10 @@
-import { Circle, G, Line, Path, Polygon, Rect } from 'react-native-svg';
+import { Circle, G, Line, Path, Polygon, Rect, Text as SvgText } from 'react-native-svg';
 
 import { C } from '../colours';
 import { balloon, bird, cloudShape, dog, person, plane, tree } from '../items/common';
 import { markIfClear, scatterMarks } from '../marks';
-import type { ItemDef, Mark, Recipe, Rect as Box } from '../types';
+import type { Rng } from '../random';
+import type { ColourDef, ItemDef, Mark, Recipe, Rect as Box, SceneDetails } from '../types';
 
 /** Band edges, as fractions of the picture height. */
 const ROOF = 0.25;
@@ -210,11 +211,10 @@ const items: ItemDef[] = [
     article: 'a',
     w: 115,
     h: 75,
-    tier: 'large',
-    size: 0.22,
-    // Parked: leaning against the building front (a bicycle can't stand on its own), several spread along it.
+    tier: 'medium',
+    size: 0.18,
+    // Parked: leaning against the building front (a bicycle can't stand on its own), side by side, clear of doors.
     backRow: true,
-    spread: true,
     zones: PAVEMENT,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.black, C.pink],
@@ -415,8 +415,9 @@ export function facade(i: number) {
   const c = (t0 + t1) / 2;
   const wall = GROUND_LINE - ROOF;
   const upper = { y0: ROOF + wall * 0.07, y1: ROOF + wall * 0.29 };
-  const doorLeft = ((i % 2) + 2) % 2 === 0;
-  const doorX = doorLeft ? t0 + 0.04 : t1 - 0.13;
+  // Doors on the left, right, right: no two doors (or house numbers) end up side by side. Side buildings alternate.
+  const doorLeft = i === 0 ? true : i === 1 || i === 2 ? false : ((i % 2) + 2) % 2 === 0;
+  const doorX = doorLeft ? t0 + 0.03 : t1 - 0.12;
   const shopX = doorLeft ? t1 - 0.15 : t0 + 0.05;
   return {
     windows: [
@@ -424,8 +425,9 @@ export function facade(i: number) {
       { x0: c + 0.035, x1: c + 0.11, ...upper },
       { x0: shopX, x1: shopX + 0.1, y0: ROOF + wall * 0.45, y1: ROOF + wall * 0.8 },
     ],
-    // About 1.25× as tall as a person on the pavement.
-    door: { x0: doorX, y0: ROOF + wall * 0.36, x1: doorX + 0.09, y1: GROUND_LINE },
+    // A little taller than a person, with the house-number plaque above it.
+    door: { x0: doorX, y0: ROOF + wall * 0.46, x1: doorX + 0.09, y1: GROUND_LINE },
+    plaque: { x0: doorX - 0.005, y0: ROOF + wall * 0.32, x1: doorX + 0.095, y1: ROOF + wall * 0.43 },
   };
 }
 
@@ -452,7 +454,36 @@ function surfaceAt(x: number, y: number): string {
 }
 
 /** Background: sky, three building fronts with their windows and doors, pavement, kerb and road. */
-function backdrop(height: number, palette: Palette) {
+/** Named house colours, so "the yellow house" means something. Each street uses three different ones. */
+export const HOUSE_COLOURS: ColourDef[] = [
+  { name: 'Yellow', hex: '#f2c94c' },
+  { name: 'Blue', hex: '#86b3e0' },
+  { name: 'Green', hex: '#93c47d' },
+  { name: 'Pink', hex: '#eaa1bd' },
+  { name: 'Orange', hex: '#f4a261' },
+  { name: 'Purple', hex: '#b39ddb' },
+];
+
+/** Plain fronts for the extra buildings wide screens show beyond the picture: no numbers, no named colours. */
+const SIDE_BUILDINGS = ['#cfc6b8', '#bdb4a6', '#d8d1c5'];
+
+/**
+ * This street's three houses, left to right: different named colours, and house numbers that rise
+ * along the street with uneven gaps (like 1204, 1210, 1236), so each one has to be remembered.
+ */
+function details(random: Rng): SceneDetails {
+  const colours = random.shuffle(HOUSE_COLOURS).slice(0, 3);
+  let number = 2 * random.int(50, 4800);
+  const houses = colours.map((colour, i) => {
+    if (i > 0) number += random.pick([2, 4, 6, 8, 10, 12, 16, 20, 24, 30]);
+    return { colour, number };
+  });
+  return { houses, palette: Object.fromEntries(houses.map((h, i) => [`facade${i}`, h.colour.hex])) };
+}
+
+function backdrop(height: number, palette: Palette, details?: SceneDetails) {
+  const colourOf = (i: number) =>
+    i >= 0 && i <= 2 ? (details?.houses?.[i].colour.hex ?? palette[`facade${i}`]) : SIDE_BUILDINGS[((i % 3) + 3) % 3];
   const roof = height * ROOF;
   const ground = height * GROUND_LINE;
   const kerb = height * KERB;
@@ -463,7 +494,7 @@ function backdrop(height: number, palette: Palette) {
     <G>
       <Rect x={-900} y={-600} width={2700} height={roof + 600} fill={palette.sky} />
       {buildings.map((i) => (
-        <Rect key={i} x={i * 300} y={roof} width={300} height={ground - roof} fill={palette[`facade${((i % 3) + 3) % 3}`]} />
+        <Rect key={i} x={i * 300} y={roof} width={300} height={ground - roof} fill={colourOf(i)} />
       ))}
       <Rect x={-900} y={roof} width={2700} height={10} fill="#000000" fillOpacity={0.18} />
       {buildings.map((i) => (
@@ -478,6 +509,23 @@ function backdrop(height: number, palette: Palette) {
             ))}
             <Rect {...r(f.door)} fill="#6b4226" stroke="#3d2412" strokeWidth={4} />
             <Circle cx={(f.door.x1 - 0.012) * 900} cy={((f.door.y0 + f.door.y1) / 2) * height} r={4} fill="#ffd60a" />
+            {/* House number above the door, on the three houses in the picture only. */}
+            {details?.houses?.[i] && (
+              <G>
+                <Rect {...r(f.plaque)} rx={6} fill="#ffffff" stroke="#343a40" strokeWidth={3} />
+                <SvgText
+                  x={((f.plaque.x0 + f.plaque.x1) / 2) * 900}
+                  y={((f.plaque.y0 + f.plaque.y1) / 2) * height}
+                  fontSize={Math.min(30, (f.plaque.y1 - f.plaque.y0) * height * 0.7)}
+                  fontWeight="bold"
+                  fill="#212529"
+                  textAnchor="middle"
+                  alignmentBaseline="central"
+                >
+                  {details.houses[i].number}
+                </SvgText>
+              </G>
+            )}
           </G>
         );
       })}
@@ -513,8 +561,13 @@ export const city: Recipe = {
     { id: 'road', label: 'On the road', surface: 'ground', top: KERB, bottom: 1, rows: 1, oneWay: true, maxGroups: 2 },
   ],
   items,
-  keepClear: FACADES.map((i) => facade(i).door),
+  // Nothing covers a door or the number above it.
+  keepClear: FACADES.map((i) => {
+    const f = facade(i);
+    return { x0: f.plaque.x0, y0: f.plaque.y0, x1: f.plaque.x1, y1: f.door.y1 };
+  }),
+  details,
   surfaceAt,
   marks,
-  variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number) => backdrop(h, p) })),
+  variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number, d?: SceneDetails) => backdrop(h, p, d) })),
 };

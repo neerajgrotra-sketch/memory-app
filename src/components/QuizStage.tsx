@@ -16,6 +16,7 @@ const TYPE_LABELS: Record<QuestionType, string> = {
   count: 'Count',
   colour: 'Colour',
   position: 'Position',
+  number: 'Number',
 };
 
 /**

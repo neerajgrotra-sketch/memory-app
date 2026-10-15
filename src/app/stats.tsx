@@ -16,6 +16,7 @@ const TYPE_LABELS: Record<QuestionType, string> = {
   count: 'Counting',
   colour: 'Colours',
   position: 'Positions',
+  number: 'Numbers',
 };
 
 const fmt = (n: number) => n.toFixed(1);

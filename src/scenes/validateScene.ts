@@ -26,6 +26,7 @@ import {
 } from './layout';
 import { createRng } from './random';
 import { getRecipe } from './recipes';
+import { variantOf } from './variant';
 import { SCENE_WIDTH, TIERS, ratioOf, type ItemDef, type Mark, type PlacedGroup, type Recipe, type Rect, type SceneSpec } from './types';
 
 export type Rule =
@@ -57,7 +58,7 @@ const EPS = 1e-6;
 
 /** The faint backdrop marks of a scene, in design units, kept clear of every thing. Same scene, same marks. */
 export function marksFor(spec: SceneSpec, recipe: Recipe, ratio: number): Mark[] {
-  const variant = recipe.variants.find((v) => v.id === spec.variantId) ?? recipe.variants[0];
+  const variant = variantOf(recipe, spec);
   const boxes = spec.groups.flatMap((g) => {
     const item = recipe.items.find((i) => i.kind === g.kind)!;
     return g.boxes.map((b) => {
@@ -76,7 +77,7 @@ export function marksFor(spec: SceneSpec, recipe: Recipe, ratio: number): Mark[]
 export function validateScene(spec: SceneSpec, width: number, height: number): SceneIssue[] {
   const recipe = getRecipe(spec.recipeId);
   const ratio = ratioOf({ width, height });
-  const variant = recipe.variants.find((v) => v.id === spec.variantId) ?? recipe.variants[0];
+  const variant = variantOf(recipe, spec);
   const issues: SceneIssue[] = [];
   const add = (rule: Rule, message: string, ...kinds: string[]) => {
     if (!issues.some((i) => i.message === message)) issues.push({ rule, message, kinds });

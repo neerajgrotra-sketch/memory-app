@@ -78,7 +78,7 @@ Every picture is laid out for the space it is shown in: the area below the heade
 - **Bands.** Each setting is split into horizontal bands, and each thing lists the bands it belongs in:
   - Beach: sky 0–35%, sea 35–60%, sand 60–100%.
   - Room: ceiling 0–10%, wall 10–55%, floor 55–100%.
-  - City: sky (with rooftops along its bottom edge), building fronts (one per third, each with two windows and a door), pavement, road.
+  - City: sky (with rooftops along its bottom edge), building fronts (one per third, each with two windows, a door and a house number), pavement, road. Each picture's houses get three different named colours and rising house numbers (`details`), which Medium and Hard ask about.
 - **Slot grid.** Each band is split into 3 columns (left / middle / right) × a few rows. Every group of things gets its own slot, preferring the emptiest parts of the picture. Positions are jittered only a little inside the slot.
 - **Spread out.**
   - Each band gets a share of the kinds in proportion to its height.

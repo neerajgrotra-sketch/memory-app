@@ -78,7 +78,7 @@ export interface StatsSummary {
   practice: PracticeSummary;
 }
 
-const QUESTION_TYPES: QuestionType[] = ['object', 'count', 'colour', 'position'];
+const QUESTION_TYPES: QuestionType[] = ['object', 'count', 'colour', 'position', 'number'];
 
 const average = (values: number[]) => (values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0);
 

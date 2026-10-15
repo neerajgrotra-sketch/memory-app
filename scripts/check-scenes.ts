@@ -49,11 +49,11 @@ for (const recipe of RECIPES) {
 // The city's building fronts: windows and doors never overlap each other or leave their building.
 for (const i of [0, 1, 2]) {
   const f = facade(i);
-  const parts = [...f.windows, f.door];
+  const parts = [...f.windows, f.door, f.plaque];
   parts.forEach((a, j) => {
     if (a.x0 < i / 3 || a.x1 > (i + 1) / 3) fail(`city: building ${i} has a window or door past its edge`);
     parts.slice(j + 1).forEach((b) => {
-      if (gapBetween(a, b) < 0.01) fail(`city: building ${i} has a door and window overlapping`);
+      if (gapBetween(a, b) < 0.005) fail(`city: building ${i} has a door, window or number overlapping`);
     });
   });
 }

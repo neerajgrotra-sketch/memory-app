@@ -8,6 +8,8 @@ import type { ItemDef, PlacedGroup, Recipe, Region, SceneSpec, ZoneDef } from '.
 export interface QuestionKnobs {
   /** Wrong counts right next to the answer (4 vs 5) instead of further away. */
   closeCounts: boolean;
+  /** Ask about house numbers and house colours (Medium and Hard). */
+  houseNumbers?: boolean;
 }
 
 const REGION_PHRASE: Record<Region, string> = {
@@ -27,6 +29,17 @@ const colourList = (names: string[]) => {
   const text = unique.length === 1 ? unique[0] : `${unique.slice(0, -1).join(', ')} and ${unique.at(-1)}`;
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
+
+/** Numbers easy to mix up with `n`: two digits swapped, or a few doors along. */
+function numberLookalikes(n: number): string[] {
+  const digits = String(n).split('');
+  const swaps = digits.slice(0, -1).map((_, i) => {
+    const d = [...digits];
+    [d[i], d[i + 1]] = [d[i + 1], d[i]];
+    return d.join('');
+  });
+  return [...swaps.filter((x) => !x.startsWith('0') && x !== String(n)), String(n + 2), String(n - 2), String(n + 10)];
+}
 
 /** Every way of choosing `k` of `items`. */
 function combinations<T>(items: T[], k: number): T[][] {
@@ -146,6 +159,40 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         rng,
       ),
     });
+  }
+
+  // Houses in the street: "What number was the yellow house?" and "What colour was number 1210?".
+  // Both are about the same house (one subject), so a round asks at most one of them per house.
+  const houses = spec.details?.houses ?? [];
+  if (knobs.houseNumbers && houses.length) {
+    const numbers = houses.map((h) => String(h.number));
+    for (const house of houses) {
+      const n = String(house.number);
+      const subject = { subject: `house-${n}` };
+      questions.push({
+        id: `${spec.id}-house-number-${n}`,
+        sceneId: spec.id,
+        answerIndex: 0,
+        type: 'number',
+        ...subject,
+        prompt: `What number was on the ${house.colour.name.toLowerCase()} house?`,
+        options: withDistractors(n, numbers, numberLookalikes(house.number), rng),
+      });
+      questions.push({
+        id: `${spec.id}-house-colour-${n}`,
+        sceneId: spec.id,
+        answerIndex: 0,
+        type: 'colour',
+        ...subject,
+        prompt: `What colour was house number ${n}?`,
+        options: withDistractors(
+          house.colour.name,
+          houses.map((h) => h.colour.name),
+          ['Yellow', 'Blue', 'Green', 'Pink', 'Orange', 'Purple'],
+          rng,
+        ),
+      });
+    }
   }
 
   if (absent.length >= 3 && present.length >= 3) {

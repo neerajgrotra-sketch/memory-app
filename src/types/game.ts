@@ -1,4 +1,4 @@
-export type QuestionType = 'object' | 'count' | 'colour' | 'position';
+export type QuestionType = 'object' | 'count' | 'colour' | 'position' | 'number';
 
 export type Difficulty = 'easy' | 'medium' | 'hard' | 'progressive';
 

@@ -27,6 +27,7 @@ import { createRng, type Rng } from './random';
 import { getRecipe } from './recipes';
 import { ratioOf, type Box, type ColourDef, type ItemDef, type PlacedGroup, type Recipe, type Rect, type SceneSize, type SceneSpec, type Slot, type VariantDef, type ZoneDef } from './types';
 import { validateScene } from './validateScene';
+import { variantOf } from './variant';
 
 export interface SceneKnobs {
   /** How many different kinds of thing appear. */
@@ -281,7 +282,9 @@ function shares(recipe: Recipe, total: number): { zone: ZoneDef; quota: number }
 /** Fills a recipe with random contents and lays them out once. */
 function build(recipe: Recipe, knobs: SceneKnobs, seed: number, rng: Rng, size: SceneSize): SceneSpec {
   const ratio = ratioOf(size);
-  const variant = rng.pick(recipe.variants);
+  const base = rng.pick(recipe.variants);
+  const details = recipe.details?.(rng);
+  const variant = variantOf(recipe, { variantId: base.id, details });
   const ctx: Context = { recipe, variant, ratio, size, rng, taken: [], cells: new Set(), oneWayFlip: (seed & 1) === 1 };
   const pool = rng.shuffle(recipe.items);
   const groups: PlacedGroup[] = [];
@@ -386,7 +389,7 @@ function build(recipe: Recipe, knobs: SceneKnobs, seed: number, rng: Rng, size: 
     tryItem(queue.length ? queue.shift()! : pool.shift()!);
   }
 
-  return { id: `${recipe.id}-${seed.toString(36)}`, seed, recipeId: recipe.id, variantId: variant.id, size, groups };
+  return { id: `${recipe.id}-${seed.toString(36)}`, seed, recipeId: recipe.id, variantId: variant.id, details, size, groups };
 }
 
 /**
@@ -416,7 +419,7 @@ export function generateScene(recipe: Recipe, knobs: SceneKnobs, seed: number, s
  */
 export function relayoutScene(spec: SceneSpec, size: SceneSize): SceneSpec | null {
   const recipe = getRecipe(spec.recipeId);
-  const variant = recipe.variants.find((v) => v.id === spec.variantId) ?? recipe.variants[0];
+  const variant = variantOf(recipe, spec);
   const ratio = ratioOf(size);
   const order = [...spec.groups].sort(
     (a, b) => footprint(recipe.items.find((i) => i.kind === b.kind)!, b.count) - footprint(recipe.items.find((i) => i.kind === a.kind)!, a.count),

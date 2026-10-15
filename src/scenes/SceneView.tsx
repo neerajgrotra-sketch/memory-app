@@ -7,6 +7,7 @@ import { relayoutScene } from './generateScene';
 import { rectOf } from './layout';
 import { LayoutOverlay } from './LayoutOverlay';
 import { getRecipe } from './recipes';
+import { variantOf } from './variant';
 import { SCENE_WIDTH, ratioOf, type SceneSize, type SceneSpec } from './types';
 import { marksFor, validateScene } from './validateScene';
 
@@ -26,7 +27,7 @@ interface SceneContentProps {
  */
 export function SceneContent({ spec, pointsPerUnit, overlay }: SceneContentProps) {
   const recipe = getRecipe(spec.recipeId);
-  const variant = recipe.variants.find((v) => v.id === spec.variantId) ?? recipe.variants[0];
+  const variant = variantOf(recipe, spec);
   const ratio = ratioOf(spec.size);
   const sceneH = SCENE_WIDTH * ratio;
 

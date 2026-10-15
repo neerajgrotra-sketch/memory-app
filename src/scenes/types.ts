@@ -1,5 +1,7 @@
 import type { ReactElement } from 'react';
 
+import type { Rng } from './random';
+
 export type Region = 'left' | 'centre' | 'right';
 
 export interface ColourDef {
@@ -145,6 +147,23 @@ export interface Mark {
   el: ReactElement;
 }
 
+/** A house in the street: its front colour and the number above its door. */
+export interface House {
+  colour: ColourDef;
+  number: number;
+}
+
+/**
+ * Per-picture details of the backdrop, chosen when the scene is made (city house colours and numbers).
+ * They are facts the questions can ask about, and they override the variant's palette.
+ */
+export interface SceneDetails {
+  /** Left to right, one per third. */
+  houses?: House[];
+  /** Surface colours for this picture, over the variant's palette (e.g. `facade0`). */
+  palette?: Record<string, string>;
+}
+
 export interface VariantDef {
   id: string;
   /** The colour of each surface the recipe's `surfaceAt` can name, used for contrast rules. */
@@ -153,7 +172,7 @@ export interface VariantDef {
    * Draws the background bands for a picture 900 wide and `height` tall (design units). It should
    * spill well past those edges (x −600…1500, y −600…height+600) so a screen of another shape is filled.
    */
-  background: (height: number) => ReactElement;
+  background: (height: number, details?: SceneDetails) => ReactElement;
 }
 
 /** A setting: its bands, backdrop and the things that belong in it. */
@@ -165,6 +184,8 @@ export interface Recipe {
   rug?: Rug;
   /** Areas nothing may cover (building doors), as fractions: x of the width, y of the height. */
   keepClear?: Rect[];
+  /** Chooses this picture's backdrop details (house colours and numbers). */
+  details?: (random: Rng) => SceneDetails;
   /** Which surface (a key of each variant's palette) is behind the point (x, y), as fractions of width and height. */
   surfaceAt: (x: number, y: number) => string;
   /**
@@ -232,6 +253,8 @@ export interface SceneSpec {
   seed: number;
   recipeId: string;
   variantId: string;
+  /** Backdrop details for this picture (house colours and numbers), if the recipe has any. */
+  details?: SceneDetails;
   /** The size the boxes were laid out for. */
   size: SceneSize;
   groups: PlacedGroup[];

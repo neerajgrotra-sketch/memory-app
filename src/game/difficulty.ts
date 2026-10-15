@@ -15,10 +15,12 @@ export interface LevelConfig {
   closeCounts: boolean;
   /** Copies of some things (fire hydrants) may each be a different colour. */
   mixedColours: boolean;
+  /** Ask about house numbers and house colours in the street. */
+  houseNumbers: boolean;
 }
 
 export const LEVELS: Record<Level, LevelConfig> = {
-  easy: { preferredTypes: ['object', 'colour'], viewSeconds: 10, groups: 5, maxCount: 3, closeCounts: false, mixedColours: false },
+  easy: { preferredTypes: ['object', 'colour'], viewSeconds: 10, groups: 5, maxCount: 3, closeCounts: false, mixedColours: false, houseNumbers: false },
   medium: {
     preferredTypes: ['object', 'count', 'colour', 'position'],
     viewSeconds: 8,
@@ -26,8 +28,9 @@ export const LEVELS: Record<Level, LevelConfig> = {
     maxCount: 4,
     closeCounts: false,
     mixedColours: false,
+    houseNumbers: true,
   },
-  hard: { preferredTypes: ['count', 'position'], viewSeconds: 6, groups: 9, maxCount: 6, closeCounts: true, mixedColours: true },
+  hard: { preferredTypes: ['count', 'position', 'number'], viewSeconds: 6, groups: 9, maxCount: 6, closeCounts: true, mixedColours: true, houseNumbers: true },
 };
 
 export const LEVEL_LABELS: Record<Level, string> = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };

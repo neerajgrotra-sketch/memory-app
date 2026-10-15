@@ -10,6 +10,21 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.5.0 (2026-10-15)
+
+- **House numbers and named house colours in the street:**
+  - Each picture's three houses get three different colours from yellow, blue, green, pink, orange and purple.
+  - Each house has a number on a white plaque above a slightly shorter door. Numbers rise along the street with uneven gaps (like 1560, 1564, 1594), so each one must be remembered.
+  - Doors sit left, right and right, so no two doors or numbers are side by side.
+  - Nothing covers a door or its number.
+- **New questions on Medium and Hard:**
+  - "What number was on the yellow house?" Wrong options are the other houses' numbers and lookalikes (swapped digits, a few doors along).
+  - "What colour was house number 1564?"
+  - At most one per house per round. Easy draws the numbers but doesn't ask about them.
+  - Number questions are a new type, "Numbers", tracked on the progress screen. Hard prefers them.
+- On wide screens, the extra buildings beyond the picture are plain beige with no numbers, so "the yellow house" is always exactly one house.
+- Bicycles lean against the walls side by side, clear of doors.
+
 ## 3.4.0 (2026-10-15)
 
 - **"I'm ready" button** in the header while you study the picture: go to the questions as soon as you're ready instead of waiting for the countdown.
