@@ -49,6 +49,9 @@ function combinations<T>(items: T[], k: number): T[][] {
   return [...combinations(rest, k - 1).map((c) => [first, ...c]), ...combinations(rest, k)];
 }
 
+/** True if there can be more than one of a thing (so counting it and plural answers make sense). */
+const canBeSeveral = (item: ItemDef) => item.countable !== false && item.maxCount > 1;
+
 /** "A sailboat" for one, "Sailboats" for several. */
 const nounPhrase = (item: ItemDef, plural: boolean) => (plural ? cap(item.plural) : `${cap(item.article)} ${item.singular}`);
 
@@ -92,7 +95,8 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     const zone = zoneOf(group.zoneId);
     const plural = group.count > 1;
 
-    if (item.countable !== false) {
+    // Only things that can appear more than once: "How many mirrors?" would always be 1, a giveaway.
+    if (canBeSeveral(item)) {
       add('count', group, {
         type: 'count',
         subject: item.kind,
@@ -146,8 +150,11 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
 
     // Only ask "what was on the left…" when exactly one kind of thing is there.
     const sharesSpot = spec.groups.some((g) => g !== group && g.zoneId === group.zoneId && sidesOf(g).has(group.region));
-    const sameZoneKinds = recipe.items.filter((i) => i.kind !== item.kind && i.zones.includes(zone.id));
-    const otherKinds = recipe.items.filter((i) => i.kind !== item.kind);
+    // For a plural answer ("Hot-air balloons"), only things that can appear in groups make believable
+    // wrong options: never "Suns" or "Buses".
+    const fits = (i: ItemDef) => i.kind !== item.kind && (!plural || canBeSeveral(i));
+    const sameZoneKinds = recipe.items.filter((i) => fits(i) && i.zones.includes(zone.id));
+    const otherKinds = recipe.items.filter(fits);
     if (!spread && !sharesSpot) add('what-here', group, {
       type: 'object',
       subject: item.kind,

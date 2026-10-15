@@ -83,7 +83,8 @@ Every picture is generated on the device from a **recipe** in a few milliseconds
 | [How a picture is made](docs/how-pictures-are-made.md) | The whole pipeline |
 | [Layout rules](docs/layout-rules.md) | Sizes, bands, slot grid, spacing, habits, `validateScene` |
 | [Drawing](docs/drawing.md) | Layers, outlines, contrast, wide screens, the dev overlay |
-| [Questions](docs/questions.md) | Question types, wrong options, picking a round |
+| [How questions are generated](docs/questions.md) | Question types, when they're asked, wrong options, picking a round |
+| [Question examples](docs/questions-examples.md) | Real pictures and every question written from them (generated) |
 | [Recipes](docs/recipes/README.md) | One page per setting, plus generated reference tables |
 | [Adding a recipe](docs/adding-a-recipe.md) | Step by step, with a checklist |
 | [Testing and reviewing](docs/testing.md) | Scene checker, gallery, overlay in Expo Go |

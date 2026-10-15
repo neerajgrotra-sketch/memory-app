@@ -7,7 +7,8 @@ How the game builds its pictures and questions, in enough detail to review the l
 | [How a picture is made](how-pictures-are-made.md) | The whole pipeline, from the screen size to a drawn picture and its questions |
 | [Layout rules](layout-rules.md) | Sizes, bands, the slot grid, spacing, real-world habits and `validateScene` |
 | [Drawing](drawing.md) | Layers, outlines, contrast, faint marks, wide screens, the dev overlay |
-| [Questions](questions.md) | Every question type, how wrong options are chosen, how a round is picked |
+| [How questions are generated](questions.md) | Every question type, when it's asked, how wrong options are chosen, how a round's 5 are picked |
+| [Question examples](questions-examples.md) | Real pictures, their facts and every question written from them (generated) |
 | [Recipes](recipes/) | One page per setting: [beach](recipes/beach.md), [city street](recipes/city.md), [living room](recipes/living-room.md), plus the generated [reference tables](recipes/reference.md) |
 | [Adding a recipe](adding-a-recipe.md) | Step by step, with a checklist |
 | [Testing and reviewing](testing.md) | The scene checker, the gallery, the overlay in Expo Go |
@@ -19,5 +20,5 @@ A **recipe** describes a setting: horizontal **bands** (sky, sea, sand…), the 
 
 ## Keeping these docs current
 
-- `docs/recipes/reference.md` is generated from the code: run `npm run docs:recipes` after changing a recipe.
+- `docs/recipes/reference.md` and `docs/questions-examples.md` are generated from the code: run `npm run docs:recipes` after changing a recipe or the questions.
 - The other pages are written by hand. When a rule changes, update the matching page and add a line to [CHANGELOG.md](../CHANGELOG.md).

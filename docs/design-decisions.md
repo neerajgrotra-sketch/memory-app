@@ -43,6 +43,7 @@ Why the rules are what they are. Most came from play-testing: a screenshot showe
 - **Questions come only from the scene's facts**, so they are right by construction. Re-layout for a different screen size never changes the facts.
 - **"In the picture", not "on the beach".** Players read "on the beach" as "on the sand", so things in the sea or sky felt like trick answers.
 - **Every option is shown after the round**, with your pick and the answer marked, and the picture can be enlarged, so players can see exactly what they missed.
+- **No giveaway questions.** "How many mirrors?" was always 1, because a room never has two, so things that can only appear once aren't counted. Plural wrong options only use things that can come in groups (never "Suns"). Both were found by reading the generated [question examples](questions-examples.md).
 - **House numbers** add Medium and Hard questions that test detail. They rise along the street with uneven gaps, so remembering one doesn't give away the others.
 
 ## The player

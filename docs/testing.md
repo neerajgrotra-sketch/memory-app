@@ -6,7 +6,7 @@
 | `npm run lint` | ESLint (Expo config) |
 | `npm run check:scenes` | Generates 5,400 scenes and checks every rule (below) |
 | `npm run gallery` | Renders pictures to `gallery.html` for reviewing by eye |
-| `npm run docs:recipes` | Regenerates `docs/recipes/reference.md` from the recipes |
+| `npm run docs:recipes` | Regenerates `docs/recipes/reference.md` and `docs/questions-examples.md` from the code |
 
 Run all of them before shipping a change to recipes, layout or questions.
 
