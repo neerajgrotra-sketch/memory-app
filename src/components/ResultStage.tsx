@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
+import type { Answers } from '@/game/quizNavigation';
 import { randomScoreMessage } from '@/game/scoreMessages';
 import { colors, radius } from '@/theme';
 import { SceneView } from '@/scenes/SceneView';
@@ -12,7 +13,7 @@ interface ResultStageProps {
   scene: SceneSpec;
   title: string;
   questions: RoundQuestion[];
-  answers: number[];
+  answers: Answers;
   score: number;
   nextLevelLabel?: string;
   onPlayAgain: () => void;

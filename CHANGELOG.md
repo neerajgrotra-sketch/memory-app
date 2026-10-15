@@ -10,6 +10,14 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 2.6.0 (2026-10-15)
+
+- **Skip a question and come back to it:**
+  - **Skip for now** moves to the next unanswered question.
+  - Skipped questions come back round once you reach the end, marked "You skipped this one".
+  - Numbered dots show every question (filled = answered, dashed = skipped, ringed = current); tap any unanswered dot to jump to it.
+  - Skip is hidden on the last remaining question, and the round ends once every question is answered. Scores and progress count each question once.
+
 ## 2.5.1 (2026-10-15)
 
 - **Nothing flying overlaps a cloud.** Clouds are placed first and the sky keeps clear of them, so a white plane can no longer sit on a white cloud.

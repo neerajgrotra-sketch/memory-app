@@ -44,7 +44,7 @@ function Game({ difficulty }: { difficulty: Difficulty }) {
 
       {phase === 'quiz' && (
         <SafeAreaView style={styles.container}>
-          <QuizStage questions={round.questions} answeredCount={answers.length} onAnswer={answer} />
+          <QuizStage key={round.index} questions={round.questions} answers={answers} onAnswer={answer} />
         </SafeAreaView>
       )}
 

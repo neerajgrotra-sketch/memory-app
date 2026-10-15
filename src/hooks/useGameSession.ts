@@ -3,6 +3,7 @@ import { useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { LEVELS, ROUND_SIZE, levelForRound } from '@/game/difficulty';
+import { emptyAnswers, type Answers } from '@/game/quizNavigation';
 import { selectQuestions, toRoundQuestion } from '@/game/selectQuestions';
 import { createStage, type Stage } from '@/scenes/createStage';
 import { statsStore } from '@/stats';
@@ -43,7 +44,7 @@ function toRoundResult(
   mode: Difficulty,
   stage: Stage,
   round: Round,
-  answers: number[],
+  answers: Answers,
 ): RoundResult {
   const byType: RoundResult['byType'] = {};
   let score = 0;
@@ -86,7 +87,7 @@ export function useGameSession(difficulty: Difficulty) {
   const [stage, setStage] = useState<Stage>(first.stage);
   const [round, setRound] = useState<Round>(first.round);
   const [phase, setPhase] = useState<Phase>('memorise');
-  const [answers, setAnswers] = useState<number[]>([]);
+  const [answers, setAnswers] = useState<Answers>(() => emptyAnswers(first.round.questions.length));
 
   /** Question ids already asked about the current picture. */
   const seenIds = useRef(new Set<string>());
@@ -99,8 +100,9 @@ export function useGameSession(difficulty: Difficulty) {
       const next = createStage(levelForRound(difficulty, index), aspect, previousRecipeId);
       seenIds.current = new Set();
       setStage(next);
-      setRound(buildRound(difficulty, index, next.questions, seenIds.current, new Set()));
-      setAnswers([]);
+      const nextRound = buildRound(difficulty, index, next.questions, seenIds.current, new Set());
+      setRound(nextRound);
+      setAnswers(emptyAnswers(nextRound.questions.length));
       setPhase('memorise');
     },
     [aspect, difficulty],
@@ -108,11 +110,12 @@ export function useGameSession(difficulty: Difficulty) {
 
   const finishMemorising = useCallback(() => setPhase('quiz'), []);
 
+  /** Records the answer to question `questionIndex` (questions can be answered in any order after skipping). */
   const answer = useCallback(
-    (optionIndex: number) => {
-      const next = [...answers, optionIndex];
+    (questionIndex: number, optionIndex: number) => {
+      const next = answers.map((a, i) => (i === questionIndex ? optionIndex : a));
       setAnswers(next);
-      if (next.length >= round.questions.length) {
+      if (next.every((a) => a !== null)) {
         setPhase('result');
         statsStore.addResult(toRoundResult(sessionId.current, difficulty, stage, round, next)).catch(() => {});
       }
@@ -130,8 +133,9 @@ export function useGameSession(difficulty: Difficulty) {
 
   const playAgain = useCallback(() => {
     const previousIds = finishRound();
-    setRound(buildRound(difficulty, roundCount.current, stage.questions, seenIds.current, previousIds));
-    setAnswers([]);
+    const nextRound = buildRound(difficulty, roundCount.current, stage.questions, seenIds.current, previousIds);
+    setRound(nextRound);
+    setAnswers(emptyAnswers(nextRound.questions.length));
     setPhase('memorise');
   }, [difficulty, finishRound, stage]);
 

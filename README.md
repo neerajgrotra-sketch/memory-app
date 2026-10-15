@@ -20,6 +20,9 @@ Every change bumps the version (shown on the home screen). See [CHANGELOG.md](CH
 1. **Home**: pick Easy, Medium, Hard or Progressive.
 2. **Memorise**: a brand-new picture is generated and shown full-screen with a countdown (10 s on Easy, 8 s on Medium, 6 s on Hard).
 3. **Quiz**: 5 questions, 4 options each. A right answer flashes green and moves on. A wrong answer shakes red, then shows the right one in green and waits for **Next**.
+   - **Skip for now** moves to the next unanswered question. Skipped questions come back round once the end is reached, marked "You skipped this one".
+   - The numbered dots show every question (filled = answered, dashed = skipped, ringed = current); tap an unanswered dot to jump to it.
+   - Skip is hidden on the last unanswered question, and the round ends when every question has an answer.
 4. **Result**: your score out of 5 with a random funny message, plus the correct answers.
    - **Next picture** generates a new picture in a different setting.
    - **Play again** keeps the same picture with 5 different questions.
@@ -96,7 +99,7 @@ Aim for 12+ items per recipe, so harder levels have enough to fill the picture a
 src/
   app/                 Expo Router screens (_layout, index = home, play)
   components/          Countdown (Reanimated), Memorise/Quiz/Result stages, Button
-  game/                Pure game logic: difficulty config, question selection, option shuffling
+  game/                Pure game logic: difficulty config, question selection, option shuffling, quiz navigation (skip / come back)
   hooks/useGameSession Game state machine: memorise → quiz → result → play again / next picture
   scenes/
     recipes/           One file per setting (beach, city, livingRoom) + the registry
