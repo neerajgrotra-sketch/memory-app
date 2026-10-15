@@ -26,9 +26,9 @@ export function progressOf(all: RoundResult[], gameId: GameId): GameProgress {
     results,
     ladder: state,
     fromHistory,
-    highScore: results.reduce((best, r) => Math.max(best, r.points ?? 0), 0),
+    highScore: results.reduce((best, r) => (r.replay ? best : Math.max(best, r.points ?? 0)), 0),
     plays: results.length,
-    perfectRounds: results.filter((r) => r.score === r.total).length,
+    perfectRounds: results.filter((r) => !r.replay && r.score === r.total).length,
     lastPlayedAt: results.at(-1)?.playedAt ?? null,
   };
 }

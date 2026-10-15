@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.3 (2026-10-15)
+
+- **Clearer next step after a round.** The main button now says what it does: **Try again · Level 1** after a weaker round, **Keep going · Level 1** after a good one, **Play Level 2** after going up, each with "New picture, same level" underneath where it helps.
+- **Same picture again** on levels, after a weaker round (0–3 right): the picture you just saw with 5 different questions, to see what you missed. It's practice: it earns points to show how you did, but never moves your level, never sets a high score and isn't counted as a perfect round. Practice rounds offer it every time (it replaces Play again).
+- **Coloured question dots:** the numbers above each question turn green for a right answer and red for a wrong one.
+- The quiz and result screens stay a phone-width column on wide screens, like the tabs.
+
 ## 4.0.0-beta.2 (2026-10-15)
 
 - **Calmer Games tab.** The big "Start here" card with a large street picture is gone: it repeated the game card below it and was oversized, worst on wide screens.

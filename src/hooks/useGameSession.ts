@@ -31,6 +31,8 @@ export interface Round {
   level: number;
   viewSeconds: number;
   questions: RoundQuestion[];
+  /** The same picture again: practice that never moves your level or sets a high score. */
+  replay: boolean;
 }
 
 /** What happened in the round just finished, for the result screen. */
@@ -39,7 +41,9 @@ export interface RoundOutcome {
   /** Beat the previous high score (never on the very first round with points). */
   newHighScore: boolean;
   highScore: number;
-  /** Levels only: before and after this round. */
+  /** Same picture again (see Round.replay). */
+  replay: boolean;
+  /** Levels only, and never for a replay: before and after this round. */
   ladder?: { before: LadderState; after: LadderState };
 }
 
@@ -65,6 +69,7 @@ function buildRound(
   seenIds: ReadonlySet<string>,
   previousIds: ReadonlySet<string>,
   extraSeconds = 0,
+  replay = false,
 ): Round {
   const picked = selectQuestions(pool, {
     count: ROUND_SIZE,
@@ -78,6 +83,7 @@ function buildRound(
     level: setup.level,
     viewSeconds: setup.knobs.viewSeconds + extraSeconds,
     questions: picked.map(toRoundQuestion),
+    replay,
   };
 }
 
@@ -167,14 +173,17 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       const correct = round.questions.map((q, i) => final[i] === q.answerIndex);
       const score = correct.filter(Boolean).length;
       const points = pointsFor({ correct, level: round.level, viewSeconds: round.viewSeconds, lookedSeconds: looked.current });
-      const newHighScore = highScore.current > 0 && points.total > highScore.current;
-      highScore.current = Math.max(highScore.current, points.total);
-      const after = mode === 'levels' ? applyRound(ladder, score, round.questions.length) : undefined;
+      // Seeing a picture twice makes it easier, so a replay never counts towards your level or high score.
+      const counts = !round.replay;
+      const newHighScore = counts && highScore.current > 0 && points.total > highScore.current;
+      if (counts) highScore.current = Math.max(highScore.current, points.total);
+      const after = mode === 'levels' && counts ? applyRound(ladder, score, round.questions.length) : undefined;
       if (after) setLadder(after);
       setOutcome({
         points,
         newHighScore,
         highScore: highScore.current,
+        replay: round.replay,
         ladder: after ? { before: ladder, after } : undefined,
       });
       const result: RoundResult = {
@@ -186,6 +195,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
         level: round.band,
         ladder: after ? { level: round.level, after } : undefined,
         points: points.total,
+        replay: round.replay || undefined,
         recipeId: stage.scene.recipeId,
         sceneId: stage.scene.id,
         score,
@@ -220,15 +230,17 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     return ids;
   }, [round]);
 
-  /** Same picture, other questions. Practice only: on levels it would make levelling up too easy. */
+  /** Same picture, other questions, as practice: it never moves your level or sets a high score. */
   const playAgain = useCallback(() => {
     const previousIds = finishRound();
-    const nextRound = buildRound(setupFor(mode, ladder.level), roundCount.current, stage.questions, seenIds.current, previousIds, extra);
+    // Keeps the settings the picture was made with (your level may have changed since).
+    const setup = mode === 'levels' ? setupFor(mode, round.level) : setupFor(mode, ladder.level);
+    const nextRound = buildRound(setup, roundCount.current, stage.questions, seenIds.current, previousIds, extra, true);
     setRound(nextRound);
     setAnswers(emptyAnswers(nextRound.questions.length));
     setOutcome(null);
     setPhase('memorise');
-  }, [extra, finishRound, ladder.level, mode, stage]);
+  }, [extra, finishRound, ladder.level, mode, round.level, stage]);
 
   const nextPicture = useCallback(() => {
     finishRound();

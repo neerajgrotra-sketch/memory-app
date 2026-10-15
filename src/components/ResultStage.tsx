@@ -25,8 +25,8 @@ interface ResultStageProps {
   outcome: RoundOutcome;
   /** Your level for the next picture. */
   nextLevel: number;
-  /** Same picture, other questions (Practice only). */
-  onPlayAgain?: () => void;
+  /** Same picture, other questions, as practice. */
+  onPlayAgain: () => void;
   onNextPicture: () => void;
   onHome: () => void;
 }
@@ -56,7 +56,11 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
         {outcome.ladder ? (
           <LevelPanel before={outcome.ladder.before} after={outcome.ladder.after} score={score} total={questions.length} />
         ) : (
-          <Text style={styles.practice}>Practice round · your level stays the same</Text>
+          <Text style={styles.practice}>
+            {outcome.replay
+              ? 'Same picture again: practice, so your level and high score stay the same'
+              : 'Practice round · your level stays the same'}
+          </Text>
         )}
 
         <ProfilePrompt />
@@ -130,20 +134,43 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
 
       {/* Pinned to the bottom so the next step is always visible without scrolling. */}
       <View style={styles.actions}>
-        <Button label={mode === 'levels' ? `Next picture · Level ${nextLevel}` : 'Next picture'} onPress={onNextPicture} />
-        <View style={styles.row}>
-          {onPlayAgain && (
-            <View style={styles.rowItem}>
-              <Button label="Play again" variant="secondary" onPress={onPlayAgain} accessibilityHint="Same picture, different questions" />
-            </View>
-          )}
-          <View style={styles.rowItem}>
-            <Button label="Done" variant="secondary" onPress={onHome} />
-          </View>
-        </View>
+        {(() => {
+          const next = nextStep(mode, outcome, score, questions.length, nextLevel);
+          return (
+            <>
+              <Button label={next.label} onPress={onNextPicture} accessibilityHint={next.detail} />
+              {next.detail && <Text style={styles.next}>{next.detail}</Text>}
+              <View style={styles.row}>
+                {next.offerReplay && (
+                  <View style={styles.rowItem}>
+                    <Button label="Same picture again" variant="secondary" onPress={onPlayAgain} accessibilityHint="Practice: different questions, doesn’t change your level" />
+                  </View>
+                )}
+                <View style={styles.rowItem}>
+                  <Button label="Done" variant="secondary" onPress={onHome} />
+                </View>
+              </View>
+            </>
+          );
+        })()}
       </View>
     </View>
   );
+}
+
+/**
+ * The next step, worded for what just happened. On levels, the same picture again is offered only after
+ * a weak round (it's practice, for seeing what you missed); in Practice it's always there.
+ */
+function nextStep(mode: PlayMode, outcome: RoundOutcome, score: number, total: number, nextLevel: number) {
+  if (mode !== 'levels') return { label: 'Next picture', detail: undefined, offerReplay: true };
+  const weak = score < total - 1;
+  if (outcome.ladder && outcome.ladder.after.level > outcome.ladder.before.level) {
+    return { label: `Play Level ${nextLevel}`, detail: undefined, offerReplay: false };
+  }
+  if (outcome.replay) return { label: `New picture · Level ${nextLevel}`, detail: 'Back to rounds that count', offerReplay: weak };
+  if (!weak) return { label: `Keep going · Level ${nextLevel}`, detail: 'New picture, same level', offerReplay: false };
+  return { label: `Try again · Level ${nextLevel}`, detail: 'New picture, same level', offerReplay: true };
 }
 
 function Chip({ label, value }: { label: string; value: number }) {
@@ -179,7 +206,8 @@ const THUMB_WIDTH = 130;
 const styles = StyleSheet.create({
   screen: { flex: 1 },
   scroll: { flex: 1 },
-  container: { padding: 24, paddingTop: 72, paddingBottom: 24, gap: 20 },
+  // Phone-width column, centred on tablets and wide windows.
+  container: { padding: 24, paddingTop: 72, paddingBottom: 24, gap: 20, width: '100%', maxWidth: 520, alignSelf: 'center' },
   message: { color: colors.textMuted, fontSize: 18, fontWeight: '600', textAlign: 'center' },
   pointsBlock: { alignItems: 'center', gap: 2 },
   highScore: { color: colors.accentText, backgroundColor: colors.accent, fontSize: 13, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 1, paddingHorizontal: 10, paddingVertical: 4, borderRadius: radius.pill, overflow: 'hidden', marginBottom: 6 },
@@ -220,6 +248,9 @@ const styles = StyleSheet.create({
   yourPick: { color: colors.wrong, fontSize: 11, fontWeight: '700', textTransform: 'uppercase' },
   actions: {
     gap: 12,
+    width: '100%',
+    maxWidth: 520,
+    alignSelf: 'center',
     paddingHorizontal: 24,
     paddingTop: 16,
     paddingBottom: 16,
@@ -228,5 +259,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   row: { flexDirection: 'row', gap: 12 },
+  next: { color: colors.textMuted, textAlign: 'center', fontSize: 13, marginTop: -6 },
   rowItem: { flex: 1 },
 });

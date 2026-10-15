@@ -77,7 +77,7 @@ function Game({ start }: { start: SessionStart }) {
             mode={start.mode}
             outcome={outcome}
             nextLevel={ladder.level}
-            onPlayAgain={start.mode === 'levels' ? undefined : playAgain}
+            onPlayAgain={playAgain}
             onNextPicture={nextPicture}
             onHome={goBack}
           />

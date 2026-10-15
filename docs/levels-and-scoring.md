@@ -60,4 +60,16 @@ The scene checker plays levels 1, 4, 6, 8, 12, 14, 17 and 30 on three phones wit
 
 ## Practice
 
-Easy, Medium and Hard are the fixed settings from before levels (`LEVELS` in `src/game/difficulty.ts`), with every place. They earn points, never change your level, and offer **Play again** (the same picture with other questions). Levelled play doesn't offer Play again, because seeing a picture twice would make going up too easy.
+Easy, Medium and Hard are the fixed settings from before levels (`LEVELS` in `src/game/difficulty.ts`), with every place. They earn points and never change your level.
+
+## The result screen's buttons
+
+| After | Main button | Also offered |
+| --- | --- | --- |
+| Going up a level | **Play Level N** | Done |
+| A good round (4–5 right) | **Keep going · Level N** ("New picture, same level") | Done |
+| A weaker round (0–3 right) | **Try again · Level N** ("New picture, same level") | **Same picture again**, Done |
+| Same picture again | **New picture · Level N** ("Back to rounds that count") | Same picture again (after 0–3 right), Done |
+| A Practice round | **Next picture** | **Same picture again**, Done |
+
+**Same picture again** plays the picture you just saw with 5 different questions. It's practice: it earns points to show how you did, but never moves your level, never sets a high score and isn't counted as a perfect round (it's saved with `replay: true`). The second time round you know the picture and some answers, so counting it would make going up too easy. On levels it's only offered after a weaker round, when looking again is most useful.

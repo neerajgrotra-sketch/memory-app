@@ -17,7 +17,7 @@ createStage(level)
        └─ selectQuestions(pool)    → 5 questions, options shuffled
 ```
 
-Each picture typically gives 20–35 questions; a round uses 5. **Play again** keeps the picture and picks 5 more from the same pool.
+Each picture typically gives 20–35 questions; a round uses 5. **Same picture again** keeps the picture and picks 5 more from the same pool.
 
 ## 2. The questions written for each group
 
@@ -84,7 +84,7 @@ House numbers rise left to right with uneven gaps, so remembering one doesn't gi
 
 `selectQuestions(pool, { count: 5, preferredTypes, seenIds, previousIds })`:
 
-1. **Not the last round's questions.** Questions from the round just played (Play again) are left out, as long as at least 5 others remain.
+1. **Not the last round's questions.** Questions from the round just played (Same picture again) are left out, as long as at least 5 others remain.
 2. **Rank** each question: +2 if it was already asked about this picture, +1 if its type isn't one the level prefers. Lower is better, ties broken at random.
 
    | Practice | Preferred types |
@@ -100,6 +100,7 @@ House numbers rise left to right with uneven gaps, so remembering one doesn't gi
 
 ## 6. In the quiz and afterwards
 
+- The numbered dots above the question turn green for a right answer and red for a wrong one.
 - A right answer flashes green and moves on. A wrong one shakes, shows the right answer and waits for **Next**. Questions can be skipped and answered later.
 - The result screen shows every question with all four options:
   - the right answer in green with ✓

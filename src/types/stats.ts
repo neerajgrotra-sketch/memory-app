@@ -24,6 +24,8 @@ export interface RoundResult {
   ladder?: { level: number; after: LadderState };
   /** Points scored (rounds from before points existed have none). */
   points?: number;
+  /** The same picture played again: practice, never counted for level or high score. */
+  replay?: boolean;
   /** The setting, e.g. "beach". */
   recipeId: string;
   sceneId: string;

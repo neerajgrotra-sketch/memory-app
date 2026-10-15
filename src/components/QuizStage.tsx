@@ -113,9 +113,10 @@ export function QuizStage({ questions, answers, onAnswer }: QuizStageProps) {
         <View style={styles.dots}>
           {questions.map((q, i) => {
             const answered = answers[i] !== null;
+            const right = answered && answers[i] === q.answerIndex;
             const isCurrent = i === current;
             const wasSkipped = !answered && skipped.has(i);
-            const label = answered ? 'answered' : isCurrent ? 'current' : wasSkipped ? 'skipped' : 'not answered yet';
+            const label = answered ? (right ? 'right' : 'wrong') : isCurrent ? 'current' : wasSkipped ? 'skipped' : 'not answered yet';
             return (
               <Pressable
                 key={q.id}
@@ -126,7 +127,7 @@ export function QuizStage({ questions, answers, onAnswer }: QuizStageProps) {
                 hitSlop={6}
                 style={[
                   styles.dot,
-                  answered && styles.dotAnswered,
+                  answered && (right ? styles.dotRight : styles.dotWrong),
                   wasSkipped && styles.dotSkipped,
                   isCurrent && styles.dotCurrent,
                 ]}
@@ -174,7 +175,7 @@ export function QuizStage({ questions, answers, onAnswer }: QuizStageProps) {
 const DOT = 30;
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, width: '100%', maxWidth: 520, alignSelf: 'center' },
   scroll: { flex: 1 },
   scrollContent: { flexGrow: 1, paddingHorizontal: 24, paddingTop: 64, paddingBottom: 16, gap: 20 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
@@ -203,11 +204,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  dotAnswered: { backgroundColor: colors.accent, borderColor: colors.accent },
+  // Green for right, red for wrong, so the score so far shows at a glance.
+  dotRight: { backgroundColor: colors.correct, borderColor: colors.correct },
+  dotWrong: { backgroundColor: colors.wrong, borderColor: colors.wrong },
   dotSkipped: { borderColor: colors.accent, borderStyle: 'dashed' },
   dotCurrent: { borderColor: colors.text, borderStyle: 'solid' },
   dotText: { color: colors.textMuted, fontSize: 13, fontWeight: '700' },
-  dotTextAnswered: { color: colors.accentText },
+  dotTextAnswered: { color: colors.background },
   // flexGrow (not flex) so the body can grow to centre itself but never shrink below its content.
   body: { flexGrow: 1, justifyContent: 'center', gap: 20 },
   skippedNote: { color: colors.accent, fontSize: 14, fontWeight: '700' },
