@@ -10,11 +10,14 @@ import { colors, radius } from '@/theme';
 
 interface LevelUpScreenProps {
   level: number;
+  /** Straight on to a new picture at the new level. */
+  onPlay: () => void;
+  /** To the round's results and answers first. */
   onContinue: () => void;
 }
 
 /** Shown after a round that took you up a level: the new level, its title if it's a milestone, and what's new. */
-export function LevelUpScreen({ level, onContinue }: LevelUpScreenProps) {
+export function LevelUpScreen({ level, onPlay, onContinue }: LevelUpScreenProps) {
   const pop = useSharedValue(0.6);
   const fade = useSharedValue(0);
   useEffect(() => {
@@ -47,7 +50,8 @@ export function LevelUpScreen({ level, onContinue }: LevelUpScreenProps) {
         </Animated.View>
       </View>
       <View style={styles.actions}>
-        <Button label="See my results" onPress={onContinue} />
+        <Button label={`Play Level ${level}`} onPress={onPlay} />
+        <Button label="See my results" variant="secondary" onPress={onContinue} />
       </View>
     </SafeAreaView>
   );
@@ -55,12 +59,12 @@ export function LevelUpScreen({ level, onContinue }: LevelUpScreenProps) {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 20 },
+  center: { flex: 1, width: '100%', maxWidth: 520, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', padding: 24, gap: 20 },
   kicker: { color: colors.accent, fontSize: 18, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 2 },
   textBlock: { alignItems: 'center', gap: 20, alignSelf: 'stretch' },
   title: { color: colors.text, fontSize: 26, fontWeight: '900', textAlign: 'center' },
   news: { alignSelf: 'stretch', backgroundColor: colors.surface, borderRadius: radius.md, padding: 16, gap: 8 },
   newsTitle: { color: colors.textMuted, fontSize: 13, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1 },
   newsLine: { color: colors.text, fontSize: 16, lineHeight: 22 },
-  actions: { padding: 24 },
+  actions: { padding: 24, gap: 12, width: '100%', maxWidth: 520, alignSelf: 'center' },
 });

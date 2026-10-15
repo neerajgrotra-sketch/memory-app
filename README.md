@@ -29,7 +29,7 @@ A round:
 
 1. **Memorise**: a brand-new picture with a countdown. Tap **I'm ready** to go to the questions early (it ignores taps in the first second).
 2. **Quiz**: 5 questions, 4 options each. The numbered dots turn green or red as you answer. A right answer flashes green and moves on. A wrong answer shakes red, then shows the right one and waits for **Next**. **Skip for now** moves on; skipped questions come back at the end.
-3. **Level up** (when you go up a level): your new level, its title at every 5th level, and exactly what's new.
+3. **Level up** (when you go up a level): your new level, its title at every 5th level, and exactly what's new, with **Play Level N** to carry straight on or **See my results** first.
 4. **Result**: your points with how they were earned, how the round moved your level, and every question with all its options (the right answer in green, your wrong pick in red). Tap the picture to see it full size. The main button plays a new picture at your level (**Try again**, **Keep going** or **Play Level N**). After a weaker round, and always in Practice, **Same picture again** replays the picture with different questions as practice: it never moves your level or sets a high score.
 
 **Levels** run from 1 to 30. 3 good rounds (4 or 5 right) take you up a level; 2 very poor rounds in a row (0 or 1 right) take you back one. Your best level never goes down. Each level adds a little: more kinds of thing, more of each, less time, new places (living room at 3, city street at 6), house numbers (8), mixed-colour hydrants (12) and closer counting choices (14). Players from before levels start at a level worked out from their earlier rounds.

@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.4 (2026-10-15)
+
+- **Play straight on from the level-up screen.** It now has **Play Level N** (a new picture at your new level) as the main button, with **See my results** below it for checking the round's answers first.
+
 ## 4.0.0-beta.3 (2026-10-15)
 
 - **Clearer next step after a round.** The main button now says what it does: **Try again · Level 1** after a weaker round, **Keep going · Level 1** after a good one, **Play Level 2** after going up, each with "New picture, same level" underneath where it helps.

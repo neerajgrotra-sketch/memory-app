@@ -84,7 +84,16 @@ function Game({ start }: { start: SessionStart }) {
         </SafeAreaView>
       )}
 
-      {showLevelUp && outcome?.ladder && <LevelUpScreen level={outcome.ladder.after.level} onContinue={() => setCelebrated(levelUpKey)} />}
+      {showLevelUp && outcome?.ladder && (
+        <LevelUpScreen
+          level={outcome.ladder.after.level}
+          onPlay={() => {
+            setCelebrated(levelUpKey);
+            nextPicture();
+          }}
+          onContinue={() => setCelebrated(levelUpKey)}
+        />
+      )}
 
       {phase === 'quiz' && (
         <SafeAreaView style={styles.closeWrap} pointerEvents="box-none">
