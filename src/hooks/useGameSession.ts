@@ -1,17 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
-import { repository } from '@/data';
 import { LEVELS, ROUND_SIZE, levelForRound } from '@/game/difficulty';
-import { selectQuestions, shuffle, toRoundQuestion } from '@/game/selectQuestions';
+import { selectQuestions, toRoundQuestion } from '@/game/selectQuestions';
+import { createStage, type Stage } from '@/scenes/createStage';
 import { statsStore } from '@/stats';
-import type { Difficulty, GameImage, Question, RoundQuestion } from '@/types/game';
+import type { Difficulty, Level, Question, RoundQuestion } from '@/types/game';
 import type { RoundResult } from '@/types/stats';
 
 export type Phase = 'memorise' | 'quiz' | 'result';
 
 export interface Round {
   index: number;
-  level: ReturnType<typeof levelForRound>;
+  level: Level;
+  viewSeconds: number;
   questions: RoundQuestion[];
 }
 
@@ -29,14 +30,7 @@ function buildRound(
     seenIds,
     previousIds,
   });
-  return { index, level, questions: picked.map(toRoundQuestion) };
-}
-
-/** Shuffled play order for the pictures; reshuffled when used up, never repeating back to back. */
-function nextDeck(images: GameImage[], currentId?: string): GameImage[] {
-  const deck = shuffle(images);
-  if (deck.length > 1 && deck[0].id === currentId) deck.push(deck.shift()!);
-  return deck;
+  return { index, level, viewSeconds: LEVELS[level].viewSeconds, questions: picked.map(toRoundQuestion) };
 }
 
 const makeId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
@@ -44,7 +38,7 @@ const makeId = () => `${Date.now().toString(36)}-${Math.random().toString(36).sl
 function toRoundResult(
   sessionId: string,
   mode: Difficulty,
-  image: GameImage,
+  stage: Stage,
   round: Round,
   answers: number[],
 ): RoundResult {
@@ -65,135 +59,81 @@ function toRoundResult(
     playedAt: new Date().toISOString(),
     mode,
     level: round.level,
-    imageId: image.id,
+    recipeId: stage.scene.recipeId,
+    sceneId: stage.scene.id,
     score,
     total: round.questions.length,
     byType,
   };
 }
 
-function seenIn(seenByImage: Map<string, Set<string>>, imageId: string): Set<string> {
-  let seen = seenByImage.get(imageId);
-  if (!seen) seenByImage.set(imageId, (seen = new Set()));
-  return seen;
-}
-
+/**
+ * Runs one game for a difficulty. The first picture is built on first render;
+ * remount (e.g. with `key={difficulty}`) to start over with another difficulty.
+ */
 export function useGameSession(difficulty: Difficulty) {
-  const [image, setImage] = useState<GameImage | null>(null);
-  const [pool, setPool] = useState<Question[]>([]);
-  const [round, setRound] = useState<Round | null>(null);
+  const [first] = useState(() => {
+    const firstStage = createStage(levelForRound(difficulty, 0));
+    return { stage: firstStage, round: buildRound(difficulty, 0, firstStage.questions, new Set(), new Set()) };
+  });
+  const [stage, setStage] = useState<Stage>(first.stage);
+  const [round, setRound] = useState<Round>(first.round);
   const [phase, setPhase] = useState<Phase>('memorise');
   const [answers, setAnswers] = useState<number[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [hasMorePictures, setHasMorePictures] = useState(false);
 
-  const deck = useRef<GameImage[]>([]);
-  const allImages = useRef<GameImage[]>([]);
-  /** Question ids already asked, per picture, for the whole session. */
-  const seenByImage = useRef(new Map<string, Set<string>>());
+  /** Question ids already asked about the current picture. */
+  const seenIds = useRef(new Set<string>());
   const roundCount = useRef(0);
   const sessionId = useRef(makeId());
 
-  /** Loads the next picture from the deck and starts a round on it. */
-  const startNextPicture = useCallback(
-    async (isCancelled: () => boolean = () => false) => {
-      if (deck.current.length === 0) deck.current = nextDeck(allImages.current, image?.id);
-      const picked = deck.current.shift()!;
-
-      setRound(null);
-      const questions = await repository.getQuestions(picked.id);
-      if (questions.length < ROUND_SIZE) throw new Error(`"${picked.title}" does not have enough questions yet.`);
-      if (isCancelled()) return;
-
-      setImage(picked);
-      setPool(questions);
-      setRound(buildRound(difficulty, roundCount.current, questions, seenIn(seenByImage.current, picked.id), new Set()));
+  /** Builds a brand-new picture for round `index`, in a different setting from the last one. */
+  const startStage = useCallback(
+    (index: number, previousRecipeId?: string) => {
+      const next = createStage(levelForRound(difficulty, index), previousRecipeId);
+      seenIds.current = new Set();
+      setStage(next);
+      setRound(buildRound(difficulty, index, next.questions, seenIds.current, new Set()));
       setAnswers([]);
       setPhase('memorise');
     },
-    [difficulty, image?.id],
+    [difficulty],
   );
-
-  useEffect(() => {
-    let cancelled = false;
-
-    (async () => {
-      try {
-        const images = await repository.listImages();
-        if (images.length === 0) throw new Error('No pictures are available yet.');
-        if (cancelled) return;
-
-        allImages.current = images;
-        deck.current = nextDeck(images);
-        seenByImage.current = new Map();
-        roundCount.current = 0;
-        sessionId.current = makeId();
-        setHasMorePictures(images.length > 1);
-        await startNextPicture(() => cancelled);
-      } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : 'Something went wrong.');
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-    // Restart only when the difficulty changes, not when the current picture does.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [difficulty]);
 
   const finishMemorising = useCallback(() => setPhase('quiz'), []);
 
   const answer = useCallback(
     (optionIndex: number) => {
-      if (!round || !image) return;
       const next = [...answers, optionIndex];
       setAnswers(next);
       if (next.length >= round.questions.length) {
         setPhase('result');
-        statsStore.addResult(toRoundResult(sessionId.current, difficulty, image, round, next)).catch(() => {});
+        statsStore.addResult(toRoundResult(sessionId.current, difficulty, stage, round, next)).catch(() => {});
       }
     },
-    [answers, difficulty, image, round],
+    [answers, difficulty, round, stage],
   );
 
   /** Records the finished round and returns its question ids. */
   const finishRound = useCallback(() => {
-    if (!round || !image) return new Set<string>();
     const ids = new Set(round.questions.map((question) => question.id));
-    ids.forEach((id) => seenIn(seenByImage.current, image.id).add(id));
+    ids.forEach((id) => seenIds.current.add(id));
     roundCount.current = round.index + 1;
     return ids;
-  }, [image, round]);
+  }, [round]);
 
   const playAgain = useCallback(() => {
-    if (!image) return;
     const previousIds = finishRound();
-    setRound(buildRound(difficulty, roundCount.current, pool, seenIn(seenByImage.current, image.id), previousIds));
+    setRound(buildRound(difficulty, roundCount.current, stage.questions, seenIds.current, previousIds));
     setAnswers([]);
     setPhase('memorise');
-  }, [difficulty, finishRound, image, pool]);
+  }, [difficulty, finishRound, stage]);
 
   const nextPicture = useCallback(() => {
     finishRound();
-    startNextPicture().catch((e) => setError(e instanceof Error ? e.message : 'Something went wrong.'));
-  }, [finishRound, startNextPicture]);
+    startStage(roundCount.current, stage.scene.recipeId);
+  }, [finishRound, startStage, stage]);
 
-  const score = round
-    ? answers.filter((choice, i) => choice === round.questions[i]?.answerIndex).length
-    : 0;
+  const score = answers.filter((choice, i) => choice === round.questions[i]?.answerIndex).length;
 
-  return {
-    image,
-    round,
-    phase,
-    answers,
-    score,
-    error,
-    hasMorePictures,
-    finishMemorising,
-    answer,
-    playAgain,
-    nextPicture,
-  };
+  return { stage, round, phase, answers, score, finishMemorising, answer, playAgain, nextPicture };
 }

@@ -16,7 +16,9 @@ export interface RoundResult {
   mode: Difficulty;
   /** The level this round was played at. */
   level: Level;
-  imageId: string;
+  /** The setting, e.g. "beach". */
+  recipeId: string;
+  sceneId: string;
   score: number;
   total: number;
   byType: Partial<Record<QuestionType, TypeTally>>;

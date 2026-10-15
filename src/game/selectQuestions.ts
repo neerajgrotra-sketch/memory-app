@@ -20,7 +20,7 @@ interface SelectOptions {
 
 /**
  * Picks `count` questions from the pool: unseen before seen, preferred types
- * before others, random within each group.
+ * before others, random within each group, and about different things where possible.
  */
 export function selectQuestions(pool: Question[], options: SelectOptions): Question[] {
   const { count, preferredTypes, seenIds, previousIds } = options;
@@ -30,11 +30,25 @@ export function selectQuestions(pool: Question[], options: SelectOptions): Quest
   const rank = (question: Question) =>
     (seenIds.has(question.id) ? 2 : 0) + (preferredTypes.includes(question.type) ? 0 : 1);
 
-  return source
+  const ranked = source
     .map((question) => ({ question, rank: rank(question), tiebreak: Math.random() }))
     .sort((a, b) => a.rank - b.rank || a.tiebreak - b.tiebreak)
-    .slice(0, count)
     .map(({ question }) => question);
+
+  // First pass skips questions about something already asked about; second pass fills any gap.
+  const picked: Question[] = [];
+  const subjects = new Set<string>();
+  for (const question of ranked) {
+    if (picked.length >= count) break;
+    if (question.subject && subjects.has(question.subject)) continue;
+    picked.push(question);
+    if (question.subject) subjects.add(question.subject);
+  }
+  for (const question of ranked) {
+    if (picked.length >= count) break;
+    if (!picked.includes(question)) picked.push(question);
+  }
+  return picked;
 }
 
 /** Shuffles a question's options and re-points the answer at its new position. */

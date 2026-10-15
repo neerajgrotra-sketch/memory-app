@@ -5,28 +5,19 @@ export type Difficulty = 'easy' | 'medium' | 'hard' | 'progressive';
 /** The level a round is actually played at (Progressive steps through these). */
 export type Level = Exclude<Difficulty, 'progressive'>;
 
-/**
- * Where an image comes from. A remote URL (e.g. Supabase Storage) is a string;
- * an asset bundled with the app is the number returned by `require()`.
- */
-export type ImageSource = string | number;
-
-export interface GameImage {
-  id: string;
-  title: string;
-  source: ImageSource;
-}
-
-/** A question as stored in the pool (mirrors a future `questions` table row). */
+/** A question about a picture, before it is prepared for a round. */
 export interface Question {
   id: string;
-  imageId: string;
+  /** The scene it is about. */
+  sceneId: string;
   type: QuestionType;
   prompt: string;
   /** Exactly four options. */
   options: string[];
   /** Index into `options` of the correct answer. */
   answerIndex: number;
+  /** What the question is about; a round avoids asking about the same thing twice. */
+  subject?: string;
 }
 
 /** A question prepared for one round: options shuffled, answer re-indexed. */

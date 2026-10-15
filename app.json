@@ -22,8 +22,7 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router",
-      "expo-image"
+      "expo-router"
     ],
     "scheme": "glance",
     "backgroundColor": "#0f1115"

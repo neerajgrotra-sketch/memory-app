@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/Button';
-import { DIFFICULTY_OPTIONS, VIEW_SECONDS } from '@/game/difficulty';
+import { DIFFICULTY_OPTIONS } from '@/game/difficulty';
 import { colors, radius } from '@/theme';
 
 export default function HomeScreen() {
@@ -12,7 +12,7 @@ export default function HomeScreen() {
       <View style={styles.hero}>
         <Text style={styles.title}>glance</Text>
         <Text style={styles.tagline}>
-          Study the picture for {VIEW_SECONDS} seconds.{'\n'}Then answer 5 questions from memory.
+          Every picture is new. Study it, then answer{'\n'}5 questions from memory.
         </Text>
       </View>
 

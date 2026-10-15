@@ -1,25 +1,26 @@
-import { Image } from 'expo-image';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { randomScoreMessage } from '@/game/scoreMessages';
 import { colors, radius } from '@/theme';
-import type { GameImage, RoundQuestion } from '@/types/game';
+import { SceneView } from '@/scenes/SceneView';
+import type { SceneSpec } from '@/scenes/types';
+import type { RoundQuestion } from '@/types/game';
 
 interface ResultStageProps {
-  image: GameImage;
+  scene: SceneSpec;
+  title: string;
   questions: RoundQuestion[];
   answers: number[];
   score: number;
   nextLevelLabel?: string;
   onPlayAgain: () => void;
-  /** Omitted when there is no other picture to move on to. */
-  onNextPicture?: () => void;
+  onNextPicture: () => void;
   onHome: () => void;
 }
 
-export function ResultStage({ image, questions, answers, score, nextLevelLabel, onPlayAgain, onNextPicture, onHome }: ResultStageProps) {
+export function ResultStage({ scene, title, questions, answers, score, nextLevelLabel, onPlayAgain, onNextPicture, onHome }: ResultStageProps) {
   // Picked once per result screen so it doesn't change on re-render.
   const [message] = useState(() => randomScoreMessage(score));
 
@@ -32,7 +33,9 @@ export function ResultStage({ image, questions, answers, score, nextLevelLabel, 
           <Text style={styles.outOf}> / {questions.length}</Text>
         </Text>
 
-        <Image source={image.source} style={styles.thumb} contentFit="cover" accessibilityLabel={image.title} />
+        <View style={styles.thumb} accessibilityLabel={title}>
+          <SceneView spec={scene} />
+        </View>
 
         <View style={styles.review}>
           {questions.map((question, i) => {
@@ -53,12 +56,12 @@ export function ResultStage({ image, questions, answers, score, nextLevelLabel, 
       {/* Pinned to the bottom so the next step is always visible without scrolling. */}
       <View style={styles.actions}>
         {nextLevelLabel && <Text style={styles.next}>Next round: {nextLevelLabel}</Text>}
-        {onNextPicture && <Button label="Next picture" onPress={onNextPicture} />}
+        <Button label="Next picture" onPress={onNextPicture} />
         <View style={styles.row}>
           <View style={styles.rowItem}>
             <Button
               label="Play again"
-              variant={onNextPicture ? 'secondary' : 'primary'}
+              variant="secondary"
               onPress={onPlayAgain}
               accessibilityHint="Same picture, different questions"
             />
@@ -79,7 +82,7 @@ const styles = StyleSheet.create({
   message: { color: colors.textMuted, fontSize: 18, fontWeight: '600', textAlign: 'center' },
   score: { color: colors.text, fontSize: 72, fontWeight: '900', textAlign: 'center' },
   outOf: { color: colors.textMuted, fontSize: 36, fontWeight: '700' },
-  thumb: { alignSelf: 'center', width: 120, height: 180, borderRadius: radius.sm },
+  thumb: { alignSelf: 'center', width: 120, height: 180, borderRadius: radius.sm, overflow: 'hidden' },
   review: { backgroundColor: colors.surface, borderRadius: radius.md, padding: 16, gap: 14 },
   reviewRow: { flexDirection: 'row', gap: 12 },
   mark: { fontSize: 18, fontWeight: '800', width: 18 },
