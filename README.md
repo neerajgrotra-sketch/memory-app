@@ -131,7 +131,7 @@ Run `npm run check:scenes` after any change to recipes or layout. It generates 5
 3. Give each item a name, plural, design box (`w`, `h`), a size `tier` and `size` (fraction of the width), the bands it may go in, a realistic maximum count, optional colours and a `draw` function. Shapes without their own stroke get the outline; small details use `stroke="none"`.
 4. List the recipe in `src/scenes/recipes/index.ts`, then run `npm run check:scenes`.
 
-Aim for 12+ items per recipe, so harder levels have enough to fill the picture and enough absent things for "Which of these was NOT…" questions.
+Aim for 12+ items per recipe, so harder levels have enough to fill the picture and enough absent things for "Which of these was NOT in the picture?" questions.
 
 ## Project layout
 

@@ -503,7 +503,6 @@ function marks(height: number, boxes: Box[], random: () => number): Mark[] {
 export const city: Recipe = {
   id: 'city',
   title: 'City street',
-  place: 'in the street',
   zones: [
     // The roofs band overlaps the bottom of the sky: flags and dishes stand on the roofline against the sky.
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: ROOF, rows: 2 },

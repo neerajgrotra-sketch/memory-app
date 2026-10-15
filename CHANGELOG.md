@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.3.2 (2026-10-15)
+
+- **"Which of these was (NOT) in the picture?"** replaces "…on the beach / in the street / in the room?". Players read "on the beach" as "on the sand", so a dolphin in the sea or a plane in the sky looked like a trick. The setting's name is no longer used in questions.
+
 ## 3.3.1 (2026-10-15)
 
 - **Wrong answers show both answers on the result screen:** "You said ~~4~~" in red, then "Answer 2" in green. Right answers show a tick and the answer, as before. Screen readers hear "Wrong. You said 4. The answer was 2."

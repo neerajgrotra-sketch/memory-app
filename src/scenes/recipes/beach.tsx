@@ -306,7 +306,6 @@ const PALETTES: Record<string, Palette> = {
 export const beach: Recipe = {
   id: 'beach',
   title: 'At the beach',
-  place: 'on the beach',
   zones: [
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: HORIZON, rows: 2 },
     // Boats, buoys and dolphins float in the water: clear of the horizon and well clear of the shore.

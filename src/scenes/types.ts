@@ -160,8 +160,6 @@ export interface VariantDef {
 export interface Recipe {
   id: string;
   title: string;
-  /** Used in "Which of these was on the beach?". */
-  place: string;
   zones: ZoneDef[];
   items: ItemDef[];
   rug?: Rug;

@@ -396,7 +396,6 @@ function surfaceAt(x: number, y: number): string {
 export const livingRoom: Recipe = {
   id: 'living-room',
   title: 'Living room',
-  place: 'in the room',
   zones: [
     { id: 'ceiling', label: 'On the ceiling', surface: 'air', top: 0, bottom: CEILING, rows: 0 },
     // Things on the wall hang on two lines: a clock high up (top row of slots), the rest at eye level.

@@ -153,14 +153,14 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     add('seen', null, {
       type: 'object',
       subject: seen.kind,
-      prompt: `Which of these was ${recipe.place}?`,
+      prompt: 'Which of these was in the picture?',
       options: withDistractors(cap(seen.singular), absent.map((i) => cap(i.singular)), [], rng),
     });
     const missing = rng.pick(absent);
     add('missing', null, {
       type: 'object',
       subject: missing.kind,
-      prompt: `Which of these was NOT ${recipe.place}?`,
+      prompt: 'Which of these was NOT in the picture?',
       options: withDistractors(cap(missing.singular), present.map((i) => cap(i.singular)), [], rng),
     });
   }
