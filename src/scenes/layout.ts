@@ -123,6 +123,9 @@ export function baseSpread(rects: Rect[]): number {
   return (Math.max(...rects.map((r) => r.y1)) - Math.min(...rects.map((r) => r.y1))) / h;
 }
 
+/** Where things against the back stand: their feet this far into the back row (fractions of its depth). */
+export const AGAINST_BACK: [number, number] = [0.05, 0.17];
+
 /** Things on the ground may step back a little from each other, but never stack up like a ladder. */
 export const MAX_GROUND_STEP = 0.45;
 

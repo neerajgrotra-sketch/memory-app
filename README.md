@@ -81,7 +81,7 @@ Every picture is laid out for the space it is shown in: the area below the heade
 - **Margins.** Things stay 5% from the left and right edges, and the bottom 4% stays clear for the home indicator.
 - **Habits.** Things go where they would in real life:
   - `hangAt`: pictures, mirrors and windows hang on one eye-level line, and a clock hangs above it.
-  - `backRow`: sofas, armchairs, TVs and plants stand against the back wall.
+  - `backRow`: sofas, armchairs, TVs and plants stand against the back wall: feet where the floor meets the wall, backs over the wall.
   - `spread`: street lamps, trees, palm trees, bookshelves, flags and dishes on roofs go one per column, standing on one line. City street lamps, clocks and trees stand within the pavement's depth, never in front of the buildings.
   - `flush` bands (rooftops): things stand exactly on the line.
   - `keepClear`: nothing stands in front of a building's door.

@@ -1,5 +1,6 @@
 import { standsOut } from './contrast';
 import {
+  AGAINST_BACK,
   GAP,
   REGIONS,
   TOP_CLEAR,
@@ -117,15 +118,14 @@ function verticalSpot(ctx: Context, item: ItemDef, zone: ZoneDef, top: number, b
     return y0 >= band.top && y0 + bh <= band.bottom ? y0 : null;
   }
   const rowH = bottom - top;
-  if (item.tall) {
-    // Tall anchors stand near the back of their band and rise above it on purpose.
-    const y0 = top + rowH * (0.12 + 0.3 * rng.next()) - bh;
+  if (item.tall || item.backRow) {
+    // Against the back: feet just in front of where the band starts (where the floor meets the wall, or
+    // the shoreline), and the thing rises over what's behind it, like real furniture against a wall.
+    const y0 = top + rowH * (AGAINST_BACK[0] + (AGAINST_BACK[1] - AGAINST_BACK[0]) * rng.next()) - bh;
     return y0 >= TOP_CLEAR * ratio ? y0 : null;
   }
   if (bh > rowH) return null;
   if (zone.flush) return bottom - bh;
-  // Against the back wall: standing just in front of where the floor meets the wall.
-  if (item.backRow) return top + (rowH - bh) * 0.3 * rng.next();
   // On the ground: towards the bottom of the row. In the air or on a wall: anywhere in it.
   return top + (rowH - bh) * (zone.surface === 'ground' ? 1 - 0.35 * rng.next() : rng.next());
 }

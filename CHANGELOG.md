@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.1.3 (2026-10-15)
+
+- **Furniture stands against the wall.** The TV, sofa, armchairs, plants, bookshelves and floor lamps stand where the floor meets the wall, with their backs over the wall, instead of out on the floor. Pictures and mirrors still hang clear of them (above a sofa, never behind a TV). Palm trees stand at the back of the sand the same way. `validateScene` checks it.
+- The TV is bigger (about 1.3 m wide next to a 2 m sofa).
+
 ## 3.1.2 (2026-10-15)
 
 - **No more stretched buildings on wide screens.** When the screen is wider than the picture (a tablet or a browser window), the street carries on with more buildings, each with its own windows and door, instead of the end buildings being painted wider.

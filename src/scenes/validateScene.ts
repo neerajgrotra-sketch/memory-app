@@ -1,5 +1,6 @@
 import { standsOut } from './contrast';
 import {
+  AGAINST_BACK,
   BOTTOM_CLEAR,
   EDGE,
   GAP,
@@ -142,10 +143,15 @@ export function validateScene(spec: SceneSpec, width: number, height: number): S
       }
       if (coversKeepClear(r, recipe, ratio)) add('placement', `${item.singular} in front of a door`, item.kind);
       if (zone.flush && Math.abs(r.y1 - bottom) > EPS) add('placement', `${item.singular} not standing on the ${zone.id} line`, item.kind);
-      if ((item.tall || item.backRow) && (!backRow || r.y1 < backRow.top - EPS || r.y1 > backRow.bottom + EPS)) {
-        add('zone', `${item.singular} not standing at the back of ${zone.id}`, item.kind);
+      if (item.tall || item.backRow) {
+        // Against the wall (or the back of the sand): feet right by the line where the band starts.
+        const depth = backRow ? backRow.bottom - backRow.top : 0;
+        const [near, far] = AGAINST_BACK;
+        if (!backRow || r.y1 < backRow.top + near * depth - EPS || r.y1 > backRow.top + far * depth + EPS) {
+          add('placement', `${item.singular} not standing against the back of ${zone.id}`, item.kind);
+        }
       }
-      if (item.tall) {
+      if (item.tall || item.backRow) {
         // Rising above its band is allowed for tall anchors.
       } else if (r.y0 < top - EPS || r.y1 > bottom + EPS) {
         add('zone', `${item.singular} crosses out of ${zone.id}`, item.kind);

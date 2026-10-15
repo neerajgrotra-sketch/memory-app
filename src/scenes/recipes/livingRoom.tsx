@@ -197,7 +197,7 @@ const items: ItemDef[] = [
     w: 170,
     h: 140,
     tier: 'large',
-    size: 0.22,
+    size: 0.28,
     zones: FLOOR_ZONE,
     maxCount: 1,
     backRow: true,
