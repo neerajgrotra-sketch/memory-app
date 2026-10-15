@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.2.0 (2026-10-15)
+
+- **Tap the picture on the result screen to see it full size**, so you can check your answers against it. It's exactly the picture you memorised, as large as the screen allows. Tap anywhere or ✕ to close. The thumbnail now has the picture's own shape and a "Tap to enlarge" hint.
+
 ## 3.1.5 (2026-10-15)
 
 - **Fire hydrants stand at the kerb**, the front edge of the pavement by the road, at most one per building, so two are always well apart. Pairs of anything spread along the street (hydrants, lamps, flags, trees) go at opposite ends when there's room.

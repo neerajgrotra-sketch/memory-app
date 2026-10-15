@@ -2,9 +2,9 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 
 import { colors } from '@/theme';
 
-export function QuitButton({ onPress }: { onPress: () => void }) {
+export function QuitButton({ onPress, label = 'Quit' }: { onPress: () => void; label?: string }) {
   return (
-    <Pressable accessibilityRole="button" accessibilityLabel="Quit" onPress={onPress} hitSlop={12} style={styles.button}>
+    <Pressable accessibilityRole="button" accessibilityLabel={label} onPress={onPress} hitSlop={12} style={styles.button}>
       <Text style={styles.text}>✕</Text>
     </Pressable>
   );

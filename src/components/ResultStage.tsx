@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
+import { PictureViewer } from '@/components/PictureViewer';
 import type { Answers } from '@/game/quizNavigation';
 import { randomScoreMessage } from '@/game/scoreMessages';
 import { colors, radius } from '@/theme';
@@ -24,6 +25,7 @@ interface ResultStageProps {
 export function ResultStage({ scene, title, questions, answers, score, nextLevelLabel, onPlayAgain, onNextPicture, onHome }: ResultStageProps) {
   // Picked once per result screen so it doesn't change on re-render.
   const [message] = useState(() => randomScoreMessage(score));
+  const [enlarged, setEnlarged] = useState(false);
 
   return (
     <View style={styles.screen}>
@@ -34,9 +36,18 @@ export function ResultStage({ scene, title, questions, answers, score, nextLevel
           <Text style={styles.outOf}> / {questions.length}</Text>
         </Text>
 
-        <View style={styles.thumb} accessibilityLabel={title}>
-          <SceneView spec={scene} />
-        </View>
+        {/* Tap the picture to see it full size and check the answers against it. */}
+        <Pressable
+          onPress={() => setEnlarged(true)}
+          accessibilityRole="button"
+          accessibilityLabel={`${title}. Show the picture full size`}
+          style={styles.thumbWrap}
+        >
+          <View style={[styles.thumb, { height: THUMB_WIDTH * (scene.size.height / scene.size.width) }]}>
+            <SceneView spec={scene} />
+          </View>
+          <Text style={styles.thumbHint}>Tap to enlarge</Text>
+        </Pressable>
 
         <View style={styles.review}>
           {questions.map((question, i) => {
@@ -53,6 +64,8 @@ export function ResultStage({ scene, title, questions, answers, score, nextLevel
           })}
         </View>
       </ScrollView>
+
+      <PictureViewer scene={scene} title={title} visible={enlarged} onClose={() => setEnlarged(false)} />
 
       {/* Pinned to the bottom so the next step is always visible without scrolling. */}
       <View style={styles.actions}>
@@ -76,6 +89,8 @@ export function ResultStage({ scene, title, questions, answers, score, nextLevel
   );
 }
 
+const THUMB_WIDTH = 130;
+
 const styles = StyleSheet.create({
   screen: { flex: 1 },
   scroll: { flex: 1 },
@@ -83,7 +98,9 @@ const styles = StyleSheet.create({
   message: { color: colors.textMuted, fontSize: 18, fontWeight: '600', textAlign: 'center' },
   score: { color: colors.text, fontSize: 72, fontWeight: '900', textAlign: 'center' },
   outOf: { color: colors.textMuted, fontSize: 36, fontWeight: '700' },
-  thumb: { alignSelf: 'center', width: 120, height: 180, borderRadius: radius.sm, overflow: 'hidden' },
+  thumbWrap: { alignSelf: 'center', alignItems: 'center', gap: 6 },
+  thumb: { width: THUMB_WIDTH, borderRadius: radius.sm, overflow: 'hidden' },
+  thumbHint: { color: colors.accent, fontSize: 13, fontWeight: '700' },
   review: { backgroundColor: colors.surface, borderRadius: radius.md, padding: 16, gap: 14 },
   reviewRow: { flexDirection: 'row', gap: 12 },
   mark: { fontSize: 18, fontWeight: '800', width: 18 },
