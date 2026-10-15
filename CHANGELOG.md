@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 2.5.1 (2026-10-15)
+
+- **Nothing flying overlaps a cloud.** Clouds are placed first and the sky keeps clear of them, so a white plane can no longer sit on a white cloud.
+- **Balloons and kites don't fly in formation.** Each one has its own height, size and direction, and they are never lined up.
+- **Only one plane** appears in a picture.
+- The scene checker tests both rules.
+
 ## 2.5.0 (2026-10-15)
 
 - **Contrast rules:** every object must clearly stand out from what's behind it, measured as a colour difference that counts hue as well as lightness.

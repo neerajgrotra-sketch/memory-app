@@ -26,7 +26,8 @@ const items: ItemDef[] = [
   { ...bird, zones: SKY, maxCount: 6 },
   { ...kite, zones: SKY, maxCount: 3 },
   { ...balloon, zones: SKY, maxCount: 3 },
-  { ...plane, zones: SKY, maxCount: 2 },
+  // One plane at a time: two planes in the same patch of sky look like they're flying in formation.
+  { ...plane, zones: SKY, maxCount: 1, countable: false },
   {
     kind: 'sailboat',
     singular: 'sailboat',

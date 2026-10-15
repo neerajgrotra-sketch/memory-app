@@ -82,6 +82,11 @@ export interface ItemDef {
    * `corner` = a building's corner on a bracket (a street clock); `roof` = standing on a rooftop (flags, dishes).
    */
   mount?: MountKind;
+  /**
+   * Air only: each copy is placed on its own, at a different height and size and sometimes facing
+   * the other way, never lined up in a row (planes and balloons don't fly in formation).
+   */
+  scatter?: boolean;
   /** Fixtures it never stands on (plants and lamps stay off the rug). */
   avoid?: FixtureKind[];
   /**
@@ -117,6 +122,8 @@ export interface DecorDef {
   h: number;
   /** How tall it looks, in picture units. */
   size: number;
+  /** Its main colour: nothing in the sky may overlap it, and anything passing in front must stand out from it. */
+  colour: string;
   /** Fractions of the picture height to spread across. */
   top: number;
   bottom: number;

@@ -81,6 +81,8 @@ interface Context {
   taken: { rect: Rect; wall: boolean }[];
   /** Windows and doors: nothing is hung over them. */
   openings: Rect[];
+  /** Clouds and other scenery, placed first: sky things never overlap them. */
+  scenery: { rect: Rect; colour: string }[];
   rugs: Extract<Fixture, { kind: 'rug' }>[];
   mounts: Mount[];
   usedMounts: Set<Mount>;
@@ -97,9 +99,13 @@ const overRug = (ctx: Context, r: Rect) =>
 const surfaceColour = (ctx: Context, r: Rect) =>
   ctx.variant.palette[ctx.recipe.surfaceAt((r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2, ctx.height)];
 
-/** True if `colour` stands out from the surface behind every one of `rects`. */
+/** True if `colour` stands out from the surface behind every one of `rects`, and from any scenery they pass in front of. */
 const standsOut = (ctx: Context, colour: string, rects: Rect[]) =>
-  rects.every((r) => contrast(colour, surfaceColour(ctx, r)) >= MIN_CONTRAST);
+  rects.every(
+    (r) =>
+      contrast(colour, surfaceColour(ctx, r)) >= MIN_CONTRAST &&
+      ctx.scenery.every((sc) => !hits(r, sc.rect, 0) || contrast(colour, sc.colour) >= MIN_CONTRAST),
+  );
 
 /** Checks a candidate group against everything already in the scene and the item's own rules. */
 function fits(ctx: Context, item: ItemDef, zone: ZoneDef, rects: Rect[]): boolean {
@@ -110,6 +116,8 @@ function fits(ctx: Context, item: ItemDef, zone: ZoneDef, rects: Rect[]): boolea
     if (wall && ctx.openings.some((o) => hits(r, o))) return false;
     if (ctx.taken.some((t) => hits(r, t.rect, wall && t.wall ? wallPad : PAD))) return false;
     if (item.avoid?.includes('rug') && overRug(ctx, r)) return false;
+    // A clear sky: nothing flying overlaps a cloud.
+    if (zone.surface === 'air' && ctx.scenery.some((sc) => hits(r, sc.rect))) return false;
   }
   // Fixed-colour things only go where they stand out; coloured things get a colour that does (see tryItem).
   if (item.tone && !standsOut(ctx, item.tone, rects)) return false;
@@ -224,6 +232,51 @@ function placeGroup(ctx: Context, item: ItemDef, count: number, zone: ZoneDef, m
   return null;
 }
 
+/**
+ * Sky things that move on their own (planes, balloons, kites): each copy gets its own spot in one
+ * third of the sky, its own size (some look further away) and direction, and never shares a line
+ * with another copy.
+ */
+function placeScattered(ctx: Context, item: ItemDef, count: number, zone: ZoneDef): Placed | null {
+  const { rng, height } = ctx;
+  const base = (zoneScale(ctx.recipe, zone, height) * item.height) / item.h;
+  const top = zone.top * height;
+  const bottom = zone.bottom * height;
+
+  for (let attempt = 0; attempt < ATTEMPTS; attempt++) {
+    const third = rng.int(0, 2);
+    const x0 = third * THIRDS[0] + 15;
+    const x1 = (third + 1) * THIRDS[0] - 15;
+    const boxes: Box[] = [];
+    const rects: Rect[] = [];
+
+    for (let i = 0; i < count; i++) {
+      for (let t = 0; t < 30; t++) {
+        const scale = base * (0.75 + 0.4 * rng.next());
+        const w = item.w * scale;
+        const h = item.h * scale;
+        if (h < MIN_VISIBLE || w > x1 - x0 || h > bottom - top) continue;
+        const x = x0 + (x1 - x0 - w) * rng.next();
+        const y = top + (bottom - top - h) * rng.next();
+        const r = { x0: x, y0: y, x1: x + w, y1: y + h };
+        const cy = y + h / 2;
+        // Not in a row: every copy sits clearly higher or lower than the others.
+        if (rects.some((o) => hits(r, o) || Math.abs((o.y0 + o.y1) / 2 - cy) < 0.6 * Math.max(h, o.y1 - o.y0))) continue;
+        if (!fits(ctx, item, zone, [r])) continue;
+        boxes.push({ x, y, scale, flip: rng.next() < 0.5 });
+        rects.push(r);
+        break;
+      }
+    }
+    if (rects.length < count) continue;
+
+    const centre = (Math.min(...rects.map((r) => r.x0)) + Math.max(...rects.map((r) => r.x1))) / 2;
+    if (!clearOfThirds(centre)) continue;
+    return { boxes, rects, region: regionOf(centre), count };
+  }
+  return null;
+}
+
 /** Things fixed to mounting points: a corner bracket (one per corner, up to both corners of a building) or a rooftop. */
 function placeMounted(ctx: Context, item: ItemDef, count: number, zone: ZoneDef): Placed | null {
   const { rng } = ctx;
@@ -288,6 +341,8 @@ export function generateScene(recipe: Recipe, knobs: SceneKnobs, seed: number, h
   const variant = rng.pick(recipe.variants);
   const pool = rng.shuffle(recipe.items);
   const fixtures = recipe.fixtures?.(height) ?? [];
+  // Scenery first, so sky things can keep clear of it.
+  const decor = spreadDecor(recipe, height, rng);
   const ctx: Context = {
     recipe,
     variant,
@@ -296,6 +351,13 @@ export function generateScene(recipe: Recipe, knobs: SceneKnobs, seed: number, h
     taken: [],
     openings: fixtures.flatMap((f) => (f.kind === 'opening' ? [{ x0: f.x0, y0: f.y0, x1: f.x1, y1: f.y1 }] : [])),
     rugs: fixtures.flatMap((f) => (f.kind === 'rug' ? [f] : [])),
+    scenery: decor.map((d) => {
+      const def = recipe.decor!.find((x) => x.kind === d.kind)!;
+      return {
+        rect: { x0: d.box.x, y0: d.box.y, x1: d.box.x + def.w * d.box.scale, y1: d.box.y + def.h * d.box.scale },
+        colour: def.colour,
+      };
+    }),
     mounts: recipe.mounts?.(height) ?? [],
     usedMounts: new Set(),
   };
@@ -312,7 +374,11 @@ export function generateScene(recipe: Recipe, knobs: SceneKnobs, seed: number, h
       if (onlyZone && zoneId !== onlyZone) continue;
       const zone = recipe.zones.find((z) => z.id === zoneId)!;
       for (let count = wanted; count >= 1; count--) {
-        const placed = item.mount ? placeMounted(ctx, item, count, zone) : placeGroup(ctx, item, count, zone, maxWidth);
+        const placed = item.mount
+          ? placeMounted(ctx, item, count, zone)
+          : item.scatter && zone.surface === 'air'
+            ? placeScattered(ctx, item, count, zone)
+            : placeGroup(ctx, item, count, zone, maxWidth);
         if (!placed) continue;
         // Only colours that stand out from what's behind them.
         const colours = item.colours?.filter((c) => standsOut(ctx, c.hex, placed.rects));
@@ -359,6 +425,6 @@ export function generateScene(recipe: Recipe, knobs: SceneKnobs, seed: number, h
     variantId: variant.id,
     height,
     groups,
-    decor: spreadDecor(recipe, height, rng),
+    decor,
   };
 }

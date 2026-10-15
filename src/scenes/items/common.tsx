@@ -26,6 +26,7 @@ export const bird: CommonItem = {
 /** Clouds are scenery: spread across the sky and never asked about. Recipes set the band. */
 export const clouds: Omit<DecorDef, 'top' | 'bottom'> = {
   kind: 'cloud',
+  colour: '#ffffff',
   w: 170,
   h: 75,
   size: 80,
@@ -42,6 +43,7 @@ export const clouds: Omit<DecorDef, 'top' | 'bottom'> = {
 
 export const balloon: CommonItem = {
   kind: 'balloon',
+  scatter: true,
   singular: 'hot-air balloon',
   plural: 'hot-air balloons',
   article: 'a',
@@ -62,6 +64,7 @@ export const balloon: CommonItem = {
 
 export const kite: CommonItem = {
   kind: 'kite',
+  scatter: true,
   singular: 'kite',
   plural: 'kites',
   article: 'a',
@@ -81,6 +84,7 @@ export const kite: CommonItem = {
 
 export const plane: CommonItem = {
   kind: 'plane',
+  scatter: true,
   singular: 'plane',
   plural: 'planes',
   article: 'a',

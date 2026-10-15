@@ -78,6 +78,30 @@ for (const height of [1350, 1600, 2000]) {
           }
         }
 
+        // A clear sky: nothing flying overlaps a cloud, and planes, balloons and kites never fly in a line.
+        const clouds = scene.decor.map((d) => {
+          const def = recipe.decor!.find((x) => x.kind === d.kind)!;
+          return { x0: d.box.x, y0: d.box.y, x1: d.box.x + def.w * d.box.scale, y1: d.box.y + def.h * d.box.scale };
+        });
+        for (const group of scene.groups) {
+          const item = recipe.items.find((i) => i.kind === group.kind)!;
+          const zone = recipe.zones.find((z) => z.id === group.zoneId)!;
+          const boxes = group.boxes.map((b) => ({ x0: b.x, y0: b.y, x1: b.x + item.w * b.scale, y1: b.y + item.h * b.scale }));
+          if (zone.surface === 'air') {
+            for (const r of boxes) {
+              if (clouds.some((c) => r.x0 < c.x1 && c.x0 < r.x1 && r.y0 < c.y1 && c.y0 < r.y1)) problems.add(`${item.kind} on top of a cloud`);
+            }
+          }
+          if (item.scatter && zone.surface === 'air') {
+            for (let a = 0; a < boxes.length; a++) {
+              for (let b = a + 1; b < boxes.length; b++) {
+                const gap = Math.abs((boxes[a].y0 + boxes[a].y1) / 2 - (boxes[b].y0 + boxes[b].y1) / 2);
+                if (gap < 0.5 * Math.min(boxes[a].y1 - boxes[a].y0, boxes[b].y1 - boxes[b].y0)) problems.add(`${item.plural} flying in a line`);
+              }
+            }
+          }
+        }
+
         // Placement habits: hanging heights, wall gaps, windows and doors, rugs, mounting points.
         const fixtures = recipe.fixtures?.(height) ?? [];
         const mounts = recipe.mounts?.(height) ?? [];

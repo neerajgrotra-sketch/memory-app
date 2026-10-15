@@ -18,7 +18,8 @@ const wheel = (cx: number, cy: number, r: number) => (
 
 const items: ItemDef[] = [
   { ...bird, zones: SKY, maxCount: 6 },
-  { ...plane, zones: SKY, maxCount: 2 },
+  // One plane at a time: two planes in the same patch of sky look like they're flying in formation.
+  { ...plane, zones: SKY, maxCount: 1, countable: false },
   { ...balloon, zones: SKY, maxCount: 3 },
   {
     kind: 'flag',
