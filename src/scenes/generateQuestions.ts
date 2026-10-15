@@ -89,9 +89,11 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       options: withDistractors(cellLabel(zone, group.region), sameZoneCells, otherCells, rng),
     });
 
+    // Only ask "what was on the left…" when exactly one kind of thing is there.
+    const sharesSpot = spec.groups.some((g) => g !== group && g.zoneId === group.zoneId && g.region === group.region);
     const sameZoneKinds = recipe.items.filter((i) => i.kind !== item.kind && i.zones.includes(zone.id));
     const otherKinds = recipe.items.filter((i) => i.kind !== item.kind);
-    add('what-here', group, {
+    if (!sharesSpot) add('what-here', group, {
       type: 'object',
       subject: item.kind,
       prompt: `What was ${lower(cellLabel(zone, group.region))}?`,

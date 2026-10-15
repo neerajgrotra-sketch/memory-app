@@ -57,22 +57,22 @@ Every picture is built on the device from a **recipe** in a fraction of a second
 
 ### Placement rules
 
-- **Wall panels.** A wall band can be split into `panels` (one per building). Anything hung there stays entirely on one panel, so nothing hangs over a gap or a lower roof. City buildings line up with the left, middle and right cells.
-- **Bands and cells.** A recipe has bands (sky, sea, near the water, at the front…) given as fractions of the picture height. Each band is split into left / middle / right cells with clear gaps between them. Each cell holds at most one kind of thing, so nothing overlaps and nothing sits on a boundary.
-- **Surfaces.** Every band is `air` (things float), `wall` (things hang) or `ground` (things stand). An item lists the bands it may go in, so a plant pot can only stand on a floor and a flag can only hang on a building. Ground bands can set a `floor` line (where the floor meets the wall) that feet must stay below.
-- **Real sizes.** Every item has a `size`: its real-world height relative to the others (sofa 150, cat 60, toy car 38). Everything is drawn 35% larger than that so small things are easy to spot. Big things may shrink to at most 75% to fit a cell; otherwise fewer of them are placed.
-- **Perspective.** Ground bands have `farScale` and `nearScale`. Things stand in rows, each row further back a little higher and smaller, with a small gap between rows so nothing overlaps.
-- **Scenery.** `decor` (such as clouds) is spread across a band, drawn behind everything, and never asked about.
-- **Screen shape.** The picture is 900 wide and as tall as the space below the countdown bar needs (1350–2000), so it fills the phone. The controls sit in that bar, never on top of the picture.
+- **One real-world scale per setting.** Every item has a real `height` in centimetres (sofa 85, armchair 95, cat 30, mirror 90, bus 280). Each recipe has a `camera` that turns centimetres into picture units, like a real photo: `pxPerCm × (y − horizon) / (ref − horizon)`. Things standing lower in the picture are nearer and bigger, from one horizon for the whole scene. At the beach the horizon is the sea line; the room's back wall is 4.3 m wide at 2.1 units per cm. Sky things are far away, so their `height` is simply how big they look.
+- **Realistic counts.** `maxCount` is the most you'd plausibly see: one sofa, one mirror, one TV, one clock; several cushions, frames, cats or cars.
+- **Surfaces.** Every band is `air` (things float), `wall` (things hang, at the scale of the wall's base) or `ground` (the band is where feet go). An item lists the bands it may go in, so a plant pot only stands on a floor and a flag only hangs on a building.
+- **Wall panels.** A wall band can be split into `panels` (one per building). Anything hung there stays entirely on one panel. City buildings line up with the left, middle and right thirds.
+- **Free placement, no overlaps.** Groups are placed at random spots in their band, biggest first, so small things fill the gaps. Nothing may touch anything else; rows of the same thing have a gap between them.
+- **Never bare.** `minGroups` guarantees some zones get things (a room wall always has at least two).
+- **Visible or not at all.** Anything smaller than 42 units where it would stand is moved nearer or left out, never drawn as a speck.
+- **Clear sides.** A group's left / middle / right is the third its centre is in, and centres stay clear of the lines between thirds. "What was on the left of the wall?" is only asked when exactly one kind of thing is there.
+- **Screen shape.** The picture is 900 wide and as tall as the space below the countdown bar needs (1350–2000). Scales stretch with the height up to 1700, then taller screens just get more space. The controls sit in their own bar, never on top of the picture.
 
-Generation is seeded, so the same seed always rebuilds the same picture (handy for a future daily challenge).
-
-Run `npm run check:scenes` after any change to recipes or placement. It generates 8,100 scenes (every recipe, level and screen height) and fails if anything overlaps, leaves its band, crosses a building edge, isn't standing on the floor, sits under the on-screen controls, never fits anywhere, or if a scene has too few questions.
+Run `npm run check:scenes` after any change to recipes or placement. It generates 8,100 scenes (every recipe, level and screen height) and fails if anything overlaps, is too small to see, leaves its band, crosses a building edge, isn't standing in its area, sits on the line between two sides, exceeds its realistic count, leaves a must-fill zone bare, never fits anywhere, or if scenes come up short of things or questions.
 
 ### Adding a recipe
 
 1. Copy a file in `src/scenes/recipes/` and give it an id, title, bands (`zones`), backdrop variants and items. Reuse shared items from `src/scenes/items/common.tsx` where you can.
-2. Each item has a name, plural, design box (`w`, `h`), real-world `size`, the bands it may go in, a maximum count, optional colours and a `draw` function. Each band has a surface type; backdrops take the picture height.
+2. Set the recipe's `camera` and draw the backdrop at the same scale. Each item has a name, plural, design box (`w`, `h`), real `height` in cm, the bands it may go in, a realistic maximum count, optional colours and a `draw` function. Each band has a surface type; backdrops take the picture height.
 3. List the recipe in `src/scenes/recipes/index.ts`.
 
 Aim for 12+ items per recipe, so harder levels have enough to fill the picture and enough absent things for "Which of these was NOT…" questions.

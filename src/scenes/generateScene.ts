@@ -1,5 +1,16 @@
 import { createRng, type Rng } from './random';
-import type { Box, ItemDef, PlacedDecor, PlacedGroup, Recipe, Region, SceneSpec, ZoneDef } from './types';
+import {
+  SCENE_WIDTH,
+  heightFactor,
+  type Box,
+  type ItemDef,
+  type PlacedDecor,
+  type PlacedGroup,
+  type Recipe,
+  type Region,
+  type SceneSpec,
+  type ZoneDef,
+} from './types';
 
 export interface SceneKnobs {
   /** How many different kinds of thing appear. */
@@ -8,124 +19,142 @@ export interface SceneKnobs {
   maxCount: number;
 }
 
-/** Columns with clear gaps between them, so nothing sits on the line between "left" and "middle". */
-export const REGIONS: { id: Region; x0: number; x1: number }[] = [
-  { id: 'left', x0: 40, x1: 280 },
-  { id: 'centre', x0: 330, x1: 570 },
-  { id: 'right', x0: 620, x1: 860 },
-];
-
+/** Keep things this far from the left and right edges. */
+const EDGE = 20;
 /** Breathing room between things side by side. */
-const SPACING = 1.15;
-/** Everything is drawn this much bigger than its real-world size so small things are easy to spot on a phone. */
-const SIZE_BOOST = 1.35;
-/** Big things may shrink to this fraction of their size to fit a cell, so they still look bigger than small things. */
-const MIN_FIT = 0.7;
-/** Gap between a row and the row behind it (fraction of the front row's height), so every one stays countable. */
+const SPACING = 1.12;
+/** Gap between a row and the row behind it (fraction of the front row's height). */
 const ROW_GAP = 0.08;
+/** Clear space kept around every thing so nothing touches or overlaps. */
+const PAD = 10;
+/** Anything drawn smaller than this (picture units) is too small to spot in a few seconds. */
+export const MIN_VISIBLE = 42;
+/** A group's centre stays this far from the lines between left / middle / right, so its side is never in doubt. */
+export const THIRD_MARGIN = 45;
+/** Keep a little sky or wall above the top-most things. */
+export const TOP_MARGIN = 0.03;
+/** Random spots tried per group before giving up on that zone. */
+const ATTEMPTS = 60;
 
-type Cell = (typeof REGIONS)[number];
+export const THIRDS: [number, number] = [SCENE_WIDTH / 3, (SCENE_WIDTH * 2) / 3];
 
-/** Keeps a little wall showing around anything hung on a panel. */
-const PANEL_MARGIN = 14;
-
-/** The part of a cell that is on a single wall panel (the panel under the cell's centre). */
-function onPanel(zone: ZoneDef, cell: Cell): Cell | null {
-  if (!zone.panels) return cell;
-  const mid = (cell.x0 + cell.x1) / 2;
-  const panel = zone.panels.find(([x0, x1]) => mid >= x0 && mid <= x1);
-  if (!panel) return null;
-  return { id: cell.id, x0: Math.max(cell.x0, panel[0] + PANEL_MARGIN), x1: Math.min(cell.x1, panel[1] - PANEL_MARGIN) };
+export function regionOf(centreX: number): Region {
+  return centreX < THIRDS[0] ? 'left' : centreX < THIRDS[1] ? 'centre' : 'right';
 }
 
-/** Air and wall bands: things keep their size and are spread over the cell. */
-function layoutFloating(item: ItemDef, count: number, zone: ZoneDef, fullCell: Cell, height: number, rng: Rng): Box[] | null {
-  const cell = onPanel(zone, fullCell);
-  if (!cell) return null;
-  const full = (item.size * SIZE_BOOST) / item.h;
-  const top = zone.top * height;
-  const cellW = cell.x1 - cell.x0;
-  const cellH = (zone.bottom - zone.top) * height;
-
-  for (let rows = 1; rows <= count; rows++) {
-    const cols = Math.ceil(count / rows);
-    const fit = Math.min(1, cellW / (cols * item.w * full * SPACING), cellH / (rows * item.h * full * SPACING));
-    if (fit < MIN_FIT) continue;
-    const scale = full * fit;
-    const w = item.w * scale;
-    const h = item.h * scale;
-    const slotW = cellW / cols;
-    const slotH = cellH / rows;
-    return Array.from({ length: count }, (_, i) => {
-      const row = Math.floor(i / cols);
-      const col = i % cols;
-      const inRow = row === rows - 1 ? count - cols * (rows - 1) : cols;
-      const rowOffset = ((cols - inRow) * slotW) / 2;
-      return {
-        x: cell.x0 + rowOffset + col * slotW + (slotW - w) * (0.25 + 0.5 * rng.next()),
-        y: top + row * slotH + (slotH - h) * rng.next(),
-        scale,
-      };
-    });
-  }
-  return null;
+/** Picture units per centimetre at height `y` (picture units), from the recipe's camera. */
+export function scaleAt(recipe: Recipe, y: number, height: number): number {
+  const { horizon, ref, pxPerCm } = recipe.camera;
+  return pxPerCm * heightFactor(height) * ((y / height - horizon) / (ref - horizon));
 }
 
-/**
- * Ground bands: things stand on the floor in rows, front row lowest and biggest,
- * each row further back a little higher and smaller (perspective), with a small gap between rows.
- */
-function layoutGround(item: ItemDef, count: number, zone: ZoneDef, cell: Cell, height: number, rng: Rng): Box[] | null {
+/** Scale for anything hung on a wall or floating in a band (ground things use `scaleAt` at their feet). */
+export function zoneScale(recipe: Recipe, zone: ZoneDef, height: number): number {
+  return zone.surface === 'air'
+    ? (zone.pxPerCm ?? 1) * heightFactor(height)
+    : scaleAt(recipe, (zone.plane ?? zone.bottom) * height, height);
+}
+
+interface Rect {
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+}
+
+/** Width of `n` things side by side with breathing room between them (none outside the ends). */
+const rowWidth = (n: number, w: number) => n * w + (n - 1) * w * (SPACING - 1);
+
+const hits = (a: Rect, b: Rect) => a.x0 < b.x1 + PAD && b.x0 < a.x1 + PAD && a.y0 < b.y1 + PAD && b.y0 < a.y1 + PAD;
+
+interface Row {
+  /** Ground: where feet stand. Air/wall: top of the row. */
+  y: number;
+  scale: number;
+  count: number;
+}
+
+/** Works out the rows for a group at a random spot in the zone, or null if it can't go there. */
+function planRows(item: ItemDef, count: number, zone: ZoneDef, recipe: Recipe, height: number, rng: Rng): Row[] | null {
+  const usable = SCENE_WIDTH - 2 * EDGE;
   const top = zone.top * height;
   const bottom = zone.bottom * height;
-  const floorTop = (zone.floor ?? zone.top) * height;
-  const far = zone.farScale ?? 1;
-  const near = zone.nearScale ?? 1;
-  const cellW = cell.x1 - cell.x0;
-  const base = (item.size * SIZE_BOOST) / item.h;
-  const perspective = (y: number) => far + (near - far) * Math.min(1, Math.max(0, (y - floorTop) / (bottom - floorTop || 1)));
 
-  /** Rows from the front, starting with the front row standing at `front`. Null if they don't fit. */
-  const stack = (rows: number, cols: number, front: number) => {
-    // The front row is the widest and tallest; if it needs to shrink to fit, every row shrinks by the same amount.
-    const frontScale = base * perspective(front);
-    const fit = Math.min(1, cellW / (cols * item.w * frontScale * SPACING), (front - top) / (item.h * frontScale));
-    if (fit < MIN_FIT) return null;
-    const result: { baseline: number; scale: number }[] = [];
-    let baseline = front;
-    for (let r = 0; r < rows; r++) {
-      const scale = base * perspective(baseline) * fit;
-      const h = item.h * scale;
-      if (baseline < floorTop || baseline - h < top) return null;
-      result.push({ baseline, scale });
-      baseline -= h * (1 + ROW_GAP);
+  if (zone.surface === 'ground') {
+    const feet = top + (bottom - top) * rng.next();
+    const scale = (scaleAt(recipe, feet, height) * item.height) / item.h;
+    if (item.h * scale < MIN_VISIBLE) return null;
+    const twoRows = !zone.singleRow && count > 1 && rowWidth(count, item.w * scale) > usable;
+    const cols = twoRows ? Math.ceil(count / 2) : count;
+    if (rowWidth(cols, item.w * scale) > usable) return null;
+    if (!twoRows) return [{ y: feet, scale, count }];
+    const backFeet = feet - item.h * scale * (1 + ROW_GAP);
+    if (backFeet < top) return null;
+    const backScale = (scaleAt(recipe, backFeet, height) * item.height) / item.h;
+    if (item.h * backScale < MIN_VISIBLE) return null;
+    return [
+      { y: feet, scale, count: count - cols },
+      { y: backFeet, scale: backScale, count: cols },
+    ];
+  }
+
+  const scale = (zoneScale(recipe, zone, height) * item.height) / item.h;
+  if (item.h * scale < MIN_VISIBLE) return null;
+  const perRow = Math.max(1, Math.floor((usable + item.w * scale * (SPACING - 1)) / (item.w * scale * SPACING)));
+  const rows = Math.ceil(count / perRow);
+  const rowH = item.h * scale * SPACING;
+  if (rows * rowH > bottom - top) return null;
+  const y0 = top + (bottom - top - rows * rowH) * rng.next();
+  return Array.from({ length: rows }, (_, r) => ({
+    y: y0 + r * rowH,
+    scale,
+    count: r === rows - 1 ? count - perRow * (rows - 1) : perRow,
+  }));
+}
+
+/** Tries random spots for a group until one fits without touching anything already placed. */
+function placeGroup(item: ItemDef, count: number, zone: ZoneDef, recipe: Recipe, height: number, rng: Rng, taken: Rect[]) {
+  for (let attempt = 0; attempt < ATTEMPTS; attempt++) {
+    const rows = planRows(item, count, zone, recipe, height, rng);
+    if (!rows) continue;
+
+    const cols = Math.max(...rows.map((r) => r.count));
+    const widest = Math.max(...rows.map((r) => item.w * r.scale));
+    const groupW = rowWidth(cols, widest);
+
+    let xMin = EDGE;
+    let xMax = SCENE_WIDTH - EDGE;
+    if (zone.panels) {
+      const fits = zone.panels.filter(([p0, p1]) => p1 - p0 - 28 >= groupW);
+      if (!fits.length) continue;
+      const [p0, p1] = rng.pick(fits);
+      xMin = p0 + 14;
+      xMax = p1 - 14;
     }
-    return result;
-  };
+    if (groupW > xMax - xMin) continue;
 
-  for (let rows = 1; rows <= (zone.singleRow ? 1 : count); rows++) {
-    const cols = Math.ceil(count / rows);
-    const tight = stack(rows, cols, bottom);
-    if (!tight) continue;
-
-    // Push the group a random way back into the band so groups sit at different depths.
-    const room = tight[tight.length - 1].baseline - floorTop;
-    const rowsInfo = stack(rows, cols, bottom - room * rng.next() * 0.8) ?? tight;
+    const x0 = xMin + (xMax - xMin - groupW) * rng.next();
+    const centre = x0 + groupW / 2;
+    if (Math.abs(centre - THIRDS[0]) < THIRD_MARGIN || Math.abs(centre - THIRDS[1]) < THIRD_MARGIN) continue;
 
     const boxes: Box[] = [];
-    rowsInfo.forEach(({ baseline, scale }, r) => {
-      // Back rows are full; any remainder goes in the front row.
-      const inRow = r === 0 ? count - cols * (rows - 1) : cols;
-      const slotW = cellW / cols;
-      const w = item.w * scale;
-      const h = item.h * scale;
-      const rowOffset = ((cols - inRow) * slotW) / 2 + (r % 2 ? slotW * 0.2 : 0);
-      for (let c = 0; c < inRow; c++) {
-        const x = cell.x0 + rowOffset + c * slotW + (slotW - w) * (0.3 + 0.4 * rng.next());
-        boxes.push({ x: Math.min(x, cell.x1 - w), y: baseline - h, scale });
+    const rects: Rect[] = [];
+    const step = widest * SPACING;
+    for (const row of rows) {
+      const w = item.w * row.scale;
+      const h = item.h * row.scale;
+      const rowStart = x0 + ((cols - row.count) * step) / 2;
+      for (let c = 0; c < row.count; c++) {
+        const x = rowStart + c * step + (widest - w) * (0.35 + 0.3 * rng.next());
+        const y = zone.surface === 'ground' ? row.y - h : row.y + (h * SPACING - h) / 2;
+        boxes.push({ x, y, scale: row.scale });
+        rects.push({ x0: x, y0: y, x1: x + w, y1: y + h });
       }
-    });
-    return boxes;
+    }
+
+    if (rects.some((r) => r.y0 < TOP_MARGIN * height || r.y1 > height)) continue;
+    if (rects.some((r) => taken.some((t) => hits(r, t)))) continue;
+    return { boxes, rects, region: regionOf(centre) };
   }
   return null;
 }
@@ -133,7 +162,7 @@ function layoutGround(item: ItemDef, count: number, zone: ZoneDef, cell: Cell, h
 function spreadDecor(recipe: Recipe, height: number, rng: Rng): PlacedDecor[] {
   return (recipe.decor ?? []).flatMap((decor) => {
     const count = rng.int(decor.min, decor.max);
-    const slotW = 900 / count;
+    const slotW = SCENE_WIDTH / count;
     return Array.from({ length: count }, (_, i) => {
       const scale = (decor.size / decor.h) * (0.8 + 0.35 * rng.next());
       const w = decor.w * scale;
@@ -148,40 +177,57 @@ function spreadDecor(recipe: Recipe, height: number, rng: Rng): PlacedDecor[] {
   });
 }
 
+/** Rough real-world footprint, so big things are placed first and small things fill the gaps. */
+const footprint = (item: ItemDef) => item.height * item.height * (item.w / item.h);
+
 /** Fills a recipe with random contents for a picture `height` tall. Same inputs, same scene. */
 export function generateScene(recipe: Recipe, knobs: SceneKnobs, seed: number, height: number): SceneSpec {
   const rng = createRng(seed);
   const variant = rng.pick(recipe.variants);
-  const cells = rng.shuffle(recipe.zones.flatMap((zone) => REGIONS.map((cell) => ({ zone, cell }))));
-  const used = new Set<string>();
+  const pool = rng.shuffle(recipe.items);
+  const taken: Rect[] = [];
   const groups: PlacedGroup[] = [];
 
-  for (const item of rng.shuffle(recipe.items)) {
-    if (groups.length >= knobs.groups) break;
+  /** Places one kind somewhere it belongs (optionally only in `onlyZone`). Returns false if it doesn't fit. */
+  const tryItem = (item: ItemDef, onlyZone?: string) => {
     const most = item.countable === false ? 1 : Math.min(item.maxCount, knobs.maxCount);
     const wanted = rng.int(1, most);
-
-    // Try each free cell this item belongs in; take the first where at least one fits.
-    for (const { zone, cell } of cells) {
-      if (!item.zones.includes(zone.id) || used.has(`${zone.id}:${cell.id}`)) continue;
-      const layout = zone.surface === 'ground' ? layoutGround : layoutFloating;
-      let placed: { count: number; boxes: Box[] } | null = null;
-      for (let count = wanted; count >= 1 && !placed; count--) {
-        const boxes = layout(item, count, zone, cell, height, rng);
-        if (boxes) placed = { count, boxes };
+    for (const zoneId of rng.shuffle(item.zones)) {
+      if (onlyZone && zoneId !== onlyZone) continue;
+      const zone = recipe.zones.find((z) => z.id === zoneId)!;
+      for (let count = wanted; count >= 1; count--) {
+        const placed = placeGroup(item, count, zone, recipe, height, rng, taken);
+        if (!placed) continue;
+        taken.push(...placed.rects);
+        groups.push({
+          kind: item.kind,
+          count,
+          colour: item.colours ? rng.pick(item.colours) : undefined,
+          zoneId: zone.id,
+          region: placed.region,
+          boxes: placed.boxes,
+        });
+        return true;
       }
-      if (!placed) continue;
-      used.add(`${zone.id}:${cell.id}`);
-      groups.push({
-        kind: item.kind,
-        count: placed.count,
-        colour: item.colours ? rng.pick(item.colours) : undefined,
-        zoneId: zone.id,
-        region: cell.id,
-        boxes: placed.boxes,
-      });
-      break;
     }
+    return false;
+  };
+
+  // First make sure zones that must not be bare (a room wall) get their things, trying each candidate in turn.
+  for (const zone of recipe.zones) {
+    let needed = zone.minGroups ?? 0;
+    for (const item of pool.filter((i) => i.zones.includes(zone.id))) {
+      if (needed <= 0 || groups.length >= knobs.groups) break;
+      pool.splice(pool.indexOf(item), 1);
+      if (tryItem(item, zone.id)) needed--;
+    }
+  }
+
+  // Then pick the rest at random and place the biggest first, so small things fill the gaps.
+  const queue = pool.splice(0, Math.max(0, knobs.groups - groups.length)).sort((a, b) => footprint(b) - footprint(a));
+  while (groups.length < knobs.groups && (queue.length || pool.length)) {
+    // When a kind doesn't fit anywhere, the next unused kind gets a turn.
+    tryItem(queue.length ? queue.shift()! : pool.shift()!);
   }
 
   return {

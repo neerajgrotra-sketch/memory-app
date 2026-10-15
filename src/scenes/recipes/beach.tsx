@@ -16,7 +16,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 140,
     h: 140,
-    size: 150,
+    height: 150,
     zones: SKY,
     maxCount: 1,
     countable: false,
@@ -33,9 +33,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 130,
     h: 150,
-    size: 170,
+    height: 700,
     zones: SEA,
-    maxCount: 4,
+    maxCount: 3,
     colours: [C.red, C.yellow, C.white, C.orange, C.purple],
     colourPrompt: (plural) => (plural ? 'What colour were the sails on the boats?' : 'What colour was the sail on the boat?'),
     draw: (colour) => (
@@ -54,9 +54,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 50,
     h: 65,
-    size: 60,
+    height: 120,
     zones: SEA,
-    maxCount: 5,
+    maxCount: 4,
     colours: [C.red, C.yellow, C.orange, C.white],
     draw: (colour) => (
       <G>
@@ -74,7 +74,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 130,
     h: 75,
-    size: 75,
+    height: 120,
     zones: SEA,
     maxCount: 3,
     draw: () => (
@@ -94,9 +94,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 160,
     h: 180,
-    size: 190,
+    height: 230,
     zones: SAND,
-    maxCount: 4,
+    maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.orange, C.purple, C.pink],
     draw: (colour) => (
       <G>
@@ -113,9 +113,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 60,
     h: 65,
-    size: 55,
+    height: 32,
     zones: SAND,
-    maxCount: 4,
+    maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.pink, C.purple],
     draw: (colour) => (
       <G>
@@ -124,7 +124,7 @@ const items: ItemDef[] = [
       </G>
     ),
   },
-  { ...ball, singular: 'beach ball', plural: 'beach balls', size: 45, zones: SAND, maxCount: 4 },
+  { ...ball, singular: 'beach ball', plural: 'beach balls', height: 35, zones: SAND, maxCount: 3 },
   {
     kind: 'crab',
     singular: 'crab',
@@ -132,9 +132,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 80,
     h: 50,
-    size: 38,
+    height: 32,
     zones: SAND,
-    maxCount: 5,
+    maxCount: 4,
     draw: () => (
       <G stroke="#9d0208" strokeWidth={4} strokeLinecap="round">
         <Line x1={22} y1={34} x2={8} y2={46} />
@@ -158,7 +158,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 160,
     h: 70,
-    size: 50,
+    height: 40,
     zones: SAND,
     maxCount: 3,
     colours: [C.red, C.blue, C.green, C.orange, C.purple, C.pink],
@@ -177,9 +177,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 160,
     h: 270,
-    size: 230,
-    zones: SAND,
-    maxCount: 3,
+    height: 450,
+    zones: ['shore'],
+    maxCount: 2,
     draw: () => (
       <G>
         <Path d="M70,270 C75,200 70,120 88,55 L100,58 C88,120 92,200 92,270 Z" fill="#8b5a2b" />
@@ -202,7 +202,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 130,
     h: 115,
-    size: 100,
+    height: 50,
     zones: SAND,
     maxCount: 2,
     draw: () => (
@@ -224,9 +224,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 55,
     h: 55,
-    size: 38,
+    height: 30,
     zones: SAND,
-    maxCount: 5,
+    maxCount: 4,
     colours: [C.orange, C.pink, C.red, C.purple],
     draw: (colour) => (
       <Polygon
@@ -264,11 +264,13 @@ export const beach: Recipe = {
   id: 'beach',
   title: 'At the beach',
   place: 'on the beach',
+  // The sea horizon is the camera's horizon: true perspective, so far boats are small and near ones big.
+  camera: { horizon: 0.33, ref: 0.9, pxPerCm: 1.6 },
   zones: [
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0.04, bottom: 0.31 },
-    { id: 'sea', label: 'In the sea', surface: 'ground', top: 0.34, bottom: 0.54, farScale: 0.7, nearScale: 0.85 },
-    { id: 'shore', label: 'Near the water', surface: 'ground', top: 0.56, bottom: 0.75, farScale: 0.8, nearScale: 0.9 },
-    { id: 'front', label: 'At the front', surface: 'ground', top: 0.76, bottom: 0.97, farScale: 0.92, nearScale: 1.05 },
+    { id: 'sea', label: 'In the sea', surface: 'ground', top: 0.38, bottom: 0.545 },
+    { id: 'shore', label: 'Near the water', surface: 'ground', top: 0.58, bottom: 0.75 },
+    { id: 'front', label: 'At the front', surface: 'ground', top: 0.78, bottom: 0.97 },
   ],
   items,
   decor: [{ ...clouds, top: 0.02, bottom: 0.28 }],

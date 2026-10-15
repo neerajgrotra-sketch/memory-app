@@ -4,11 +4,9 @@
  */
 import { LEVELS } from '@/game/difficulty';
 import { generateQuestions } from '@/scenes/generateQuestions';
-import { generateScene } from '@/scenes/generateScene';
+import { MIN_VISIBLE, THIRD_MARGIN, THIRDS, TOP_MARGIN, generateScene, regionOf } from '@/scenes/generateScene';
 import { RECIPES } from '@/scenes/recipes';
 
-/** Keep a little sky or wall above the top-most things. */
-const TOP_MARGIN = 0.03;
 const SCENES_PER_CASE = 300;
 const MIN_QUESTIONS = 12;
 
@@ -20,25 +18,44 @@ for (const height of [1350, 1600, 2000]) {
       const knobs = LEVELS[level];
       const problems = new Set<string>();
       const placed = new Set<string>();
+      let short = 0;
+      let veryShort = 0;
 
       for (let n = 1; n <= SCENES_PER_CASE; n++) {
         const scene = generateScene(recipe, knobs, n * 7919, height);
-        if (scene.groups.length < knobs.groups) problems.add(`only ${scene.groups.length} of ${knobs.groups} kinds placed`);
+        // At real sizes a crowded picture may have room for a kind or two fewer: one short now and then,
+        // two short very rarely, never more.
+        if (scene.groups.length < knobs.groups - 2) problems.add(`only ${scene.groups.length} of ${knobs.groups} kinds placed`);
+        if (scene.groups.length < knobs.groups) short++;
+        if (scene.groups.length < knobs.groups - 1) veryShort++;
         if (generateQuestions(scene, recipe, knobs).length < MIN_QUESTIONS) problems.add('too few questions');
 
         const rects = scene.groups.flatMap((group) => {
           const item = recipe.items.find((i) => i.kind === group.kind)!;
           const zone = recipe.zones.find((z) => z.id === group.zoneId)!;
           placed.add(group.kind);
-          return group.boxes.map((b) => ({ kind: group.kind, zone, x0: b.x, y0: b.y, x1: b.x + item.w * b.scale, y1: b.y + item.h * b.scale }));
+          if (group.count > item.maxCount) problems.add(`more ${item.plural} than is realistic`);
+          const boxes = group.boxes.map((b) => ({ kind: group.kind, zone, x0: b.x, y0: b.y, x1: b.x + item.w * b.scale, y1: b.y + item.h * b.scale }));
+          const centre = (Math.min(...boxes.map((b) => b.x0)) + Math.max(...boxes.map((b) => b.x1))) / 2;
+          if (regionOf(centre) !== group.region) problems.add(`${group.kind} answer says ${group.region} but it is not`);
+          if (Math.abs(centre - THIRDS[0]) < THIRD_MARGIN - 25 || Math.abs(centre - THIRDS[1]) < THIRD_MARGIN - 25) problems.add(`${group.kind} on the line between two sides`);
+          return boxes;
         });
+
+        for (const zone of recipe.zones) {
+          if ((zone.minGroups ?? 0) > scene.groups.filter((g) => g.zoneId === zone.id).length) problems.add(`${zone.id} left bare`);
+        }
 
         for (const r of rects) {
           if (r.x0 < 0 || r.x1 > 900) problems.add(`${r.kind} off the side of the picture`);
-          if (r.y0 < TOP_MARGIN * height) problems.add(`${r.kind} touching the top edge`);
-          if (r.y0 < r.zone.top * height - 1 || r.y1 > r.zone.bottom * height + 1) problems.add(`${r.kind} outside its band`);
+          if (r.y0 < TOP_MARGIN * height - 1) problems.add(`${r.kind} touching the top edge`);
+          if (r.y1 - r.y0 < MIN_VISIBLE - 0.5) problems.add(`${r.kind} too small to see`);
+          if (r.zone.surface === 'ground') {
+            if (r.y1 < r.zone.top * height - 1 || r.y1 > r.zone.bottom * height + 1) problems.add(`${r.kind} not standing in its area`);
+          } else if (r.y0 < r.zone.top * height - 1 || r.y1 > r.zone.bottom * height + 1) {
+            problems.add(`${r.kind} outside its band`);
+          }
           if (r.zone.panels && !r.zone.panels.some(([p0, p1]) => r.x0 >= p0 && r.x1 <= p1)) problems.add(`${r.kind} crosses a building edge`);
-          if (r.zone.surface === 'ground' && r.y1 < (r.zone.floor ?? r.zone.top) * height - 1) problems.add(`${r.kind} not standing on the floor`);
         }
         for (let a = 0; a < rects.length; a++) {
           for (let b = a + 1; b < rects.length; b++) {
@@ -51,6 +68,8 @@ for (const height of [1350, 1600, 2000]) {
         }
       }
 
+      if (veryShort / SCENES_PER_CASE > 0.01) problems.add(`${veryShort} pictures two kinds short`);
+      if (short / SCENES_PER_CASE > 0.15) problems.add(`${Math.round((100 * short) / SCENES_PER_CASE)}% of pictures one kind short`);
       for (const item of recipe.items) if (!placed.has(item.kind)) problems.add(`${item.kind} never fits anywhere`);
       const label = `${recipe.id} / ${level} / height ${height}`;
       if (problems.size) {

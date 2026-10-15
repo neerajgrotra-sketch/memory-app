@@ -10,6 +10,17 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 2.3.0 (2026-10-15)
+
+- **Real-world scale:** every object now has a real height in centimetres, and each setting has a camera that turns that into picture size. Objects are in proportion to the room or street and to each other: in the room, a sofa is about a third of the back wall and a cat looks like a cat next to it.
+- **True perspective from one horizon:** at the beach, boats far out are small and boats near the shore are big; things further back in a room are smaller.
+- **Realistic counts:** one mirror, one sofa, one TV and one clock in a room. Counting questions are about things you'd expect several of (cushions, frames, cats, cars).
+- **Free placement:** big things such as sofas, buses and palm trees get the room they need, and several kinds can share an area. Nothing overlaps.
+- **Never bare:** a room wall always has at least two things, and the city buildings at least one.
+- **Visible or not at all:** anything too small to spot where it would stand is moved nearer or left out.
+- The living room now shows its ceiling and a hanging light, and city buildings have doors and windows at the same scale as the people.
+- "What was on the left…" questions are only asked when exactly one kind of thing is there.
+
 ## 2.2.3 (2026-10-15)
 
 - The ✕ button, timer bar and countdown now sit in a bar above the picture instead of on top of it, so they can never hide anything, whatever the phone or viewer. The picture fills the space below the bar.

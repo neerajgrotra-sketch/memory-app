@@ -2,7 +2,7 @@ import { Circle, Ellipse, G, Line, Path, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
 import { ball, dog, plantPot } from '../items/common';
-import type { ItemDef, Recipe } from '../types';
+import { heightFactor, type ItemDef, type Recipe } from '../types';
 
 const WALL = ['wall'];
 const BACK = ['back'];
@@ -16,7 +16,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 110,
     h: 90,
-    size: 100,
+    height: 45,
     zones: WALL,
     maxCount: 4,
     colours: [C.red, C.blue, C.yellow, C.green, C.black, C.white, C.purple],
@@ -37,7 +37,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 100,
     h: 100,
-    size: 90,
+    height: 45,
     zones: WALL,
     maxCount: 1,
     countable: false,
@@ -56,9 +56,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 90,
     h: 130,
-    size: 150,
+    height: 90,
     zones: WALL,
-    maxCount: 2,
+    maxCount: 1,
     draw: () => (
       <G>
         <Ellipse cx={45} cy={65} rx={44} ry={64} fill="#b08d57" />
@@ -74,7 +74,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 150,
     h: 175,
-    size: 220,
+    height: 140,
     zones: WALL,
     maxCount: 2,
     draw: () => (
@@ -92,9 +92,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 230,
     h: 120,
-    size: 130,
+    height: 85,
     zones: BACK,
-    maxCount: 2,
+    maxCount: 1,
     colours: [C.red, C.blue, C.green, C.grey, C.yellow, C.purple, C.brown],
     draw: (colour) => (
       <G stroke="#00000033" strokeWidth={2}>
@@ -114,9 +114,9 @@ const items: ItemDef[] = [
     article: 'an',
     w: 120,
     h: 120,
-    size: 130,
+    height: 95,
     zones: BACK,
-    maxCount: 3,
+    maxCount: 2,
     colours: [C.red, C.blue, C.green, C.yellow, C.orange, C.pink],
     draw: (colour) => (
       <G stroke="#00000033" strokeWidth={2}>
@@ -136,7 +136,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 80,
     h: 230,
-    size: 330,
+    height: 160,
     zones: BACK,
     maxCount: 2,
     colours: [C.red, C.blue, C.yellow, C.green, C.white, C.orange],
@@ -156,7 +156,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 170,
     h: 140,
-    size: 190,
+    height: 115,
     zones: BACK,
     maxCount: 1,
     countable: false,
@@ -168,7 +168,7 @@ const items: ItemDef[] = [
       </G>
     ),
   },
-  { ...plantPot, zones: [...BACK, ...FRONT], maxCount: 3 },
+  { ...plantPot, height: 80, zones: [...BACK, ...FRONT], maxCount: 3 },
   {
     kind: 'bookshelf',
     singular: 'bookshelf',
@@ -176,7 +176,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 120,
     h: 200,
-    size: 300,
+    height: 190,
     zones: BACK,
     maxCount: 2,
     draw: () => (
@@ -200,8 +200,8 @@ const items: ItemDef[] = [
     article: 'a',
     w: 90,
     h: 75,
-    size: 60,
-    zones: FRONT,
+    height: 30,
+    zones: [...FRONT, ...BACK],
     maxCount: 3,
     colours: [C.orange, C.black, C.grey, C.white],
     draw: (colour) => (
@@ -215,8 +215,8 @@ const items: ItemDef[] = [
       </G>
     ),
   },
-  { ...dog, size: 75, zones: FRONT, maxCount: 2 },
-  { ...ball, size: 40, zones: FRONT, maxCount: 4 },
+  { ...dog, zones: FRONT, maxCount: 2 },
+  { ...ball, zones: FRONT, maxCount: 3 },
   {
     kind: 'cushion',
     singular: 'cushion',
@@ -224,7 +224,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 75,
     h: 60,
-    size: 50,
+    height: 40,
     zones: FRONT,
     maxCount: 4,
     colours: [C.red, C.blue, C.yellow, C.green, C.pink, C.purple, C.orange],
@@ -239,7 +239,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 75,
     h: 90,
-    size: 70,
+    height: 35,
     zones: FRONT,
     maxCount: 3,
     draw: () => (
@@ -261,9 +261,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 85,
     h: 45,
-    size: 38,
+    height: 20,
     zones: FRONT,
-    maxCount: 3,
+    maxCount: 4,
     colours: [C.red, C.blue, C.yellow, C.green, C.orange],
     draw: (colour) => (
       <G>
@@ -280,7 +280,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 90,
     h: 60,
-    size: 50,
+    height: 22,
     zones: FRONT,
     maxCount: 3,
     draw: () => (
@@ -293,13 +293,26 @@ const items: ItemDef[] = [
   },
 ];
 
-function backdrop(height: number, wall: string, floor: string, plank: string, rug: string) {
-  const floorLine = height * 0.6;
+/** Floor meets back wall here; the camera's scale is set on this line. */
+const FLOOR = 0.6;
+/** Back wall: 4.3 m wide (900 units) and 3 m tall at 2.1 units per cm on a 1600-tall picture. */
+const CAMERA = { horizon: -0.07, ref: FLOOR, pxPerCm: 2.1 };
+const WALL_CM = 300;
+/** Lowest the top of the wall gets on any screen; things are only hung below this. */
+const WALL_TOP_MAX = 0.245;
+
+function backdrop(height: number, wall: string, ceiling: string, floor: string, plank: string, rug: string) {
+  const floorLine = height * FLOOR;
+  const wallTop = floorLine - WALL_CM * CAMERA.pxPerCm * heightFactor(height);
   // Floorboard lines get further apart towards the front (perspective).
   const planks = [0.63, 0.67, 0.72, 0.78, 0.85, 0.93, 1.02].map((f) => height * f);
   return (
     <G>
-      <Rect x={-600} y={-600} width={2100} height={floorLine + 600} fill={wall} />
+      <Rect x={-600} y={-600} width={2100} height={wallTop + 600} fill={ceiling} />
+      <Rect x={-600} y={wallTop} width={2100} height={floorLine - wallTop} fill={wall} />
+      <Rect x={-600} y={wallTop} width={2100} height={14} fill="#ffffff" fillOpacity={0.6} />
+      <Line x1={450} y1={-600} x2={450} y2={wallTop * 0.55} stroke="#6c757d" strokeWidth={3} />
+      <Path d={`M405,${wallTop * 0.55 + 50} L420,${wallTop * 0.55} H480 L495,${wallTop * 0.55 + 50} Z`} fill="#fff3bf" stroke="#00000022" strokeWidth={2} />
       <Rect x={-600} y={floorLine - 22} width={2100} height={22} fill="#ffffff" fillOpacity={0.7} />
       <Rect x={-600} y={floorLine} width={2100} height={height - floorLine + 600} fill={floor} />
       <G stroke={plank} strokeWidth={3}>
@@ -307,8 +320,8 @@ function backdrop(height: number, wall: string, floor: string, plank: string, ru
           <Line key={y} x1={-600} y1={y} x2={1500} y2={y} />
         ))}
       </G>
-      <Ellipse cx={450} cy={height * 0.8} rx={300} ry={height * 0.07} fill={rug} fillOpacity={0.3} />
-      <Ellipse cx={450} cy={height * 0.8} rx={260} ry={height * 0.052} fill="none" stroke="#ffffff" strokeOpacity={0.4} strokeWidth={5} />
+      <Ellipse cx={450} cy={height * 0.82} rx={330} ry={height * 0.075} fill={rug} fillOpacity={0.3} />
+      <Ellipse cx={450} cy={height * 0.82} rx={290} ry={height * 0.056} fill="none" stroke="#ffffff" strokeOpacity={0.4} strokeWidth={5} />
     </G>
   );
 }
@@ -317,25 +330,16 @@ export const livingRoom: Recipe = {
   id: 'living-room',
   title: 'Living room',
   place: 'in the room',
+  camera: CAMERA,
   zones: [
-    { id: 'wall', label: 'On the wall', surface: 'wall', top: 0.05, bottom: 0.38 },
-    {
-      id: 'back',
-      label: 'At the back',
-      surface: 'ground',
-      top: 0.39,
-      bottom: 0.64,
-      floor: 0.6,
-      farScale: 0.75,
-      nearScale: 0.8,
-      singleRow: true,
-    },
-    { id: 'front', label: 'At the front', surface: 'ground', top: 0.67, bottom: 0.97, farScale: 0.9, nearScale: 1.05 },
+    { id: 'wall', label: 'On the wall', surface: 'wall', top: WALL_TOP_MAX + 0.02, bottom: FLOOR - 0.03, plane: FLOOR, minGroups: 2 },
+    { id: 'back', label: 'At the back', surface: 'ground', top: FLOOR, bottom: FLOOR + 0.045, singleRow: true },
+    { id: 'front', label: 'At the front', surface: 'ground', top: 0.71, bottom: 0.97 },
   ],
   items,
   variants: [
-    { id: 'cream', background: (h) => backdrop(h, '#f3e9d2', '#b98b5e', '#a47751', '#9d4edd') },
-    { id: 'blue', background: (h) => backdrop(h, '#cfe0ec', '#c9a27e', '#b08b68', '#c1121f') },
-    { id: 'sage', background: (h) => backdrop(h, '#dce5d1', '#a87f5a', '#8f6a48', '#1d3557') },
+    { id: 'cream', background: (h) => backdrop(h, '#f3e9d2', '#faf6ec', '#b98b5e', '#a47751', '#9d4edd') },
+    { id: 'blue', background: (h) => backdrop(h, '#cfe0ec', '#eef4f8', '#c9a27e', '#b08b68', '#c1121f') },
+    { id: 'sage', background: (h) => backdrop(h, '#dce5d1', '#f1f5ec', '#a87f5a', '#8f6a48', '#1d3557') },
   ],
 };

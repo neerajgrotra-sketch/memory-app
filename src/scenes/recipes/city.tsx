@@ -2,7 +2,7 @@ import { Circle, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
 import { balloon, bird, clouds, dog, person, plane, tree } from '../items/common';
-import type { ItemDef, Recipe } from '../types';
+import { heightFactor, type ItemDef, type Recipe } from '../types';
 
 const SKY = ['sky'];
 const WALLS = ['buildings'];
@@ -27,7 +27,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 100,
     h: 112,
-    size: 120,
+    height: 170,
     zones: WALLS,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.purple, C.orange],
@@ -47,7 +47,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 120,
     h: 110,
-    size: 105,
+    height: 90,
     zones: WALLS,
     maxCount: 1,
     countable: false,
@@ -69,7 +69,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 80,
     h: 80,
-    size: 80,
+    height: 85,
     zones: WALLS,
     maxCount: 3,
     draw: () => (
@@ -89,7 +89,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 180,
     h: 160,
-    size: 150,
+    height: 230,
     zones: PAVEMENT,
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.orange, C.purple, C.yellow],
@@ -116,8 +116,8 @@ const items: ItemDef[] = [
     ),
   },
   { ...person, zones: PAVEMENT, maxCount: 4 },
-  { ...dog, size: 70, zones: PAVEMENT, maxCount: 3 },
-  { ...tree, size: 240, zones: PAVEMENT, maxCount: 2 },
+  { ...dog, zones: PAVEMENT, maxCount: 2 },
+  { ...tree, zones: PAVEMENT, maxCount: 2 },
   {
     kind: 'bench',
     singular: 'bench',
@@ -125,7 +125,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 140,
     h: 75,
-    size: 70,
+    height: 85,
     zones: PAVEMENT,
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.brown, C.yellow],
@@ -145,9 +145,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 55,
     h: 85,
-    size: 85,
+    height: 100,
     zones: PAVEMENT,
-    maxCount: 4,
+    maxCount: 3,
     colours: [C.green, C.black, C.blue, C.orange],
     draw: (colour) => (
       <G>
@@ -165,7 +165,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 115,
     h: 75,
-    size: 75,
+    height: 100,
     zones: PAVEMENT,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.black, C.pink],
@@ -187,7 +187,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 50,
     h: 75,
-    size: 65,
+    height: 75,
     zones: PAVEMENT,
     maxCount: 2,
     colours: [C.red, C.yellow],
@@ -207,7 +207,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 60,
     h: 240,
-    size: 260,
+    height: 450,
     zones: PAVEMENT,
     maxCount: 2,
     draw: () => (
@@ -225,7 +225,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 175,
     h: 85,
-    size: 75,
+    height: 145,
     zones: ROAD,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.white, C.black, C.orange],
@@ -245,9 +245,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 230,
     h: 115,
-    size: 95,
+    height: 280,
     zones: ROAD,
-    maxCount: 2,
+    maxCount: 1,
     colours: [C.red, C.blue, C.yellow, C.green, C.white],
     draw: (colour) => (
       <G>
@@ -271,7 +271,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 95,
     h: 75,
-    size: 70,
+    height: 115,
     zones: ROAD,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.pink, C.white],
@@ -292,7 +292,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 190,
     h: 100,
-    size: 95,
+    height: 230,
     zones: ROAD,
     maxCount: 2,
     colours: [C.white, C.blue, C.red, C.green, C.yellow],
@@ -329,13 +329,20 @@ function backdrop(height: number, sky: string, walls: string[], window: string) 
   const roof = height * 0.31;
   const pavement = height * 0.6;
   const kerb = height * 0.73;
+  // Windows and doors at the same scale as the people on the pavement (1.03 units per cm on a 1600-tall picture).
+  const unit = 1.03 * heightFactor(height);
+  const winW = 80 * unit;
+  const winH = 110 * unit;
+  const doorW = 100 * unit;
+  const doorH = 215 * unit;
   return (
     <G>
       <Rect x={-600} y={-600} width={2100} height={pavement + 600} fill={sky} />
       {BUILDINGS.map((b, i) => {
         const top = roof - b.rise * height;
-        const rows = Math.floor((pavement - top - 30) / 90);
-        const cols = Math.max(3, Math.round(b.w / 95));
+        const cols = Math.max(2, Math.floor((b.w - 40) / (winW * 1.9)));
+        const gapX = (b.w - cols * winW) / (cols + 1);
+        const rows = Math.max(1, Math.floor((pavement - doorH - 40 - top) / (winH * 1.45)));
         return (
           <G key={b.x}>
             <Rect x={b.x} y={top} width={b.w} height={pavement - top} fill={walls[i % walls.length]} />
@@ -344,15 +351,16 @@ function backdrop(height: number, sky: string, walls: string[], window: string) 
               Array.from({ length: cols }, (_, col) => (
                 <Rect
                   key={`${row}-${col}`}
-                  x={b.x + 22 + col * ((b.w - 44) / cols)}
-                  y={top + 28 + row * 90}
-                  width={(b.w - 44) / cols - 18}
-                  height={54}
+                  x={b.x + gapX + col * (winW + gapX)}
+                  y={top + 30 + row * winH * 1.45}
+                  width={winW}
+                  height={winH}
                   fill={window}
-                  fillOpacity={0.55}
+                  fillOpacity={0.6}
                 />
               )),
             )}
+            <Rect x={b.x + b.w / 2 - doorW / 2} y={pavement - doorH} width={doorW} height={doorH} fill="#5c3d1e" fillOpacity={0.85} />
           </G>
         );
       })}
@@ -366,7 +374,7 @@ function backdrop(height: number, sky: string, walls: string[], window: string) 
       <Rect x={-600} y={kerb + 14} width={2100} height={height - kerb + 600} fill="#495057" />
       <G fill="#f8f9fa">
         {[-200, 40, 280, 520, 760, 1000].map((x) => (
-          <Rect key={x} x={x} y={height * 0.855} width={110} height={8} />
+          <Rect key={x} x={x} y={height * 0.88} width={110} height={8} />
         ))}
       </G>
     </G>
@@ -377,21 +385,13 @@ export const city: Recipe = {
   id: 'city',
   title: 'City street',
   place: 'in the street',
+  // A slightly raised camera: gentle perspective, with buildings drawn at the same scale as people.
+  camera: { horizon: -0.6, ref: 0.6, pxPerCm: 1.03 },
   zones: [
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0.04, bottom: 0.27 },
-    { id: 'buildings', label: 'On the buildings', surface: 'wall', top: 0.33, bottom: 0.5, panels: FACADES },
-    {
-      id: 'pavement',
-      label: 'On the pavement',
-      surface: 'ground',
-      top: 0.51,
-      bottom: 0.72,
-      floor: 0.65,
-      farScale: 0.85,
-      nearScale: 0.9,
-      singleRow: true,
-    },
-    { id: 'road', label: 'On the road', surface: 'ground', top: 0.75, bottom: 0.98, farScale: 0.9, nearScale: 1 },
+    { id: 'buildings', label: 'On the buildings', surface: 'wall', top: 0.33, bottom: 0.5, plane: 0.6, panels: FACADES, minGroups: 1 },
+    { id: 'pavement', label: 'On the pavement', surface: 'ground', top: 0.63, bottom: 0.72, singleRow: true },
+    { id: 'road', label: 'On the road', surface: 'ground', top: 0.79, bottom: 0.97 },
   ],
   items,
   decor: [{ ...clouds, top: 0.02, bottom: 0.2 }],
