@@ -93,7 +93,7 @@ for (const phone of PHONES) {
             if (!again) continue;
             // Spread groups (lamps along a pavement) have no side to ask about, so their side isn't a fact.
             const spreadOut = (g: (typeof scene.groups)[number]) => recipe.items.find((i) => i.kind === g.kind)!.spread && g.count > 1;
-            const facts = (s: typeof scene) => JSON.stringify(s.groups.map((g) => [g.kind, g.count, g.colour?.name, g.zoneId, spreadOut(g) ? '' : g.region]));
+            const facts = (s: typeof scene) => JSON.stringify(s.groups.map((g) => [g.kind, g.count, g.colour?.name, g.colours?.map((c) => c.name).join('+'), g.zoneId, spreadOut(g) ? '' : g.region]));
             if (facts(again) !== facts(scene)) note('laying out again changed the facts');
             if (validateScene(again, other.size.width, other.size.height).length) note('laid out again but not valid');
           }

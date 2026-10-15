@@ -21,6 +21,21 @@ const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
 const cellLabel = (zone: ZoneDef, region: Region) => `${zone.label}, ${REGION_PHRASE[region]}`;
 
+/** "Red and yellow", "Orange, red and yellow": a group's different colours, in a fixed order so answers match. */
+const colourList = (names: string[]) => {
+  const unique = [...new Set(names.map((n) => n.toLowerCase()))].sort();
+  const text = unique.length === 1 ? unique[0] : `${unique.slice(0, -1).join(', ')} and ${unique.at(-1)}`;
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
+
+/** Every way of choosing `k` of `items`. */
+function combinations<T>(items: T[], k: number): T[][] {
+  if (k === 0) return [[]];
+  if (items.length < k) return [];
+  const [first, ...rest] = items;
+  return [...combinations(rest, k - 1).map((c) => [first, ...c]), ...combinations(rest, k)];
+}
+
 /** "A sailboat" for one, "Sailboats" for several. */
 const nounPhrase = (item: ItemDef, plural: boolean) => (plural ? cap(item.plural) : `${cap(item.article)} ${item.singular}`);
 
@@ -89,6 +104,21 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
 
     // Things spread across the picture (street lamps along the pavement) have no single side to ask about.
     const spread = item.spread === true && group.count > 1;
+
+    // Copies in different colours (fire hydrants on Hard): which colours were they?
+    if (group.colours && item.colours) {
+      const answer = colourList(group.colours.map((c) => c.name));
+      const names = item.colours.map((c) => c.name);
+      const n = new Set(group.colours.map((c) => c.name)).size;
+      const sameSize = combinations(names, n).map(colourList);
+      const allOne = names.map((c) => `All ${c.toLowerCase()}`);
+      add('colours', group, {
+        type: 'colour',
+        subject: item.kind,
+        prompt: `What colours were the ${item.plural}?`,
+        options: withDistractors(answer, sameSize, [...allOne, ...combinations(names, Math.min(names.length, n + 1)).map(colourList)], rng),
+      });
+    }
 
     const sameZoneCells = zones
       .filter((z) => item.zones.includes(z.id))

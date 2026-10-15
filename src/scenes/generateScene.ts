@@ -1,6 +1,7 @@
 import { standsOut } from './contrast';
 import {
   AGAINST_BACK,
+  AT_FRONT,
   GAP,
   REGIONS,
   TOP_CLEAR,
@@ -32,6 +33,8 @@ export interface SceneKnobs {
   groups: number;
   /** Most of any one kind. */
   maxCount: number;
+  /** Copies of things with `mixedColours` may each be a different colour. */
+  mixedColours?: boolean;
 }
 
 /** Fresh placements tried before showing the best one found. */
@@ -86,8 +89,8 @@ interface Want {
   col?: number;
   /** Only where the group's centre falls in this third of the height. */
   third?: number;
-  /** A fixed colour (laying out again) that must still stand out where it goes. */
-  colour?: string;
+  /** Fixed colours (laying out again) that must still stand out where they go: one, or one per copy. */
+  colour?: string | string[];
 }
 
 /** Everything a candidate group must pass besides its slot: clearances, rug, doors, contrast. */
@@ -97,7 +100,8 @@ function clearToPlace(ctx: Context, want: Want, rects: Rect[]): boolean {
   if (rects.some((r) => !rugOk(item, r, ctx.recipe, ctx.ratio))) return false;
   if (rects.some((r) => coversKeepClear(r, ctx.recipe, ctx.ratio))) return false;
   if (item.tone && !colourFits(ctx, item.tone, rects)) return false;
-  if (want.colour && !colourFits(ctx, want.colour, rects)) return false;
+  if (typeof want.colour === 'string' && !colourFits(ctx, want.colour, rects)) return false;
+  if (Array.isArray(want.colour) && !rects.every((r, i) => colourFits(ctx, (want.colour as string[])[i], [r]))) return false;
   if (want.third !== undefined) {
     const cy = centreOf(boundsOf(rects)).y / ctx.ratio;
     if (cy < want.third / 3 || cy >= (want.third + 1) / 3) return false;
@@ -126,6 +130,8 @@ function verticalSpot(ctx: Context, item: ItemDef, zone: ZoneDef, top: number, b
   }
   if (bh > rowH) return null;
   if (zone.flush) return bottom - bh;
+  // At the front edge (a fire hydrant at the kerb).
+  if (item.frontRow) return bottom - bh - (rowH - bh) * AT_FRONT * rng.next();
   // On the ground: towards the bottom of the row. In the air or on a wall: anywhere in it.
   return top + (rowH - bh) * (zone.surface === 'ground' ? 1 - 0.35 * rng.next() : rng.next());
 }
@@ -140,7 +146,7 @@ function placeSpread(ctx: Context, want: Want): Placement | null {
   const w = itemWidth(item, ctx.size);
   const h = heightFor(item, w);
   const rows = rowsOf(zone, ratio);
-  const rowIndex = item.hangAt !== undefined && item.hangAt < HIGH_HANG ? rows.length - 1 : 0;
+  const rowIndex = item.frontRow || (item.hangAt !== undefined && item.hangAt < HIGH_HANG) ? rows.length - 1 : 0;
   if (!rows[rowIndex]) return null;
   // Things standing on the ground that are taller than one row (street lamps) use the band's full depth.
   const fullBand = zone.surface === 'ground' && !item.tall && !item.backRow && h > rows[rowIndex].bottom - rows[rowIndex].top;
@@ -151,7 +157,8 @@ function placeSpread(ctx: Context, want: Want): Placement | null {
   if (free.length < count) return null;
 
   for (let attempt = 0; attempt < JITTERS * 4; attempt++) {
-    const cols = rng.shuffle(free).slice(0, count).sort();
+    // Two copies go at opposite ends (left and right thirds) when both are free, as far apart as possible.
+    const cols = count === 2 && free.includes(0) && free.includes(2) && attempt < JITTERS * 2 ? [0, 2] : rng.shuffle(free).slice(0, count).sort();
     const y0 = verticalSpot(ctx, item, zone, row.top, row.bottom, h);
     if (y0 === null) return null;
     // Each copy stands near the middle of its third, so neighbours never end up side by side at a boundary.
@@ -195,9 +202,10 @@ function place(ctx: Context, want: Want): Placement | null {
     sum([0, 1, 2].map((c) => used(zone.id, c, row))) +
     sum(ctx.recipe.zones.flatMap((z) => Array.from({ length: z.rows }, (_, r) => used(z.id, col, r)))) / 2;
   const candidates: { row: number; span: number; col: number; score: number }[] = [];
-  for (let span = 1; span <= (firstRowOnly || hung ? 1 : rows.length); span++) {
+  for (let span = 1; span <= (firstRowOnly || hung || item.frontRow ? 1 : rows.length); span++) {
     for (let row = 0; row < rows.length; row++) {
       if (firstRowOnly && row !== 0) continue;
+      if (item.frontRow && row !== rows.length - 1) continue;
       // Hung things take the top row if they hang high (a clock), else the bottom one (eye level).
       if (hung && row !== (item.hangAt! >= HIGH_HANG ? 0 : rows.length - 1)) continue;
       if (row + span > rows.length) continue;
@@ -291,11 +299,23 @@ function build(recipe: Recipe, knobs: SceneKnobs, seed: number, rng: Rng, size: 
         // Only colours that stand out from everything behind them.
         const colours: ColourDef[] | undefined = item.colours?.filter((c) => colourFits(ctx, c.hex, placed.rects));
         if (colours && !colours.length) continue;
+        // On levels that allow it, half the time copies of some things each get their own colour (at least two different).
+        let perCopy: ColourDef[] | undefined;
+        if (knobs.mixedColours && item.mixedColours && item.colours && count > 1 && rng.next() < 0.5) {
+          const options = placed.rects.map((r) => item.colours!.filter((c) => colourFits(ctx, c.hex, [r])));
+          const picked = options.map((o) => rng.pick(o.length ? o : item.colours!));
+          if (new Set(picked.map((c) => c.name)).size < 2) {
+            const other = options[1].find((c) => c.name !== picked[0].name);
+            if (other) picked[1] = other;
+          }
+          if (new Set(picked.map((c) => c.name)).size >= 2 && picked.every((c, i) => options[i].includes(c))) perCopy = picked;
+        }
         commit(ctx, placed);
         groups.push({
           kind: item.kind,
           count,
-          colour: colours ? rng.pick(colours) : undefined,
+          colour: perCopy ? undefined : colours ? rng.pick(colours) : undefined,
+          colours: perCopy,
           zoneId: zone.id,
           // Spread copies have no single side; the questions don't ask where they were.
           region: item.spread && count > 1 ? regionOf(centreOf(boundsOf(placed.rects)).x) : REGIONS[placed.slot.col],
@@ -409,7 +429,7 @@ export function relayoutScene(spec: SceneSpec, size: SceneSize): SceneSpec | nul
       const item = recipe.items.find((i) => i.kind === group.kind)!;
       const zone = recipe.zones.find((z) => z.id === group.zoneId)!;
       const spread = item.spread && group.count > 1;
-      const placed = place(ctx, { item, count: group.count, zone, col: spread ? undefined : REGIONS.indexOf(group.region), colour: group.colour?.hex });
+      const placed = place(ctx, { item, count: group.count, zone, col: spread ? undefined : REGIONS.indexOf(group.region), colour: group.colours ? group.colours.map((c) => c.hex) : group.colour?.hex });
       if (!placed) break;
       commit(ctx, placed);
       moved.set(group, { ...group, slot: placed.slot, boxes: placed.boxes, region: spread ? regionOf(centreOf(boundsOf(placed.rects)).x) : group.region });

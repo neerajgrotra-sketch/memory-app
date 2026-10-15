@@ -13,18 +13,21 @@ export interface LevelConfig {
   maxCount: number;
   /** Wrong counts right next to the answer (4 vs 5). */
   closeCounts: boolean;
+  /** Copies of some things (fire hydrants) may each be a different colour. */
+  mixedColours: boolean;
 }
 
 export const LEVELS: Record<Level, LevelConfig> = {
-  easy: { preferredTypes: ['object', 'colour'], viewSeconds: 10, groups: 5, maxCount: 3, closeCounts: false },
+  easy: { preferredTypes: ['object', 'colour'], viewSeconds: 10, groups: 5, maxCount: 3, closeCounts: false, mixedColours: false },
   medium: {
     preferredTypes: ['object', 'count', 'colour', 'position'],
     viewSeconds: 8,
     groups: 7,
     maxCount: 4,
     closeCounts: false,
+    mixedColours: false,
   },
-  hard: { preferredTypes: ['count', 'position'], viewSeconds: 6, groups: 9, maxCount: 6, closeCounts: true },
+  hard: { preferredTypes: ['count', 'position'], viewSeconds: 6, groups: 9, maxCount: 6, closeCounts: true, mixedColours: true },
 };
 
 export const LEVEL_LABELS: Record<Level, string> = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };

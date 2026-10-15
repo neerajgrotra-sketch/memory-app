@@ -10,6 +10,12 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.1.5 (2026-10-15)
+
+- **Fire hydrants stand at the kerb**, the front edge of the pavement by the road, at most one per building, so two are always well apart. Pairs of anything spread along the street (hydrants, lamps, flags, trees) go at opposite ends when there's room.
+- **On Hard, hydrants can be different colours** (red, yellow or orange), half the time. The question then asks "What colours were the fire hydrants?", with answers like "Red and yellow". Easy and Medium keep one colour per kind.
+- `validateScene` checks that kerb things stand at the front edge, and that per-copy colours match the copies and stand out.
+
 ## 3.1.4 (2026-10-15)
 
 - **Bicycles are parked against the buildings** (a bicycle can't stand on its own in the middle of the pavement). Their wheels sit at the building line, never in front of a door, and several are spread along the street.

@@ -33,9 +33,12 @@ export function SceneContent({ spec, pointsPerUnit, overlay }: SceneContentProps
   const placed = spec.groups
     .flatMap((group) => {
       const item = recipe.items.find((i) => i.kind === group.kind)!;
-      const colour = group.colour?.hex ?? '';
-      const outline = shade(group.colour?.hex ?? item.tone ?? '#555555');
-      return group.boxes.map((box, i) => ({ key: `${group.kind}-${i}`, item, box, colour, outline, bottom: rectOf(item, box, ratio).y1 }));
+      return group.boxes.map((box, i) => {
+        const own = group.colours?.[i] ?? group.colour;
+        const colour = own?.hex ?? '';
+        const outline = shade(own?.hex ?? item.tone ?? '#555555');
+        return { key: `${group.kind}-${i}`, item, box, colour, outline, bottom: rectOf(item, box, ratio).y1 };
+      });
     })
     .sort((a, b) => a.bottom - b.bottom);
 

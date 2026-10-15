@@ -85,6 +85,8 @@ Every picture is laid out for the space it is shown in: the area below the heade
   - `spread`: street lamps, trees, palm trees, bookshelves, flags and dishes on roofs go one per column, standing on one line. City street lamps, clocks and trees stand within the pavement's depth, never in front of the buildings.
   - `flush` bands (rooftops): things stand exactly on the line.
   - `keepClear`: nothing stands in front of a building's door.
+  - `frontRow`: fire hydrants stand at the kerb, one per building.
+  - `mixedColours`: on Hard, copies of some things (fire hydrants) may each be a different colour; the question asks which colours they were.
   - `oneWay` bands (the road): every vehicle faces the same way. Vehicle drawings all face right, and moving scooters have riders.
   - Boats float in the water, clear of the shore.
   - Copies of something on the ground stand side by side, never stacked like a ladder.

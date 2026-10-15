@@ -239,9 +239,14 @@ const items: ItemDef[] = [
     h: 62,
     tier: 'small',
     size: 0.1,
+    // At the kerb (the front edge of the pavement, by the road), at most one per building so they are
+    // always well apart. On Hard each one may be a different colour.
+    frontRow: true,
+    spread: true,
+    mixedColours: true,
     zones: PAVEMENT,
     maxCount: 2,
-    colours: [C.red, C.yellow],
+    colours: [C.red, C.yellow, C.orange],
     draw: (colour) => (
       <G>
         <Rect x={19} y={16} width={28} height={40} rx={5} fill={colour} />

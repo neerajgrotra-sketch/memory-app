@@ -1,6 +1,7 @@
 import { standsOut } from './contrast';
 import {
   AGAINST_BACK,
+  AT_FRONT,
   BOTTOM_CLEAR,
   EDGE,
   GAP,
@@ -133,6 +134,10 @@ export function validateScene(spec: SceneSpec, width: number, height: number): S
     // Band membership, edges, side.
     const { top, bottom } = zoneBounds(zone, ratio);
     const backRow = rowsOf(zone, ratio)[0];
+    const frontRowOf = rowsOf(zone, ratio).at(-1);
+    if (group.colours && (group.colours.length !== group.count || new Set(group.colours.map((c) => c.name)).size < 2)) {
+      add('count', `${name}: mixed colours don't match the copies`, item.kind);
+    }
     for (const r of rects) {
       if (r.x0 < EDGE - EPS || r.x1 > 1 - EDGE + EPS) add('edges', `${item.singular} too near the side`, item.kind);
       if (r.y1 > (1 - BOTTOM_CLEAR) * ratio + EPS) add('edges', `${item.singular} in the bottom 4%`, item.kind);
@@ -162,11 +167,16 @@ export function validateScene(spec: SceneSpec, width: number, height: number): S
       }
       if (!rugOk(item, r, recipe, ratio)) add('rug', `${item.singular} half on the rug`, item.kind);
 
-      const colour = group.colour?.hex ?? item.tone;
+      const own = group.colours?.[rects.indexOf(r)] ?? group.colour;
+      const colour = own?.hex ?? item.tone;
+      if (frontRowOf && item.frontRow) {
+        const slack = (frontRowOf.bottom - frontRowOf.top - (r.y1 - r.y0)) * AT_FRONT;
+        if (r.y1 < frontRowOf.bottom - slack - EPS || r.y1 > frontRowOf.bottom + EPS) add('placement', `${item.singular} not at the front edge of ${zone.id}`, item.kind);
+      }
       if (colour) {
         for (const [x, y] of samplePoints(r, ratio)) {
           const surface = recipe.surfaceAt(x, y);
-          if (!standsOut(colour, variant.palette[surface])) add('contrast', `${group.colour?.name ?? ''} ${item.singular} blends into the ${surface}`.trim(), item.kind);
+          if (!standsOut(colour, variant.palette[surface])) add('contrast', `${own?.name ?? ''} ${item.singular} blends into the ${surface}`.trim(), item.kind);
         }
       }
     }

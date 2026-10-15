@@ -94,6 +94,10 @@ export interface ItemDef {
   tall?: boolean;
   /** Never touches the rug (sofas, plants, lamps). Everything else is either fully on the rug or off it. */
   avoidRug?: boolean;
+  /** Only in the last slot row of its band, at its bottom edge: fire hydrants at the kerb. */
+  frontRow?: boolean;
+  /** On levels that allow it, each copy may be a different colour (fire hydrants). */
+  mixedColours?: boolean;
   /** Only in the first slot row of its band, close to its top edge: furniture against the back wall. */
   backRow?: boolean;
   /**
@@ -203,7 +207,10 @@ export interface Slot {
 export interface PlacedGroup {
   kind: string;
   count: number;
+  /** The group's colour, when every copy is the same colour. */
   colour?: ColourDef;
+  /** One colour per copy (same order as `boxes`), when copies differ (fire hydrants on Hard). */
+  colours?: ColourDef[];
   zoneId: string;
   /** Which third of the picture the group's centre is in. */
   region: Region;
