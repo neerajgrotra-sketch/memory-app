@@ -54,6 +54,7 @@ Why the rules are what they are. Most came from play-testing: a screenshot showe
 - **"What's new" is worked out, never written.** The level-up screen lists exactly what changed between the two levels' settings, so it can't promise something that isn't there. An early version said "trickier questions" on a level where nothing changed.
 - **Points reward accuracy, not speed.** Right answers (worth more at higher levels), runs of right answers, and being ready early score; slow answers never cost points. A score that punished slowness would push players to guess and put off older players.
 - **No overall "brain score" and no comparing with other people.** Level, points and trends compare you only with yourself. A single brain index would read as a health measure, which glance isn't.
+- **A launch animation, kept short.** About 1.5 seconds, once per launch, tap to skip, and none with Reduce Motion. People open the app several times a day; a long intro gets in the way by the second day. The eye blinking once ("taking its glance") says what the app is about without words. The native splash is the same plain background, so the hand-over doesn't flash.
 - **Our own look.** The layout borrows a familiar structure (a big "carry on" card, games by skill, a game page with records), but keeps glance's dark theme and amber accent, and the art is drawn by the game itself.
 
 ## The player

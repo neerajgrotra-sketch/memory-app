@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.6 (2026-10-15)
+
+- **Launch animation.** When the app starts, an amber eye opens, **glance** and the tagline **"Look closer. Remember more."** rise in, the eye blinks once, and it all fades into the Games tab, in about 1.5 seconds.
+  - It plays only when the app starts, not when you come back to it. A tap skips it.
+  - With Reduce Motion on, it simply appears and fades.
+- **Native splash** (`expo-splash-screen`): a plain dark screen in glance's background colour while the app loads, so there's no white flash and the animation follows on seamlessly. It shows in installed builds (EAS); Expo Go always shows its own loading screen first.
+
 ## 4.0.0-beta.5 (2026-10-15)
 
 - **Beach art for Look & Remember.** The game card and game page now show a beach (palms, a white sailboat, a strip of sand) instead of the city houses. It's still drawn by the game's own engine, picked by eye, and shown at the same shape everywhere, so it looks the same on the card and the page.

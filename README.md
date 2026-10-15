@@ -15,7 +15,7 @@ Every change bumps the version (shown on the Games tab). See [CHANGELOG.md](CHAN
 
 ## The app
 
-Three tabs:
+It opens with a short launch animation (an eye opens, **glance** and "Look closer. Remember more." rise in, the eye blinks, about 1.5 s; a tap skips it). Then three tabs:
 
 - **Games**: once you've played, a slim **Continue** strip (your level ring and **Play**), then games grouped by skill. A skill only appears once it has a game, so today there's **Memory** with Look & Remember. Tapping a game opens its page.
 - **Progress**: each game's level, best level, high score and a chart of your level over time, then your scores, accuracy per question type, practice habits and recent sessions.
