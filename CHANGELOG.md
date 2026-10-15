@@ -10,6 +10,14 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.1.2 (2026-10-15)
+
+- **No more stretched buildings on wide screens.** When the screen is wider than the picture (a tablet or a browser window), the street carries on with more buildings, each with its own windows and door, instead of the end buildings being painted wider.
+- **Street lamps, the street clock and trees stand on the pavement** and are never taller than it is deep, so they no longer cover a building's windows or door.
+- **Doors are taller than people** (about 1.25×), with the upper windows above them.
+- City sky is a little taller and has a **helicopter**. The road holds at most two kinds of vehicle (one lane), and the roofs at most two kinds.
+- When a layout can't fit every kind, the generator tries again and keeps the fullest valid picture.
+
 ## 3.1.1 (2026-10-15)
 
 - **Doors no longer overlap windows.** City building fronts are now worked out from the roof and pavement lines: two upper-floor windows, and on the ground floor a door to one side and a shop window on the other. The scene checker fails if any window or door overlaps another or leaves its building.

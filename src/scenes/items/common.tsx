@@ -158,7 +158,7 @@ export const tree: CommonItem = {
   h: 200,
   tier: 'large',
   size: 0.2,
-  tall: true,
+  // Stands on the pavement without rising in front of the buildings; two are spread apart.
   spread: true,
   tone: '#2f8f3a',
   draw: () => (

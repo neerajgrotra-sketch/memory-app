@@ -77,11 +77,12 @@ Every picture is laid out for the space it is shown in: the area below the heade
   - Every third of the screen (top, middle, bottom) has something to remember.
 - **Copies.** 2–4 of the same thing are staggered (zigzag, diagonal or arc) or kept at least 0.6× their width apart. They never touch or sit in a tight line.
 - **No overlaps.** Nothing comes within 4% of the width of anything else.
+- **Wider screens** get the backdrop carried on around the picture (more buildings along the street, more sea and sand), never stretched.
 - **Margins.** Things stay 5% from the left and right edges, and the bottom 4% stays clear for the home indicator.
 - **Habits.** Things go where they would in real life:
   - `hangAt`: pictures, mirrors and windows hang on one eye-level line, and a clock hangs above it.
   - `backRow`: sofas, armchairs, TVs and plants stand against the back wall.
-  - `spread`: street lamps, trees, palm trees, bookshelves, flags and dishes on roofs go one per column, standing on one line.
+  - `spread`: street lamps, trees, palm trees, bookshelves, flags and dishes on roofs go one per column, standing on one line. City street lamps, clocks and trees stand within the pavement's depth, never in front of the buildings.
   - `flush` bands (rooftops): things stand exactly on the line.
   - `keepClear`: nothing stands in front of a building's door.
   - `oneWay` bands (the road): every vehicle faces the same way. Vehicle drawings all face right, and moving scooters have riders.

@@ -141,9 +141,14 @@ function placeSpread(ctx: Context, want: Want): Placement | null {
   const h = heightFor(item, w);
   const rows = rowsOf(zone, ratio);
   const rowIndex = item.hangAt !== undefined && item.hangAt < HIGH_HANG ? rows.length - 1 : 0;
-  const row = rows[rowIndex];
-  const free = [0, 1, 2].filter((c) => !ctx.cells.has(cellKey(zone.id, c, rowIndex)));
-  if (!row || free.length < count) return null;
+  if (!rows[rowIndex]) return null;
+  // Things standing on the ground that are taller than one row (street lamps) use the band's full depth.
+  const fullBand = zone.surface === 'ground' && !item.tall && !item.backRow && h > rows[rowIndex].bottom - rows[rowIndex].top;
+  const usedRows = fullBand ? rows.map((_, i) => i) : [rowIndex];
+  const row = { top: rows[usedRows[0]].top, bottom: rows[usedRows[usedRows.length - 1]].bottom };
+  const cellsOf = (c: number) => usedRows.map((r) => cellKey(zone.id, c, r));
+  const free = [0, 1, 2].filter((c) => cellsOf(c).every((k) => !ctx.cells.has(k)));
+  if (free.length < count) return null;
 
   for (let attempt = 0; attempt < JITTERS * 4; attempt++) {
     const cols = rng.shuffle(free).slice(0, count).sort();
@@ -160,7 +165,7 @@ function placeSpread(ctx: Context, want: Want): Placement | null {
     const rects = boxes.map((b) => rectOf(item, b, ratio));
     if (rects.some((r, i) => rects.some((q, j) => j > i && !duplicatesOk(r, q)))) continue;
     if (!clearToPlace(ctx, want, rects)) continue;
-    return { boxes, rects, slot: { col: cols[0], row: rowIndex, span: 1 }, cells: cols.map((c) => cellKey(zone.id, c, rowIndex)) };
+    return { boxes, rects, slot: { col: cols[0], row: usedRows[0], span: usedRows.length }, cells: cols.flatMap(cellsOf) };
   }
   return null;
 }
@@ -249,14 +254,18 @@ const commit = (ctx: Context, p: Placement) => {
 /** Bigger things first, so small ones fill the gaps. */
 const footprint = (item: ItemDef, count = 1) => item.size * item.size * (item.h / item.w) * count;
 
-/** How many kinds each band should get: shares of `total` by band height (largest remainders), at least 1 and `minGroups`. */
+/** How many kinds each band should get: shares of `total` by band height (largest remainders), at least 1 and `minGroups`, at most `maxGroups`. */
 function shares(recipe: Recipe, total: number): { zone: ZoneDef; quota: number }[] {
   const zones = recipe.zones.filter((z) => z.rows > 0);
   const span = zones.reduce((n, z) => n + z.bottom - z.top, 0);
   const exact = zones.map((z) => (total * (z.bottom - z.top)) / span);
-  const quotas = exact.map((e, i) => Math.max(1, zones[i].minGroups ?? 0, Math.floor(e)));
+  const cap = (i: number) => zones[i].maxGroups ?? Infinity;
+  const quotas = exact.map((e, i) => Math.min(cap(i), Math.max(1, zones[i].minGroups ?? 0, Math.floor(e))));
   const order = exact.map((e, i) => i).sort((a, b) => (exact[b] % 1) - (exact[a] % 1));
-  for (const i of order) if (quotas.reduce((a, b) => a + b, 0) < total) quotas[i]++;
+  // Hand out what's left by largest remainder, skipping bands that are full.
+  for (let round = 0; round < total && quotas.reduce((a, b) => a + b, 0) < total; round++) {
+    for (const i of order) if (quotas.reduce((a, b) => a + b, 0) < total && quotas[i] < cap(i)) quotas[i]++;
+  }
   return zones.map((zone, i) => ({ zone, quota: quotas[i] }));
 }
 
@@ -361,17 +370,20 @@ function build(recipe: Recipe, knobs: SceneKnobs, seed: number, rng: Rng, size: 
 
 /**
  * Fills a recipe with random contents laid out for a picture `size` points. Each layout is checked
- * with `validateScene`; one that fails is placed again (up to `LAYOUT_ATTEMPTS` times) and the best
- * one is returned. Same inputs, same scene.
+ * with `validateScene`; one that fails, or that couldn't fit every kind, is placed again (up to
+ * `LAYOUT_ATTEMPTS` times) and the best one is returned. Same inputs, same scene.
  */
 export function generateScene(recipe: Recipe, knobs: SceneKnobs, seed: number, size: SceneSize): SceneSpec {
+  // Keep the best layout: fewest problems first, then the most kinds. A clean, full one ends the search.
   let best: { spec: SceneSpec; issues: number } | null = null;
+  const better = (spec: SceneSpec, issues: number) =>
+    !best || issues < best.issues || (issues === best.issues && spec.groups.length > best.spec.groups.length);
   for (let attempt = 0; attempt < LAYOUT_ATTEMPTS; attempt++) {
     const rng = createRng(seed + attempt * 0x9e3779b1);
     const spec = build(recipe, knobs, seed, rng, size);
     const issues = validateScene(spec, size.width, size.height).length;
-    if (!issues) return spec;
-    if (!best || issues < best.issues) best = { spec, issues };
+    if (!issues && spec.groups.length >= knobs.groups) return spec;
+    if (better(spec, issues)) best = { spec, issues };
   }
   return best!.spec;
 }
