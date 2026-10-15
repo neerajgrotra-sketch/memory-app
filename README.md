@@ -2,7 +2,7 @@
 
 A picture memory game built with Expo (React Native + TypeScript), Expo Router and Reanimated.
 
-Study a picture for 10 seconds, then answer 5 multiple-choice questions about it from memory.
+Study a picture for 10 seconds (or tap **I'm ready** sooner), then answer 5 multiple-choice questions about it from memory.
 
 ## Run it
 
@@ -11,7 +11,7 @@ npm install
 npx expo start --tunnel   # scan the QR code with Expo Go
 ```
 
-Checks: `npm run typecheck` and `npm run lint`.
+Checks: `npm run typecheck`, `npm run lint` and `npm run check:scenes` (5,400 generated pictures against every layout rule). Review pictures by eye with `npm run gallery` (writes `gallery.html`). After changing a recipe, run `npm run docs:recipes`. See [docs/testing.md](docs/testing.md).
 
 Every change bumps the version (shown on the home screen). See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
 
@@ -50,7 +50,9 @@ Difficulty changes the picture and the questions:
 | ----------- | --------- | -------------- | ---------------- | ----------------- | --------------------- |
 | Easy        | 10 s      | 5              | 3                | spread out        | object, colour        |
 | Medium      | 8 s       | 7              | 4                | spread out        | all types             |
-| Hard        | 6 s       | 9              | 6                | right next to it  | count, position       |
+| Hard        | 6 s       | 9              | 6                | right next to it  | count, position, number |
+
+Medium and Hard also ask about house numbers and house colours in the street. On Hard, fire hydrants can differ in colour.
 
 **Progressive** plays Easy, then Medium, then Hard, stepping up every round.
 
@@ -58,107 +60,64 @@ A round never asks two questions about the same thing, and Play again never repe
 
 ## How pictures are generated
 
-Every picture is built on the device from a **recipe** in a fraction of a second. No network or AI service is involved.
+Every picture is generated on the device from a **recipe** in a few milliseconds. No network, stored images or AI service is involved. There are 3 recipes: **at the beach**, **city street** and **living room**. Each picture picks a different mix of things, counts, colours and positions, and never the same setting twice in a row.
 
-1. Pick a recipe (beach, city street, living room), never the same as the last picture.
-2. Fill it: pick which things appear, how many, what colour and where, following the layout rules below.
-3. Record every fact: kind, count, colour, band and side.
-4. Draw the picture from those facts (`react-native-svg`).
-5. Write the questions from the same facts, so every answer is right by construction. Wrong options come from the same recipe so they're believable. A picture that can't give enough questions is quietly replaced.
+1. **Measure** the picture area (below the header, inside the safe area).
+2. **Pick a recipe** and the level's settings:
+   - how many kinds of thing
+   - the most of one kind
+   - whether to ask about house numbers.
+3. **Fill and place:**
+   - each band (sky, sea, sand…) gets a share of the kinds
+   - each group of things gets its own cell of a 3-column slot grid
+   - things follow real-world habits: pictures hang at eye level, furniture stands against the wall, flags stand on roofs, hydrants at the kerb, traffic goes one way.
+4. **Check** with `validateScene` (overlaps, sizes, spacing, margins, bands, habits, contrast…). A picture that fails is placed again before it is shown.
+5. **Draw** with `react-native-svg`: background bands, then faint details, then things back to front, each with an outline in its own darker colour.
+6. **Ask** questions written from the same facts (kind, count, colour, band, side, house numbers), so every answer is right by construction.
 
-### Layout rules
+**Full documentation: [docs/](docs/README.md).**
 
-Every picture is laid out for the space it is shown in: the area below the header, down to the bottom safe-area inset, measured with `onLayout`. Positions and sizes are stored as fractions of that area (`x` and `w` of the width, `y` of the height) and converted when drawn, so nothing assumes a fixed or square canvas. If the measured area differs from the estimate the scene was made for, the same contents are laid out again: same kinds, counts, colours, bands and sides, so the questions stay right.
-
-- **Size tiers, measured against the width.** Things of one kind are always the same size:
-  - extra large (bus, van, car, sofa): 30–62%, so they look right next to people and doors. They may span more than one column.
-  - large anchors (umbrella, sailboat, palm tree, bookshelf, sofa, window): 20–28% of the width
-  - medium (plane, kite, lamp, plant, mirror, clock, dolphin, cushion): 13–18%
-  - small countables (ball, starfish, buoy, bird, toy car, bucket): 10–13%, and never under 44 pt.
-- **Bands.** Each setting is split into horizontal bands, and each thing lists the bands it belongs in:
-  - Beach: sky 0–35%, sea 35–60%, sand 60–100%.
-  - Room: ceiling 0–10%, wall 10–55%, floor 55–100%.
-  - City: sky (with rooftops along its bottom edge), building fronts (one per third, each with two windows, a door and a house number), pavement, road. Each picture's houses get three different named colours and rising house numbers (`details`), which Medium and Hard ask about.
-- **Slot grid.** Each band is split into 3 columns (left / middle / right) × a few rows. Every group of things gets its own slot, preferring the emptiest parts of the picture. Positions are jittered only a little inside the slot.
-- **Spread out.**
-  - Each band gets a share of the kinds in proportion to its height.
-  - Every third of the screen (top, middle, bottom) has something to remember.
-- **Copies.** 2–4 of the same thing are staggered (zigzag, diagonal or arc) or kept at least 0.6× their width apart. They never touch or sit in a tight line.
-- **No overlaps.** Nothing comes within 4% of the width of anything else.
-- **Wider screens** get the backdrop carried on around the picture (more buildings along the street, more sea and sand), never stretched.
-- **Margins.** Things stay 5% from the left and right edges, and the bottom 4% stays clear for the home indicator.
-- **Habits.** Things go where they would in real life:
-  - `hangAt`: pictures, mirrors and windows hang on one eye-level line, and a clock hangs above it.
-  - `backRow`: sofas, armchairs, TVs and plants stand against the back wall: feet where the floor meets the wall, backs over the wall.
-  - `spread`: street lamps, trees, palm trees, bookshelves, flags and dishes on roofs go one per column, standing on one line. City street lamps, clocks and trees stand within the pavement's depth, never in front of the buildings.
-  - `flush` bands (rooftops): things stand exactly on the line.
-  - `keepClear`: nothing stands in front of a building's door.
-  - `frontRow`: fire hydrants stand at the kerb, one per building.
-  - `mixedColours`: on Hard, copies of some things (fire hydrants) may each be a different colour; the question asks which colours they were.
-  - `oneWay` bands (the road): every vehicle faces the same way. Vehicle drawings all face right, and moving scooters have riders.
-  - Boats float in the water, clear of the shore.
-  - Copies of something on the ground stand side by side, never stacked like a ladder.
-- **Bands are respected.** Nothing crosses out of its band. Tall anchors (palm trees, bookshelves, street and floor lamps) are the exception: they stand in the back row of their band and rise above it on purpose.
-- **Rugs.** Anything touching the rug is fully on it (toy cars); furniture and plants stay off it.
-- **Draw order.**
-  1. Background bands.
-  2. Faint marks (waves, floorboards, road markings), at most 35% opaque, and white clouds (scenery, solid). None of them ever touches a thing's box.
-  3. Things, back to front by their bottom edge.
-- **Contrast.** Every thing has a 2–3 pt outline in a darker shade of its own colour. Its colour must differ clearly from what it sits on, in colour (OKLab difference ≥ 18) and in lightness (fill or outline ≥ 15 lighter or darker). Coloured things only get colours that pass wherever they are drawn.
-- **Sides.** A group's left / middle / right is the third its centre is in, and centres stay clear of the lines between thirds. "What was on the left of the wall?" is only asked when exactly one kind of thing is there.
-
-`validateScene(scene, width, height)` (`src/scenes/validateScene.ts`) checks all of this: overlaps, sizes, duplicate gaps, edge margins, band membership, habits, doors, the rug rule, contrast, marks and that each third has content. A generated scene that fails is placed again (up to 12 tries) before it is shown.
-
-**Checking layouts on a phone.** In a development build (Expo Go), the ▦ button in the memorise header turns on the layout overlay:
-- every box, with its 4% clearance dashed around it
-- the slot grid and band edges in blue
-- the thirds in pink
-- the margins shaded
-- a banner that is green ("layout OK") or red with the first problem.
-
-The timer waits while the overlay is on.
-
-Run `npm run check:scenes` after any change to recipes or layout. It generates 5,400 scenes (iPhone SE, 15 and Pro Max picture sizes × every setting × every level × 200) and fails if any scene breaks a rule, or if any of these happen:
-- a size is outside its tier
-- a thing can't stand out anywhere
-- laying a scene out again changes its facts
-- scenes come up short of kinds or questions.
-
-### Adding a recipe
-
-1. Copy a file in `src/scenes/recipes/` and give it an id, title, bands (`zones`), backdrop variants and items. Reuse shared items from `src/scenes/items/common.tsx` where you can.
-2. Define the bands (`zones`: top and bottom as fractions of the height, a surface type and slot rows) and a backdrop that draws only the background bands for a picture 900 wide and any height. Faint details go in `marks`, which are kept clear of every thing.
-3. Give each item a name, plural, design box (`w`, `h`), a size `tier` and `size` (fraction of the width), the bands it may go in, a realistic maximum count, optional colours and a `draw` function. Shapes without their own stroke get the outline; small details use `stroke="none"`.
-4. List the recipe in `src/scenes/recipes/index.ts`, then run `npm run check:scenes`.
-
-Aim for 12+ items per recipe, so harder levels have enough to fill the picture and enough absent things for "Which of these was NOT in the picture?" questions.
+| Page | What it covers |
+| --- | --- |
+| [How a picture is made](docs/how-pictures-are-made.md) | The whole pipeline |
+| [Layout rules](docs/layout-rules.md) | Sizes, bands, slot grid, spacing, habits, `validateScene` |
+| [Drawing](docs/drawing.md) | Layers, outlines, contrast, wide screens, the dev overlay |
+| [Questions](docs/questions.md) | Question types, wrong options, picking a round |
+| [Recipes](docs/recipes/README.md) | One page per setting, plus generated reference tables |
+| [Adding a recipe](docs/adding-a-recipe.md) | Step by step, with a checklist |
+| [Testing and reviewing](docs/testing.md) | Scene checker, gallery, overlay in Expo Go |
+| [Design decisions](docs/design-decisions.md) | Why the rules are what they are |
 
 ## Project layout
 
 ```
+docs/                  How pictures and questions are made (start at docs/README.md)
+  recipes/             One page per setting + reference.md (generated)
+scripts/
+  check-scenes.ts      npm run check:scenes: 5,400 scenes against every rule
+  gallery.tsx          npm run gallery: pictures to gallery.html for reviewing by eye
+  recipe-reference.ts  npm run docs:recipes: regenerates docs/recipes/reference.md
 src/
-  app/                 Expo Router screens (_layout, index = home, play)
-  components/          Countdown (Reanimated), Memorise/Quiz/Result stages, Button
-  game/                Pure game logic: difficulty config, question selection, option shuffling, quiz navigation (skip / come back)
+  app/                 Expo Router screens: _layout, index (home), play, stats (progress), profile
+  components/          Countdown (Reanimated), Memorise/Quiz/Result stages, picture viewer, profile prompt, buttons
+  game/                Pure game logic: difficulty, question selection, option shuffling, quiz navigation, score messages
   hooks/useGameSession Game state machine: memorise → quiz → result → play again / next picture
   scenes/
     recipes/           One file per setting (beach, city, livingRoom) + the registry
     items/common.tsx   Things shared across settings (people, dogs, birds, trees…)
-    layout.ts          Layout rules and geometry: tiers, margins, slot grid, duplicate arrangements
-    generateScene.ts   Fills a recipe with random, fair contents and lays them out (and lays them out again for another size)
-    validateScene.ts   Checks a laid-out scene against every layout rule
-    LayoutOverlay.tsx  Dev-only overlay of boxes, slot grid, bands and thirds
+    layout.ts          Layout rules and geometry: tiers, margins, slot grid, arrangements of copies
+    generateScene.ts   Fills a recipe with contents and lays them out (and again for another size)
+    validateScene.ts   Checks a laid-out scene against every rule
     generateQuestions.ts  Writes every question a scene can answer
     createStage.ts     Recipe + level → playable picture and question pool
-    SceneView.tsx      Draws a scene, filling any screen shape
-  profile/
-    profileStore.ts    ProfileStore interface + on-device (AsyncStorage) store
-    index.tsx          ProfileProvider / useProfile, age bands, "More time to look"
-  stats/
-    statsStore.ts      StatsStore interface + on-device (AsyncStorage) store
-    index.ts           The one place the active stats store is chosen
-    summarize.ts       Pure functions: totals, trends, per-level/type/session summaries
-  types/               Domain types (game, stats)
+    SceneView.tsx      Draws a scene (layers, outlines) and fits it to the screen
+    LayoutOverlay.tsx  Dev-only overlay of boxes, slot grid, bands and thirds
+    marks.tsx          Faint backdrop details kept clear of things
+    contrast.ts        OKLab contrast, lightness and outline shades
+    variant.ts         A scene's colour scheme with its per-picture details (house colours)
+  profile/             ProfileStore (on-device) and ProfileProvider / useProfile
+  stats/               StatsStore (on-device) and pure summaries (trends, practice)
+  types/               Domain types (game, stats, profile)
 ```
 
 ## Moving to Supabase

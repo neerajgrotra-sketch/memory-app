@@ -10,6 +10,21 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.5.1 (2026-10-15)
+
+- **Documentation:** a new `docs/` folder explains how pictures and questions are made, in enough detail to review the logic or rebuild it:
+  - how a picture is made
+  - layout rules
+  - drawing
+  - questions
+  - one page per recipe, plus reference tables generated from the code
+  - adding a recipe, with a checklist
+  - testing and reviewing
+  - design decisions.
+- `npm run docs:recipes` regenerates `docs/recipes/reference.md` from the recipes, so the tables never drift from the code.
+- `npm run gallery` renders pictures for every setting on iPhone SE, 15 and Pro Max to `gallery.html`, with the layout overlay, for reviewing by eye.
+- README updated: how pictures are generated, the docs index, scripts and project layout.
+
 ## 3.5.0 (2026-10-15)
 
 - **House numbers and named house colours in the street:**

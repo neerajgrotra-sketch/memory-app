@@ -1,6 +1,6 @@
 {
   "name": "glance",
-  "version": "3.5.0",
+  "version": "3.5.1",
   "main": "expo-router/entry",
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
@@ -33,7 +33,9 @@
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
-    "check:scenes": "esbuild scripts/check-scenes.ts --bundle --platform=node --outfile=node_modules/.cache/check-scenes.js --alias:react-native-svg=./scripts/svg-stub.js --jsx=automatic --log-level=error && node node_modules/.cache/check-scenes.js"
+    "check:scenes": "esbuild scripts/check-scenes.ts --bundle --platform=node --outfile=node_modules/.cache/check-scenes.js --alias:react-native-svg=./scripts/svg-stub.js --jsx=automatic --log-level=error && node node_modules/.cache/check-scenes.js",
+    "docs:recipes": "esbuild scripts/recipe-reference.ts --bundle --platform=node --outfile=node_modules/.cache/recipe-reference.js --alias:react-native-svg=./scripts/svg-stub.js --jsx=automatic --log-level=error && node node_modules/.cache/recipe-reference.js",
+    "gallery": "esbuild scripts/gallery.tsx --bundle --platform=node --outfile=node_modules/.cache/gallery.js --alias:react-native-svg=./scripts/svg-dom.js --alias:react-native=./scripts/rn-stub.js --jsx=automatic --define:__DEV__=true --log-level=error && node node_modules/.cache/gallery.js"
   },
   "private": true
 }
