@@ -10,6 +10,17 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 2.5.0 (2026-10-15)
+
+- **Contrast rules:** every object must clearly stand out from what's behind it, measured as a colour difference that counts hue as well as lightness.
+  - Objects that come in several colours only get colours that show up where they stand (no yellow bucket on yellow sand, no orange cat on an oak floor).
+  - Fixed-colour objects are never placed where they'd blend in.
+- **The ceiling lamp** is now an amber shade with a dark outline, so it's clearly visible.
+- **Windows** have deeper blue glass so they show on every wall colour.
+- **Floors** are lighter oak, so brown dogs and teddies stand out.
+- **Skies, planes, dolphins and satellite dishes** were recoloured so clouds, planes, dolphins and dishes show clearly.
+- The scene checker tests the contrast of every object, and of the lamp and clouds in every colour variant.
+
 ## 2.4.0 (2026-10-15)
 
 - **Placement habits:** objects now follow the rules people use when arranging a room or street.

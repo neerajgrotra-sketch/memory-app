@@ -1,3 +1,4 @@
+import { MIN_CONTRAST, contrast } from './contrast';
 import { createRng, type Rng } from './random';
 import {
   SCENE_WIDTH,
@@ -10,6 +11,7 @@ import {
   type PlacedGroup,
   type Recipe,
   type Region,
+  type VariantDef,
   type SceneSpec,
   type ZoneDef,
 } from './types';
@@ -72,6 +74,7 @@ const hits = (a: Rect, b: Rect, pad = PAD) => a.x0 < b.x1 + pad && b.x0 < a.x1 +
 /** Everything placement needs to know about the scene being built. */
 interface Context {
   recipe: Recipe;
+  variant: VariantDef;
   height: number;
   rng: Rng;
   /** Things already placed; `wall` marks things hung on a wall, which keep a wider gap between them. */
@@ -90,6 +93,14 @@ interface Context {
 const overRug = (ctx: Context, r: Rect) =>
   ctx.rugs.some((rug) => hits(r, { x0: rug.cx - rug.rx, y0: rug.cy - rug.ry, x1: rug.cx + rug.rx, y1: rug.cy + rug.ry }, PAD * 2));
 
+/** Colour of the surface behind the middle of a rect. */
+const surfaceColour = (ctx: Context, r: Rect) =>
+  ctx.variant.palette[ctx.recipe.surfaceAt((r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2, ctx.height)];
+
+/** True if `colour` stands out from the surface behind every one of `rects`. */
+const standsOut = (ctx: Context, colour: string, rects: Rect[]) =>
+  rects.every((r) => contrast(colour, surfaceColour(ctx, r)) >= MIN_CONTRAST);
+
 /** Checks a candidate group against everything already in the scene and the item's own rules. */
 function fits(ctx: Context, item: ItemDef, zone: ZoneDef, rects: Rect[]): boolean {
   const wall = zone.surface === 'wall';
@@ -100,6 +111,8 @@ function fits(ctx: Context, item: ItemDef, zone: ZoneDef, rects: Rect[]): boolea
     if (ctx.taken.some((t) => hits(r, t.rect, wall && t.wall ? wallPad : PAD))) return false;
     if (item.avoid?.includes('rug') && overRug(ctx, r)) return false;
   }
+  // Fixed-colour things only go where they stand out; coloured things get a colour that does (see tryItem).
+  if (item.tone && !standsOut(ctx, item.tone, rects)) return false;
   return true;
 }
 
@@ -160,7 +173,7 @@ function planRows(ctx: Context, item: ItemDef, count: number, zone: ZoneDef): Ro
   }));
 }
 
-type Placed = { boxes: Box[]; rects: Rect[]; region: Region; count: number };
+type Placed = { boxes: Box[]; rects: Rect[]; region: Region; count: number; mounts?: Mount[] };
 
 const clearOfThirds = (centre: number) => Math.abs(centre - THIRDS[0]) >= THIRD_MARGIN && Math.abs(centre - THIRDS[1]) >= THIRD_MARGIN;
 
@@ -243,8 +256,7 @@ function placeMounted(ctx: Context, item: ItemDef, count: number, zone: ZoneDef)
     const rects = boxes.map((b) => ({ x0: b.x, y0: b.y, x1: b.x + w, y1: b.y + h }));
     const centre = (Math.min(...rects.map((r) => r.x0)) + Math.max(...rects.map((r) => r.x1))) / 2;
     if (!clearOfThirds(centre) || !fits(ctx, item, zone, rects)) continue;
-    used.forEach((m) => ctx.usedMounts.add(m));
-    return { boxes, rects, region: regionOf(centre), count };
+    return { boxes, rects, region: regionOf(centre), count, mounts: used };
   }
   return null;
 }
@@ -278,6 +290,7 @@ export function generateScene(recipe: Recipe, knobs: SceneKnobs, seed: number, h
   const fixtures = recipe.fixtures?.(height) ?? [];
   const ctx: Context = {
     recipe,
+    variant,
     height,
     rng,
     taken: [],
@@ -301,11 +314,15 @@ export function generateScene(recipe: Recipe, knobs: SceneKnobs, seed: number, h
       for (let count = wanted; count >= 1; count--) {
         const placed = item.mount ? placeMounted(ctx, item, count, zone) : placeGroup(ctx, item, count, zone, maxWidth);
         if (!placed) continue;
+        // Only colours that stand out from what's behind them.
+        const colours = item.colours?.filter((c) => standsOut(ctx, c.hex, placed.rects));
+        if (colours && !colours.length) continue;
+        placed.mounts?.forEach((m) => ctx.usedMounts.add(m));
         ctx.taken.push(...placed.rects.map((rect) => ({ rect, wall: zone.surface === 'wall' })));
         groups.push({
           kind: item.kind,
           count,
-          colour: item.colours ? rng.pick(item.colours) : undefined,
+          colour: colours ? rng.pick(colours) : undefined,
           zoneId: zone.id,
           region: placed.region,
           boxes: placed.boxes,

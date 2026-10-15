@@ -64,6 +64,10 @@ Every picture is built on the device from a **recipe** in a fraction of a second
   - `wallGapCm`: a recipe's least gap between things on a wall (35 cm in the room).
   - `avoid: ['rug']`: things that never sit over a rug or stand in front of it (plants, floor lamps, piles of books). Plants only stand along the back wall.
   - `mount`: things fixed to a recipe's mounting points instead of anywhere. A street clock goes on a building corner on a bracket (mirrored on right-hand corners); flags and dishes stand on rooftops.
+- **Contrast.** Everything must stand out from the surface behind it: a perceptual colour difference (OKLab, which counts hue as well as lightness) of at least 18, in `src/scenes/contrast.ts`.
+  - Each variant has a `palette`, and each recipe has a `surfaceAt(x, y)` that says which surface is behind a point: wall, ceiling, floor, rug, sky, sea, sand, a building, pavement or road.
+  - Coloured things only get colours that pass where they stand. Fixed-colour things declare a `tone` and are never placed where it would blend in.
+  - Backdrop details (`accents`, such as the ceiling lamp and clouds) must pass in every variant.
 - **Fixtures.** A recipe's `fixtures(height)` lists the windows, doors and rug in its backdrop, and the backdrop draws them from the same data. Nothing is hung over a window or door. City buildings have a fixed layout (upper-floor windows, a centred door) that leaves the corners clear for clocks.
 - **Surfaces.** Every band is `air` (things float), `wall` (things hang, at the scale of the wall's base) or `ground` (the band is where feet go). An item lists the bands it may go in, so a plant pot only stands on a floor and a flag only hangs on a building.
 - **Wall panels.** A wall band can be split into `panels` (one per building). Anything hung there stays entirely on one panel. City buildings line up with the left, middle and right thirds.
@@ -73,7 +77,7 @@ Every picture is built on the device from a **recipe** in a fraction of a second
 - **Clear sides.** A group's left / middle / right is the third its centre is in, and centres stay clear of the lines between thirds. "What was on the left of the wall?" is only asked when exactly one kind of thing is there.
 - **Screen shape.** The picture is 900 wide and as tall as the space below the countdown bar needs (1350–2000). Scales stretch with the height up to 1700, then taller screens just get more space. The controls sit in their own bar, never on top of the picture.
 
-Run `npm run check:scenes` after any change to recipes or placement. It generates 8,100 scenes (every recipe, level and screen height) and fails if anything overlaps, covers a window or door, hangs at the wrong height, sits too close to another thing on a wall, is over a rug it should avoid, isn't on its mounting point, is too small to see, leaves its band, crosses a building edge, isn't standing in its area, sits on the line between two sides, exceeds its realistic count, leaves a must-fill zone bare, never fits anywhere, or if scenes come up short of things or questions.
+Run `npm run check:scenes` after any change to recipes or placement. It generates 8,100 scenes (every recipe, level and screen height) and fails if anything blends into its background, overlaps, covers a window or door, hangs at the wrong height, sits too close to another thing on a wall, is over a rug it should avoid, isn't on its mounting point, is too small to see, leaves its band, crosses a building edge, isn't standing in its area, sits on the line between two sides, exceeds its realistic count, leaves a must-fill zone bare, never fits anywhere, or if scenes come up short of things or questions.
 
 ### Adding a recipe
 

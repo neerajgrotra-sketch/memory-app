@@ -84,6 +84,11 @@ export interface ItemDef {
   mount?: MountKind;
   /** Fixtures it never stands on (plants and lamps stay off the rug). */
   avoid?: FixtureKind[];
+  /**
+   * For things with a fixed colour: the colour that defines its outline (a clock's dark rim,
+   * a window's blue glass). It must stand out from whatever surface it is drawn on.
+   */
+  tone?: string;
   draw: (colour: string) => ReactElement;
 }
 
@@ -122,6 +127,8 @@ export interface DecorDef {
 
 export interface VariantDef {
   id: string;
+  /** The colour of each surface the recipe's `surfaceAt` can name, used for contrast rules. */
+  palette: Record<string, string>;
   /**
    * Draws the backdrop for a picture `height` tall and 900 wide. It should spill
    * well past those edges (x −600…1500, y −600…height+600) so any screen is filled.
@@ -141,6 +148,10 @@ export interface Recipe {
   decor?: DecorDef[];
   /** Windows, doors and rugs in the backdrop for a picture `height` tall; the backdrop draws them from the same data. */
   fixtures?: (height: number) => Fixture[];
+  /** Which surface (a key of each variant's palette) is behind the point (x, y) of a picture `height` tall. */
+  surfaceAt: (x: number, y: number, height: number) => string;
+  /** Backdrop details that must stand out from the surface they sit on, in every variant (the ceiling lamp, clouds). */
+  accents?: { name: string; colour: string; on: string }[];
   /** Mounting points for things with `mount` (building corners, rooftops) for a picture `height` tall. */
   mounts?: (height: number) => Mount[];
   /** Least space between any two things hung on a wall, in cm. */

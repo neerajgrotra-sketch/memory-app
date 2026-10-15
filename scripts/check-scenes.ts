@@ -3,6 +3,7 @@
  * the placement rules. Run with `npm run check:scenes`; exits non-zero on any failure.
  */
 import { LEVELS } from '@/game/difficulty';
+import { MIN_CONTRAST, contrast } from '@/scenes/contrast';
 import { generateQuestions } from '@/scenes/generateQuestions';
 import { MIN_VISIBLE, THIRD_MARGIN, THIRDS, TOP_MARGIN, generateScene, regionOf, zoneScale } from '@/scenes/generateScene';
 import { RECIPES } from '@/scenes/recipes';
@@ -11,6 +12,25 @@ const SCENES_PER_CASE = 300;
 const MIN_QUESTIONS = 12;
 
 let failed = false;
+
+// Every fixed-colour thing declares the colour that has to stand out, and backdrop details stand out in every variant.
+for (const recipe of RECIPES) {
+  for (const item of recipe.items) {
+    if (!item.colours && !item.tone) {
+      failed = true;
+      console.log(`✗ ${recipe.id}: ${item.kind} has no tone to check contrast with`);
+    }
+  }
+  for (const variant of recipe.variants) {
+    for (const accent of recipe.accents ?? []) {
+      const c = contrast(accent.colour, variant.palette[accent.on]);
+      if (c < MIN_CONTRAST) {
+        failed = true;
+        console.log(`✗ ${recipe.id} / ${variant.id}: ${accent.name} barely shows on the ${accent.on} (${c.toFixed(1)})`);
+      }
+    }
+  }
+}
 
 for (const height of [1350, 1600, 2000]) {
   for (const recipe of RECIPES) {
@@ -44,6 +64,18 @@ for (const height of [1350, 1600, 2000]) {
 
         for (const zone of recipe.zones) {
           if ((zone.minGroups ?? 0) > scene.groups.filter((g) => g.zoneId === zone.id).length) problems.add(`${zone.id} left bare`);
+        }
+
+        // Contrast: everything stands out from the surface behind it.
+        const variant = recipe.variants.find((v) => v.id === scene.variantId)!;
+        for (const group of scene.groups) {
+          const item = recipe.items.find((i) => i.kind === group.kind)!;
+          const colour = group.colour?.hex ?? item.tone;
+          if (!colour) continue;
+          for (const b of group.boxes) {
+            const behind = variant.palette[recipe.surfaceAt(b.x + (item.w * b.scale) / 2, b.y + (item.h * b.scale) / 2, height)];
+            if (contrast(colour, behind) < MIN_CONTRAST) problems.add(`${group.colour?.name ?? ''} ${item.kind} blends into the background`.trim());
+          }
         }
 
         // Placement habits: hanging heights, wall gaps, windows and doors, rugs, mounting points.

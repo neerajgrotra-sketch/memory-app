@@ -2,6 +2,7 @@ import { Circle, Ellipse, G, Line, Path, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
 import { ball, dog, plantPot } from '../items/common';
+import { blend } from '../contrast';
 import { heightFactor, type Fixture, type ItemDef, type Recipe } from '../types';
 
 const WALL = ['wall'];
@@ -41,6 +42,7 @@ const items: ItemDef[] = [
     height: 45,
     zones: WALL,
     maxCount: 1,
+    tone: '#343a40',
     hangAt: [175, 200],
     countable: false,
     draw: () => (
@@ -61,6 +63,7 @@ const items: ItemDef[] = [
     height: 90,
     zones: WALL,
     maxCount: 1,
+    tone: '#b08d57',
     hangAt: [135, 160],
     draw: () => (
       <G>
@@ -80,11 +83,12 @@ const items: ItemDef[] = [
     height: 140,
     zones: WALL,
     maxCount: 2,
+    tone: '#5aa9e6',
     // Centre at 140–155 cm puts the sill at about 70–85 cm, like a real window.
     hangAt: [140, 155],
     draw: () => (
       <G>
-        <Rect x={0} y={0} width={150} height={175} fill="#a5d8ff" stroke="#ffffff" strokeWidth={12} />
+        <Rect x={0} y={0} width={150} height={175} fill="#5aa9e6" stroke="#ffffff" strokeWidth={12} />
         <Line x1={75} y1={0} x2={75} y2={175} stroke="#ffffff" strokeWidth={10} />
         <Line x1={0} y1={88} x2={150} y2={88} stroke="#ffffff" strokeWidth={10} />
       </G>
@@ -165,6 +169,7 @@ const items: ItemDef[] = [
     height: 115,
     zones: BACK,
     maxCount: 1,
+    tone: '#212529',
     countable: false,
     draw: () => (
       <G>
@@ -186,6 +191,7 @@ const items: ItemDef[] = [
     height: 190,
     zones: BACK,
     maxCount: 2,
+    tone: '#8b5a2b',
     draw: () => (
       <G>
         <Rect x={0} y={0} width={120} height={200} fill="#8b5a2b" />
@@ -249,6 +255,7 @@ const items: ItemDef[] = [
     height: 35,
     zones: FRONT,
     maxCount: 3,
+    tone: '#a0612b',
     draw: () => (
       <G fill="#a0612b" stroke="#00000033" strokeWidth={2}>
         <Circle cx={18} cy={12} r={11} />
@@ -290,6 +297,7 @@ const items: ItemDef[] = [
     height: 22,
     zones: FRONT,
     maxCount: 3,
+    tone: '#1d70d6',
     avoid: ['rug'],
     draw: () => (
       <G stroke="#00000033" strokeWidth={2}>
@@ -316,10 +324,16 @@ function fixtures(height: number): Fixture[] {
   return [rugOf(height)];
 }
 
-function backdrop(height: number, wall: string, ceiling: string, floor: string, plank: string, rug: string) {
+/** Where the wall meets the ceiling. */
+const wallTopAt = (height: number) => height * FLOOR - WALL_CM * CAMERA.pxPerCm * heightFactor(height);
+
+const LAMP = '#e07a1f';
+
+function backdrop(height: number, palette: Palette) {
+  const { wall, ceiling, floor, plank, rugTint } = palette;
   const r = rugOf(height);
   const floorLine = height * FLOOR;
-  const wallTop = floorLine - WALL_CM * CAMERA.pxPerCm * heightFactor(height);
+  const wallTop = wallTopAt(height);
   // Floorboard lines get further apart towards the front (perspective).
   const planks = [0.63, 0.67, 0.72, 0.78, 0.85, 0.93, 1.02].map((f) => height * f);
   return (
@@ -327,8 +341,9 @@ function backdrop(height: number, wall: string, ceiling: string, floor: string, 
       <Rect x={-600} y={-600} width={2100} height={wallTop + 600} fill={ceiling} />
       <Rect x={-600} y={wallTop} width={2100} height={floorLine - wallTop} fill={wall} />
       <Rect x={-600} y={wallTop} width={2100} height={14} fill="#ffffff" fillOpacity={0.6} />
-      <Line x1={450} y1={-600} x2={450} y2={wallTop * 0.55} stroke="#6c757d" strokeWidth={3} />
-      <Path d={`M405,${wallTop * 0.55 + 50} L420,${wallTop * 0.55} H480 L495,${wallTop * 0.55 + 50} Z`} fill="#fff3bf" stroke="#00000022" strokeWidth={2} />
+      <Line x1={450} y1={-600} x2={450} y2={wallTop * 0.55} stroke="#495057" strokeWidth={4} />
+      <Path d={`M400,${wallTop * 0.55 + 55} L420,${wallTop * 0.55} H480 L500,${wallTop * 0.55 + 55} Z`} fill={LAMP} stroke="#343a40" strokeWidth={4} />
+      <Ellipse cx={450} cy={wallTop * 0.55 + 55} rx={50} ry={8} fill="#fff3bf" stroke="#343a40" strokeWidth={3} />
       <Rect x={-600} y={floorLine - 22} width={2100} height={22} fill="#ffffff" fillOpacity={0.7} />
       <Rect x={-600} y={floorLine} width={2100} height={height - floorLine + 600} fill={floor} />
       <G stroke={plank} strokeWidth={3}>
@@ -336,10 +351,32 @@ function backdrop(height: number, wall: string, ceiling: string, floor: string, 
           <Line key={y} x1={-600} y1={y} x2={1500} y2={y} />
         ))}
       </G>
-      <Ellipse cx={r.cx} cy={r.cy} rx={r.rx} ry={r.ry} fill={rug} fillOpacity={0.3} />
+      <Ellipse cx={r.cx} cy={r.cy} rx={r.rx} ry={r.ry} fill={rugTint} fillOpacity={RUG_OPACITY} />
       <Ellipse cx={r.cx} cy={r.cy} rx={r.rx - 40} ry={r.ry * 0.75} fill="none" stroke="#ffffff" strokeOpacity={0.4} strokeWidth={5} />
     </G>
   );
+}
+
+type Palette = Record<'wall' | 'ceiling' | 'floor' | 'plank' | 'rugTint' | 'rug', string>;
+
+const RUG_OPACITY = 0.3;
+
+/** Light oak floors so brown pets and teddies stand out; the rug's colour is its tint over the floor. */
+function palette(wall: string, ceiling: string, floor: string, plank: string, rugTint: string): Palette {
+  return { wall, ceiling, floor, plank, rugTint, rug: blend(floor, rugTint, RUG_OPACITY) };
+}
+
+const PALETTES: Record<string, Palette> = {
+  cream: palette('#f3e9d2', '#faf6ec', '#d9b98c', '#b8956a', '#9d4edd'),
+  blue: palette('#cfe0ec', '#eef4f8', '#d4b48c', '#b39068', '#c1121f'),
+  sage: palette('#dce5d1', '#f1f5ec', '#c9a47a', '#a8845c', '#1d3557'),
+};
+
+function surfaceAt(x: number, y: number, height: number): string {
+  if (y < wallTopAt(height)) return 'ceiling';
+  if (y < height * FLOOR) return 'wall';
+  const r = rugOf(height);
+  return ((x - r.cx) / r.rx) ** 2 + ((y - r.cy) / r.ry) ** 2 <= 1 ? 'rug' : 'floor';
 }
 
 export const livingRoom: Recipe = {
@@ -354,11 +391,9 @@ export const livingRoom: Recipe = {
   ],
   items,
   fixtures,
+  surfaceAt,
+  accents: [{ name: 'ceiling lamp', colour: LAMP, on: 'ceiling' }],
   // Pictures, mirrors, clocks and windows keep at least 35 cm apart.
   wallGapCm: 35,
-  variants: [
-    { id: 'cream', background: (h) => backdrop(h, '#f3e9d2', '#faf6ec', '#b98b5e', '#a47751', '#9d4edd') },
-    { id: 'blue', background: (h) => backdrop(h, '#cfe0ec', '#eef4f8', '#c9a27e', '#b08b68', '#c1121f') },
-    { id: 'sage', background: (h) => backdrop(h, '#dce5d1', '#f1f5ec', '#a87f5a', '#8f6a48', '#1d3557') },
-  ],
+  variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number) => backdrop(h, p) })),
 };

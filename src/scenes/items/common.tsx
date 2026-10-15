@@ -17,6 +17,7 @@ export const bird: CommonItem = {
   w: 60,
   h: 30,
   height: 52,
+  tone: '#222222',
   draw: () => (
     <Path d="M5,12 Q17,0 30,16 Q43,0 55,12" fill="none" stroke="#222" strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" />
   ),
@@ -86,9 +87,10 @@ export const plane: CommonItem = {
   w: 170,
   h: 60,
   height: 55,
+  tone: '#ffffff',
   draw: () => (
     <G>
-      <Path d="M10,30 C10,22 20,20 30,20 H140 C160,20 168,30 168,30 C168,30 160,40 140,40 H30 C20,40 10,38 10,30 Z" fill="#f1f3f5" stroke="#868e96" strokeWidth={3} />
+      <Path d="M10,30 C10,22 20,20 30,20 H140 C160,20 168,30 168,30 C168,30 160,40 140,40 H30 C20,40 10,38 10,30 Z" fill="#ffffff" stroke="#6c757d" strokeWidth={3} />
       <Polygon points="70,30 100,30 75,2 62,2" fill="#adb5bd" />
       <Polygon points="70,32 100,32 75,58 62,58" fill="#adb5bd" />
       <Polygon points="14,28 30,20 22,4 12,4" fill="#adb5bd" />
@@ -153,6 +155,7 @@ export const tree: CommonItem = {
   w: 120,
   h: 200,
   height: 450,
+  tone: '#2f8f3a',
   draw: () => (
     <G>
       <Rect x={50} y={110} width={22} height={90} fill="#7a4a2a" />

@@ -51,6 +51,7 @@ const items: ItemDef[] = [
     height: 72,
     zones: WALLS,
     maxCount: 1,
+    tone: '#343a40',
     countable: false,
     mount: 'corner',
     // A street clock on a bracket fixed to a building's corner (bracket on the left; mirrored on right-hand corners).
@@ -74,14 +75,15 @@ const items: ItemDef[] = [
     height: 90,
     zones: WALLS,
     maxCount: 3,
+    tone: '#6c757d',
     mount: 'roof',
     draw: () => (
       <G>
         <Line x1={40} y1={50} x2={40} y2={74} stroke="#495057" strokeWidth={6} />
         <Rect x={28} y={70} width={24} height={10} rx={2} fill="#343a40" />
-        <Path d="M8,10 C0,45 40,65 70,50 Z" fill="#dee2e6" stroke="#868e96" strokeWidth={3} />
-        <Line x1={39} y1={30} x2={62} y2={12} stroke="#868e96" strokeWidth={4} />
-        <Circle cx={63} cy={11} r={5} fill="#868e96" />
+        <Path d="M8,10 C0,45 40,65 70,50 Z" fill="#6c757d" stroke="#343a40" strokeWidth={3} />
+        <Line x1={39} y1={30} x2={62} y2={12} stroke="#343a40" strokeWidth={4} />
+        <Circle cx={63} cy={11} r={5} fill="#343a40" />
       </G>
     ),
   },
@@ -213,6 +215,7 @@ const items: ItemDef[] = [
     height: 450,
     zones: PAVEMENT,
     maxCount: 2,
+    tone: '#343a40',
     draw: () => (
       <G>
         <Rect x={26} y={40} width={8} height={200} fill="#343a40" />
@@ -361,6 +364,30 @@ function facadeLayout(height: number) {
   });
 }
 
+/** Building fronts in order (extension left, the three main buildings, extension right). */
+function cityPalette(sky: string, facades: string[], window: string): Palette {
+  return {
+    sky,
+    window,
+    pavement: '#ced4da',
+    road: '#495057',
+    ...Object.fromEntries(BUILDINGS.map((_, i) => [`facade${i}`, facades[i % facades.length]])),
+  };
+}
+
+const PALETTES: Record<string, Palette> = {
+  day: cityPalette('#8cc8f5', ['#e9c46a', '#f4a261', '#b5838d', '#90be6d'], '#e7f5ff'),
+  sunset: cityPalette('#ffa98a', ['#c9ada7', '#9a8c98', '#e5989b', '#b5c99a'], '#fff3bf'),
+};
+
+function surfaceAt(x: number, y: number, height: number): string {
+  if (y >= height * 0.73) return 'road';
+  if (y >= height * GROUND_LINE) return 'pavement';
+  const i = BUILDINGS.findIndex((b) => x >= b.x && x < b.x + b.w);
+  if (i < 0 || y < height * (ROOF - BUILDINGS[i].rise)) return 'sky';
+  return `facade${i}`;
+}
+
 function fixtures(height: number): Fixture[] {
   return facadeLayout(height)
     .filter((b) => b.facade !== undefined)
@@ -380,7 +407,10 @@ function mounts(height: number): Mount[] {
   );
 }
 
-function backdrop(height: number, sky: string, walls: string[], window: string) {
+type Palette = Record<string, string>;
+
+function backdrop(height: number, palette: Palette) {
+  const { sky, window } = palette;
   const pavement = height * GROUND_LINE;
   const kerb = height * 0.73;
   return (
@@ -388,7 +418,7 @@ function backdrop(height: number, sky: string, walls: string[], window: string) 
       <Rect x={-600} y={-600} width={2100} height={pavement + 600} fill={sky} />
       {facadeLayout(height).map((b, i) => (
         <G key={b.x}>
-          <Rect x={b.x} y={b.top} width={b.w} height={pavement - b.top} fill={walls[i % walls.length]} />
+          <Rect x={b.x} y={b.top} width={b.w} height={pavement - b.top} fill={palette[`facade${i}`]} />
           <Rect x={b.x} y={b.top} width={b.w} height={10} fill="#000000" fillOpacity={0.12} />
           {b.windows.map((w) => (
             <Rect key={w.x0} x={w.x0} y={w.y0} width={w.x1 - w.x0} height={w.y1 - w.y0} fill={window} fillOpacity={0.6} />
@@ -396,14 +426,14 @@ function backdrop(height: number, sky: string, walls: string[], window: string) 
           <Rect x={b.door.x0} y={b.door.y0} width={b.door.x1 - b.door.x0} height={b.door.y1 - b.door.y0} fill="#5c3d1e" fillOpacity={0.85} />
         </G>
       ))}
-      <Rect x={-600} y={pavement} width={2100} height={kerb - pavement} fill="#ced4da" />
+      <Rect x={-600} y={pavement} width={2100} height={kerb - pavement} fill={palette.pavement} />
       <G stroke="#b8bfc6" strokeWidth={3}>
         {[-300, 0, 150, 300, 450, 600, 750, 900, 1200].map((x) => (
           <Line key={x} x1={x} y1={pavement} x2={x - 40} y2={kerb} />
         ))}
       </G>
       <Rect x={-600} y={kerb} width={2100} height={14} fill="#868e96" />
-      <Rect x={-600} y={kerb + 14} width={2100} height={height - kerb + 600} fill="#495057" />
+      <Rect x={-600} y={kerb + 14} width={2100} height={height - kerb + 600} fill={palette.road} />
       <G fill="#f8f9fa">
         {[-200, 40, 280, 520, 760, 1000].map((x) => (
           <Rect key={x} x={x} y={height * 0.88} width={110} height={8} />
@@ -430,8 +460,7 @@ export const city: Recipe = {
   mounts,
   wallGapCm: 30,
   decor: [{ ...clouds, top: 0.02, bottom: 0.2 }],
-  variants: [
-    { id: 'day', background: (h) => backdrop(h, '#a5d8ff', ['#e9c46a', '#f4a261', '#b5838d', '#90be6d'], '#e7f5ff') },
-    { id: 'sunset', background: (h) => backdrop(h, '#ffc9a9', ['#c9ada7', '#9a8c98', '#e5989b', '#b5c99a'], '#fff3bf') },
-  ],
+  surfaceAt,
+  accents: [{ name: 'clouds', colour: '#ffffff', on: 'sky' }],
+  variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number) => backdrop(h, p) })),
 };

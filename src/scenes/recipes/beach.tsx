@@ -19,6 +19,7 @@ const items: ItemDef[] = [
     height: 150,
     zones: SKY,
     maxCount: 1,
+    tone: '#ffd93b',
     countable: false,
     draw: () => <Circle cx={70} cy={70} r={62} fill="#ffd93b" />,
   },
@@ -77,11 +78,12 @@ const items: ItemDef[] = [
     height: 120,
     zones: SEA,
     maxCount: 3,
+    tone: '#ced4da',
     draw: () => (
       <G>
-        <Path d="M8,62 C20,15 85,2 118,30 C108,30 100,36 98,40 C80,22 40,25 22,62 Z" fill="#8d99ae" />
-        <Polygon points="62,14 75,0 80,18" fill="#8d99ae" />
-        <Polygon points="8,62 0,50 16,56" fill="#8d99ae" />
+        <Path d="M8,62 C20,15 85,2 118,30 C108,30 100,36 98,40 C80,22 40,25 22,62 Z" fill="#ced4da" stroke="#6c757d" strokeWidth={2} />
+        <Polygon points="62,14 75,0 80,18" fill="#ced4da" stroke="#6c757d" strokeWidth={2} />
+        <Polygon points="8,62 0,50 16,56" fill="#ced4da" stroke="#6c757d" strokeWidth={2} />
         <Circle cx={104} cy={30} r={3} fill="#222" />
         <Path d="M0,70 Q30,62 60,70 T120,70" fill="none" stroke="#ffffff" strokeWidth={4} />
       </G>
@@ -135,6 +137,7 @@ const items: ItemDef[] = [
     height: 32,
     zones: SAND,
     maxCount: 4,
+    tone: '#e63946',
     draw: () => (
       <G stroke="#9d0208" strokeWidth={4} strokeLinecap="round">
         <Line x1={22} y1={34} x2={8} y2={46} />
@@ -180,6 +183,7 @@ const items: ItemDef[] = [
     height: 450,
     zones: ['shore'],
     maxCount: 2,
+    tone: '#2b9348',
     draw: () => (
       <G>
         <Path d="M70,270 C75,200 70,120 88,55 L100,58 C88,120 92,200 92,270 Z" fill="#8b5a2b" />
@@ -205,15 +209,16 @@ const items: ItemDef[] = [
     height: 50,
     zones: SAND,
     maxCount: 2,
+    tone: '#b07d3a',
     draw: () => (
-      <G fill="#d4a259" stroke="#a87b3d" strokeWidth={2}>
+      <G fill="#b07d3a" stroke="#7a5426" strokeWidth={2}>
         <Rect x={10} y={55} width={110} height={60} />
         <Rect x={0} y={30} width={36} height={85} />
         <Rect x={94} y={30} width={36} height={85} />
         <Rect x={47} y={20} width={36} height={95} />
         <Line x1={65} y1={20} x2={65} y2={0} stroke="#555" />
         <Polygon points="65,0 85,6 65,12" fill="#e63946" stroke="none" />
-        <Path d="M55,115 V95 C55,85 75,85 75,95 V115 Z" fill="#a87b3d" />
+        <Path d="M55,115 V95 C55,85 75,85 75,95 V115 Z" fill="#7a5426" />
       </G>
     ),
   },
@@ -241,9 +246,14 @@ const items: ItemDef[] = [
   { ...person, zones: SAND, maxCount: 4 },
 ];
 
-function backdrop(height: number, sky: string, sea: string, sand: string, foam: string) {
-  const horizon = height * 0.33;
-  const shore = height * 0.55;
+type Palette = Record<'sky' | 'sea' | 'sand' | 'foam', string>;
+
+const HORIZON = 0.33;
+const SHORE = 0.55;
+
+function backdrop(height: number, { sky, sea, sand, foam }: Palette) {
+  const horizon = height * HORIZON;
+  const shore = height * SHORE;
   return (
     <G>
       <Rect x={-600} y={-600} width={2100} height={horizon + 610} fill={sky} />
@@ -260,6 +270,13 @@ function backdrop(height: number, sky: string, sea: string, sand: string, foam: 
   );
 }
 
+const PALETTES: Record<string, Palette> = {
+  day: { sky: '#8fd3f4', sea: '#2a9fd6', sand: '#f2d49b', foam: '#ffffff' },
+  sunset: { sky: '#ffb38a', sea: '#3d6fa8', sand: '#e9c46a', foam: '#ffd6a5' },
+};
+
+const surfaceAt = (_x: number, y: number, height: number) => (y < height * HORIZON ? 'sky' : y < height * SHORE ? 'sea' : 'sand');
+
 export const beach: Recipe = {
   id: 'beach',
   title: 'At the beach',
@@ -274,8 +291,7 @@ export const beach: Recipe = {
   ],
   items,
   decor: [{ ...clouds, top: 0.02, bottom: 0.28 }],
-  variants: [
-    { id: 'day', background: (h) => backdrop(h, '#8fd3f4', '#2a9fd6', '#f2d49b', '#ffffff') },
-    { id: 'sunset', background: (h) => backdrop(h, '#ffb38a', '#3d6fa8', '#e9c46a', '#ffd6a5') },
-  ],
+  surfaceAt,
+  accents: [{ name: 'clouds', colour: '#ffffff', on: 'sky' }],
+  variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number) => backdrop(h, p) })),
 };
