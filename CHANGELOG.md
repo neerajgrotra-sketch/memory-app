@@ -10,6 +10,33 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.1.0 (2026-10-15)
+
+Fixes for the 3.0.0 layout, which placed things without regard to how they are used in real life.
+
+- **Things follow their habits again:**
+  - **Beach:** boats, buoys and dolphins float in the water, clear of the shoreline (a boat was sitting on the sand). Palm trees spread out along the back of the beach.
+  - **City:**
+    - Every building always has its door and two windows. 3.0.0 left them out wherever something was in front.
+    - Flags and satellite dishes stand on the roofs, one per building. The clock is a street clock on a post on the pavement, instead of a clock bracketed to the middle of a wall.
+    - Street lamps, trees and the clock spread out along the pavement on one line, and never stand in front of a door. Doors sit to one side of each building so there is room.
+  - **Room:**
+    - Pictures, mirrors and windows hang on one eye-level line, and the clock hangs above them. Pictures were stacked in a pyramid in 3.0.0.
+    - The sofa, armchairs, TV, plants, bookshelves and lamps stand against the back wall, spread out. They are placed before the toys, so they actually appear.
+  - **Everywhere:** copies of something on the ground stand side by side, never stacked up like a ladder.
+- **Believable sizes:**
+  - Vehicles and the sofa get a new extra-large size (30–62% of the width), so a bus is bigger than a person and a door rather than a toy. They may span more than one column.
+  - People have arms and are drawn at 44 pt wide.
+  - Beach towels are about as long as a person.
+- **The scooter is redrawn** as a proper motor scooter.
+- **Clouds are white again.** They count as scenery: drawn solid, but never touching anything.
+- `validateScene` checks the new habits:
+  - spread-out things are one per third and on one line
+  - hung things are at their height
+  - nothing stands in front of a door
+  - rooftop things stand on the roofline
+  - ground copies aren't stacked.
+
 ## 3.0.0 (2026-10-15)
 
 A new layout engine, so every picture lays out cleanly on iPhone portrait screens (SE to Pro Max).

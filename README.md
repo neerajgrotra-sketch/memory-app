@@ -63,13 +63,14 @@ Every picture is built on the device from a **recipe** in a fraction of a second
 Every picture is laid out for the space it is shown in: the area below the header, down to the bottom safe-area inset, measured with `onLayout`. Positions and sizes are stored as fractions of that area (`x` and `w` of the width, `y` of the height) and converted when drawn, so nothing assumes a fixed or square canvas. If the measured area differs from the estimate the scene was made for, the same contents are laid out again: same kinds, counts, colours, bands and sides, so the questions stay right.
 
 - **Size tiers, measured against the width.** Things of one kind are always the same size:
+  - extra large (bus, van, car, sofa): 30–62%, so they look right next to people and doors. They may span more than one column.
   - large anchors (umbrella, sailboat, palm tree, bookshelf, sofa, window): 20–28% of the width
   - medium (plane, kite, lamp, plant, mirror, clock, dolphin, cushion): 13–18%
   - small countables (ball, starfish, buoy, bird, toy car, bucket): 10–13%, and never under 44 pt.
 - **Bands.** Each setting is split into horizontal bands, and each thing lists the bands it belongs in:
   - Beach: sky 0–35%, sea 35–60%, sand 60–100%.
   - Room: ceiling 0–10%, wall 10–55%, floor 55–100%.
-  - City: sky, building fronts (one per third), pavement, road.
+  - City: sky (with rooftops along its bottom edge), building fronts (one per third, each with two windows and a door), pavement, road.
 - **Slot grid.** Each band is split into 3 columns (left / middle / right) × a few rows. Every group of things gets its own slot, preferring the emptiest parts of the picture. Positions are jittered only a little inside the slot.
 - **Spread out.**
   - Each band gets a share of the kinds in proportion to its height.
@@ -77,16 +78,24 @@ Every picture is laid out for the space it is shown in: the area below the heade
 - **Copies.** 2–4 of the same thing are staggered (zigzag, diagonal or arc) or kept at least 0.6× their width apart. They never touch or sit in a tight line.
 - **No overlaps.** Nothing comes within 4% of the width of anything else.
 - **Margins.** Things stay 5% from the left and right edges, and the bottom 4% stays clear for the home indicator.
+- **Habits.** Things go where they would in real life:
+  - `hangAt`: pictures, mirrors and windows hang on one eye-level line, and a clock hangs above it.
+  - `backRow`: sofas, armchairs, TVs and plants stand against the back wall.
+  - `spread`: street lamps, trees, palm trees, bookshelves, flags and dishes on roofs go one per column, standing on one line.
+  - `flush` bands (rooftops): things stand exactly on the line.
+  - `keepClear`: nothing stands in front of a building's door.
+  - Boats float in the water, clear of the shore.
+  - Copies of something on the ground stand side by side, never stacked like a ladder.
 - **Bands are respected.** Nothing crosses out of its band. Tall anchors (palm trees, bookshelves, street and floor lamps) are the exception: they stand in the back row of their band and rise above it on purpose.
 - **Rugs.** Anything touching the rug is fully on it (toy cars); furniture and plants stay off it.
 - **Draw order.**
   1. Background bands.
-  2. Faint marks (clouds, waves, floorboards, building windows, road markings), at most 35% opaque and never inside a thing's box.
+  2. Faint marks (waves, floorboards, road markings), at most 35% opaque, and white clouds (scenery, solid). None of them ever touches a thing's box.
   3. Things, back to front by their bottom edge.
 - **Contrast.** Every thing has a 2–3 pt outline in a darker shade of its own colour. Its colour must differ clearly from what it sits on, in colour (OKLab difference ≥ 18) and in lightness (fill or outline ≥ 15 lighter or darker). Coloured things only get colours that pass wherever they are drawn.
 - **Sides.** A group's left / middle / right is the third its centre is in, and centres stay clear of the lines between thirds. "What was on the left of the wall?" is only asked when exactly one kind of thing is there.
 
-`validateScene(scene, width, height)` (`src/scenes/validateScene.ts`) checks all of this: overlaps, sizes, duplicate gaps, edge margins, band membership, the rug rule, contrast, marks and that each third has content. A generated scene that fails is placed again (up to 12 tries) before it is shown.
+`validateScene(scene, width, height)` (`src/scenes/validateScene.ts`) checks all of this: overlaps, sizes, duplicate gaps, edge margins, band membership, habits, doors, the rug rule, contrast, marks and that each third has content. A generated scene that fails is placed again (up to 12 tries) before it is shown.
 
 **Checking layouts on a phone.** In a development build (Expo Go), the ▦ button in the memorise header turns on the layout overlay:
 - every box, with its 4% clearance dashed around it

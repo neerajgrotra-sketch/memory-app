@@ -84,17 +84,47 @@ export function zoneBounds(zone: ZoneDef, ratio: number) {
 /** Top and bottom of each slot row of a band, in width units. */
 export function rowsOf(zone: ZoneDef, ratio: number): { top: number; bottom: number }[] {
   const { top, bottom } = zoneBounds(zone, ratio);
-  const h = (bottom - top) / Math.max(1, zone.rows);
-  return Array.from({ length: zone.rows }, (_, i) => ({ top: top + i * h, bottom: top + (i + 1) * h }));
+  const sizes = zone.rowSizes ?? Array.from({ length: zone.rows }, () => 1);
+  const total = sizes.reduce((a, b) => a + b, 0);
+  let y = top;
+  return sizes.map((s) => {
+    const row = { top: y, bottom: y + ((bottom - top) * s) / total };
+    y = row.bottom;
+    return row;
+  });
 }
 
-/** Left and right limits for a group in column `col` (0 = left third), in width units. */
-export function columnBounds(zone: ZoneDef, col: number) {
+/**
+ * Left and right limits for a group in column `col` (0 = left third), in width units. Wide things
+ * (a bus) may use the whole width as long as their centre stays in the column's third.
+ */
+export function columnBounds(zone: ZoneDef, col: number, wide = false) {
   const t0 = col / 3;
   const t1 = (col + 1) / 3;
   const inset = zone.panels ? -0.02 : SPILL;
-  return { x0: Math.max(EDGE, t0 - inset), x1: Math.min(1 - EDGE, t1 + inset), centreMin: t0 + THIRD_MARGIN, centreMax: t1 - THIRD_MARGIN };
+  const centre = { centreMin: t0 + THIRD_MARGIN, centreMax: t1 - THIRD_MARGIN };
+  if (wide) return { x0: EDGE, x1: 1 - EDGE, ...centre };
+  return { x0: Math.max(EDGE, t0 - inset), x1: Math.min(1 - EDGE, t1 + inset), ...centre };
 }
+
+/** The columns (thirds) a rect really covers: more than the small spill allowed past a third's edge. */
+export function columnsCovered(r: Rect): number[] {
+  return [0, 1, 2].filter((c) => Math.min(r.x1, (c + 1) / 3) - Math.max(r.x0, c / 3) > SPILL + 1e-9);
+}
+
+/** True if the rect covers any of the recipe's keep-clear areas (building doors). */
+export function coversKeepClear(r: Rect, recipe: Recipe, ratio: number): boolean {
+  return (recipe.keepClear ?? []).some((k) => gapBetween(r, { x0: k.x0, y0: k.y0 * ratio, x1: k.x1, y1: k.y1 * ratio }) < 0.01);
+}
+
+/** How far the copies' bottoms differ, as a fraction of their height: 0 means standing on one line. */
+export function baseSpread(rects: Rect[]): number {
+  const h = rects[0].y1 - rects[0].y0;
+  return (Math.max(...rects.map((r) => r.y1)) - Math.min(...rects.map((r) => r.y1))) / h;
+}
+
+/** Things on the ground may step back a little from each other, but never stack up like a ladder. */
+export const MAX_GROUND_STEP = 0.45;
 
 /** True if the rect touches the rug at all. */
 export function touchesRug(r: Rect, rug: Rug, ratio: number): boolean {

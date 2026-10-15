@@ -104,7 +104,7 @@ export const person: CommonItem = {
   singular: 'person',
   plural: 'people',
   article: 'a',
-  w: 50,
+  w: 64,
   h: 125,
   tier: 'small',
   size: 0.1,
@@ -112,11 +112,15 @@ export const person: CommonItem = {
   colourPrompt: (plural) => (plural ? 'What colour were the people’s shirts?' : 'What colour was the person’s shirt?'),
   draw: (colour) => (
     <G>
-      <Rect x={14} y={78} width={9} height={47} rx={4} fill="#343a40" stroke="none" />
-      <Rect x={27} y={78} width={9} height={47} rx={4} fill="#343a40" stroke="none" />
-      <Rect x={8} y={32} width={34} height={52} rx={10} fill={colour} />
-      <Circle cx={25} cy={16} r={15} fill="#e0ac69" stroke="none" />
-      <Path d="M10,14 C12,0 38,0 40,14 C32,8 18,8 10,14 Z" fill="#4a2c17" stroke="none" />
+      <Rect x={20} y={80} width={10} height={45} rx={4} fill="#343a40" stroke="none" />
+      <Rect x={34} y={80} width={10} height={45} rx={4} fill="#343a40" stroke="none" />
+      <Rect x={4} y={36} width={11} height={40} rx={5} fill={colour} />
+      <Rect x={49} y={36} width={11} height={40} rx={5} fill={colour} />
+      <Circle cx={9.5} cy={78} r={5} fill="#e0ac69" stroke="none" />
+      <Circle cx={54.5} cy={78} r={5} fill="#e0ac69" stroke="none" />
+      <Rect x={13} y={32} width={38} height={52} rx={10} fill={colour} />
+      <Circle cx={32} cy={16} r={15} fill="#e0ac69" stroke="none" />
+      <Path d="M17,14 C19,0 45,0 47,14 C39,8 25,8 17,14 Z" fill="#4a2c17" stroke="none" />
     </G>
   ),
 };
@@ -155,6 +159,7 @@ export const tree: CommonItem = {
   tier: 'large',
   size: 0.2,
   tall: true,
+  spread: true,
   tone: '#2f8f3a',
   draw: () => (
     <G>

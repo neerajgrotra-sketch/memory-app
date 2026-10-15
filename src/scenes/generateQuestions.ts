@@ -2,6 +2,7 @@ import type { Question } from '@/types/game';
 
 import { ALL_COLOURS } from './colours';
 import { createRng, type Rng } from './random';
+import { regionOf } from './layout';
 import type { ItemDef, PlacedGroup, Recipe, Region, SceneSpec, ZoneDef } from './types';
 
 export interface QuestionKnobs {
@@ -46,6 +47,12 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   const present = spec.groups.map((g) => itemOf(g.kind));
   const absent = recipe.items.filter((i) => !spec.groups.some((g) => g.kind === i.kind));
   const questions: Question[] = [];
+  /** Every side a group is on: one, or each side a spread group has a copy on. */
+  const sidesOf = (g: PlacedGroup): Set<Region> => {
+    const it = itemOf(g.kind);
+    if (!(it.spread && g.count > 1)) return new Set([g.region]);
+    return new Set(g.boxes.map((b) => regionOf(b.x + b.w / 2)));
+  };
   // Only bands things can go in make believable wrong answers (not the room's bare ceiling).
   const zones = recipe.zones.filter((z) => z.rows > 0);
 
@@ -80,11 +87,14 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       });
     }
 
+    // Things spread across the picture (street lamps along the pavement) have no single side to ask about.
+    const spread = item.spread === true && group.count > 1;
+
     const sameZoneCells = zones
       .filter((z) => item.zones.includes(z.id))
       .flatMap((z) => (['left', 'centre', 'right'] as Region[]).map((r) => cellLabel(z, r)));
     const otherCells = zones.flatMap((z) => (['left', 'centre', 'right'] as Region[]).map((r) => cellLabel(z, r)));
-    add('where', group, {
+    if (!spread) add('where', group, {
       type: 'position',
       subject: item.kind,
       prompt: plural ? `Where were the ${item.plural}?` : `Where was the ${item.singular}?`,
@@ -92,10 +102,10 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     });
 
     // Only ask "what was on the left…" when exactly one kind of thing is there.
-    const sharesSpot = spec.groups.some((g) => g !== group && g.zoneId === group.zoneId && g.region === group.region);
+    const sharesSpot = spec.groups.some((g) => g !== group && g.zoneId === group.zoneId && sidesOf(g).has(group.region));
     const sameZoneKinds = recipe.items.filter((i) => i.kind !== item.kind && i.zones.includes(zone.id));
     const otherKinds = recipe.items.filter((i) => i.kind !== item.kind);
-    if (!sharesSpot) add('what-here', group, {
+    if (!spread && !sharesSpot) add('what-here', group, {
       type: 'object',
       subject: item.kind,
       prompt: `What was ${lower(cellLabel(zone, group.region))}?`,

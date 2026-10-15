@@ -57,6 +57,7 @@ export function scatterMarks(
   random: () => number,
   opacity: number,
   draw: (x: number, y: number) => Mark['el'],
+  scenery = false,
 ): Mark[] {
   const marks: Mark[] = [];
   for (let tries = 0; tries < count * 12 && marks.length < count; tries++) {
@@ -64,7 +65,7 @@ export function scatterMarks(
     const y = area.y0 + (area.y1 - area.y0 - h) * random();
     const r = { x0: x, y0: y, x1: x + w, y1: y + h };
     if (!clear(r, boxes) || marks.some((m) => gapBetween(r, m) < 20)) continue;
-    marks.push({ ...r, opacity, el: <G key={`s-${marks.length}-${Math.round(x)}`} opacity={opacity}>{draw(x, y)}</G> });
+    marks.push({ ...r, opacity, scenery, el: <G key={`s-${marks.length}-${Math.round(x)}`} opacity={opacity}>{draw(x, y)}</G> });
   }
   return marks;
 }

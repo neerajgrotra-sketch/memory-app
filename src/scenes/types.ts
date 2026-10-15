@@ -28,8 +28,14 @@ export interface ZoneDef {
   bottom: number;
   /** Slot rows in the band (e.g. back and front of the sand). Bands without things use 0. */
   rows: number;
+  /** Relative heights of the rows, back first (default: equal). */
+  rowSizes?: number[];
   /** At least this many kinds of thing go here (e.g. a room wall is never bare). */
   minGroups?: number;
+  /** At least this many of the band's kinds are anchors (tall, against the wall or extra wide): a room always has furniture. */
+  anchors?: number;
+  /** Ground bands: things stand exactly on the bottom line (flags and dishes on a roofline). */
+  flush?: boolean;
   /**
    * Things here stay inside their own third (one building front per third in the city), instead of
    * being allowed slightly over the line between thirds.
@@ -43,9 +49,14 @@ export interface ZoneDef {
  * - `medium` (plane, kite, lamp, mirror, clock): 0.13–0.18
  * - `small` countables (ball, starfish, buoy, bird): 0.10–0.13, and never under 44 pt on screen.
  */
-export type SizeTier = 'large' | 'medium' | 'small';
+export type SizeTier = 'xl' | 'large' | 'medium' | 'small';
 
+/**
+ * `xl` is for things that must be bigger than everything else to look right next to people and
+ * doors (cars, vans, buses, a sofa). They may span more than one column.
+ */
 export const TIERS: Record<SizeTier, [number, number]> = {
+  xl: [0.3, 0.62],
   large: [0.2, 0.28],
   medium: [0.13, 0.18],
   small: [0.1, 0.13],
@@ -79,6 +90,20 @@ export interface ItemDef {
   tall?: boolean;
   /** Never touches the rug (sofas, plants, lamps). Everything else is either fully on the rug or off it. */
   avoidRug?: boolean;
+  /** Only in the first slot row of its band, close to its top edge: furniture against the back wall. */
+  backRow?: boolean;
+  /**
+   * Wall things: hung with their centre this far above the bottom of the band (fractions of the
+   * picture width), so pictures, mirrors and windows share one eye-level line and a clock hangs above it.
+   */
+  hangAt?: number;
+  /** `xl` things: may be wider than one column (a bus); the side is still the third its centre is in. */
+  wide?: boolean;
+  /**
+   * Copies go one per column, standing on the same line (street lamps along a pavement, a flag on
+   * each roof, palm trees along the beach), never bunched in one spot.
+   */
+  spread?: boolean;
   /** For things with a fixed colour: their main colour, used for the contrast rules and the outline. */
   tone?: string;
   /**
@@ -107,6 +132,8 @@ export interface Mark {
   x1: number;
   y1: number;
   opacity: number;
+  /** Scenery like clouds: drawn solid (no opacity limit) but still never touching a thing. */
+  scenery?: boolean;
   el: ReactElement;
 }
 
@@ -130,6 +157,8 @@ export interface Recipe {
   zones: ZoneDef[];
   items: ItemDef[];
   rug?: Rug;
+  /** Areas nothing may cover (building doors), as fractions: x of the width, y of the height. */
+  keepClear?: Rect[];
   /** Which surface (a key of each variant's palette) is behind the point (x, y), as fractions of width and height. */
   surfaceAt: (x: number, y: number) => string;
   /**

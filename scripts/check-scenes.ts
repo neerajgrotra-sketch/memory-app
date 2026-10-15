@@ -56,6 +56,7 @@ for (const phone of PHONES) {
       const placed = new Set<string>();
       let short = 0;
       let veryShort = 0;
+      let fewQuestions = 0;
 
       for (let n = 1; n <= SCENES_PER_CASE; n++) {
         const t0 = Date.now();
@@ -67,7 +68,8 @@ for (const phone of PHONES) {
         if (scene.groups.length < knobs.groups - 2) note(`only ${scene.groups.length} of ${knobs.groups} kinds placed`);
         if (scene.groups.length < knobs.groups) short++;
         if (scene.groups.length < knobs.groups - 1) veryShort++;
-        if (generateQuestions(scene, recipe, knobs).length < MIN_QUESTIONS) note('too few questions');
+        // createStage quietly replaces a picture with too few questions, so only flag it if that's common.
+        if (generateQuestions(scene, recipe, knobs).length < MIN_QUESTIONS) fewQuestions++;
 
         // Laid out again for another phone: same facts, or keep the original layout (never different facts).
         if (n % 10 === 0) {
@@ -75,13 +77,16 @@ for (const phone of PHONES) {
             if (other === phone) continue;
             const again = relayoutScene(scene, other.size);
             if (!again) continue;
-            const facts = (s: typeof scene) => JSON.stringify(s.groups.map((g) => [g.kind, g.count, g.colour?.name, g.zoneId, g.region]));
+            // Spread groups (lamps along a pavement) have no side to ask about, so their side isn't a fact.
+            const spreadOut = (g: (typeof scene.groups)[number]) => recipe.items.find((i) => i.kind === g.kind)!.spread && g.count > 1;
+            const facts = (s: typeof scene) => JSON.stringify(s.groups.map((g) => [g.kind, g.count, g.colour?.name, g.zoneId, spreadOut(g) ? '' : g.region]));
             if (facts(again) !== facts(scene)) note('laying out again changed the facts');
             if (validateScene(again, other.size.width, other.size.height).length) note('laid out again but not valid');
           }
         }
       }
 
+      if (fewQuestions / SCENES_PER_CASE > 0.1) note(`${fewQuestions} pictures with too few questions`);
       if (veryShort / SCENES_PER_CASE > 0.02) note(`${veryShort} pictures two kinds short`);
       if (short / SCENES_PER_CASE > 0.2) note(`${Math.round((100 * short) / SCENES_PER_CASE)}% of pictures one kind short`);
       for (const item of recipe.items) if (!placed.has(item.kind)) note(`${item.kind} never fits anywhere`);

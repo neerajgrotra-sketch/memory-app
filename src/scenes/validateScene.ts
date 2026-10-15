@@ -3,6 +3,9 @@ import {
   BOTTOM_CLEAR,
   EDGE,
   GAP,
+  MAX_GROUND_STEP,
+  baseSpread,
+  coversKeepClear,
   MIN_POINTS,
   THIRDS,
   THIRD_MARGIN,
@@ -34,6 +37,7 @@ export type Rule =
   | 'rug'
   | 'contrast'
   | 'marks'
+  | 'placement'
   | 'count'
   | 'bare';
 
@@ -106,6 +110,18 @@ export function validateScene(spec: SceneSpec, width: number, height: number): S
       if (w < lo - EPS || (w > hi + EPS && w > minW + EPS)) add('size', `${item.singular} outside its ${item.tier} size`, item.kind);
     }
 
+    // Spread copies: one per third, standing on one line. Hung copies: one level. Ground copies: no ladders.
+    const spread = item.spread && group.count > 1;
+    if (spread) {
+      const thirds = new Set(rects.map((r) => regionOf(centreOf(r).x)));
+      if (thirds.size < rects.length) add('placement', `${name} bunched together instead of spread out`, item.kind);
+    }
+    if (rects.length > 1) {
+      const step = baseSpread(rects);
+      if ((spread || item.hangAt !== undefined) && step > EPS) add('placement', `${name} not on one line`, item.kind);
+      else if (zone && zone.surface === 'ground' && step > MAX_GROUND_STEP + EPS) add('placement', `${name} stacked up instead of standing side by side`, item.kind);
+    }
+
     // Copies apart, or staggered.
     for (let a = 0; a < rects.length; a++) {
       for (let b = a + 1; b < rects.length; b++) {
@@ -120,13 +136,22 @@ export function validateScene(spec: SceneSpec, width: number, height: number): S
       if (r.x0 < EDGE - EPS || r.x1 > 1 - EDGE + EPS) add('edges', `${item.singular} too near the side`, item.kind);
       if (r.y1 > (1 - BOTTOM_CLEAR) * ratio + EPS) add('edges', `${item.singular} in the bottom 4%`, item.kind);
       if (r.y0 < TOP_CLEAR * ratio - EPS) add('edges', `${item.singular} touching the top`, item.kind);
+      if (item.hangAt !== undefined) {
+        const centre = bottom - item.hangAt;
+        if (Math.abs((r.y0 + r.y1) / 2 - centre) > 0.011) add('placement', `${item.singular} not hung at its height`, item.kind);
+      }
+      if (coversKeepClear(r, recipe, ratio)) add('placement', `${item.singular} in front of a door`, item.kind);
+      if (zone.flush && Math.abs(r.y1 - bottom) > EPS) add('placement', `${item.singular} not standing on the ${zone.id} line`, item.kind);
+      if ((item.tall || item.backRow) && (!backRow || r.y1 < backRow.top - EPS || r.y1 > backRow.bottom + EPS)) {
+        add('zone', `${item.singular} not standing at the back of ${zone.id}`, item.kind);
+      }
       if (item.tall) {
-        if (!backRow || r.y1 < backRow.top - EPS || r.y1 > backRow.bottom + EPS) add('zone', `${item.singular} not standing in the back of ${zone.id}`, item.kind);
+        // Rising above its band is allowed for tall anchors.
       } else if (r.y0 < top - EPS || r.y1 > bottom + EPS) {
         add('zone', `${item.singular} crosses out of ${zone.id}`, item.kind);
       }
       if (zone.panels) {
-        const col = columnBounds(zone, ['left', 'centre', 'right'].indexOf(group.region));
+        const col = columnBounds(zone, ['left', 'centre', 'right'].indexOf(regionOf(centreOf(r).x)));
         if (r.x0 < col.x0 - EPS || r.x1 > col.x1 + EPS) add('zone', `${item.singular} crosses a building edge`, item.kind);
       }
       if (!rugOk(item, r, recipe, ratio)) add('rug', `${item.singular} half on the rug`, item.kind);
@@ -140,6 +165,7 @@ export function validateScene(spec: SceneSpec, width: number, height: number): S
       }
     }
     const centre = centreOf(boundsOf(rects)).x;
+    if (item.spread && group.count > 1) continue;
     if (regionOf(centre) !== group.region) add('side', `${name} recorded ${group.region} but drawn ${regionOf(centre)}`, item.kind);
     if (Math.abs(centre - THIRDS[0]) < THIRD_MARGIN - EPS || Math.abs(centre - THIRDS[1]) < THIRD_MARGIN - EPS) {
       add('side', `${name} on the line between two sides`, item.kind);
@@ -171,7 +197,7 @@ export function validateScene(spec: SceneSpec, width: number, height: number): S
 
   // Backdrop marks stay faint and never inside a thing's box.
   for (const mark of marksFor(spec, recipe, ratio)) {
-    if (mark.opacity > MAX_MARK_OPACITY + EPS) add('marks', `a backdrop mark is too strong (${mark.opacity})`);
+    if (!mark.scenery && mark.opacity > MAX_MARK_OPACITY + EPS) add('marks', `a backdrop mark is too strong (${mark.opacity})`);
     for (const p of placed) {
       const r = p.rect;
       const scaled = { x0: r.x0 * SCENE_WIDTH, y0: r.y0 * SCENE_WIDTH, x1: r.x1 * SCENE_WIDTH, y1: r.y1 * SCENE_WIDTH };

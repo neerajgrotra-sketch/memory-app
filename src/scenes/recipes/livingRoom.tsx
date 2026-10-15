@@ -26,7 +26,10 @@ const items: ItemDef[] = [
     tier: 'medium',
     size: 0.14,
     zones: WALL,
-    maxCount: 4,
+    maxCount: 2,
+    // At eye level, one per stretch of wall.
+    hangAt: 0.34,
+    spread: true,
     colours: [C.red, C.blue, C.yellow, C.green, C.black, C.white, C.purple],
     colourPrompt: (plural) => (plural ? 'What colour were the picture frames?' : 'What colour was the picture frame?'),
     draw: (colour) => (
@@ -51,6 +54,8 @@ const items: ItemDef[] = [
     size: 0.13,
     zones: WALL,
     maxCount: 1,
+    // Above everything else on the wall.
+    hangAt: 0.52,
     tone: '#343a40',
     countable: false,
     draw: () => (
@@ -72,6 +77,7 @@ const items: ItemDef[] = [
     size: 0.15,
     zones: WALL,
     maxCount: 1,
+    hangAt: 0.36,
     tone: '#b08d57',
     draw: () => (
       <G>
@@ -91,6 +97,7 @@ const items: ItemDef[] = [
     tier: 'large',
     size: 0.22,
     zones: WALL,
+    hangAt: 0.36,
     // One window: two would end up one above the other on a single wall.
     maxCount: 1,
     tone: '#5aa9e6',
@@ -113,8 +120,10 @@ const items: ItemDef[] = [
     article: 'a',
     w: 230,
     h: 120,
-    tier: 'large',
-    size: 0.28,
+    tier: 'xl',
+    size: 0.44,
+    wide: true,
+    backRow: true,
     zones: FLOOR_ZONE,
     maxCount: 1,
     avoidRug: true,
@@ -141,6 +150,8 @@ const items: ItemDef[] = [
     size: 0.2,
     zones: FLOOR_ZONE,
     maxCount: 2,
+    backRow: true,
+    spread: true,
     avoidRug: true,
     colours: [C.red, C.blue, C.green, C.yellow, C.orange, C.pink],
     draw: (colour) => (
@@ -164,6 +175,7 @@ const items: ItemDef[] = [
     tier: 'medium',
     size: 0.13,
     tall: true,
+    spread: true,
     zones: FLOOR_ZONE,
     maxCount: 2,
     avoidRug: true,
@@ -188,6 +200,7 @@ const items: ItemDef[] = [
     size: 0.22,
     zones: FLOOR_ZONE,
     maxCount: 1,
+    backRow: true,
     avoidRug: true,
     tone: '#212529',
     countable: false,
@@ -200,7 +213,7 @@ const items: ItemDef[] = [
     ),
   },
   // Plants stand along the wall, never out in the room or on the rug.
-  { ...plantPot, zones: FLOOR_ZONE, maxCount: 3, avoidRug: true },
+  { ...plantPot, zones: FLOOR_ZONE, maxCount: 3, avoidRug: true, backRow: true, spread: true },
   {
     kind: 'bookshelf',
     singular: 'bookshelf',
@@ -211,6 +224,7 @@ const items: ItemDef[] = [
     tier: 'large',
     size: 0.2,
     tall: true,
+    spread: true,
     zones: FLOOR_ZONE,
     maxCount: 2,
     avoidRug: true,
@@ -385,8 +399,10 @@ export const livingRoom: Recipe = {
   place: 'in the room',
   zones: [
     { id: 'ceiling', label: 'On the ceiling', surface: 'air', top: 0, bottom: CEILING, rows: 0 },
+    // Things on the wall hang on two lines: a clock high up (top row of slots), the rest at eye level.
     { id: 'wall', label: 'On the wall', surface: 'wall', top: CEILING, bottom: FLOOR, rows: 2, minGroups: 2 },
-    { id: 'floor', label: 'On the floor', surface: 'ground', top: FLOOR, bottom: 1, rows: 2 },
+    // A deeper back row for furniture against the wall, then two rows for things out on the floor.
+    { id: 'floor', label: 'On the floor', surface: 'ground', top: FLOOR, bottom: 1, rows: 3, rowSizes: [0.4, 0.3, 0.3], anchors: 2 },
   ],
   items,
   rug: RUG,

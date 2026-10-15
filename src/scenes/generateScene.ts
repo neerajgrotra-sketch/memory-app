@@ -3,10 +3,14 @@ import {
   GAP,
   REGIONS,
   TOP_CLEAR,
+  MAX_GROUND_STEP,
   arrangements,
   boundsOf,
   centreOf,
   columnBounds,
+  columnsCovered,
+  coversKeepClear,
+  duplicatesOk,
   gapBetween,
   heightFor,
   itemWidth,
@@ -15,6 +19,7 @@ import {
   rowsOf,
   rugOk,
   samplePoints,
+  zoneBounds,
 } from './layout';
 import { createRng, type Rng } from './random';
 import { getRecipe } from './recipes';
@@ -30,6 +35,8 @@ export interface SceneKnobs {
 
 /** Fresh placements tried before showing the best one found. */
 export const LAYOUT_ATTEMPTS = 12;
+/** Hung things this high (width units above the band's bottom) use the wall's top row of slots. */
+const HIGH_HANG = 0.45;
 /** Positions tried inside a slot before moving on to the next slot. */
 const JITTERS = 4;
 
@@ -56,6 +63,8 @@ interface Placement {
   boxes: Box[];
   rects: Rect[];
   slot: Slot;
+  /** Slot-grid cells the group uses. */
+  cells: string[];
 }
 
 interface Want {
@@ -70,45 +79,128 @@ interface Want {
   colour?: string;
 }
 
+/** Everything a candidate group must pass besides its slot: clearances, rug, doors, contrast. */
+function clearToPlace(ctx: Context, want: Want, rects: Rect[]): boolean {
+  const { item } = want;
+  if (rects.some((r) => ctx.taken.some((t) => gapBetween(r, t) < GAP))) return false;
+  if (rects.some((r) => !rugOk(item, r, ctx.recipe, ctx.ratio))) return false;
+  if (rects.some((r) => coversKeepClear(r, ctx.recipe, ctx.ratio))) return false;
+  if (item.tone && !colourFits(ctx, item.tone, rects)) return false;
+  if (want.colour && !colourFits(ctx, want.colour, rects)) return false;
+  if (want.third !== undefined) {
+    const cy = centreOf(boundsOf(rects)).y / ctx.ratio;
+    if (cy < want.third / 3 || cy >= (want.third + 1) / 3) return false;
+  }
+  return true;
+}
+
+/**
+ * Where a group `bh` tall goes vertically in rows `top`…`bottom` (width units), following the
+ * thing's habits. Returns the top of the group, or null if it can't go there.
+ */
+function verticalSpot(ctx: Context, item: ItemDef, zone: ZoneDef, top: number, bottom: number, bh: number): number | null {
+  const { rng, ratio } = ctx;
+  const band = zoneBounds(zone, ratio);
+  if (item.hangAt !== undefined) {
+    // Hung on the band's eye-level line (a clock above it), with only a tiny wobble.
+    const y0 = band.bottom - item.hangAt - bh / 2 + (rng.next() - 0.5) * 0.02;
+    return y0 >= band.top && y0 + bh <= band.bottom ? y0 : null;
+  }
+  const rowH = bottom - top;
+  if (item.tall) {
+    // Tall anchors stand near the back of their band and rise above it on purpose.
+    const y0 = top + rowH * (0.12 + 0.3 * rng.next()) - bh;
+    return y0 >= TOP_CLEAR * ratio ? y0 : null;
+  }
+  if (bh > rowH) return null;
+  if (zone.flush) return bottom - bh;
+  // Against the back wall: standing just in front of where the floor meets the wall.
+  if (item.backRow) return top + (rowH - bh) * 0.3 * rng.next();
+  // On the ground: towards the bottom of the row. In the air or on a wall: anywhere in it.
+  return top + (rowH - bh) * (zone.surface === 'ground' ? 1 - 0.35 * rng.next() : rng.next());
+}
+
+/**
+ * Copies of things that spread out (street lamps, palm trees, flags on roofs, armchairs along a wall):
+ * one per column, all standing on the same line.
+ */
+function placeSpread(ctx: Context, want: Want): Placement | null {
+  const { item, count, zone } = want;
+  const { rng, ratio } = ctx;
+  const w = itemWidth(item, ctx.size);
+  const h = heightFor(item, w);
+  const rows = rowsOf(zone, ratio);
+  const rowIndex = item.hangAt !== undefined && item.hangAt < HIGH_HANG ? rows.length - 1 : 0;
+  const row = rows[rowIndex];
+  const free = [0, 1, 2].filter((c) => !ctx.cells.has(cellKey(zone.id, c, rowIndex)));
+  if (!row || free.length < count) return null;
+
+  for (let attempt = 0; attempt < JITTERS * 4; attempt++) {
+    const cols = rng.shuffle(free).slice(0, count).sort();
+    const y0 = verticalSpot(ctx, item, zone, row.top, row.bottom, h);
+    if (y0 === null) return null;
+    const spans = cols.map((col) => {
+      const b = columnBounds(zone, col);
+      return [Math.max(b.x0, b.centreMin - w / 2), Math.min(b.x1 - w, b.centreMax - w / 2)];
+    });
+    if (spans.some(([lo, hi]) => hi < lo)) return null;
+    const boxes = spans.map(([lo, hi]) => ({ x: lo + (hi - lo) * rng.next(), y: y0 / ratio, w, flip: rng.next() < 0.5 }));
+    const rects = boxes.map((b) => rectOf(item, b, ratio));
+    if (rects.some((r, i) => rects.some((q, j) => j > i && !duplicatesOk(r, q)))) continue;
+    if (!clearToPlace(ctx, want, rects)) continue;
+    return { boxes, rects, slot: { col: cols[0], row: rowIndex, span: 1 }, cells: cols.map((c) => cellKey(zone.id, c, rowIndex)) };
+  }
+  return null;
+}
+
 /**
  * Finds a slot for `count` copies of a thing in one band: each group gets its own cells of the
  * slot grid (one column, one or more rows), with a little jitter inside them. Null if nowhere fits.
  */
 function place(ctx: Context, want: Want): Placement | null {
   const { item, count, zone } = want;
+  if (item.spread && count > 1) return placeSpread(ctx, want);
   const { rng, ratio } = ctx;
   const w = itemWidth(item, ctx.size);
   const h = heightFor(item, w);
   const rows = rowsOf(zone, ratio);
-  const cols = want.col === undefined ? rng.shuffle([0, 1, 2]) : [want.col];
+  if (!rows.length) return null;
+  const cols = want.col === undefined ? [0, 1, 2] : [want.col];
+  const firstRowOnly = item.tall || item.backRow;
+  const hung = item.hangAt !== undefined;
 
-  // Candidate cells: one column, one or more rows (tall anchors stand in the back row). Fewest rows
-  // first, then the emptiest parts of the picture, so things spread out instead of bunching up.
+  // Candidate cells: one column, one or more rows. Fewest rows first, then the emptiest parts of
+  // the picture, so things spread out instead of bunching up. Hung things use the whole band height.
   const used = (zoneId: string, col: number, row: number): number => (ctx.cells.has(cellKey(zoneId, col, row)) ? 1 : 0);
   const sum = (values: number[]) => values.reduce((a, b) => a + b, 0);
-  // Cells taken in the same row of this band, the same column of this band, and (counting half) the same column anywhere.
   const crowding = (col: number, row: number) =>
     sum(rows.map((_, r) => used(zone.id, col, r))) +
     sum([0, 1, 2].map((c) => used(zone.id, c, row))) +
     sum(ctx.recipe.zones.flatMap((z) => Array.from({ length: z.rows }, (_, r) => used(z.id, col, r)))) / 2;
   const candidates: { row: number; span: number; col: number; score: number }[] = [];
-  for (let span = 1; span <= (item.tall ? 1 : rows.length); span++) {
+  for (let span = 1; span <= (firstRowOnly || hung ? 1 : rows.length); span++) {
     for (let row = 0; row < rows.length; row++) {
-      if (item.tall ? row !== 0 : row + span > rows.length) continue;
+      if (firstRowOnly && row !== 0) continue;
+      // Hung things take the top row if they hang high (a clock), else the bottom one (eye level).
+      if (hung && row !== (item.hangAt! >= HIGH_HANG ? 0 : rows.length - 1)) continue;
+      if (row + span > rows.length) continue;
       for (const col of cols) candidates.push({ row, span, col, score: span * 10 + crowding(col, row) + rng.next() * 1.5 });
     }
   }
   candidates.sort((a, b) => a.score - b.score);
 
+  // Hung things share one level; things on the ground stand side by side, never stacked like a ladder.
+  const all = arrangements(count, w, h).filter(({ offsets }) => {
+    const step = (Math.max(...offsets.map(([, y]) => y)) - Math.min(...offsets.map(([, y]) => y))) / h;
+    return hung ? step < 1e-9 : zone.surface === 'ground' ? step <= MAX_GROUND_STEP : true;
+  });
+
   for (const { row, span, col } of candidates) {
-    const cells = Array.from({ length: span }, (_, i) => cellKey(zone.id, col, row + i));
-    if (cells.some((c) => ctx.cells.has(c))) continue;
-    const bounds = columnBounds(zone, col);
+    const bounds = columnBounds(zone, col, item.wide);
     const top = rows[row].top;
     const bottom = rows[row + span - 1].bottom;
 
     // Staggered arrangements (zigzags, diagonals, arcs) first; straight rows and columns only if nothing else fits.
-    const all = arrangements(count, w, h);
     const ordered = [...rng.shuffle(all.filter((a) => !a.straight)), ...rng.shuffle(all.filter((a) => a.straight))];
     for (const { offsets } of ordered) {
       const bw = Math.max(...offsets.map(([x]) => x)) + w;
@@ -116,38 +208,30 @@ function place(ctx: Context, want: Want): Placement | null {
       const xMin = Math.max(bounds.x0, bounds.centreMin - bw / 2);
       const xMax = Math.min(bounds.x1 - bw, bounds.centreMax - bw / 2);
       if (xMax < xMin) continue;
-      // Tall anchors stand in the back row and may rise above it; everything else fits inside its cells.
-      const yMin = item.tall ? Math.max(TOP_CLEAR * ratio, top - bh + (bottom - top) * 0.5) : top;
-      const yMax = bottom - bh;
-      if (yMax < yMin) continue;
 
       for (let j = 0; j < JITTERS; j++) {
+        const y0 = verticalSpot(ctx, item, zone, top, bottom, bh);
+        if (y0 === null) break;
         const x0 = xMin + (xMax - xMin) * rng.next();
-        // Things on the ground stand towards the bottom of their row; the rest float anywhere in it.
-        const t = zone.surface === 'ground' || item.tall ? 1 - 0.35 * rng.next() : rng.next();
-        const y0 = yMin + (yMax - yMin) * t;
         const boxes = offsets.map(([dx, dy]) => ({ x: x0 + dx, y: (y0 + dy) / ratio, w, flip: rng.next() < 0.5 }));
         const rects = boxes.map((b) => rectOf(item, b, ratio));
         const group = boundsOf(rects);
-        if (want.third !== undefined) {
-          const cy = centreOf(group).y / ratio;
-          if (cy < want.third / 3 || cy >= (want.third + 1) / 3) continue;
-        }
         if (regionOf(centreOf(group).x) !== REGIONS[col]) continue;
-        if (rects.some((r) => ctx.taken.some((t2) => gapBetween(r, t2) < GAP))) continue;
-        if (rects.some((r) => !rugOk(item, r, ctx.recipe, ratio))) continue;
-        if (item.tone && !colourFits(ctx, item.tone, rects)) continue;
-        if (want.colour && !colourFits(ctx, want.colour, rects)) continue;
-        return { boxes, rects, slot: { col, row, span } };
+        // Every column the group really covers must be free in its rows (a bus takes more than one).
+        const covered = [...new Set([col, ...columnsCovered(group)])];
+        const cells = covered.flatMap((c) => Array.from({ length: span }, (_, i) => cellKey(zone.id, c, row + i)));
+        if (cells.some((c) => ctx.cells.has(c))) continue;
+        if (!clearToPlace(ctx, want, rects)) continue;
+        return { boxes, rects, slot: { col, row, span }, cells };
       }
     }
   }
   return null;
 }
 
-const commit = (ctx: Context, zone: ZoneDef, p: Placement) => {
+const commit = (ctx: Context, p: Placement) => {
   ctx.taken.push(...p.rects);
-  for (let i = 0; i < p.slot.span; i++) ctx.cells.add(cellKey(zone.id, p.slot.col, p.slot.row + i));
+  p.cells.forEach((c) => ctx.cells.add(c));
 };
 
 /** Bigger things first, so small ones fill the gaps. */
@@ -185,13 +269,14 @@ function build(recipe: Recipe, knobs: SceneKnobs, seed: number, rng: Rng, size: 
         // Only colours that stand out from everything behind them.
         const colours: ColourDef[] | undefined = item.colours?.filter((c) => colourFits(ctx, c.hex, placed.rects));
         if (colours && !colours.length) continue;
-        commit(ctx, zone, placed);
+        commit(ctx, placed);
         groups.push({
           kind: item.kind,
           count,
           colour: colours ? rng.pick(colours) : undefined,
           zoneId: zone.id,
-          region: REGIONS[placed.slot.col],
+          // Spread copies have no single side; the questions don't ask where they were.
+          region: item.spread && count > 1 ? regionOf(centreOf(boundsOf(placed.rects)).x) : REGIONS[placed.slot.col],
           slot: placed.slot,
           boxes: placed.boxes,
         });
@@ -203,14 +288,37 @@ function build(recipe: Recipe, knobs: SceneKnobs, seed: number, rng: Rng, size: 
   const take = (item: ItemDef) => pool.splice(pool.indexOf(item), 1);
 
   // Each band gets its fair share of the kinds first, in proportion to its height (at least one, and at
-  // least its `minGroups`), so no band is left empty while another is crowded.
-  for (const { zone, quota } of rng.shuffle(shares(recipe, knobs.groups))) {
-    let needed = quota;
-    for (const item of pool.filter((i) => i.zones.includes(zone.id))) {
-      if (needed <= 0 || groups.length >= knobs.groups) break;
+  // least its `minGroups`), so no band is left empty while another is crowded. The kinds are picked first,
+  // then placed biggest first (furniture against the wall before the toys in front of it).
+  const chosen: { item: ItemDef; zone: ZoneDef }[] = [];
+  for (const { zone, quota } of shares(recipe, knobs.groups)) {
+    let left = quota;
+    let wide = false;
+    // Anchors the band asks for come first (a room's furniture), always leaving room for at least one
+    // thing out in front of them; the rest of the band's share goes to things that aren't anchors.
+    const here = pool.filter((i) => i.zones.includes(zone.id));
+    const isAnchor = (i: ItemDef) => !!(i.tall || i.backRow || i.wide);
+    const anchorsFirst = zone.anchors
+      ? [...here.filter(isAnchor).slice(0, Math.min(zone.anchors, quota - 1)), ...here.filter((i) => !isAnchor(i))]
+      : here;
+    for (const item of [...new Set(anchorsFirst)]) {
+      // Only one extra-wide kind per band: two buses' worth of vehicles can't share one lane.
+      if (left <= 0 || (item.wide && wide)) continue;
+      wide ||= !!item.wide;
       take(item);
-      if (tryItem(item, zone.id)) needed--;
-      else pool.push(item);
+      chosen.push({ item, zone });
+      left--;
+    }
+  }
+  const anchored = (i: ItemDef) => (i.tall || i.backRow || i.wide ? 1 : 0);
+
+  chosen.sort((a, b) => anchored(b.item) - anchored(a.item) || footprint(b.item) - footprint(a.item));
+  for (const { item, zone } of chosen) {
+    if (groups.length >= knobs.groups || tryItem(item, zone.id)) continue;
+    // Didn't fit: give the band another (not extra-wide) kind instead.
+    for (const other of pool.filter((i) => i.zones.includes(zone.id) && !i.wide)) {
+      take(other);
+      if (tryItem(other, zone.id)) break;
     }
   }
 
@@ -275,10 +383,11 @@ export function relayoutScene(spec: SceneSpec, size: SceneSize): SceneSpec | nul
     for (const group of order) {
       const item = recipe.items.find((i) => i.kind === group.kind)!;
       const zone = recipe.zones.find((z) => z.id === group.zoneId)!;
-      const placed = place(ctx, { item, count: group.count, zone, col: REGIONS.indexOf(group.region), colour: group.colour?.hex });
+      const spread = item.spread && group.count > 1;
+      const placed = place(ctx, { item, count: group.count, zone, col: spread ? undefined : REGIONS.indexOf(group.region), colour: group.colour?.hex });
       if (!placed) break;
-      commit(ctx, zone, placed);
-      moved.set(group, { ...group, slot: placed.slot, boxes: placed.boxes });
+      commit(ctx, placed);
+      moved.set(group, { ...group, slot: placed.slot, boxes: placed.boxes, region: spread ? regionOf(centreOf(boundsOf(placed.rects)).x) : group.region });
     }
     if (moved.size < spec.groups.length) continue;
     const next = { ...spec, size, groups: spec.groups.map((g) => moved.get(g)!) };

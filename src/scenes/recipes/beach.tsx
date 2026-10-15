@@ -175,10 +175,11 @@ const items: ItemDef[] = [
     article: 'a',
     w: 160,
     h: 70,
-    tier: 'medium',
-    size: 0.17,
+    // About as long as a person is tall.
+    tier: 'large',
+    size: 0.26,
     zones: SAND,
-    maxCount: 3,
+    maxCount: 2,
     colours: [C.red, C.blue, C.green, C.orange, C.purple, C.pink],
     draw: (colour) => (
       <G>
@@ -197,8 +198,9 @@ const items: ItemDef[] = [
     h: 270,
     tier: 'large',
     size: 0.24,
-    // Tall on purpose: it stands at the back of the sand and its leaves rise over the sea.
+    // Tall on purpose: it stands at the back of the sand and its leaves rise over the sea. Two are spread apart.
     tall: true,
+    spread: true,
     zones: SAND,
     maxCount: 2,
     tone: '#2b9348',
@@ -279,7 +281,8 @@ function marks(height: number, boxes: Box[], random: () => number, variant: Vari
   const shore = height * SHORE;
   const wave = (x: number, y: number) => <Path d={`M${x},${y + 10} q15,-10 30,0 t30,0`} fill="none" stroke={foam} strokeWidth={4} strokeLinecap="round" />;
   return [
-    ...scatterMarks({ x0: -100, y0: height * 0.03, x1: 1000, y1: horizon - 20 }, 150, 66, 3, boxes, random, 0.35, (x, y) => cloudShape(x, y, 150 / 170)),
+    // White clouds: scenery, so solid, but never touching anything in the sky.
+    ...scatterMarks({ x0: -100, y0: height * 0.03, x1: 1000, y1: horizon - 30 }, 150, 66, 3, boxes, random, 0.95, (x, y) => cloudShape(x, y, 150 / 170), true),
     ...scatterMarks({ x0: 20, y0: horizon + 20, x1: 880, y1: shore - 10 }, 60, 20, 6, boxes, random, 0.3, wave),
     ...lineMarks(shore, -600, 1500, boxes, foam, 5, 0.35),
     ...[0.2, 0.5, 0.8].flatMap((fx) => {
@@ -306,7 +309,8 @@ export const beach: Recipe = {
   place: 'on the beach',
   zones: [
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: HORIZON, rows: 2 },
-    { id: 'sea', label: 'In the sea', surface: 'ground', top: HORIZON, bottom: SHORE, rows: 1 },
+    // Boats, buoys and dolphins float in the water: clear of the horizon and well clear of the shore.
+    { id: 'sea', label: 'In the sea', surface: 'air', top: HORIZON + 0.015, bottom: SHORE - 0.03, rows: 1 },
     { id: 'sand', label: 'On the sand', surface: 'ground', top: SHORE, bottom: 1, rows: 2 },
   ],
   items,

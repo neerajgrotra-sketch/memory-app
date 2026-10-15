@@ -3,15 +3,15 @@ import { Circle, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 import { C } from '../colours';
 import { balloon, bird, cloudShape, dog, person, plane, tree } from '../items/common';
 import { markIfClear, scatterMarks } from '../marks';
-import type { ItemDef, Mark, Recipe, Rect as Box, VariantDef } from '../types';
+import type { ItemDef, Mark, Recipe, Rect as Box } from '../types';
 
 /** Band edges, as fractions of the picture height. */
-const ROOF = 0.26;
-const GROUND_LINE = 0.56;
-const KERB = 0.78;
+const ROOF = 0.22;
+const GROUND_LINE = 0.5;
+const KERB = 0.74;
 
 const SKY = ['sky'];
-const WALLS = ['buildings'];
+const ROOFS = ['roofs'];
 const PAVEMENT = ['pavement'];
 const ROAD = ['road'];
 
@@ -32,43 +32,20 @@ const items: ItemDef[] = [
     singular: 'flag',
     plural: 'flags',
     article: 'a',
-    w: 100,
-    h: 90,
-    tier: 'medium',
-    size: 0.14,
-    zones: WALLS,
-    maxCount: 2,
+    w: 80,
+    h: 130,
+    tier: 'small',
+    size: 0.1,
+    zones: ROOFS,
+    maxCount: 3,
+    // One flag per roof, standing on the roofline.
+    spread: true,
     colours: [C.red, C.blue, C.yellow, C.green, C.purple, C.orange],
-    // A flag on a short pole sticking out from the building front.
     draw: (colour) => (
       <G>
-        <Rect x={0} y={70} width={12} height={20} rx={2} fill="#343a40" stroke="none" />
-        <Line x1={8} y1={80} x2={60} y2={8} stroke="#495057" strokeWidth={5} strokeLinecap="round" />
-        <Path d="M60,8 C72,14 84,2 98,8 V50 C84,44 72,56 60,50 Z" fill={colour} />
-      </G>
-    ),
-  },
-  {
-    kind: 'clock',
-    singular: 'clock',
-    plural: 'clocks',
-    article: 'a',
-    w: 120,
-    h: 110,
-    tier: 'medium',
-    size: 0.14,
-    zones: WALLS,
-    maxCount: 1,
-    tone: '#343a40',
-    countable: false,
-    // A street clock on a bracket fixed to the building front.
-    draw: () => (
-      <G>
-        <Rect x={0} y={20} width={14} height={40} rx={3} fill="#343a40" />
-        <Rect x={10} y={34} width={28} height={10} fill="#343a40" />
-        <Circle cx={76} cy={58} r={42} fill="#ffffff" stroke="#343a40" strokeWidth={8} />
-        <Line x1={76} y1={58} x2={76} y2={28} stroke="#343a40" strokeWidth={6} strokeLinecap="round" />
-        <Line x1={76} y1={58} x2={96} y2={68} stroke="#343a40" strokeWidth={6} strokeLinecap="round" />
+        <Rect x={2} y={120} width={20} height={10} rx={2} fill="#343a40" stroke="none" />
+        <Line x1={12} y1={4} x2={12} y2={122} stroke="#495057" strokeWidth={6} strokeLinecap="round" />
+        <Path d="M15,8 C34,2 54,16 78,8 V52 C54,60 34,46 15,52 Z" fill={colour} />
       </G>
     ),
   },
@@ -81,16 +58,43 @@ const items: ItemDef[] = [
     h: 80,
     tier: 'medium',
     size: 0.13,
-    zones: WALLS,
+    zones: ROOFS,
     maxCount: 3,
-    tone: '#e9ecef',
+    // One dish per roof, standing on the roofline.
+    spread: true,
+    tone: '#6c757d',
     draw: () => (
       <G>
-        <Rect x={2} y={34} width={12} height={30} rx={2} fill="#495057" stroke="none" />
-        <Line x1={10} y1={50} x2={34} y2={46} stroke="#495057" strokeWidth={5} />
-        <Path d="M30,6 C10,40 40,74 76,60 Z" fill="#e9ecef" />
-        <Line x1={44} y1={40} x2={66} y2={22} stroke="#495057" strokeWidth={4} />
-        <Circle cx={67} cy={21} r={5} fill="#495057" stroke="none" />
+        <Line x1={40} y1={50} x2={40} y2={74} stroke="#495057" strokeWidth={6} />
+        <Rect x={26} y={70} width={28} height={10} rx={2} fill="#343a40" stroke="none" />
+        <Path d="M8,10 C0,45 40,65 70,50 Z" fill="#6c757d" />
+        <Line x1={39} y1={30} x2={62} y2={12} stroke="#495057" strokeWidth={4} />
+        <Circle cx={63} cy={11} r={5} fill="#495057" stroke="none" />
+      </G>
+    ),
+  },
+  {
+    kind: 'clock',
+    singular: 'street clock',
+    plural: 'street clocks',
+    article: 'a',
+    w: 80,
+    h: 230,
+    tier: 'medium',
+    size: 0.13,
+    zones: PAVEMENT,
+    maxCount: 1,
+    // A clock on its own post, standing on the pavement like a street lamp.
+    tall: true,
+    tone: '#343a40',
+    countable: false,
+    draw: () => (
+      <G>
+        <Rect x={34} y={70} width={12} height={150} fill="#343a40" />
+        <Rect x={22} y={214} width={36} height={16} rx={3} fill="#343a40" />
+        <Circle cx={40} cy={40} r={36} fill="#ffffff" stroke="#343a40" strokeWidth={8} />
+        <Line x1={40} y1={40} x2={40} y2={16} stroke="#343a40" strokeWidth={6} strokeLinecap="round" />
+        <Line x1={40} y1={40} x2={56} y2={48} stroke="#343a40" strokeWidth={6} strokeLinecap="round" />
       </G>
     ),
   },
@@ -102,7 +106,7 @@ const items: ItemDef[] = [
     w: 180,
     h: 160,
     tier: 'large',
-    size: 0.26,
+    size: 0.28,
     zones: PAVEMENT,
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.orange, C.purple, C.yellow],
@@ -138,7 +142,7 @@ const items: ItemDef[] = [
     w: 140,
     h: 75,
     tier: 'medium',
-    size: 0.17,
+    size: 0.18,
     zones: PAVEMENT,
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.brown, C.yellow],
@@ -179,8 +183,8 @@ const items: ItemDef[] = [
     article: 'a',
     w: 115,
     h: 75,
-    tier: 'medium',
-    size: 0.16,
+    tier: 'large',
+    size: 0.22,
     zones: PAVEMENT,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.black, C.pink],
@@ -226,8 +230,9 @@ const items: ItemDef[] = [
     tier: 'small',
     size: 0.1,
     tall: true,
+    spread: true,
     zones: PAVEMENT,
-    maxCount: 2,
+    maxCount: 3,
     tone: '#343a40',
     draw: () => (
       <G>
@@ -244,8 +249,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 175,
     h: 85,
-    tier: 'large',
-    size: 0.22,
+    tier: 'xl',
+    size: 0.36,
+    wide: true,
     zones: ROAD,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.white, C.black, C.orange],
@@ -265,8 +271,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 230,
     h: 115,
-    tier: 'large',
-    size: 0.28,
+    tier: 'xl',
+    size: 0.58,
+    wide: true,
     zones: ROAD,
     maxCount: 1,
     colours: [C.red, C.blue, C.yellow, C.green, C.white],
@@ -290,20 +297,24 @@ const items: ItemDef[] = [
     singular: 'scooter',
     plural: 'scooters',
     article: 'a',
-    w: 95,
-    h: 75,
-    tier: 'medium',
-    size: 0.15,
+    w: 100,
+    h: 82,
+    tier: 'large',
+    size: 0.22,
     zones: ROAD,
-    maxCount: 3,
+    maxCount: 2,
     colours: [C.red, C.blue, C.yellow, C.green, C.pink, C.white],
+    // A motor scooter: rear body and seat, low footboard, tall front shield, handlebars and headlight.
     draw: (colour) => (
       <G>
-        <Path d="M20,52 C22,34 45,30 62,36 L70,52 Z" fill={colour} />
-        <Rect x={30} y={26} width={30} height={9} rx={4} fill="#222" stroke="none" />
-        <Path d="M70,52 L78,10 H90" fill="none" stroke="#343a40" strokeWidth={6} strokeLinecap="round" />
-        {wheel(18, 58, 15)}
-        {wheel(78, 58, 15)}
+        <Path d="M6,64 C4,46 16,36 36,38 L46,58 H70 L72,66 H8 Z" fill={colour} />
+        <Path d="M66,66 L76,22 C77,16 86,14 88,20 L90,66 Z" fill={colour} />
+        <Rect x={14} y={28} width={34} height={11} rx={5} fill="#262626" stroke="none" />
+        <Line x1={82} y1={18} x2={78} y2={6} stroke="#343a40" strokeWidth={5} strokeLinecap="round" />
+        <Line x1={66} y1={6} x2={94} y2={6} stroke="#343a40" strokeWidth={5} strokeLinecap="round" />
+        <Circle cx={88} cy={28} r={5} fill="#fff3b0" stroke="#343a40" strokeWidth={2} />
+        {wheel(22, 68, 13)}
+        {wheel(80, 68, 13)}
       </G>
     ),
   },
@@ -314,8 +325,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 190,
     h: 100,
-    tier: 'large',
-    size: 0.24,
+    tier: 'xl',
+    size: 0.42,
+    wide: true,
     zones: ROAD,
     maxCount: 2,
     colours: [C.white, C.blue, C.red, C.green, C.yellow],
@@ -332,8 +344,26 @@ const items: ItemDef[] = [
 
 type Palette = Record<string, string>;
 
-/** One building front per third of the picture, so anything "on the buildings" is on exactly one. */
+/** One building front per third of the picture. */
 const FACADES = [0, 1, 2];
+
+/**
+ * Every building front, in fractions of the picture: two upper windows and a door, always drawn. Doors
+ * sit towards one side (alternating), leaving room on the other side of each building for a street lamp,
+ * tree or clock, which never stands in front of a door.
+ */
+function facade(i: number) {
+  const c = (i + 0.5) / 3;
+  const win = { y0: ROOF + 0.05, y1: ROOF + 0.14 };
+  const doorX = i % 2 === 0 ? i / 3 + 0.04 : (i + 1) / 3 - 0.13;
+  return {
+    windows: [
+      { x0: c - 0.11, x1: c - 0.035, ...win },
+      { x0: c + 0.035, x1: c + 0.11, ...win },
+    ],
+    door: { x0: doorX, y0: GROUND_LINE - 0.17, x1: doorX + 0.09, y1: GROUND_LINE },
+  };
+}
 
 function cityPalette(sky: string, facades: string[], window: string): Palette {
   return {
@@ -346,7 +376,7 @@ function cityPalette(sky: string, facades: string[], window: string): Palette {
 }
 
 const PALETTES: Record<string, Palette> = {
-  day: cityPalette('#8cc8f5', ['#e9c46a', '#f4a261', '#b5838d'], '#e7f5ff'),
+  day: cityPalette('#8cc8f5', ['#e9c46a', '#f4a261', '#b5838d'], '#dff1ff'),
   sunset: cityPalette('#ffa98a', ['#c9ada7', '#9a8c98', '#e5989b'], '#fff3bf'),
 };
 
@@ -357,7 +387,7 @@ function surfaceAt(x: number, y: number): string {
   return 'road';
 }
 
-/** Background bands: sky, three building fronts (the outer ones run on past the picture's edges), pavement, kerb, road. */
+/** Background: sky, three building fronts with their windows and doors, pavement, kerb and road. */
 function backdrop(height: number, palette: Palette) {
   const roof = height * ROOF;
   const ground = height * GROUND_LINE;
@@ -367,16 +397,29 @@ function backdrop(height: number, palette: Palette) {
     [300, 600],
     [600, 1500],
   ];
+  const r = (f: { x0: number; y0: number; x1: number; y1: number }) => ({ x: f.x0 * 900, y: f.y0 * height, width: (f.x1 - f.x0) * 900, height: (f.y1 - f.y0) * height });
   return (
     <G>
       <Rect x={-600} y={-600} width={2100} height={roof + 600} fill={palette.sky} />
       {spans.map(([x0, x1], i) => (
         <Rect key={x0} x={x0} y={roof} width={x1 - x0} height={ground - roof} fill={palette[`facade${i}`]} />
       ))}
-      <Rect x={-600} y={roof} width={2100} height={10} fill="#000000" fillOpacity={0.15} />
+      <Rect x={-600} y={roof} width={2100} height={10} fill="#000000" fillOpacity={0.18} />
       {[300, 600].map((x) => (
-        <Rect key={x} x={x - 2} y={roof} width={4} height={ground - roof} fill="#000000" fillOpacity={0.15} />
+        <Rect key={x} x={x - 2} y={roof} width={4} height={ground - roof} fill="#000000" fillOpacity={0.18} />
       ))}
+      {FACADES.map((i) => {
+        const f = facade(i);
+        return (
+          <G key={i}>
+            {f.windows.map((w) => (
+              <Rect key={w.x0} {...r(w)} fill={palette.window} stroke="#ffffff" strokeWidth={6} />
+            ))}
+            <Rect {...r(f.door)} fill="#6b4226" stroke="#3d2412" strokeWidth={4} />
+            <Circle cx={(f.door.x1 - 0.012) * 900} cy={(f.door.y0 + 0.09) * height} r={4} fill="#ffd60a" />
+          </G>
+        );
+      })}
       <Rect x={-600} y={ground} width={2100} height={kerb - ground} fill={palette.pavement} />
       <Rect x={-600} y={kerb} width={2100} height={height - kerb + 600} fill={palette.road} />
       <Rect x={-600} y={kerb} width={2100} height={12} fill="#868e96" />
@@ -384,28 +427,15 @@ function backdrop(height: number, palette: Palette) {
   );
 }
 
-/** Faint windows, doors, road markings and clouds, each left out wherever it would touch a thing. */
-function marks(height: number, boxes: Box[], random: () => number, variant: VariantDef): Mark[] {
+/** Road markings (left out where a vehicle is) and white clouds kept clear of everything in the sky. */
+function marks(height: number, boxes: Box[], random: () => number): Mark[] {
   const roof = height * ROOF;
-  const ground = height * GROUND_LINE;
-  const wallH = ground - roof;
+  const dashY = height * 0.875;
   const out: Mark[] = [];
-  for (const i of FACADES) {
-    const centre = i * 300 + 150;
-    for (const dx of [-75, 25]) {
-      const x0 = centre + dx;
-      const y0 = roof + wallH * 0.18;
-      const r = { x0, y0, x1: x0 + 50, y1: y0 + wallH * 0.24 };
-      out.push(...markIfClear(r, boxes, 0.3, <Rect key={`w${i}${dx}`} x={r.x0} y={r.y0} width={r.x1 - r.x0} height={r.y1 - r.y0} fill={variant.palette.window} fillOpacity={0.3} />));
-    }
-    const door = { x0: centre - 28, y0: ground - wallH * 0.36, x1: centre + 28, y1: ground };
-    out.push(...markIfClear(door, boxes, 0.3, <Rect key={`d${i}`} x={door.x0} y={door.y0} width={56} height={door.y1 - door.y0} fill="#3d2412" fillOpacity={0.3} />));
-  }
-  const dashY = height * 0.885;
   for (const x of [40, 280, 520, 760]) {
     out.push(...markIfClear({ x0: x, y0: dashY - 4, x1: x + 100, y1: dashY + 4 }, boxes, 0.35, <Rect key={`r${x}`} x={x} y={dashY - 4} width={100} height={8} fill="#f8f9fa" fillOpacity={0.35} />));
   }
-  out.push(...scatterMarks({ x0: -100, y0: height * 0.03, x1: 1000, y1: roof - 20 }, 150, 66, 3, boxes, random, 0.35, (x, y) => cloudShape(x, y, 150 / 170)));
+  out.push(...scatterMarks({ x0: -100, y0: height * 0.02, x1: 1000, y1: roof * 0.6 }, 150, 66, 3, boxes, random, 0.95, (x, y) => cloudShape(x, y, 150 / 170), true));
   return out;
 }
 
@@ -414,12 +444,15 @@ export const city: Recipe = {
   title: 'City street',
   place: 'in the street',
   zones: [
+    // The roofs band overlaps the bottom of the sky: flags and dishes stand on the roofline against the sky.
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: ROOF, rows: 2 },
-    { id: 'buildings', label: 'On the buildings', surface: 'wall', top: ROOF, bottom: GROUND_LINE, rows: 2, panels: true, minGroups: 1 },
+    { id: 'roofs', label: 'On the roofs', surface: 'ground', top: ROOF - 0.14, bottom: ROOF, rows: 1, flush: true, panels: true },
+    { id: 'buildings', label: 'On the buildings', surface: 'wall', top: ROOF, bottom: GROUND_LINE, rows: 0 },
     { id: 'pavement', label: 'On the pavement', surface: 'ground', top: GROUND_LINE, bottom: KERB, rows: 2 },
     { id: 'road', label: 'On the road', surface: 'ground', top: KERB, bottom: 1, rows: 1 },
   ],
   items,
+  keepClear: FACADES.map((i) => facade(i).door),
   surfaceAt,
   marks,
   variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number) => backdrop(h, p) })),
