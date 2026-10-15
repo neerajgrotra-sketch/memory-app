@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 2.2.1 (2026-10-15)
+
+- Flags and satellite dishes are bolted to the walls with a bracket, so they no longer look like they float.
+- Shop awnings are replaced by market stalls standing on the pavement.
+- The sky and wall areas start below the ✕ button and the countdown, so nothing hides behind them.
+- Palm trees, buses and sofas appear again; they were too big to fit. Tall things are now checked for height as well as width.
+
 ## 2.2.0 (2026-10-15)
 
 - **Realistic sizes:** a sofa is now bigger than a cat, a bus bigger than a scooter, and a palm tree taller than a person.

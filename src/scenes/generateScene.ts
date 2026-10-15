@@ -20,7 +20,7 @@ const SPACING = 1.15;
 /** Everything is drawn this much bigger than its real-world size so small things are easy to spot on a phone. */
 const SIZE_BOOST = 1.35;
 /** Big things may shrink to this fraction of their size to fit a cell, so they still look bigger than small things. */
-const MIN_FIT = 0.75;
+const MIN_FIT = 0.7;
 /** How much of a back-row thing's base may tuck behind the row in front. Small, so everything stays countable. */
 const ROW_TUCK = 0.1;
 
@@ -73,8 +73,9 @@ function layoutGround(item: ItemDef, count: number, zone: ZoneDef, cell: Cell, h
 
   /** Rows from the front, starting with the front row standing at `front`. Null if they don't fit. */
   const stack = (rows: number, cols: number, front: number) => {
-    // The front row is the widest; if it needs to shrink to fit, every row shrinks by the same amount.
-    const fit = Math.min(1, cellW / (cols * item.w * base * perspective(front) * SPACING));
+    // The front row is the widest and tallest; if it needs to shrink to fit, every row shrinks by the same amount.
+    const frontScale = base * perspective(front);
+    const fit = Math.min(1, cellW / (cols * item.w * frontScale * SPACING), (front - top) / (item.h * frontScale));
     if (fit < MIN_FIT) return null;
     const result: { baseline: number; scale: number }[] = [];
     let baseline = front;

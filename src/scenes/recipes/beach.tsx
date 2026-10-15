@@ -177,7 +177,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 160,
     h: 270,
-    size: 330,
+    size: 230,
     zones: SAND,
     maxCount: 3,
     draw: () => (
@@ -265,7 +265,7 @@ export const beach: Recipe = {
   title: 'At the beach',
   place: 'on the beach',
   zones: [
-    { id: 'sky', label: 'In the sky', surface: 'air', top: 0.07, bottom: 0.31 },
+    { id: 'sky', label: 'In the sky', surface: 'air', top: 0.12, bottom: 0.31 },
     { id: 'sea', label: 'In the sea', surface: 'ground', top: 0.34, bottom: 0.54, farScale: 0.7, nearScale: 0.85 },
     { id: 'shore', label: 'Near the water', surface: 'ground', top: 0.56, bottom: 0.75, farScale: 0.8, nearScale: 0.9 },
     { id: 'front', label: 'At the front', surface: 'ground', top: 0.76, bottom: 0.97, farScale: 0.92, nearScale: 1.05 },

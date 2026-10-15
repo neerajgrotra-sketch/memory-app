@@ -92,7 +92,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 230,
     h: 120,
-    size: 150,
+    size: 130,
     zones: BACK,
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.grey, C.yellow, C.purple, C.brown],
@@ -114,7 +114,7 @@ const items: ItemDef[] = [
     article: 'an',
     w: 120,
     h: 120,
-    size: 150,
+    size: 130,
     zones: BACK,
     maxCount: 3,
     colours: [C.red, C.blue, C.green, C.yellow, C.orange, C.pink],
@@ -318,7 +318,7 @@ export const livingRoom: Recipe = {
   title: 'Living room',
   place: 'in the room',
   zones: [
-    { id: 'wall', label: 'On the wall', surface: 'wall', top: 0.08, bottom: 0.38 },
+    { id: 'wall', label: 'On the wall', surface: 'wall', top: 0.12, bottom: 0.38 },
     {
       id: 'back',
       label: 'At the back',

@@ -25,16 +25,18 @@ const items: ItemDef[] = [
     singular: 'flag',
     plural: 'flags',
     article: 'a',
-    w: 90,
-    h: 110,
+    w: 100,
+    h: 112,
     size: 120,
     zones: WALLS,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.purple, C.orange],
+    // Bolted to the wall: a bracket plate with the pole sticking out at an angle.
     draw: (colour) => (
       <G>
-        <Line x1={6} y1={0} x2={6} y2={110} stroke="#495057" strokeWidth={6} />
-        <Path d="M9,6 C35,0 55,16 86,8 V56 C55,64 35,48 9,54 Z" fill={colour} stroke="#00000033" strokeWidth={2} />
+        <Path d="M42,49 L67,13 C78,22 86,20 97,48 C86,46 80,60 72,84 Z" fill={colour} stroke="#00000033" strokeWidth={2} />
+        <Line x1={10} y1={98} x2={70} y2={8} stroke="#495057" strokeWidth={6} strokeLinecap="round" />
+        <Rect x={0} y={88} width={16} height={24} rx={3} fill="#343a40" />
       </G>
     ),
   },
@@ -69,7 +71,8 @@ const items: ItemDef[] = [
     maxCount: 3,
     draw: () => (
       <G>
-        <Line x1={40} y1={50} x2={40} y2={80} stroke="#495057" strokeWidth={6} />
+        <Line x1={40} y1={50} x2={40} y2={74} stroke="#495057" strokeWidth={6} />
+        <Rect x={28} y={70} width={24} height={10} rx={2} fill="#343a40" />
         <Path d="M8,10 C0,45 40,65 70,50 Z" fill="#dee2e6" stroke="#868e96" strokeWidth={3} />
         <Line x1={39} y1={30} x2={62} y2={12} stroke="#868e96" strokeWidth={4} />
         <Circle cx={63} cy={11} r={5} fill="#868e96" />
@@ -77,24 +80,35 @@ const items: ItemDef[] = [
     ),
   },
   {
-    kind: 'awning',
-    singular: 'shop awning',
-    plural: 'shop awnings',
+    kind: 'stall',
+    singular: 'market stall',
+    plural: 'market stalls',
     article: 'a',
-    w: 170,
-    h: 70,
-    size: 70,
-    zones: WALLS,
+    w: 180,
+    h: 160,
+    size: 150,
+    zones: PAVEMENT,
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.orange, C.purple, C.yellow],
+    colourPrompt: (plural) => (plural ? 'What colour were the awnings on the market stalls?' : 'What colour was the awning on the market stall?'),
     draw: (colour) => (
       <G>
-        <Polygon points="10,0 160,0 170,50 0,50" fill={colour} stroke="#00000033" strokeWidth={2} />
-        <G fill="#ffffff" fillOpacity={0.75}>
-          <Polygon points="40,0 60,0 62,50 38,50" />
-          <Polygon points="100,0 120,0 126,50 102,50" />
+        <Rect x={12} y={50} width={7} height={110} fill="#5c3d1e" />
+        <Rect x={161} y={50} width={7} height={110} fill="#5c3d1e" />
+        <Rect x={8} y={105} width={164} height={55} fill="#a0612b" stroke="#00000033" strokeWidth={2} />
+        <G>
+          <Circle cx={40} cy={100} r={12} fill="#e63946" />
+          <Circle cx={64} cy={100} r={12} fill="#f77f00" />
+          <Circle cx={88} cy={100} r={12} fill="#ffd60a" />
+          <Circle cx={112} cy={100} r={12} fill="#2b9348" />
+          <Circle cx={136} cy={100} r={12} fill="#e63946" />
         </G>
-        <Path d="M0,50 Q14,68 28,50 Q42,68 56,50 Q70,68 85,50 Q99,68 113,50 Q127,68 141,50 Q155,68 170,50" fill={colour} />
+        <Polygon points="10,0 170,0 180,45 0,45" fill={colour} stroke="#00000033" strokeWidth={2} />
+        <G fill="#ffffff" fillOpacity={0.75}>
+          <Polygon points="42,0 62,0 64,45 40,45" />
+          <Polygon points="106,0 126,0 132,45 108,45" />
+        </G>
+        <Path d="M0,45 Q15,62 30,45 Q45,62 60,45 Q75,62 90,45 Q105,62 120,45 Q135,62 150,45 Q165,62 180,45" fill={colour} />
       </G>
     ),
   },
@@ -228,7 +242,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 230,
     h: 115,
-    size: 105,
+    size: 95,
     zones: ROAD,
     maxCount: 2,
     colours: [C.red, C.blue, C.yellow, C.green, C.white],
@@ -300,7 +314,7 @@ const BUILDINGS = [
 ];
 
 function backdrop(height: number, sky: string, walls: string[], window: string) {
-  const roof = height * 0.27;
+  const roof = height * 0.31;
   const pavement = height * 0.6;
   const kerb = height * 0.73;
   return (
@@ -350,13 +364,13 @@ export const city: Recipe = {
   title: 'City street',
   place: 'in the street',
   zones: [
-    { id: 'sky', label: 'In the sky', surface: 'air', top: 0.07, bottom: 0.24 },
-    { id: 'buildings', label: 'On the buildings', surface: 'wall', top: 0.29, bottom: 0.49 },
+    { id: 'sky', label: 'In the sky', surface: 'air', top: 0.12, bottom: 0.27 },
+    { id: 'buildings', label: 'On the buildings', surface: 'wall', top: 0.33, bottom: 0.5 },
     {
       id: 'pavement',
       label: 'On the pavement',
       surface: 'ground',
-      top: 0.5,
+      top: 0.51,
       bottom: 0.72,
       floor: 0.65,
       farScale: 0.85,
