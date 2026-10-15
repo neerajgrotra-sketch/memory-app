@@ -9,6 +9,8 @@ import { standsOut } from '@/scenes/contrast';
 import { generateQuestions } from '@/scenes/generateQuestions';
 import { generateScene, relayoutScene } from '@/scenes/generateScene';
 import { RECIPES } from '@/scenes/recipes';
+import { facade } from '@/scenes/recipes/city';
+import { gapBetween } from '@/scenes/layout';
 import { TIERS, type SceneSize } from '@/scenes/types';
 import { validateScene } from '@/scenes/validateScene';
 
@@ -42,6 +44,18 @@ for (const recipe of RECIPES) {
     const shows = recipe.variants.some((v) => colours.some((c) => surfaces.some((s) => standsOut(c, v.palette[s]))));
     if (!shows) fail(`${recipe.id}: ${item.kind} can't stand out anywhere`);
   }
+}
+
+// The city's building fronts: windows and doors never overlap each other or leave their building.
+for (const i of [0, 1, 2]) {
+  const f = facade(i);
+  const parts = [...f.windows, f.door];
+  parts.forEach((a, j) => {
+    if (a.x0 < i / 3 || a.x1 > (i + 1) / 3) fail(`city: building ${i} has a window or door past its edge`);
+    parts.slice(j + 1).forEach((b) => {
+      if (gapBetween(a, b) < 0.01) fail(`city: building ${i} has a door and window overlapping`);
+    });
+  });
 }
 
 const started = Date.now();

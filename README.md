@@ -84,6 +84,7 @@ Every picture is laid out for the space it is shown in: the area below the heade
   - `spread`: street lamps, trees, palm trees, bookshelves, flags and dishes on roofs go one per column, standing on one line.
   - `flush` bands (rooftops): things stand exactly on the line.
   - `keepClear`: nothing stands in front of a building's door.
+  - `oneWay` bands (the road): every vehicle faces the same way. Vehicle drawings all face right, and moving scooters have riders.
   - Boats float in the water, clear of the shore.
   - Copies of something on the ground stand side by side, never stacked like a ladder.
 - **Bands are respected.** Nothing crosses out of its band. Tall anchors (palm trees, bookshelves, street and floor lamps) are the exception: they stand in the back row of their band and rise above it on purpose.

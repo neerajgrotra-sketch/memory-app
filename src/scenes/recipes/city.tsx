@@ -204,8 +204,9 @@ const items: ItemDef[] = [
     singular: 'fire hydrant',
     plural: 'fire hydrants',
     article: 'a',
-    w: 50,
-    h: 75,
+    // Squat, so at its smallest size (44 pt wide) it stays well under knee height of a person.
+    w: 66,
+    h: 62,
     tier: 'small',
     size: 0.1,
     zones: PAVEMENT,
@@ -213,10 +214,10 @@ const items: ItemDef[] = [
     colours: [C.red, C.yellow],
     draw: (colour) => (
       <G>
-        <Rect x={10} y={20} width={30} height={50} rx={5} fill={colour} />
-        <Rect x={0} y={34} width={50} height={12} rx={4} fill={colour} />
-        <Path d="M10,22 C10,4 40,4 40,22 Z" fill={colour} />
-        <Rect x={4} y={68} width={42} height={7} fill={colour} />
+        <Rect x={19} y={16} width={28} height={40} rx={5} fill={colour} />
+        <Rect x={6} y={26} width={54} height={13} rx={5} fill={colour} />
+        <Path d="M19,18 C19,2 47,2 47,18 Z" fill={colour} />
+        <Rect x={13} y={54} width={40} height={8} rx={2} fill={colour} />
       </G>
     ),
   },
@@ -255,12 +256,17 @@ const items: ItemDef[] = [
     zones: ROAD,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.white, C.black, C.orange],
+    // Faces right, like every vehicle drawing (the road's one-way rule mirrors them all together).
     draw: (colour) => (
       <G>
-        <Path d="M5,62 V42 C5,34 12,30 20,30 H40 L62,6 H122 L145,30 H158 C166,30 172,36 172,44 V62 Z" fill={colour} />
-        <Path d="M70,12 H95 V30 H50 Z M101,12 H118 L136,30 H101 Z" fill="#cfe9ff" stroke="none" />
-        {wheel(42, 64, 18)}
-        {wheel(134, 64, 18)}
+        <G transform="translate(177 0) scale(-1 1)">
+          <Path d="M5,62 V42 C5,34 12,30 20,30 H40 L62,6 H122 L145,30 H158 C166,30 172,36 172,44 V62 Z" fill={colour} />
+          <Path d="M70,12 H95 V30 H50 Z M101,12 H118 L136,30 H101 Z" fill="#cfe9ff" stroke="none" />
+        </G>
+        <Rect x={163} y={36} width={9} height={8} rx={2} fill="#fff3b0" stroke="none" />
+        <Rect x={5} y={36} width={6} height={9} rx={2} fill="#d00000" stroke="none" />
+        {wheel(43, 64, 18)}
+        {wheel(135, 64, 18)}
       </G>
     ),
   },
@@ -287,6 +293,8 @@ const items: ItemDef[] = [
           <Rect x={146} y={14} width={36} height={30} rx={4} />
           <Rect x={190} y={14} width={30} height={50} rx={4} />
         </G>
+        <Rect x={221} y={68} width={6} height={12} rx={2} fill="#fff3b0" stroke="none" />
+        <Rect x={3} y={66} width={5} height={14} rx={2} fill="#d00000" stroke="none" />
         {wheel(48, 94, 20)}
         {wheel(180, 94, 20)}
       </G>
@@ -298,23 +306,33 @@ const items: ItemDef[] = [
     plural: 'scooters',
     article: 'a',
     w: 100,
-    h: 82,
+    h: 110,
     tier: 'large',
     size: 0.22,
     zones: ROAD,
     maxCount: 2,
     colours: [C.red, C.blue, C.yellow, C.green, C.pink, C.white],
-    // A motor scooter: rear body and seat, low footboard, tall front shield, handlebars and headlight.
+    colourPrompt: (plural) => (plural ? 'What colour were the scooters?' : 'What colour was the scooter?'),
+    // A motor scooter on the move, so it has a rider (helmet and dark jacket, so the scooter's colour is the
+    // only colour to remember): rear body and seat, low footboard, front shield, handlebars and headlight.
     draw: (colour) => (
       <G>
-        <Path d="M6,64 C4,46 16,36 36,38 L46,58 H70 L72,66 H8 Z" fill={colour} />
-        <Path d="M66,66 L76,22 C77,16 86,14 88,20 L90,66 Z" fill={colour} />
-        <Rect x={14} y={28} width={34} height={11} rx={5} fill="#262626" stroke="none" />
-        <Line x1={82} y1={18} x2={78} y2={6} stroke="#343a40" strokeWidth={5} strokeLinecap="round" />
-        <Line x1={66} y1={6} x2={94} y2={6} stroke="#343a40" strokeWidth={5} strokeLinecap="round" />
-        <Circle cx={88} cy={28} r={5} fill="#fff3b0" stroke="#343a40" strokeWidth={2} />
-        {wheel(22, 68, 13)}
-        {wheel(80, 68, 13)}
+        <G stroke="none">
+          <Path d="M30,64 L58,90 L64,86 L40,58 Z" fill="#343a40" />
+          <Path d="M24,30 C24,22 30,18 38,18 L48,20 L52,60 L28,62 Z" fill="#495057" />
+          <Path d="M44,28 L86,32" stroke="#495057" strokeWidth={8} strokeLinecap="round" />
+          <Circle cx={36} cy={12} r={12} fill="#343a40" />
+          <Path d="M38,6 H48 V16 H40 Z" fill="#a5d8ff" />
+        </G>
+        <G transform="translate(0 28)">
+          <Path d="M6,64 C4,46 16,36 36,38 L46,58 H70 L72,66 H8 Z" fill={colour} />
+          <Path d="M66,66 L76,22 C77,16 86,14 88,20 L90,66 Z" fill={colour} />
+          <Line x1={82} y1={18} x2={80} y2={6} stroke="#343a40" strokeWidth={5} strokeLinecap="round" />
+          <Line x1={70} y1={6} x2={94} y2={6} stroke="#343a40" strokeWidth={5} strokeLinecap="round" />
+          <Circle cx={88} cy={28} r={5} fill="#fff3b0" stroke="#343a40" strokeWidth={2} />
+          {wheel(22, 68, 13)}
+          {wheel(80, 68, 13)}
+        </G>
       </G>
     ),
   },
@@ -335,6 +353,8 @@ const items: ItemDef[] = [
       <G>
         <Path d="M4,78 V14 C4,8 8,4 14,4 H130 L170,38 C180,40 186,46 186,54 V78 Z" fill={colour} />
         <Path d="M134,12 L162,38 H134 Z" fill="#cfe9ff" stroke="none" />
+        <Rect x={178} y={54} width={8} height={9} rx={2} fill="#fff3b0" stroke="none" />
+        <Rect x={4} y={56} width={6} height={12} rx={2} fill="#d00000" stroke="none" />
         {wheel(42, 80, 18)}
         {wheel(150, 80, 18)}
       </G>
@@ -348,20 +368,27 @@ type Palette = Record<string, string>;
 const FACADES = [0, 1, 2];
 
 /**
- * Every building front, in fractions of the picture: two upper windows and a door, always drawn. Doors
- * sit towards one side (alternating), leaving room on the other side of each building for a street lamp,
- * tree or clock, which never stands in front of a door.
+ * Every building front, in fractions of the picture, worked out from the roof and pavement lines so
+ * the parts never overlap: two upper-floor windows, and on the ground floor a door to one side
+ * (alternating) and a shop window on the other. Street lamps, trees and the clock never stand in front
+ * of a door. Exported for the scene checker.
  */
-function facade(i: number) {
-  const c = (i + 0.5) / 3;
-  const win = { y0: ROOF + 0.05, y1: ROOF + 0.14 };
-  const doorX = i % 2 === 0 ? i / 3 + 0.04 : (i + 1) / 3 - 0.13;
+export function facade(i: number) {
+  const t0 = i / 3;
+  const t1 = (i + 1) / 3;
+  const c = (t0 + t1) / 2;
+  const wall = GROUND_LINE - ROOF;
+  const upper = { y0: ROOF + wall * 0.12, y1: ROOF + wall * 0.4 };
+  const doorLeft = i % 2 === 0;
+  const doorX = doorLeft ? t0 + 0.04 : t1 - 0.13;
+  const shopX = doorLeft ? t1 - 0.15 : t0 + 0.05;
   return {
     windows: [
-      { x0: c - 0.11, x1: c - 0.035, ...win },
-      { x0: c + 0.035, x1: c + 0.11, ...win },
+      { x0: c - 0.11, x1: c - 0.035, ...upper },
+      { x0: c + 0.035, x1: c + 0.11, ...upper },
+      { x0: shopX, x1: shopX + 0.1, y0: ROOF + wall * 0.55, y1: ROOF + wall * 0.85 },
     ],
-    door: { x0: doorX, y0: GROUND_LINE - 0.17, x1: doorX + 0.09, y1: GROUND_LINE },
+    door: { x0: doorX, y0: ROOF + wall * 0.5, x1: doorX + 0.09, y1: GROUND_LINE },
   };
 }
 
@@ -416,7 +443,7 @@ function backdrop(height: number, palette: Palette) {
               <Rect key={w.x0} {...r(w)} fill={palette.window} stroke="#ffffff" strokeWidth={6} />
             ))}
             <Rect {...r(f.door)} fill="#6b4226" stroke="#3d2412" strokeWidth={4} />
-            <Circle cx={(f.door.x1 - 0.012) * 900} cy={(f.door.y0 + 0.09) * height} r={4} fill="#ffd60a" />
+            <Circle cx={(f.door.x1 - 0.012) * 900} cy={((f.door.y0 + f.door.y1) / 2) * height} r={4} fill="#ffd60a" />
           </G>
         );
       })}
@@ -449,7 +476,8 @@ export const city: Recipe = {
     { id: 'roofs', label: 'On the roofs', surface: 'ground', top: ROOF - 0.14, bottom: ROOF, rows: 1, flush: true, panels: true },
     { id: 'buildings', label: 'On the buildings', surface: 'wall', top: ROOF, bottom: GROUND_LINE, rows: 0 },
     { id: 'pavement', label: 'On the pavement', surface: 'ground', top: GROUND_LINE, bottom: KERB, rows: 2 },
-    { id: 'road', label: 'On the road', surface: 'ground', top: KERB, bottom: 1, rows: 1 },
+    // One lane of traffic: every vehicle faces the same way. Vehicle drawings all face right.
+    { id: 'road', label: 'On the road', surface: 'ground', top: KERB, bottom: 1, rows: 1, oneWay: true },
   ],
   items,
   keepClear: FACADES.map((i) => facade(i).door),

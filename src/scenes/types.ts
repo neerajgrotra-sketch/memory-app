@@ -32,6 +32,8 @@ export interface ZoneDef {
   rowSizes?: number[];
   /** At least this many kinds of thing go here (e.g. a room wall is never bare). */
   minGroups?: number;
+  /** Everything here faces the same way (traffic on a road), chosen once per picture. */
+  oneWay?: boolean;
   /** At least this many of the band's kinds are anchors (tall, against the wall or extra wide): a room always has furniture. */
   anchors?: number;
   /** Ground bands: things stand exactly on the bottom line (flags and dishes on a roofline). */

@@ -172,6 +172,12 @@ export function validateScene(spec: SceneSpec, width: number, height: number): S
     }
   }
 
+  // Traffic: everything in a one-way band faces the same way.
+  for (const zone of recipe.zones.filter((z) => z.oneWay)) {
+    const ways = new Set(spec.groups.filter((g) => g.zoneId === zone.id).flatMap((g) => g.boxes.map((b) => !!b.flip)));
+    if (ways.size > 1) add('placement', `traffic on the ${zone.id} going both ways`);
+  }
+
   // No two things overlap or touch (copies of one thing follow the duplicate rule above).
   for (let a = 0; a < placed.length; a++) {
     for (let b = a + 1; b < placed.length; b++) {

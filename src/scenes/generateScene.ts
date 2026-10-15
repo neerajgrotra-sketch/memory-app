@@ -35,6 +35,8 @@ export interface SceneKnobs {
 
 /** Fresh placements tried before showing the best one found. */
 export const LAYOUT_ATTEMPTS = 12;
+/** How far a spread copy may sit from the middle of its third (fraction of the width). */
+const SPREAD_JITTER = 0.07;
 /** Hung things this high (width units above the band's bottom) use the wall's top row of slots. */
 const HIGH_HANG = 0.45;
 /** Positions tried inside a slot before moving on to the next slot. */
@@ -51,9 +53,17 @@ interface Context {
   taken: Rect[];
   /** Slot-grid cells already used, as `zone:col:row`. */
   cells: Set<string>;
+  /** Whether things in one-way bands are drawn mirrored. */
+  oneWayFlip: boolean;
 }
 
 const cellKey = (zone: string, col: number, row: number) => `${zone}:${col}:${row}`;
+
+/**
+ * Which way a thing faces. In a one-way band (a road) everything faces the same way, fixed by the
+ * scene's seed so laying the scene out again keeps it; elsewhere each thing faces either way.
+ */
+const facing = (ctx: Context, zone: ZoneDef) => (zone.oneWay ? ctx.oneWayFlip : ctx.rng.next() < 0.5);
 
 /** True if `colour` stands out from every surface each rect is drawn over. */
 const colourFits = (ctx: Context, colour: string, rects: Rect[]) =>
@@ -139,12 +149,14 @@ function placeSpread(ctx: Context, want: Want): Placement | null {
     const cols = rng.shuffle(free).slice(0, count).sort();
     const y0 = verticalSpot(ctx, item, zone, row.top, row.bottom, h);
     if (y0 === null) return null;
+    // Each copy stands near the middle of its third, so neighbours never end up side by side at a boundary.
     const spans = cols.map((col) => {
       const b = columnBounds(zone, col);
-      return [Math.max(b.x0, b.centreMin - w / 2), Math.min(b.x1 - w, b.centreMax - w / 2)];
+      const mid = (col + 0.5) / 3;
+      return [Math.max(b.x0, b.centreMin - w / 2, mid - SPREAD_JITTER - w / 2), Math.min(b.x1 - w, b.centreMax - w / 2, mid + SPREAD_JITTER - w / 2)];
     });
     if (spans.some(([lo, hi]) => hi < lo)) return null;
-    const boxes = spans.map(([lo, hi]) => ({ x: lo + (hi - lo) * rng.next(), y: y0 / ratio, w, flip: rng.next() < 0.5 }));
+    const boxes = spans.map(([lo, hi]) => ({ x: lo + (hi - lo) * rng.next(), y: y0 / ratio, w, flip: facing(ctx, zone) }));
     const rects = boxes.map((b) => rectOf(item, b, ratio));
     if (rects.some((r, i) => rects.some((q, j) => j > i && !duplicatesOk(r, q)))) continue;
     if (!clearToPlace(ctx, want, rects)) continue;
@@ -213,7 +225,7 @@ function place(ctx: Context, want: Want): Placement | null {
         const y0 = verticalSpot(ctx, item, zone, top, bottom, bh);
         if (y0 === null) break;
         const x0 = xMin + (xMax - xMin) * rng.next();
-        const boxes = offsets.map(([dx, dy]) => ({ x: x0 + dx, y: (y0 + dy) / ratio, w, flip: rng.next() < 0.5 }));
+        const boxes = offsets.map(([dx, dy]) => ({ x: x0 + dx, y: (y0 + dy) / ratio, w, flip: facing(ctx, zone) }));
         const rects = boxes.map((b) => rectOf(item, b, ratio));
         const group = boundsOf(rects);
         if (regionOf(centreOf(group).x) !== REGIONS[col]) continue;
@@ -252,7 +264,7 @@ function shares(recipe: Recipe, total: number): { zone: ZoneDef; quota: number }
 function build(recipe: Recipe, knobs: SceneKnobs, seed: number, rng: Rng, size: SceneSize): SceneSpec {
   const ratio = ratioOf(size);
   const variant = rng.pick(recipe.variants);
-  const ctx: Context = { recipe, variant, ratio, size, rng, taken: [], cells: new Set() };
+  const ctx: Context = { recipe, variant, ratio, size, rng, taken: [], cells: new Set(), oneWayFlip: (seed & 1) === 1 };
   const pool = rng.shuffle(recipe.items);
   const groups: PlacedGroup[] = [];
 
@@ -378,7 +390,7 @@ export function relayoutScene(spec: SceneSpec, size: SceneSize): SceneSpec | nul
   );
 
   for (let attempt = 0; attempt < LAYOUT_ATTEMPTS; attempt++) {
-    const ctx: Context = { recipe, variant, ratio, size, rng: createRng(spec.seed + 7 + attempt * 0x85ebca6b), taken: [], cells: new Set() };
+    const ctx: Context = { recipe, variant, ratio, size, rng: createRng(spec.seed + 7 + attempt * 0x85ebca6b), taken: [], cells: new Set(), oneWayFlip: (spec.seed & 1) === 1 };
     const moved = new Map<PlacedGroup, PlacedGroup>();
     for (const group of order) {
       const item = recipe.items.find((i) => i.kind === group.kind)!;

@@ -10,6 +10,14 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.1.1 (2026-10-15)
+
+- **Doors no longer overlap windows.** City building fronts are now worked out from the roof and pavement lines: two upper-floor windows, and on the ground floor a door to one side and a shop window on the other. The scene checker fails if any window or door overlaps another or leaves its building.
+- **Traffic goes one way.** Every vehicle on the road faces the same way, chosen once per picture. All vehicle drawings now face the same way (the car was drawn backwards), and cars, vans and buses have headlights and tail lights so their direction is clear.
+- **Scooters have riders** in a helmet and a dark jacket, so the scooter's colour is still the one to remember. Bicycles stay rider-less because they're parked on the pavement.
+- Spread-out things (lamps, flags, trees, the street clock) stand near the middle of their building or stretch of pavement, so neighbours never end up side by side at a boundary.
+- Fire hydrants are squatter, so they're well under knee height next to a person.
+
 ## 3.1.0 (2026-10-15)
 
 Fixes for the 3.0.0 layout, which placed things without regard to how they are used in real life.
