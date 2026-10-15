@@ -10,6 +10,17 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 2.4.0 (2026-10-15)
+
+- **Placement habits:** objects now follow the rules people use when arranging a room or street.
+  - **Hanging heights:** pictures, mirrors and clocks hang at their normal height (clock centre 175–200 cm, pictures at eye level), and windows sit at sill height.
+  - **Wall spacing:** things on a wall keep at least 35 cm apart, so no more clock jammed against a window.
+  - **Plants stand along the wall.** Plants, floor lamps and piles of books stay off the rug. Pets, cushions and toys may sit on it.
+- **Buildings have real windows and doors** that nothing may cover.
+  - Street clocks are fixed to a building's corner on a bracket, at the right height between the door and the upper windows.
+  - Flags and satellite dishes stand on the rooftops, and flags are now drawn as rooftop flagpoles.
+- The scene checker tests all of these rules on every generated scene.
+
 ## 2.3.0 (2026-10-15)
 
 - **Real-world scale:** every object now has a real height in centimetres, and each setting has a camera that turns that into picture size. Objects are in proportion to the room or street and to each other: in the room, a sofa is about a third of the back wall and a cat looks like a cat next to it.

@@ -4,7 +4,7 @@
  */
 import { LEVELS } from '@/game/difficulty';
 import { generateQuestions } from '@/scenes/generateQuestions';
-import { MIN_VISIBLE, THIRD_MARGIN, THIRDS, TOP_MARGIN, generateScene, regionOf } from '@/scenes/generateScene';
+import { MIN_VISIBLE, THIRD_MARGIN, THIRDS, TOP_MARGIN, generateScene, regionOf, zoneScale } from '@/scenes/generateScene';
 import { RECIPES } from '@/scenes/recipes';
 
 const SCENES_PER_CASE = 300;
@@ -44,6 +44,61 @@ for (const height of [1350, 1600, 2000]) {
 
         for (const zone of recipe.zones) {
           if ((zone.minGroups ?? 0) > scene.groups.filter((g) => g.zoneId === zone.id).length) problems.add(`${zone.id} left bare`);
+        }
+
+        // Placement habits: hanging heights, wall gaps, windows and doors, rugs, mounting points.
+        const fixtures = recipe.fixtures?.(height) ?? [];
+        const mounts = recipe.mounts?.(height) ?? [];
+        for (const group of scene.groups) {
+          const item = recipe.items.find((i) => i.kind === group.kind)!;
+          const zone = recipe.zones.find((z) => z.id === group.zoneId)!;
+          const pxPerCm = zoneScale(recipe, zone, height);
+          for (const b of group.boxes) {
+            const w = item.w * b.scale;
+            const h = item.h * b.scale;
+            const r = { x0: b.x, y0: b.y, x1: b.x + w, y1: b.y + h };
+            if (zone.surface === 'wall') {
+              for (const f of fixtures) {
+                if (f.kind === 'opening' && r.x0 < f.x1 && f.x0 < r.x1 && r.y0 < f.y1 && f.y0 < r.y1) problems.add(`${item.kind} covers a window or door`);
+              }
+            }
+            if (item.hangAt) {
+              const centreCm = ((zone.plane ?? zone.bottom) * height - (r.y0 + r.y1) / 2) / pxPerCm;
+              if (centreCm < item.hangAt[0] - 1 || centreCm > item.hangAt[1] + 1) problems.add(`${item.kind} hung at the wrong height`);
+            }
+            if (item.avoid?.includes('rug')) {
+              for (const f of fixtures) {
+                if (f.kind !== 'rug') continue;
+                if (r.x0 < f.cx + f.rx && f.cx - f.rx < r.x1 && r.y0 < f.cy + f.ry && f.cy - f.ry < r.y1) problems.add(`${item.kind} over the rug`);
+              }
+            }
+            if (item.mount === 'corner') {
+              const ok = mounts.some((m) => m.kind === 'corner' && Math.abs((r.y0 + r.y1) / 2 - m.y) < 1 && (m.side === 'left' ? Math.abs(r.x0 - m.x) < 1 : Math.abs(r.x1 - m.x) < 1));
+              if (!ok) problems.add(`${item.kind} not fixed to a building corner`);
+            }
+            if (item.mount === 'roof') {
+              const ok = mounts.some((m) => m.kind === 'roof' && Math.abs(r.y1 - m.y) < 1 && r.x0 >= m.x0 - 1 && r.x1 <= m.x1 + 1);
+              if (!ok) problems.add(`${item.kind} not standing on a roof`);
+            }
+          }
+        }
+        if (recipe.wallGapCm) {
+          const hung = scene.groups.filter((g) => recipe.zones.find((z) => z.id === g.zoneId)!.surface === 'wall');
+          for (let a = 0; a < hung.length; a++) {
+            for (let b = a + 1; b < hung.length; b++) {
+              const zone = recipe.zones.find((z) => z.id === hung[a].zoneId)!;
+              const gap = recipe.wallGapCm * zoneScale(recipe, zone, height) - 1;
+              const box = (g: (typeof hung)[number]) => {
+                const item = recipe.items.find((i) => i.kind === g.kind)!;
+                return g.boxes.map((bx) => ({ x0: bx.x, y0: bx.y, x1: bx.x + item.w * bx.scale, y1: bx.y + item.h * bx.scale }));
+              };
+              for (const p of box(hung[a])) {
+                for (const q of box(hung[b])) {
+                  if (p.x0 < q.x1 + gap && q.x0 < p.x1 + gap && p.y0 < q.y1 + gap && q.y0 < p.y1 + gap) problems.add(`${hung[a].kind} too close to ${hung[b].kind} on the wall`);
+                }
+              }
+            }
+          }
         }
 
         for (const r of rects) {

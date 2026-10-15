@@ -2,7 +2,7 @@ import { Circle, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
 import { balloon, bird, clouds, dog, person, plane, tree } from '../items/common';
-import { heightFactor, type ItemDef, type Recipe } from '../types';
+import { heightFactor, type Fixture, type ItemDef, type Mount, type Recipe } from '../types';
 
 const SKY = ['sky'];
 const WALLS = ['buildings'];
@@ -25,18 +25,19 @@ const items: ItemDef[] = [
     singular: 'flag',
     plural: 'flags',
     article: 'a',
-    w: 100,
-    h: 112,
-    height: 170,
+    w: 80,
+    h: 160,
+    height: 300,
     zones: WALLS,
-    maxCount: 3,
+    maxCount: 2,
+    mount: 'roof',
     colours: [C.red, C.blue, C.yellow, C.green, C.purple, C.orange],
-    // Bolted to the wall: a bracket plate with the pole sticking out at an angle.
+    // A flagpole standing on the roof.
     draw: (colour) => (
       <G>
-        <Path d="M42,49 L67,13 C78,22 86,20 97,48 C86,46 80,60 72,84 Z" fill={colour} stroke="#00000033" strokeWidth={2} />
-        <Line x1={10} y1={98} x2={70} y2={8} stroke="#495057" strokeWidth={6} strokeLinecap="round" />
-        <Rect x={0} y={88} width={16} height={24} rx={3} fill="#343a40" />
+        <Rect x={4} y={152} width={14} height={8} rx={2} fill="#343a40" />
+        <Line x1={11} y1={2} x2={11} y2={154} stroke="#495057" strokeWidth={5} strokeLinecap="round" />
+        <Path d="M13,8 C35,2 52,18 78,10 V52 C52,60 35,44 13,50 Z" fill={colour} stroke="#00000033" strokeWidth={2} />
       </G>
     ),
   },
@@ -47,11 +48,12 @@ const items: ItemDef[] = [
     article: 'a',
     w: 120,
     h: 110,
-    height: 90,
+    height: 72,
     zones: WALLS,
     maxCount: 1,
     countable: false,
-    // A street clock on a bracket fixed to the wall.
+    mount: 'corner',
+    // A street clock on a bracket fixed to a building's corner (bracket on the left; mirrored on right-hand corners).
     draw: () => (
       <G>
         <Rect x={0} y={20} width={14} height={40} rx={3} fill="#343a40" />
@@ -69,9 +71,10 @@ const items: ItemDef[] = [
     article: 'a',
     w: 80,
     h: 80,
-    height: 85,
+    height: 90,
     zones: WALLS,
     maxCount: 3,
+    mount: 'roof',
     draw: () => (
       <G>
         <Line x1={40} y1={50} x2={40} y2={74} stroke="#495057" strokeWidth={6} />
@@ -308,8 +311,8 @@ const items: ItemDef[] = [
 ];
 
 /**
- * The three main buildings line up with the left, middle and right cells, so
- * anything hung "on the buildings" is always on exactly one building.
+ * The three main buildings line up with the left, middle and right thirds, so
+ * anything on "the buildings" is always on exactly one building.
  */
 const FACADES: [number, number][] = [
   [0, 305],
@@ -319,51 +322,80 @@ const FACADES: [number, number][] = [
 
 const BUILDINGS = [
   { x: -600, w: 600, rise: 0.01 },
-  { x: FACADES[0][0], w: FACADES[0][1] - FACADES[0][0], rise: 0.03 },
-  { x: FACADES[1][0], w: FACADES[1][1] - FACADES[1][0], rise: 0 },
-  { x: FACADES[2][0], w: FACADES[2][1] - FACADES[2][0], rise: 0.02 },
+  { x: FACADES[0][0], w: FACADES[0][1] - FACADES[0][0], rise: 0.03, facade: 0 },
+  { x: FACADES[1][0], w: FACADES[1][1] - FACADES[1][0], rise: 0, facade: 1 },
+  { x: FACADES[2][0], w: FACADES[2][1] - FACADES[2][0], rise: 0.02, facade: 2 },
   { x: 900, w: 600, rise: 0.005 },
 ];
 
-function backdrop(height: number, sky: string, walls: string[], window: string) {
-  const roof = height * 0.31;
-  const pavement = height * 0.6;
-  const kerb = height * 0.73;
-  // Windows and doors at the same scale as the people on the pavement (1.03 units per cm on a 1600-tall picture).
-  const unit = 1.03 * heightFactor(height);
-  const winW = 80 * unit;
+/** Where the building fronts meet the pavement, and the roofline (fractions of the height). */
+const GROUND_LINE = 0.6;
+const ROOF = 0.31;
+/** Picture units per cm on the building fronts; the same scale as the camera at the pavement line. */
+const unitFor = (height: number) => 1.03 * heightFactor(height);
+
+/**
+ * Each building's real layout, shared by the drawing and the placement rules: two upper-floor
+ * windows (sill at 290 cm, 110 cm tall) and an 85 cm door (215 cm tall), all centred, which leaves the
+ * corners clear for a bracket clock at 240 cm.
+ */
+function facadeLayout(height: number) {
+  const unit = unitFor(height);
+  const ground = height * GROUND_LINE;
+  const winW = 70 * unit;
   const winH = 110 * unit;
-  const doorW = 100 * unit;
+  const doorW = 85 * unit;
   const doorH = 215 * unit;
+  return BUILDINGS.map((b) => {
+    const centre = b.x + b.w / 2;
+    const sill = ground - 290 * unit;
+    return {
+      ...b,
+      top: height * (ROOF - b.rise),
+      windows: [
+        { x0: centre - 20 * unit - winW, y0: sill - winH, x1: centre - 20 * unit, y1: sill },
+        { x0: centre + 20 * unit, y0: sill - winH, x1: centre + 20 * unit + winW, y1: sill },
+      ],
+      door: { x0: centre - doorW / 2, y0: ground - doorH, x1: centre + doorW / 2, y1: ground },
+    };
+  });
+}
+
+function fixtures(height: number): Fixture[] {
+  return facadeLayout(height)
+    .filter((b) => b.facade !== undefined)
+    .flatMap((b) => [...b.windows, b.door].map((r) => ({ kind: 'opening' as const, ...r })));
+}
+
+function mounts(height: number): Mount[] {
+  const clockAt = height * GROUND_LINE - 240 * unitFor(height);
+  return facadeLayout(height).flatMap((b): Mount[] =>
+    b.facade === undefined
+      ? []
+      : [
+          { kind: 'corner', panel: b.facade, side: 'left', x: b.x + 2, y: clockAt },
+          { kind: 'corner', panel: b.facade, side: 'right', x: b.x + b.w - 2, y: clockAt },
+          { kind: 'roof', panel: b.facade, x0: b.x + 16, x1: b.x + b.w - 16, y: b.top },
+        ],
+  );
+}
+
+function backdrop(height: number, sky: string, walls: string[], window: string) {
+  const pavement = height * GROUND_LINE;
+  const kerb = height * 0.73;
   return (
     <G>
       <Rect x={-600} y={-600} width={2100} height={pavement + 600} fill={sky} />
-      {BUILDINGS.map((b, i) => {
-        const top = roof - b.rise * height;
-        const cols = Math.max(2, Math.floor((b.w - 40) / (winW * 1.9)));
-        const gapX = (b.w - cols * winW) / (cols + 1);
-        const rows = Math.max(1, Math.floor((pavement - doorH - 40 - top) / (winH * 1.45)));
-        return (
-          <G key={b.x}>
-            <Rect x={b.x} y={top} width={b.w} height={pavement - top} fill={walls[i % walls.length]} />
-            <Rect x={b.x} y={top} width={b.w} height={10} fill="#000000" fillOpacity={0.12} />
-            {Array.from({ length: rows }, (_, row) =>
-              Array.from({ length: cols }, (_, col) => (
-                <Rect
-                  key={`${row}-${col}`}
-                  x={b.x + gapX + col * (winW + gapX)}
-                  y={top + 30 + row * winH * 1.45}
-                  width={winW}
-                  height={winH}
-                  fill={window}
-                  fillOpacity={0.6}
-                />
-              )),
-            )}
-            <Rect x={b.x + b.w / 2 - doorW / 2} y={pavement - doorH} width={doorW} height={doorH} fill="#5c3d1e" fillOpacity={0.85} />
-          </G>
-        );
-      })}
+      {facadeLayout(height).map((b, i) => (
+        <G key={b.x}>
+          <Rect x={b.x} y={b.top} width={b.w} height={pavement - b.top} fill={walls[i % walls.length]} />
+          <Rect x={b.x} y={b.top} width={b.w} height={10} fill="#000000" fillOpacity={0.12} />
+          {b.windows.map((w) => (
+            <Rect key={w.x0} x={w.x0} y={w.y0} width={w.x1 - w.x0} height={w.y1 - w.y0} fill={window} fillOpacity={0.6} />
+          ))}
+          <Rect x={b.door.x0} y={b.door.y0} width={b.door.x1 - b.door.x0} height={b.door.y1 - b.door.y0} fill="#5c3d1e" fillOpacity={0.85} />
+        </G>
+      ))}
       <Rect x={-600} y={pavement} width={2100} height={kerb - pavement} fill="#ced4da" />
       <G stroke="#b8bfc6" strokeWidth={3}>
         {[-300, 0, 150, 300, 450, 600, 750, 900, 1200].map((x) => (
@@ -388,12 +420,15 @@ export const city: Recipe = {
   // A slightly raised camera: gentle perspective, with buildings drawn at the same scale as people.
   camera: { horizon: -0.6, ref: 0.6, pxPerCm: 1.03 },
   zones: [
-    { id: 'sky', label: 'In the sky', surface: 'air', top: 0.04, bottom: 0.27 },
-    { id: 'buildings', label: 'On the buildings', surface: 'wall', top: 0.33, bottom: 0.5, plane: 0.6, panels: FACADES, minGroups: 1 },
+    { id: 'sky', label: 'In the sky', surface: 'air', top: 0.04, bottom: 0.25 },
+    { id: 'buildings', label: 'On the buildings', surface: 'wall', top: 0.05, bottom: 0.5, plane: GROUND_LINE, panels: FACADES, minGroups: 1 },
     { id: 'pavement', label: 'On the pavement', surface: 'ground', top: 0.63, bottom: 0.72, singleRow: true },
     { id: 'road', label: 'On the road', surface: 'ground', top: 0.79, bottom: 0.97 },
   ],
   items,
+  fixtures,
+  mounts,
+  wallGapCm: 30,
   decor: [{ ...clouds, top: 0.02, bottom: 0.2 }],
   variants: [
     { id: 'day', background: (h) => backdrop(h, '#a5d8ff', ['#e9c46a', '#f4a261', '#b5838d', '#90be6d'], '#e7f5ff') },

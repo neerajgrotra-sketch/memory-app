@@ -3,7 +3,9 @@ import {
   SCENE_WIDTH,
   heightFactor,
   type Box,
+  type Fixture,
   type ItemDef,
+  type Mount,
   type PlacedDecor,
   type PlacedGroup,
   type Recipe,
@@ -65,7 +67,41 @@ interface Rect {
 /** Width of `n` things side by side with breathing room between them (none outside the ends). */
 const rowWidth = (n: number, w: number) => n * w + (n - 1) * w * (SPACING - 1);
 
-const hits = (a: Rect, b: Rect) => a.x0 < b.x1 + PAD && b.x0 < a.x1 + PAD && a.y0 < b.y1 + PAD && b.y0 < a.y1 + PAD;
+const hits = (a: Rect, b: Rect, pad = PAD) => a.x0 < b.x1 + pad && b.x0 < a.x1 + pad && a.y0 < b.y1 + pad && b.y0 < a.y1 + pad;
+
+/** Everything placement needs to know about the scene being built. */
+interface Context {
+  recipe: Recipe;
+  height: number;
+  rng: Rng;
+  /** Things already placed; `wall` marks things hung on a wall, which keep a wider gap between them. */
+  taken: { rect: Rect; wall: boolean }[];
+  /** Windows and doors: nothing is hung over them. */
+  openings: Rect[];
+  rugs: Extract<Fixture, { kind: 'rug' }>[];
+  mounts: Mount[];
+  usedMounts: Set<Mount>;
+}
+
+/**
+ * True if any part of a thing would sit over a rug, even standing just in front of it, since that
+ * reads as being on the rug. Things that avoid rugs end up by the wall or at the sides of the room.
+ */
+const overRug = (ctx: Context, r: Rect) =>
+  ctx.rugs.some((rug) => hits(r, { x0: rug.cx - rug.rx, y0: rug.cy - rug.ry, x1: rug.cx + rug.rx, y1: rug.cy + rug.ry }, PAD * 2));
+
+/** Checks a candidate group against everything already in the scene and the item's own rules. */
+function fits(ctx: Context, item: ItemDef, zone: ZoneDef, rects: Rect[]): boolean {
+  const wall = zone.surface === 'wall';
+  const wallPad = Math.max(PAD, (ctx.recipe.wallGapCm ?? 0) * zoneScale(ctx.recipe, zone, ctx.height));
+  for (const r of rects) {
+    if (r.y0 < TOP_MARGIN * ctx.height || r.y1 > ctx.height) return false;
+    if (wall && ctx.openings.some((o) => hits(r, o))) return false;
+    if (ctx.taken.some((t) => hits(r, t.rect, wall && t.wall ? wallPad : PAD))) return false;
+    if (item.avoid?.includes('rug') && overRug(ctx, r)) return false;
+  }
+  return true;
+}
 
 interface Row {
   /** Ground: where feet stand. Air/wall: top of the row. */
@@ -75,7 +111,8 @@ interface Row {
 }
 
 /** Works out the rows for a group at a random spot in the zone, or null if it can't go there. */
-function planRows(item: ItemDef, count: number, zone: ZoneDef, recipe: Recipe, height: number, rng: Rng): Row[] | null {
+function planRows(ctx: Context, item: ItemDef, count: number, zone: ZoneDef): Row[] | null {
+  const { recipe, height, rng } = ctx;
   const usable = SCENE_WIDTH - 2 * EDGE;
   const top = zone.top * height;
   const bottom = zone.bottom * height;
@@ -98,11 +135,22 @@ function planRows(item: ItemDef, count: number, zone: ZoneDef, recipe: Recipe, h
     ];
   }
 
-  const scale = (zoneScale(recipe, zone, height) * item.height) / item.h;
-  if (item.h * scale < MIN_VISIBLE) return null;
+  const pxPerCm = zoneScale(recipe, zone, height);
+  const scale = (pxPerCm * item.height) / item.h;
+  const h = item.h * scale;
+  if (h < MIN_VISIBLE) return null;
   const perRow = Math.max(1, Math.floor((usable + item.w * scale * (SPACING - 1)) / (item.w * scale * SPACING)));
+
+  if (item.hangAt) {
+    // Hung at its normal height: one row, centred somewhere in the item's height range above the wall's base.
+    if (count > perRow) return null;
+    const [lo, hi] = item.hangAt;
+    const centreY = (zone.plane ?? zone.bottom) * height - (lo + (hi - lo) * rng.next()) * pxPerCm;
+    return [{ y: centreY - h / 2 - (h * SPACING - h) / 2, scale, count }];
+  }
+
   const rows = Math.ceil(count / perRow);
-  const rowH = item.h * scale * SPACING;
+  const rowH = h * SPACING;
   if (rows * rowH > bottom - top) return null;
   const y0 = top + (bottom - top - rows * rowH) * rng.next();
   return Array.from({ length: rows }, (_, r) => ({
@@ -112,22 +160,28 @@ function planRows(item: ItemDef, count: number, zone: ZoneDef, recipe: Recipe, h
   }));
 }
 
-/** Tries random spots for a group until one fits without touching anything already placed. */
-function placeGroup(item: ItemDef, count: number, zone: ZoneDef, recipe: Recipe, height: number, rng: Rng, taken: Rect[]) {
+type Placed = { boxes: Box[]; rects: Rect[]; region: Region; count: number };
+
+const clearOfThirds = (centre: number) => Math.abs(centre - THIRDS[0]) >= THIRD_MARGIN && Math.abs(centre - THIRDS[1]) >= THIRD_MARGIN;
+
+/** Tries random spots for a group until one fits without breaking any rule. */
+function placeGroup(ctx: Context, item: ItemDef, count: number, zone: ZoneDef, maxWidth = SCENE_WIDTH): Placed | null {
+  const { rng } = ctx;
   for (let attempt = 0; attempt < ATTEMPTS; attempt++) {
-    const rows = planRows(item, count, zone, recipe, height, rng);
+    const rows = planRows(ctx, item, count, zone);
     if (!rows) continue;
 
     const cols = Math.max(...rows.map((r) => r.count));
     const widest = Math.max(...rows.map((r) => item.w * r.scale));
     const groupW = rowWidth(cols, widest);
+    if (groupW > maxWidth) continue;
 
     let xMin = EDGE;
     let xMax = SCENE_WIDTH - EDGE;
     if (zone.panels) {
-      const fits = zone.panels.filter(([p0, p1]) => p1 - p0 - 28 >= groupW);
-      if (!fits.length) continue;
-      const [p0, p1] = rng.pick(fits);
+      const panels = zone.panels.filter(([p0, p1]) => p1 - p0 - 28 >= groupW);
+      if (!panels.length) continue;
+      const [p0, p1] = rng.pick(panels);
       xMin = p0 + 14;
       xMax = p1 - 14;
     }
@@ -135,7 +189,7 @@ function placeGroup(item: ItemDef, count: number, zone: ZoneDef, recipe: Recipe,
 
     const x0 = xMin + (xMax - xMin - groupW) * rng.next();
     const centre = x0 + groupW / 2;
-    if (Math.abs(centre - THIRDS[0]) < THIRD_MARGIN || Math.abs(centre - THIRDS[1]) < THIRD_MARGIN) continue;
+    if (!clearOfThirds(centre)) continue;
 
     const boxes: Box[] = [];
     const rects: Rect[] = [];
@@ -152,9 +206,45 @@ function placeGroup(item: ItemDef, count: number, zone: ZoneDef, recipe: Recipe,
       }
     }
 
-    if (rects.some((r) => r.y0 < TOP_MARGIN * height || r.y1 > height)) continue;
-    if (rects.some((r) => taken.some((t) => hits(r, t)))) continue;
-    return { boxes, rects, region: regionOf(centre) };
+    if (fits(ctx, item, zone, rects)) return { boxes, rects, region: regionOf(centre), count };
+  }
+  return null;
+}
+
+/** Things fixed to mounting points: a corner bracket (one per corner, up to both corners of a building) or a rooftop. */
+function placeMounted(ctx: Context, item: ItemDef, count: number, zone: ZoneDef): Placed | null {
+  const { rng } = ctx;
+  const scale = (zoneScale(ctx.recipe, zone, ctx.height) * item.height) / item.h;
+  const w = item.w * scale;
+  const h = item.h * scale;
+  if (h < MIN_VISIBLE) return null;
+  const free = ctx.mounts.filter((m) => m.kind === item.mount && !ctx.usedMounts.has(m));
+
+  for (const panel of rng.shuffle([...new Set(free.map((m) => m.panel))])) {
+    const here = free.filter((m) => m.panel === panel);
+    let boxes: Box[];
+    let used: Mount[];
+
+    if (item.mount === 'corner') {
+      const corners = rng.shuffle(here).slice(0, Math.min(count, 2)) as Extract<Mount, { kind: 'corner' }>[];
+      if (corners.length < count) continue;
+      // The bracket touches the building edge; on a right-hand corner the drawing is mirrored.
+      boxes = corners.map((m) => ({ x: m.side === 'left' ? m.x : m.x - w, y: m.y - h / 2, scale, flip: m.side === 'right' }));
+      used = corners;
+    } else {
+      const roof = here[0] as Extract<Mount, { kind: 'roof' }>;
+      const groupW = rowWidth(count, w);
+      if (groupW > roof.x1 - roof.x0) continue;
+      const x0 = roof.x0 + (roof.x1 - roof.x0 - groupW) * rng.next();
+      boxes = Array.from({ length: count }, (_, i) => ({ x: x0 + i * w * SPACING, y: roof.y - h, scale }));
+      used = [roof];
+    }
+
+    const rects = boxes.map((b) => ({ x0: b.x, y0: b.y, x1: b.x + w, y1: b.y + h }));
+    const centre = (Math.min(...rects.map((r) => r.x0)) + Math.max(...rects.map((r) => r.x1))) / 2;
+    if (!clearOfThirds(centre) || !fits(ctx, item, zone, rects)) continue;
+    used.forEach((m) => ctx.usedMounts.add(m));
+    return { boxes, rects, region: regionOf(centre), count };
   }
   return null;
 }
@@ -185,20 +275,33 @@ export function generateScene(recipe: Recipe, knobs: SceneKnobs, seed: number, h
   const rng = createRng(seed);
   const variant = rng.pick(recipe.variants);
   const pool = rng.shuffle(recipe.items);
-  const taken: Rect[] = [];
+  const fixtures = recipe.fixtures?.(height) ?? [];
+  const ctx: Context = {
+    recipe,
+    height,
+    rng,
+    taken: [],
+    openings: fixtures.flatMap((f) => (f.kind === 'opening' ? [{ x0: f.x0, y0: f.y0, x1: f.x1, y1: f.y1 }] : [])),
+    rugs: fixtures.flatMap((f) => (f.kind === 'rug' ? [f] : [])),
+    mounts: recipe.mounts?.(height) ?? [],
+    usedMounts: new Set(),
+  };
   const groups: PlacedGroup[] = [];
 
-  /** Places one kind somewhere it belongs (optionally only in `onlyZone`). Returns false if it doesn't fit. */
-  const tryItem = (item: ItemDef, onlyZone?: string) => {
+  /**
+   * Places one kind somewhere it belongs (optionally only in `onlyZone`, at most `maxWidth` wide).
+   * Returns false if it doesn't fit.
+   */
+  const tryItem = (item: ItemDef, onlyZone?: string, maxWidth?: number) => {
     const most = item.countable === false ? 1 : Math.min(item.maxCount, knobs.maxCount);
     const wanted = rng.int(1, most);
     for (const zoneId of rng.shuffle(item.zones)) {
       if (onlyZone && zoneId !== onlyZone) continue;
       const zone = recipe.zones.find((z) => z.id === zoneId)!;
       for (let count = wanted; count >= 1; count--) {
-        const placed = placeGroup(item, count, zone, recipe, height, rng, taken);
+        const placed = item.mount ? placeMounted(ctx, item, count, zone) : placeGroup(ctx, item, count, zone, maxWidth);
         if (!placed) continue;
-        taken.push(...placed.rects);
+        ctx.taken.push(...placed.rects.map((rect) => ({ rect, wall: zone.surface === 'wall' })));
         groups.push({
           kind: item.kind,
           count,
@@ -214,12 +317,14 @@ export function generateScene(recipe: Recipe, knobs: SceneKnobs, seed: number, h
   };
 
   // First make sure zones that must not be bare (a room wall) get their things, trying each candidate in turn.
+  // Each of those things takes at most its share of the width, so there is room for the others.
   for (const zone of recipe.zones) {
     let needed = zone.minGroups ?? 0;
+    const share = (SCENE_WIDTH - 2 * EDGE) / Math.max(1, needed) - (recipe.wallGapCm ?? 0) * zoneScale(recipe, zone, height);
     for (const item of pool.filter((i) => i.zones.includes(zone.id))) {
       if (needed <= 0 || groups.length >= knobs.groups) break;
       pool.splice(pool.indexOf(item), 1);
-      if (tryItem(item, zone.id)) needed--;
+      if (tryItem(item, zone.id, share)) needed--;
     }
   }
 

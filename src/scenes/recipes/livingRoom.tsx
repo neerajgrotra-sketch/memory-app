@@ -2,7 +2,7 @@ import { Circle, Ellipse, G, Line, Path, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
 import { ball, dog, plantPot } from '../items/common';
-import { heightFactor, type ItemDef, type Recipe } from '../types';
+import { heightFactor, type Fixture, type ItemDef, type Recipe } from '../types';
 
 const WALL = ['wall'];
 const BACK = ['back'];
@@ -19,6 +19,7 @@ const items: ItemDef[] = [
     height: 45,
     zones: WALL,
     maxCount: 4,
+    hangAt: [135, 165],
     colours: [C.red, C.blue, C.yellow, C.green, C.black, C.white, C.purple],
     colourPrompt: (plural) => (plural ? 'What colour were the picture frames?' : 'What colour was the picture frame?'),
     draw: (colour) => (
@@ -40,6 +41,7 @@ const items: ItemDef[] = [
     height: 45,
     zones: WALL,
     maxCount: 1,
+    hangAt: [175, 200],
     countable: false,
     draw: () => (
       <G>
@@ -59,6 +61,7 @@ const items: ItemDef[] = [
     height: 90,
     zones: WALL,
     maxCount: 1,
+    hangAt: [135, 160],
     draw: () => (
       <G>
         <Ellipse cx={45} cy={65} rx={44} ry={64} fill="#b08d57" />
@@ -77,6 +80,8 @@ const items: ItemDef[] = [
     height: 140,
     zones: WALL,
     maxCount: 2,
+    // Centre at 140–155 cm puts the sill at about 70–85 cm, like a real window.
+    hangAt: [140, 155],
     draw: () => (
       <G>
         <Rect x={0} y={0} width={150} height={175} fill="#a5d8ff" stroke="#ffffff" strokeWidth={12} />
@@ -139,6 +144,7 @@ const items: ItemDef[] = [
     height: 160,
     zones: BACK,
     maxCount: 2,
+    avoid: ['rug'],
     colours: [C.red, C.blue, C.yellow, C.green, C.white, C.orange],
     colourPrompt: (plural) => (plural ? 'What colour were the lampshades?' : 'What colour was the lampshade?'),
     draw: (colour) => (
@@ -168,7 +174,8 @@ const items: ItemDef[] = [
       </G>
     ),
   },
-  { ...plantPot, height: 80, zones: [...BACK, ...FRONT], maxCount: 3 },
+  // Plants stand along the wall, never out in the room or on the rug.
+  { ...plantPot, height: 80, zones: BACK, maxCount: 3, avoid: ['rug'] },
   {
     kind: 'bookshelf',
     singular: 'bookshelf',
@@ -283,6 +290,7 @@ const items: ItemDef[] = [
     height: 22,
     zones: FRONT,
     maxCount: 3,
+    avoid: ['rug'],
     draw: () => (
       <G stroke="#00000033" strokeWidth={2}>
         <Rect x={0} y={40} width={90} height={20} fill="#e63946" />
@@ -301,7 +309,15 @@ const WALL_CM = 300;
 /** Lowest the top of the wall gets on any screen; things are only hung below this. */
 const WALL_TOP_MAX = 0.245;
 
+/** The rug, shared by the drawing and the placement rules. */
+const rugOf = (height: number) => ({ kind: 'rug' as const, cx: 450, cy: height * 0.82, rx: 330, ry: height * 0.075 });
+
+function fixtures(height: number): Fixture[] {
+  return [rugOf(height)];
+}
+
 function backdrop(height: number, wall: string, ceiling: string, floor: string, plank: string, rug: string) {
+  const r = rugOf(height);
   const floorLine = height * FLOOR;
   const wallTop = floorLine - WALL_CM * CAMERA.pxPerCm * heightFactor(height);
   // Floorboard lines get further apart towards the front (perspective).
@@ -320,8 +336,8 @@ function backdrop(height: number, wall: string, ceiling: string, floor: string, 
           <Line key={y} x1={-600} y1={y} x2={1500} y2={y} />
         ))}
       </G>
-      <Ellipse cx={450} cy={height * 0.82} rx={330} ry={height * 0.075} fill={rug} fillOpacity={0.3} />
-      <Ellipse cx={450} cy={height * 0.82} rx={290} ry={height * 0.056} fill="none" stroke="#ffffff" strokeOpacity={0.4} strokeWidth={5} />
+      <Ellipse cx={r.cx} cy={r.cy} rx={r.rx} ry={r.ry} fill={rug} fillOpacity={0.3} />
+      <Ellipse cx={r.cx} cy={r.cy} rx={r.rx - 40} ry={r.ry * 0.75} fill="none" stroke="#ffffff" strokeOpacity={0.4} strokeWidth={5} />
     </G>
   );
 }
@@ -337,6 +353,9 @@ export const livingRoom: Recipe = {
     { id: 'front', label: 'At the front', surface: 'ground', top: 0.71, bottom: 0.97 },
   ],
   items,
+  fixtures,
+  // Pictures, mirrors, clocks and windows keep at least 35 cm apart.
+  wallGapCm: 35,
   variants: [
     { id: 'cream', background: (h) => backdrop(h, '#f3e9d2', '#faf6ec', '#b98b5e', '#a47751', '#9d4edd') },
     { id: 'blue', background: (h) => backdrop(h, '#cfe0ec', '#eef4f8', '#c9a27e', '#b08b68', '#c1121f') },

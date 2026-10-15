@@ -59,6 +59,12 @@ Every picture is built on the device from a **recipe** in a fraction of a second
 
 - **One real-world scale per setting.** Every item has a real `height` in centimetres (sofa 85, armchair 95, cat 30, mirror 90, bus 280). Each recipe has a `camera` that turns centimetres into picture units, like a real photo: `pxPerCm × (y − horizon) / (ref − horizon)`. Things standing lower in the picture are nearer and bigger, from one horizon for the whole scene. At the beach the horizon is the sea line; the room's back wall is 4.3 m wide at 2.1 units per cm. Sky things are far away, so their `height` is simply how big they look.
 - **Realistic counts.** `maxCount` is the most you'd plausibly see: one sofa, one mirror, one TV, one clock; several cushions, frames, cats or cars.
+- **Placement habits.** Items carry the habits people follow:
+  - `hangAt`: hanging height of the centre above the floor, in cm. Clock 175–200; pictures and mirrors at eye level; windows 140–155, which puts the sill at about 80 cm.
+  - `wallGapCm`: a recipe's least gap between things on a wall (35 cm in the room).
+  - `avoid: ['rug']`: things that never sit over a rug or stand in front of it (plants, floor lamps, piles of books). Plants only stand along the back wall.
+  - `mount`: things fixed to a recipe's mounting points instead of anywhere. A street clock goes on a building corner on a bracket (mirrored on right-hand corners); flags and dishes stand on rooftops.
+- **Fixtures.** A recipe's `fixtures(height)` lists the windows, doors and rug in its backdrop, and the backdrop draws them from the same data. Nothing is hung over a window or door. City buildings have a fixed layout (upper-floor windows, a centred door) that leaves the corners clear for clocks.
 - **Surfaces.** Every band is `air` (things float), `wall` (things hang, at the scale of the wall's base) or `ground` (the band is where feet go). An item lists the bands it may go in, so a plant pot only stands on a floor and a flag only hangs on a building.
 - **Wall panels.** A wall band can be split into `panels` (one per building). Anything hung there stays entirely on one panel. City buildings line up with the left, middle and right thirds.
 - **Free placement, no overlaps.** Groups are placed at random spots in their band, biggest first, so small things fill the gaps. Nothing may touch anything else; rows of the same thing have a gap between them.
@@ -67,7 +73,7 @@ Every picture is built on the device from a **recipe** in a fraction of a second
 - **Clear sides.** A group's left / middle / right is the third its centre is in, and centres stay clear of the lines between thirds. "What was on the left of the wall?" is only asked when exactly one kind of thing is there.
 - **Screen shape.** The picture is 900 wide and as tall as the space below the countdown bar needs (1350–2000). Scales stretch with the height up to 1700, then taller screens just get more space. The controls sit in their own bar, never on top of the picture.
 
-Run `npm run check:scenes` after any change to recipes or placement. It generates 8,100 scenes (every recipe, level and screen height) and fails if anything overlaps, is too small to see, leaves its band, crosses a building edge, isn't standing in its area, sits on the line between two sides, exceeds its realistic count, leaves a must-fill zone bare, never fits anywhere, or if scenes come up short of things or questions.
+Run `npm run check:scenes` after any change to recipes or placement. It generates 8,100 scenes (every recipe, level and screen height) and fails if anything overlaps, covers a window or door, hangs at the wrong height, sits too close to another thing on a wall, is over a rug it should avoid, isn't on its mounting point, is too small to see, leaves its band, crosses a building edge, isn't standing in its area, sits on the line between two sides, exceeds its realistic count, leaves a must-fill zone bare, never fits anywhere, or if scenes come up short of things or questions.
 
 ### Adding a recipe
 

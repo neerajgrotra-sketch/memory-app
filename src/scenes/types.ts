@@ -75,8 +75,35 @@ export interface ItemDef {
   colourPrompt?: (plural: boolean) => string;
   /** False for one-off things like the sun, where "how many" makes no sense. */
   countable?: boolean;
+  /** Wall only: where it normally hangs, as the height of its centre above the wall's base, in cm. */
+  hangAt?: [number, number];
+  /**
+   * Wall only: fixed to one of the recipe's mounting points instead of anywhere on the wall:
+   * `corner` = a building's corner on a bracket (a street clock); `roof` = standing on a rooftop (flags, dishes).
+   */
+  mount?: MountKind;
+  /** Fixtures it never stands on (plants and lamps stay off the rug). */
+  avoid?: FixtureKind[];
   draw: (colour: string) => ReactElement;
 }
+
+/**
+ * Parts of the backdrop that placement must respect:
+ * - `opening`: a window or door; nothing is hung over it.
+ * - `rug`: an oval on the floor; things with `avoid: ['rug']` never stand on it.
+ */
+export type FixtureKind = 'opening' | 'rug';
+
+export type MountKind = 'corner' | 'roof';
+
+/** Where mounted things attach, for a picture of a given height. */
+export type Mount =
+  | { kind: 'corner'; panel: number; side: 'left' | 'right'; x: number; y: number }
+  | { kind: 'roof'; panel: number; x0: number; x1: number; y: number };
+
+export type Fixture =
+  | { kind: 'opening'; x0: number; y0: number; x1: number; y1: number }
+  | { kind: 'rug'; cx: number; cy: number; rx: number; ry: number };
 
 /** Scenery spread across a band (clouds in the sky). Never asked about, drawn behind everything else. */
 export interface DecorDef {
@@ -112,6 +139,12 @@ export interface Recipe {
   zones: ZoneDef[];
   items: ItemDef[];
   decor?: DecorDef[];
+  /** Windows, doors and rugs in the backdrop for a picture `height` tall; the backdrop draws them from the same data. */
+  fixtures?: (height: number) => Fixture[];
+  /** Mounting points for things with `mount` (building corners, rooftops) for a picture `height` tall. */
+  mounts?: (height: number) => Mount[];
+  /** Least space between any two things hung on a wall, in cm. */
+  wallGapCm?: number;
   variants: VariantDef[];
 }
 
@@ -119,6 +152,8 @@ export interface Box {
   x: number;
   y: number;
   scale: number;
+  /** Drawn mirrored (a corner bracket on the right-hand edge of a building). */
+  flip?: boolean;
 }
 
 /** One kind of thing in a scene: all the same colour, all in one spot. */

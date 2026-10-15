@@ -50,7 +50,14 @@ export const SceneView = memo(function SceneView({ spec }: SceneViewProps) {
           ) : null;
         })}
         {placed.map(({ key, item, box, colour }) => (
-          <G key={key} transform={`translate(${box.x} ${box.y}) scale(${box.scale})`}>
+          <G
+            key={key}
+            transform={
+              box.flip
+                ? `translate(${box.x + item.w * box.scale} ${box.y}) scale(${-box.scale} ${box.scale})`
+                : `translate(${box.x} ${box.y}) scale(${box.scale})`
+            }
+          >
             {item.draw(colour)}
           </G>
         ))}
