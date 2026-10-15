@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeInRight } from 'react-native-reanimated';
 
 import { AnswerOption, type OptionStatus } from '@/components/AnswerOption';
@@ -76,28 +76,31 @@ export function QuizStage({ questions, answeredCount, onAnswer }: QuizStageProps
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.progress}>
-          Question {answeredCount + 1} of {questions.length}
-        </Text>
-        <Text style={styles.chip}>{TYPE_LABELS[question.type]}</Text>
-      </View>
-
-      <Animated.View key={question.id} entering={FadeInRight.duration(250)} style={styles.body}>
-        <Text style={styles.prompt}>{question.prompt}</Text>
-        <View style={styles.options}>
-          {question.options.map((option, index) => (
-            <AnswerOption
-              key={option}
-              label={option}
-              status={statusFor(index)}
-              disabled={feedback !== 'choosing'}
-              onPress={() => choose(index)}
-              onShakeEnd={() => setFeedback('revealed')}
-            />
-          ))}
+      {/* Scrolls on short screens instead of letting the question spill over the header. */}
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+        <View style={styles.header}>
+          <Text style={styles.progress}>
+            Question {answeredCount + 1} of {questions.length}
+          </Text>
+          <Text style={styles.chip}>{TYPE_LABELS[question.type]}</Text>
         </View>
-      </Animated.View>
+
+        <Animated.View key={question.id} entering={FadeInRight.duration(250)} style={styles.body}>
+          <Text style={styles.prompt}>{question.prompt}</Text>
+          <View style={styles.options}>
+            {question.options.map((option, index) => (
+              <AnswerOption
+                key={option}
+                label={option}
+                status={statusFor(index)}
+                disabled={feedback !== 'choosing'}
+                onPress={() => choose(index)}
+                onShakeEnd={() => setFeedback('revealed')}
+              />
+            ))}
+          </View>
+        </Animated.View>
+      </ScrollView>
 
       <View style={styles.footer}>
         {feedback === 'revealed' && selected !== null && (
@@ -114,7 +117,9 @@ export function QuizStage({ questions, answeredCount, onAnswer }: QuizStageProps
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, paddingTop: 72 },
+  container: { flex: 1 },
+  scroll: { flex: 1 },
+  scrollContent: { flexGrow: 1, paddingHorizontal: 24, paddingTop: 64, paddingBottom: 16, gap: 24 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   progress: { color: colors.textMuted, fontSize: 15, fontWeight: '600' },
   chip: {
@@ -130,11 +135,12 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     overflow: 'hidden',
   },
-  body: { flex: 1, justifyContent: 'center', gap: 32 },
-  prompt: { color: colors.text, fontSize: 26, fontWeight: '800', lineHeight: 32 },
+  // flexGrow (not flex) so the body can grow to centre itself but never shrink below its content.
+  body: { flexGrow: 1, justifyContent: 'center', gap: 24 },
+  prompt: { color: colors.text, fontSize: 24, fontWeight: '800', lineHeight: 30 },
   options: { gap: 12 },
   // Fixed height so the options don't jump when the Next button appears.
-  footer: { minHeight: 110, justifyContent: 'flex-end' },
+  footer: { minHeight: 110, justifyContent: 'flex-end', paddingHorizontal: 24, paddingBottom: 16 },
   footerContent: { gap: 14 },
   hint: { color: colors.textMuted, fontSize: 15, textAlign: 'center' },
   hintAnswer: { color: colors.correct, fontWeight: '700' },

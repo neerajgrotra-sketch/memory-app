@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 2.1.1 (2026-10-15)
+
+- Fixed the question overlapping "Question 1 of 5" on shorter screens, such as inside the Claude app. The quiz and home screens now scroll when space is tight.
+
 ## 2.1.0 (2026-10-15)
 
 - The app version now shows at the bottom of the home screen.
