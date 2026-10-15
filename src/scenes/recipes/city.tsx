@@ -212,6 +212,9 @@ const items: ItemDef[] = [
     h: 75,
     tier: 'large',
     size: 0.22,
+    // Parked: leaning against the building front (a bicycle can't stand on its own), several spread along it.
+    backRow: true,
+    spread: true,
     zones: PAVEMENT,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.black, C.pink],

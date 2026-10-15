@@ -209,7 +209,8 @@ function place(ctx: Context, want: Want): Placement | null {
   // Hung things share one level; things on the ground stand side by side, never stacked like a ladder.
   const all = arrangements(count, w, h).filter(({ offsets }) => {
     const step = (Math.max(...offsets.map(([, y]) => y)) - Math.min(...offsets.map(([, y]) => y))) / h;
-    return hung ? step < 1e-9 : zone.surface === 'ground' ? step <= MAX_GROUND_STEP : true;
+    // Hung things and things against the back stand on one line; other ground things may step back a little.
+    return hung || item.backRow ? step < 1e-9 : zone.surface === 'ground' ? step <= MAX_GROUND_STEP : true;
   });
 
   for (const { row, span, col } of candidates) {

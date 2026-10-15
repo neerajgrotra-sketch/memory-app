@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 3.1.4 (2026-10-15)
+
+- **Bicycles are parked against the buildings** (a bicycle can't stand on its own in the middle of the pavement). Their wheels sit at the building line, never in front of a door, and several are spread along the street.
+
 ## 3.1.3 (2026-10-15)
 
 - **Furniture stands against the wall.** The TV, sofa, armchairs, plants, bookshelves and floor lamps stand where the floor meets the wall, with their backs over the wall, instead of out on the floor. Pictures and mirrors still hang clear of them (above a sofa, never behind a TV). Palm trees stand at the back of the sand the same way. `validateScene` checks it.
