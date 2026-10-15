@@ -1,12 +1,12 @@
 import { Circle, Ellipse, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
-import { balloon, ball, bird, cloud, kite, person, plane } from '../items/common';
+import { balloon, ball, bird, clouds, kite, person, plane } from '../items/common';
 import type { ItemDef, Recipe } from '../types';
 
 const SKY = ['sky'];
 const SEA = ['sea'];
-const SAND = ['sand'];
+const SAND = ['shore', 'front'];
 
 const items: ItemDef[] = [
   {
@@ -16,13 +16,13 @@ const items: ItemDef[] = [
     article: 'a',
     w: 140,
     h: 140,
+    size: 150,
     zones: SKY,
     maxCount: 1,
     countable: false,
     draw: () => <Circle cx={70} cy={70} r={62} fill="#ffd93b" />,
   },
   { ...bird, zones: SKY, maxCount: 6 },
-  { ...cloud, zones: SKY, maxCount: 3 },
   { ...kite, zones: SKY, maxCount: 3 },
   { ...balloon, zones: SKY, maxCount: 3 },
   { ...plane, zones: SKY, maxCount: 2 },
@@ -33,6 +33,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 130,
     h: 150,
+    size: 170,
     zones: SEA,
     maxCount: 4,
     colours: [C.red, C.yellow, C.white, C.orange, C.purple],
@@ -53,6 +54,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 50,
     h: 65,
+    size: 60,
     zones: SEA,
     maxCount: 5,
     colours: [C.red, C.yellow, C.orange, C.white],
@@ -72,6 +74,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 130,
     h: 75,
+    size: 75,
     zones: SEA,
     maxCount: 3,
     draw: () => (
@@ -91,6 +94,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 160,
     h: 180,
+    size: 190,
     zones: SAND,
     maxCount: 4,
     colours: [C.red, C.blue, C.yellow, C.green, C.orange, C.purple, C.pink],
@@ -109,6 +113,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 60,
     h: 65,
+    size: 55,
     zones: SAND,
     maxCount: 4,
     colours: [C.red, C.blue, C.yellow, C.green, C.pink, C.purple],
@@ -119,7 +124,7 @@ const items: ItemDef[] = [
       </G>
     ),
   },
-  { ...ball, singular: 'beach ball', plural: 'beach balls', zones: SAND, maxCount: 4 },
+  { ...ball, singular: 'beach ball', plural: 'beach balls', size: 45, zones: SAND, maxCount: 4 },
   {
     kind: 'crab',
     singular: 'crab',
@@ -127,6 +132,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 80,
     h: 50,
+    size: 38,
     zones: SAND,
     maxCount: 5,
     draw: () => (
@@ -152,6 +158,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 160,
     h: 70,
+    size: 50,
     zones: SAND,
     maxCount: 3,
     colours: [C.red, C.blue, C.green, C.orange, C.purple, C.pink],
@@ -170,6 +177,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 160,
     h: 270,
+    size: 330,
     zones: SAND,
     maxCount: 3,
     draw: () => (
@@ -194,6 +202,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 130,
     h: 115,
+    size: 100,
     zones: SAND,
     maxCount: 2,
     draw: () => (
@@ -215,6 +224,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 55,
     h: 55,
+    size: 38,
     zones: SAND,
     maxCount: 5,
     colours: [C.orange, C.pink, C.red, C.purple],
@@ -231,15 +241,21 @@ const items: ItemDef[] = [
   { ...person, zones: SAND, maxCount: 4 },
 ];
 
-function backdrop(sky: string, sea: string, sand: string, foam: string) {
+function backdrop(height: number, sky: string, sea: string, sand: string, foam: string) {
+  const horizon = height * 0.33;
+  const shore = height * 0.55;
   return (
     <G>
-      <Rect x={-600} y={-600} width={2100} height={1060} fill={sky} />
-      <Rect x={-600} y={450} width={2100} height={350} fill={sea} />
+      <Rect x={-600} y={-600} width={2100} height={horizon + 610} fill={sky} />
+      <Path d={`M-600,${horizon} H0 Q120,${horizon - 30} 240,${horizon} H1500 V${horizon + 4} H-600 Z`} fill="#6c9a8b" fillOpacity={0.6} />
+      <Rect x={-600} y={horizon} width={2100} height={shore - horizon + 20} fill={sea} />
       <G stroke={foam} strokeWidth={4} fill="none" strokeOpacity={0.5}>
-        <Path d="M40,560 q30,-12 60,0 M300,620 q30,-12 60,0 M620,540 q30,-12 60,0 M760,700 q30,-12 60,0 M160,720 q30,-12 60,0" />
+        {[0.37, 0.42, 0.47, 0.52].map((f, i) => (
+          <Path key={f} d={`M${60 + i * 190},${height * f} q30,-12 60,0 M${520 - i * 110},${height * f + 30} q30,-12 60,0`} />
+        ))}
       </G>
-      <Path d="M-600,790 H0 Q225,770 450,790 T900,790 H1500 V1950 H-600 Z" fill={sand} />
+      <Path d={`M-600,${shore} H0 Q225,${shore - 20} 450,${shore} T900,${shore} H1500 V${height + 600} H-600 Z`} fill={sand} />
+      <Path d={`M-600,${shore} H0 Q225,${shore - 20} 450,${shore} T900,${shore} H1500`} fill="none" stroke="#ffffff" strokeOpacity={0.7} strokeWidth={6} />
     </G>
   );
 }
@@ -249,13 +265,15 @@ export const beach: Recipe = {
   title: 'At the beach',
   place: 'on the beach',
   zones: [
-    { id: 'sky', label: 'In the sky', top: 30, bottom: 420 },
-    { id: 'sea', label: 'In the sea', top: 480, bottom: 770 },
-    { id: 'sand', label: 'On the sand', top: 830, bottom: 1310 },
+    { id: 'sky', label: 'In the sky', surface: 'air', top: 0.07, bottom: 0.31 },
+    { id: 'sea', label: 'In the sea', surface: 'ground', top: 0.34, bottom: 0.54, farScale: 0.7, nearScale: 0.85 },
+    { id: 'shore', label: 'Near the water', surface: 'ground', top: 0.56, bottom: 0.75, farScale: 0.8, nearScale: 0.9 },
+    { id: 'front', label: 'At the front', surface: 'ground', top: 0.76, bottom: 0.97, farScale: 0.92, nearScale: 1.05 },
   ],
   items,
+  decor: [{ ...clouds, top: 0.04, bottom: 0.28 }],
   variants: [
-    { id: 'day', background: () => backdrop('#8fd3f4', '#2a9fd6', '#f2d49b', '#ffffff') },
-    { id: 'sunset', background: () => backdrop('#ffb38a', '#3d6fa8', '#e9c46a', '#ffd6a5') },
+    { id: 'day', background: (h) => backdrop(h, '#8fd3f4', '#2a9fd6', '#f2d49b', '#ffffff') },
+    { id: 'sunset', background: (h) => backdrop(h, '#ffb38a', '#3d6fa8', '#e9c46a', '#ffd6a5') },
   ],
 };

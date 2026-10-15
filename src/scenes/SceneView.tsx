@@ -3,18 +3,19 @@ import { StyleSheet, View, type LayoutChangeEvent } from 'react-native';
 import Svg, { G } from 'react-native-svg';
 
 import { getRecipe } from './recipes';
-import { SCENE_HEIGHT, SCENE_WIDTH, type SceneSpec } from './types';
+import { SCENE_WIDTH, type SceneSpec } from './types';
 
 interface SceneViewProps {
   spec: SceneSpec;
 }
 
 /**
- * Draws a generated scene, filling its box. The whole 900 × 1350 scene is always
- * visible; on taller or wider screens the backdrop simply extends to fill the gap.
+ * Draws a generated scene, filling its box. The whole scene is always visible;
+ * if the box is a different shape, the backdrop simply extends to fill the gap.
  */
 export const SceneView = memo(function SceneView({ spec }: SceneViewProps) {
-  const [size, setSize] = useState({ width: SCENE_WIDTH, height: SCENE_HEIGHT });
+  const sceneH = spec.height;
+  const [size, setSize] = useState({ width: SCENE_WIDTH, height: sceneH });
   const recipe = getRecipe(spec.recipeId);
   const variant = recipe.variants.find((v) => v.id === spec.variantId) ?? recipe.variants[0];
 
@@ -25,9 +26,9 @@ export const SceneView = memo(function SceneView({ spec }: SceneViewProps) {
 
   // Widen whichever side of the view box the screen has room for, keeping the scene centred.
   const aspect = size.width / size.height;
-  const viewW = Math.max(SCENE_WIDTH, SCENE_HEIGHT * aspect);
-  const viewH = Math.max(SCENE_HEIGHT, SCENE_WIDTH / aspect);
-  const viewBox = `${(SCENE_WIDTH - viewW) / 2} ${(SCENE_HEIGHT - viewH) / 2} ${viewW} ${viewH}`;
+  const viewW = Math.max(SCENE_WIDTH, sceneH * aspect);
+  const viewH = Math.max(sceneH, SCENE_WIDTH / aspect);
+  const viewBox = `${(SCENE_WIDTH - viewW) / 2} ${(sceneH - viewH) / 2} ${viewW} ${viewH}`;
 
   const placed = spec.groups
     .flatMap((group) => {
@@ -39,7 +40,15 @@ export const SceneView = memo(function SceneView({ spec }: SceneViewProps) {
   return (
     <View style={StyleSheet.absoluteFill} onLayout={onLayout}>
       <Svg width="100%" height="100%" viewBox={viewBox} preserveAspectRatio="xMidYMid meet">
-        {variant.background()}
+        {variant.background(sceneH)}
+        {spec.decor.map(({ kind, box }, i) => {
+          const decor = recipe.decor?.find((d) => d.kind === kind);
+          return decor ? (
+            <G key={`decor-${i}`} transform={`translate(${box.x} ${box.y}) scale(${box.scale})`}>
+              {decor.draw()}
+            </G>
+          ) : null;
+        })}
         {placed.map(({ key, item, box, colour }) => (
           <G key={key} transform={`translate(${box.x} ${box.y}) scale(${box.scale})`}>
             {item.draw(colour)}

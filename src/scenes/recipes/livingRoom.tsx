@@ -16,6 +16,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 110,
     h: 90,
+    size: 100,
     zones: WALL,
     maxCount: 4,
     colours: [C.red, C.blue, C.yellow, C.green, C.black, C.white, C.purple],
@@ -36,6 +37,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 100,
     h: 100,
+    size: 90,
     zones: WALL,
     maxCount: 1,
     countable: false,
@@ -54,6 +56,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 90,
     h: 130,
+    size: 150,
     zones: WALL,
     maxCount: 2,
     draw: () => (
@@ -71,6 +74,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 150,
     h: 175,
+    size: 220,
     zones: WALL,
     maxCount: 2,
     draw: () => (
@@ -88,6 +92,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 230,
     h: 120,
+    size: 150,
     zones: BACK,
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.grey, C.yellow, C.purple, C.brown],
@@ -109,6 +114,7 @@ const items: ItemDef[] = [
     article: 'an',
     w: 120,
     h: 120,
+    size: 150,
     zones: BACK,
     maxCount: 3,
     colours: [C.red, C.blue, C.green, C.yellow, C.orange, C.pink],
@@ -130,6 +136,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 80,
     h: 230,
+    size: 330,
     zones: BACK,
     maxCount: 2,
     colours: [C.red, C.blue, C.yellow, C.green, C.white, C.orange],
@@ -149,6 +156,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 170,
     h: 140,
+    size: 190,
     zones: BACK,
     maxCount: 1,
     countable: false,
@@ -160,7 +168,7 @@ const items: ItemDef[] = [
       </G>
     ),
   },
-  { ...plantPot, zones: BACK, maxCount: 3 },
+  { ...plantPot, zones: [...BACK, ...FRONT], maxCount: 3 },
   {
     kind: 'bookshelf',
     singular: 'bookshelf',
@@ -168,6 +176,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 120,
     h: 200,
+    size: 300,
     zones: BACK,
     maxCount: 2,
     draw: () => (
@@ -191,6 +200,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 90,
     h: 75,
+    size: 60,
     zones: FRONT,
     maxCount: 3,
     colours: [C.orange, C.black, C.grey, C.white],
@@ -205,8 +215,8 @@ const items: ItemDef[] = [
       </G>
     ),
   },
-  { ...dog, zones: FRONT, maxCount: 2 },
-  { ...ball, zones: FRONT, maxCount: 4 },
+  { ...dog, size: 75, zones: FRONT, maxCount: 2 },
+  { ...ball, size: 40, zones: FRONT, maxCount: 4 },
   {
     kind: 'cushion',
     singular: 'cushion',
@@ -214,6 +224,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 75,
     h: 60,
+    size: 50,
     zones: FRONT,
     maxCount: 4,
     colours: [C.red, C.blue, C.yellow, C.green, C.pink, C.purple, C.orange],
@@ -228,6 +239,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 75,
     h: 90,
+    size: 70,
     zones: FRONT,
     maxCount: 3,
     draw: () => (
@@ -249,6 +261,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 85,
     h: 45,
+    size: 38,
     zones: FRONT,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.orange],
@@ -267,6 +280,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 90,
     h: 60,
+    size: 50,
     zones: FRONT,
     maxCount: 3,
     draw: () => (
@@ -279,17 +293,22 @@ const items: ItemDef[] = [
   },
 ];
 
-function backdrop(wall: string, floor: string, plank: string) {
+function backdrop(height: number, wall: string, floor: string, plank: string, rug: string) {
+  const floorLine = height * 0.6;
+  // Floorboard lines get further apart towards the front (perspective).
+  const planks = [0.63, 0.67, 0.72, 0.78, 0.85, 0.93, 1.02].map((f) => height * f);
   return (
     <G>
-      <Rect x={-600} y={-600} width={2100} height={1450} fill={wall} />
-      <Rect x={-600} y={830} width={2100} height={20} fill="#ffffff" fillOpacity={0.7} />
-      <Rect x={-600} y={850} width={2100} height={1100} fill={floor} />
+      <Rect x={-600} y={-600} width={2100} height={floorLine + 600} fill={wall} />
+      <Rect x={-600} y={floorLine - 22} width={2100} height={22} fill="#ffffff" fillOpacity={0.7} />
+      <Rect x={-600} y={floorLine} width={2100} height={height - floorLine + 600} fill={floor} />
       <G stroke={plank} strokeWidth={3}>
-        {[930, 1030, 1140, 1260, 1390, 1530].map((y) => (
+        {planks.map((y) => (
           <Line key={y} x1={-600} y1={y} x2={1500} y2={y} />
         ))}
       </G>
+      <Ellipse cx={450} cy={height * 0.8} rx={300} ry={height * 0.07} fill={rug} fillOpacity={0.3} />
+      <Ellipse cx={450} cy={height * 0.8} rx={260} ry={height * 0.052} fill="none" stroke="#ffffff" strokeOpacity={0.4} strokeWidth={5} />
     </G>
   );
 }
@@ -299,14 +318,24 @@ export const livingRoom: Recipe = {
   title: 'Living room',
   place: 'in the room',
   zones: [
-    { id: 'wall', label: 'On the wall', top: 70, bottom: 560 },
-    { id: 'back', label: 'At the back', top: 600, bottom: 1000, ground: true, singleRow: true },
-    { id: 'front', label: 'At the front', top: 1060, bottom: 1320, ground: true },
+    { id: 'wall', label: 'On the wall', surface: 'wall', top: 0.08, bottom: 0.38 },
+    {
+      id: 'back',
+      label: 'At the back',
+      surface: 'ground',
+      top: 0.39,
+      bottom: 0.64,
+      floor: 0.6,
+      farScale: 0.75,
+      nearScale: 0.8,
+      singleRow: true,
+    },
+    { id: 'front', label: 'At the front', surface: 'ground', top: 0.67, bottom: 0.97, farScale: 0.9, nearScale: 1.05 },
   ],
   items,
   variants: [
-    { id: 'cream', background: () => backdrop('#f3e9d2', '#b98b5e', '#a47751') },
-    { id: 'blue', background: () => backdrop('#cfe0ec', '#c9a27e', '#b08b68') },
-    { id: 'sage', background: () => backdrop('#dce5d1', '#a87f5a', '#8f6a48') },
+    { id: 'cream', background: (h) => backdrop(h, '#f3e9d2', '#b98b5e', '#a47751', '#9d4edd') },
+    { id: 'blue', background: (h) => backdrop(h, '#cfe0ec', '#c9a27e', '#b08b68', '#c1121f') },
+    { id: 'sage', background: (h) => backdrop(h, '#dce5d1', '#a87f5a', '#8f6a48', '#1d3557') },
   ],
 };

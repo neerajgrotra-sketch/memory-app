@@ -37,9 +37,9 @@ Difficulty changes the picture and the questions:
 
 | Mode        | View time | Kinds of thing | Most of one kind | Wrong counts      | Questions asked first |
 | ----------- | --------- | -------------- | ---------------- | ----------------- | --------------------- |
-| Easy        | 10 s      | 4              | 3                | spread out        | object, colour        |
-| Medium      | 8 s       | 6              | 4                | spread out        | all types             |
-| Hard        | 6 s       | 8              | 6                | right next to it  | count, position       |
+| Easy        | 10 s      | 5              | 3                | spread out        | object, colour        |
+| Medium      | 8 s       | 7              | 4                | spread out        | all types             |
+| Hard        | 6 s       | 9              | 6                | right next to it  | count, position       |
 
 **Progressive** plays Easy, then Medium, then Hard, stepping up every round.
 
@@ -50,17 +50,26 @@ A round never asks two questions about the same thing, and Play again never repe
 Every picture is built on the device from a **recipe** in a fraction of a second. No network or AI service is involved.
 
 1. Pick a recipe (beach, city street, living room), never the same as the last picture.
-2. Fill it: pick which things appear, how many, what colour and where. A recipe has bands (sky, sea, sand…) split into left / middle / right cells with clear gaps, and each cell holds at most one kind of thing, so nothing overlaps or sits on a boundary. Things that would be too small to see are dropped.
+2. Fill it: pick which things appear, how many, what colour and where, following the placement rules below.
 3. Record every fact: kind, count, colour, band and side.
 4. Draw the picture from those facts (`react-native-svg`).
 5. Write the questions from the same facts, so every answer is right by construction. Wrong options come from the same recipe so they're believable. A picture that can't give enough questions is quietly replaced.
+
+### Placement rules
+
+- **Bands and cells.** A recipe has bands (sky, sea, near the water, at the front…) given as fractions of the picture height. Each band is split into left / middle / right cells with clear gaps between them. Each cell holds at most one kind of thing, so nothing overlaps and nothing sits on a boundary.
+- **Surfaces.** Every band is `air` (things float), `wall` (things hang) or `ground` (things stand). An item lists the bands it may go in, so a plant pot can only stand on a floor and a flag can only hang on a building. Ground bands can set a `floor` line (where the floor meets the wall) that feet must stay below.
+- **Real sizes.** Every item has a `size`: its real-world height relative to the others (sofa 150, cat 60, toy car 38). Everything is drawn 35% larger than that so small things are easy to spot. Big things may shrink to at most 75% to fit a cell; otherwise fewer of them are placed.
+- **Perspective.** Ground bands have `farScale` and `nearScale`. Things stand in rows, each row further back a little higher and smaller, and only the bottom 10% of a back-row thing may tuck behind the row in front.
+- **Scenery.** `decor` (such as clouds) is spread across a band, drawn behind everything, and never asked about.
+- **Screen shape.** The picture is 900 wide and as tall as the screen's shape needs (1350–2000), so it fills the phone.
 
 Generation is seeded, so the same seed always rebuilds the same picture (handy for a future daily challenge).
 
 ### Adding a recipe
 
 1. Copy a file in `src/scenes/recipes/` and give it an id, title, bands (`zones`), backdrop variants and items. Reuse shared items from `src/scenes/items/common.tsx` where you can.
-2. Each item has a name, plural, size, the bands it may go in, a maximum count, optional colours and a `draw` function.
+2. Each item has a name, plural, design box (`w`, `h`), real-world `size`, the bands it may go in, a maximum count, optional colours and a `draw` function. Each band has a surface type; backdrops take the picture height.
 3. List the recipe in `src/scenes/recipes/index.ts`.
 
 Aim for 12+ items per recipe, so harder levels have enough to fill the picture and enough absent things for "Which of these was NOT…" questions.

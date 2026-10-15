@@ -1,7 +1,7 @@
 import { Circle, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
-import { balloon, bird, cloud, dog, person, plane, plantPot, tree } from '../items/common';
+import { balloon, bird, clouds, dog, person, plane, tree } from '../items/common';
 import type { ItemDef, Recipe } from '../types';
 
 const SKY = ['sky'];
@@ -18,7 +18,6 @@ const wheel = (cx: number, cy: number, r: number) => (
 
 const items: ItemDef[] = [
   { ...bird, zones: SKY, maxCount: 6 },
-  { ...cloud, zones: SKY, maxCount: 3 },
   { ...plane, zones: SKY, maxCount: 2 },
   { ...balloon, zones: SKY, maxCount: 3 },
   {
@@ -28,6 +27,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 90,
     h: 110,
+    size: 120,
     zones: WALLS,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.purple, C.orange],
@@ -45,6 +45,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 100,
     h: 100,
+    size: 100,
     zones: WALLS,
     maxCount: 1,
     countable: false,
@@ -63,6 +64,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 80,
     h: 80,
+    size: 80,
     zones: WALLS,
     maxCount: 3,
     draw: () => (
@@ -81,6 +83,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 170,
     h: 70,
+    size: 70,
     zones: WALLS,
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.orange, C.purple, C.yellow],
@@ -95,10 +98,9 @@ const items: ItemDef[] = [
       </G>
     ),
   },
-  { ...plantPot, singular: 'window plant', plural: 'window plants', zones: WALLS, maxCount: 3 },
   { ...person, zones: PAVEMENT, maxCount: 4 },
-  { ...dog, zones: PAVEMENT, maxCount: 3 },
-  { ...tree, zones: PAVEMENT, maxCount: 2 },
+  { ...dog, size: 70, zones: PAVEMENT, maxCount: 3 },
+  { ...tree, size: 240, zones: PAVEMENT, maxCount: 2 },
   {
     kind: 'bench',
     singular: 'bench',
@@ -106,6 +108,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 140,
     h: 75,
+    size: 70,
     zones: PAVEMENT,
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.brown, C.yellow],
@@ -125,6 +128,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 55,
     h: 85,
+    size: 85,
     zones: PAVEMENT,
     maxCount: 4,
     colours: [C.green, C.black, C.blue, C.orange],
@@ -144,6 +148,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 115,
     h: 75,
+    size: 75,
     zones: PAVEMENT,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.black, C.pink],
@@ -165,6 +170,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 50,
     h: 75,
+    size: 65,
     zones: PAVEMENT,
     maxCount: 2,
     colours: [C.red, C.yellow],
@@ -184,6 +190,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 60,
     h: 240,
+    size: 260,
     zones: PAVEMENT,
     maxCount: 2,
     draw: () => (
@@ -201,6 +208,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 175,
     h: 85,
+    size: 75,
     zones: ROAD,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.white, C.black, C.orange],
@@ -220,6 +228,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 230,
     h: 115,
+    size: 105,
     zones: ROAD,
     maxCount: 2,
     colours: [C.red, C.blue, C.yellow, C.green, C.white],
@@ -245,6 +254,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 95,
     h: 75,
+    size: 70,
     zones: ROAD,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.pink, C.white],
@@ -265,6 +275,7 @@ const items: ItemDef[] = [
     article: 'a',
     w: 190,
     h: 100,
+    size: 95,
     zones: ROAD,
     maxCount: 2,
     colours: [C.white, C.blue, C.red, C.green, C.yellow],
@@ -280,40 +291,54 @@ const items: ItemDef[] = [
 ];
 
 const BUILDINGS = [
-  { x: 0, w: 240, top: 390 },
-  { x: 240, w: 210, top: 440 },
-  { x: 450, w: 230, top: 400 },
-  { x: 680, w: 220, top: 450 },
+  { x: -600, w: 600, rise: 0 },
+  { x: 0, w: 240, rise: 0.03 },
+  { x: 240, w: 210, rise: 0 },
+  { x: 450, w: 230, rise: 0.025 },
+  { x: 680, w: 220, rise: 0.005 },
+  { x: 900, w: 600, rise: 0.02 },
 ];
 
-function backdrop(sky: string, walls: string[], window: string) {
+function backdrop(height: number, sky: string, walls: string[], window: string) {
+  const roof = height * 0.27;
+  const pavement = height * 0.6;
+  const kerb = height * 0.73;
   return (
     <G>
-      <Rect x={-600} y={-600} width={2100} height={1500} fill={sky} />
-      {BUILDINGS.map((b, i) => (
-        <G key={b.x}>
-          <Rect x={b.x} y={b.top} width={b.w} height={900 - b.top} fill={walls[i]} />
-          {[0, 1, 2, 3, 4].map((row) =>
-            [0, 1, 2].map((col) => (
-              <Rect
-                key={`${row}-${col}`}
-                x={b.x + 22 + col * ((b.w - 44) / 3)}
-                y={b.top + 30 + row * 92}
-                width={(b.w - 44) / 3 - 18}
-                height={56}
-                fill={window}
-                fillOpacity={0.55}
-              />
-            )),
-          )}
-        </G>
-      ))}
-      <Rect x={-600} y={880} width={2100} height={210} fill="#ced4da" />
-      <Rect x={-600} y={1080} width={2100} height={14} fill="#868e96" />
-      <Rect x={-600} y={1094} width={2100} height={860} fill="#495057" />
+      <Rect x={-600} y={-600} width={2100} height={pavement + 600} fill={sky} />
+      {BUILDINGS.map((b, i) => {
+        const top = roof - b.rise * height;
+        const rows = Math.floor((pavement - top - 30) / 90);
+        return (
+          <G key={b.x}>
+            <Rect x={b.x} y={top} width={b.w} height={pavement - top} fill={walls[i % walls.length]} />
+            {Array.from({ length: rows }, (_, row) =>
+              [0, 1, 2].map((col) => (
+                <Rect
+                  key={`${row}-${col}`}
+                  x={b.x + 22 + col * ((b.w - 44) / 3)}
+                  y={top + 28 + row * 90}
+                  width={(b.w - 44) / 3 - 18}
+                  height={54}
+                  fill={window}
+                  fillOpacity={0.55}
+                />
+              )),
+            )}
+          </G>
+        );
+      })}
+      <Rect x={-600} y={pavement} width={2100} height={kerb - pavement} fill="#ced4da" />
+      <G stroke="#b8bfc6" strokeWidth={3}>
+        {[-300, 0, 150, 300, 450, 600, 750, 900, 1200].map((x) => (
+          <Line key={x} x1={x} y1={pavement} x2={x - 40} y2={kerb} />
+        ))}
+      </G>
+      <Rect x={-600} y={kerb} width={2100} height={14} fill="#868e96" />
+      <Rect x={-600} y={kerb + 14} width={2100} height={height - kerb + 600} fill="#495057" />
       <G fill="#f8f9fa">
-        {[40, 280, 520, 760].map((x) => (
-          <Rect key={x} x={x} y={1335} width={110} height={8} />
+        {[-200, 40, 280, 520, 760, 1000].map((x) => (
+          <Rect key={x} x={x} y={height * 0.855} width={110} height={8} />
         ))}
       </G>
     </G>
@@ -325,14 +350,25 @@ export const city: Recipe = {
   title: 'City street',
   place: 'in the street',
   zones: [
-    { id: 'sky', label: 'In the sky', top: 30, bottom: 360 },
-    { id: 'buildings', label: 'On the buildings', top: 470, bottom: 800 },
-    { id: 'pavement', label: 'On the pavement', top: 800, bottom: 1075, ground: true, singleRow: true },
-    { id: 'road', label: 'On the road', top: 1110, bottom: 1325, ground: true },
+    { id: 'sky', label: 'In the sky', surface: 'air', top: 0.07, bottom: 0.24 },
+    { id: 'buildings', label: 'On the buildings', surface: 'wall', top: 0.29, bottom: 0.49 },
+    {
+      id: 'pavement',
+      label: 'On the pavement',
+      surface: 'ground',
+      top: 0.5,
+      bottom: 0.72,
+      floor: 0.65,
+      farScale: 0.85,
+      nearScale: 0.9,
+      singleRow: true,
+    },
+    { id: 'road', label: 'On the road', surface: 'ground', top: 0.75, bottom: 0.98, farScale: 0.9, nearScale: 1 },
   ],
   items,
+  decor: [{ ...clouds, top: 0.03, bottom: 0.2 }],
   variants: [
-    { id: 'day', background: () => backdrop('#a5d8ff', ['#e9c46a', '#f4a261', '#b5838d', '#90be6d'], '#e7f5ff') },
-    { id: 'sunset', background: () => backdrop('#ffc9a9', ['#c9ada7', '#9a8c98', '#e5989b', '#b5c99a'], '#fff3bf') },
+    { id: 'day', background: (h) => backdrop(h, '#a5d8ff', ['#e9c46a', '#f4a261', '#b5838d', '#90be6d'], '#e7f5ff') },
+    { id: 'sunset', background: (h) => backdrop(h, '#ffc9a9', ['#c9ada7', '#9a8c98', '#e5989b', '#b5c99a'], '#fff3bf') },
   ],
 };

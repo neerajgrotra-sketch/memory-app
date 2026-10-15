@@ -1,9 +1,9 @@
 import { Circle, Ellipse, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
-import type { ItemDef } from '../types';
+import type { DecorDef, ItemDef } from '../types';
 
-/** Things that turn up in several settings. Each recipe sets which bands they may go in. */
+/** Things that turn up in several settings. Each recipe sets which bands they may go in, and may adjust `size`. */
 type CommonItem = Omit<ItemDef, 'zones' | 'maxCount'>;
 
 export const bird: CommonItem = {
@@ -13,20 +13,22 @@ export const bird: CommonItem = {
   article: 'a',
   w: 60,
   h: 30,
+  size: 26,
   draw: () => (
     <Path d="M5,12 Q17,0 30,16 Q43,0 55,12" fill="none" stroke="#222" strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" />
   ),
 };
 
-export const cloud: CommonItem = {
+/** Clouds are scenery: spread across the sky and never asked about. Recipes set the band. */
+export const clouds: Omit<DecorDef, 'top' | 'bottom'> = {
   kind: 'cloud',
-  singular: 'cloud',
-  plural: 'clouds',
-  article: 'a',
   w: 170,
   h: 75,
+  size: 80,
+  min: 2,
+  max: 4,
   draw: () => (
-    <G fill="#ffffff">
+    <G fill="#ffffff" fillOpacity={0.95}>
       <Ellipse cx={85} cy={50} rx={80} ry={25} />
       <Ellipse cx={110} cy={32} rx={45} ry={28} />
       <Ellipse cx={60} cy={36} rx={38} ry={24} />
@@ -41,6 +43,7 @@ export const balloon: CommonItem = {
   article: 'a',
   w: 90,
   h: 135,
+  size: 150,
   colours: [C.red, C.blue, C.purple, C.green, C.orange, C.pink],
   draw: (colour) => (
     <G>
@@ -60,6 +63,7 @@ export const kite: CommonItem = {
   article: 'a',
   w: 80,
   h: 160,
+  size: 150,
   colours: [C.red, C.blue, C.yellow, C.green, C.purple, C.orange],
   draw: (colour) => (
     <G>
@@ -78,6 +82,7 @@ export const plane: CommonItem = {
   article: 'a',
   w: 170,
   h: 60,
+  size: 55,
   draw: () => (
     <G>
       <Path d="M10,30 C10,22 20,20 30,20 H140 C160,20 168,30 168,30 C168,30 160,40 140,40 H30 C20,40 10,38 10,30 Z" fill="#f1f3f5" stroke="#868e96" strokeWidth={3} />
@@ -100,6 +105,7 @@ export const person: CommonItem = {
   article: 'a',
   w: 50,
   h: 125,
+  size: 150,
   colours: [C.red, C.blue, C.yellow, C.green, C.orange, C.purple, C.pink, C.white],
   colourPrompt: (plural) => (plural ? 'What colour were the people’s shirts?' : 'What colour was the person’s shirt?'),
   draw: (colour) => (
@@ -120,6 +126,7 @@ export const dog: CommonItem = {
   article: 'a',
   w: 100,
   h: 75,
+  size: 80,
   colours: [C.brown, C.black, C.white],
   draw: (colour) => (
     <G stroke="#00000044" strokeWidth={2}>
@@ -142,6 +149,7 @@ export const tree: CommonItem = {
   article: 'a',
   w: 120,
   h: 200,
+  size: 260,
   draw: () => (
     <G>
       <Rect x={50} y={110} width={22} height={90} fill="#7a4a2a" />
@@ -159,6 +167,7 @@ export const plantPot: CommonItem = {
   article: 'a',
   w: 80,
   h: 110,
+  size: 115,
   colours: [C.orange, C.blue, C.white, C.yellow, C.pink, C.purple],
   colourPrompt: (plural) => (plural ? 'What colour were the plant pots?' : 'What colour was the plant pot?'),
   draw: (colour) => (
@@ -178,6 +187,7 @@ export const ball: CommonItem = {
   article: 'a',
   w: 55,
   h: 55,
+  size: 45,
   colours: [C.red, C.blue, C.yellow, C.green, C.orange, C.purple, C.pink],
   draw: (colour) => (
     <G>

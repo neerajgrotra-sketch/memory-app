@@ -10,6 +10,18 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 2.2.0 (2026-10-15)
+
+- **Realistic sizes:** a sofa is now bigger than a cat, a bus bigger than a scooter, and a palm tree taller than a person.
+- **Perspective:** things further back are smaller and higher up; things at the front are bigger and lower.
+- **Surface rules:** furniture, pots, people and animals always stand on the floor, sand or pavement; flags, clocks and frames hang on walls; boats float on the water. No more floating plant pots.
+- **Clouds:** 2–4 clouds are spread across every sky. They're scenery and never asked about.
+- **Fuller pictures:**
+  - pictures are built to your screen's shape, so there's no empty band
+  - beaches now have a "near the water" and an "at the front" area
+  - living rooms have a rug
+  - every level shows one more kind of thing (Easy 5, Medium 7, Hard 9)
+
 ## 2.1.1 (2026-10-15)
 
 - Fixed the question overlapping "Question 1 of 5" on shorter screens, such as inside the Claude app. The quiz and home screens now scroll when space is tight.

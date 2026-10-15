@@ -1,5 +1,5 @@
 import { createRng, type Rng } from './random';
-import type { Box, ItemDef, PlacedGroup, Recipe, Region, SceneSpec, ZoneDef } from './types';
+import type { Box, ItemDef, PlacedDecor, PlacedGroup, Recipe, Region, SceneSpec, ZoneDef } from './types';
 
 export interface SceneKnobs {
   /** How many different kinds of thing appear. */
@@ -15,74 +15,167 @@ export const REGIONS: { id: Region; x0: number; x1: number }[] = [
   { id: 'right', x0: 620, x1: 860 },
 ];
 
-/** Items are drawn larger than their design size so they read well on a phone. */
-const ITEM_SCALE = 1.5;
-/** Smaller than this and things get hard to see in a few seconds. */
-const MIN_SCALE = 0.75;
-/** Breathing room around each thing so nothing overlaps. */
-const SPACING = 1.2;
+/** Breathing room between things side by side. */
+const SPACING = 1.15;
+/** Everything is drawn this much bigger than its real-world size so small things are easy to spot on a phone. */
+const SIZE_BOOST = 1.35;
+/** Big things may shrink to this fraction of their size to fit a cell, so they still look bigger than small things. */
+const MIN_FIT = 0.75;
+/** How much of a back-row thing's base may tuck behind the row in front. Small, so everything stays countable. */
+const ROW_TUCK = 0.1;
 
-/** Lays out `count` copies of an item in one cell, or returns null if they would be too small. */
-function layoutGroup(item: ItemDef, count: number, zone: ZoneDef, region: (typeof REGIONS)[number], rng: Rng): Box[] | null {
-  const cellW = region.x1 - region.x0;
-  const cellH = zone.bottom - zone.top;
+type Cell = (typeof REGIONS)[number];
 
-  let best = { scale: 0, rows: 1, cols: count };
+/** Air and wall bands: things keep their size and are spread over the cell. */
+function layoutFloating(item: ItemDef, count: number, zone: ZoneDef, cell: Cell, height: number, rng: Rng): Box[] | null {
+  const full = (item.size * SIZE_BOOST) / item.h;
+  const top = zone.top * height;
+  const cellW = cell.x1 - cell.x0;
+  const cellH = (zone.bottom - zone.top) * height;
+
+  for (let rows = 1; rows <= count; rows++) {
+    const cols = Math.ceil(count / rows);
+    const fit = Math.min(1, cellW / (cols * item.w * full * SPACING), cellH / (rows * item.h * full * SPACING));
+    if (fit < MIN_FIT) continue;
+    const scale = full * fit;
+    const w = item.w * scale;
+    const h = item.h * scale;
+    const slotW = cellW / cols;
+    const slotH = cellH / rows;
+    return Array.from({ length: count }, (_, i) => {
+      const row = Math.floor(i / cols);
+      const col = i % cols;
+      const inRow = row === rows - 1 ? count - cols * (rows - 1) : cols;
+      const rowOffset = ((cols - inRow) * slotW) / 2;
+      return {
+        x: cell.x0 + rowOffset + col * slotW + (slotW - w) * (0.25 + 0.5 * rng.next()),
+        y: top + row * slotH + (slotH - h) * rng.next(),
+        scale,
+      };
+    });
+  }
+  return null;
+}
+
+/**
+ * Ground bands: things stand on the floor in rows, front row lowest and biggest,
+ * each row further back a little higher and smaller (perspective).
+ */
+function layoutGround(item: ItemDef, count: number, zone: ZoneDef, cell: Cell, height: number, rng: Rng): Box[] | null {
+  const top = zone.top * height;
+  const bottom = zone.bottom * height;
+  const floorTop = (zone.floor ?? zone.top) * height;
+  const far = zone.farScale ?? 1;
+  const near = zone.nearScale ?? 1;
+  const cellW = cell.x1 - cell.x0;
+  const base = (item.size * SIZE_BOOST) / item.h;
+  const perspective = (y: number) => far + (near - far) * Math.min(1, Math.max(0, (y - floorTop) / (bottom - floorTop || 1)));
+
+  /** Rows from the front, starting with the front row standing at `front`. Null if they don't fit. */
+  const stack = (rows: number, cols: number, front: number) => {
+    // The front row is the widest; if it needs to shrink to fit, every row shrinks by the same amount.
+    const fit = Math.min(1, cellW / (cols * item.w * base * perspective(front) * SPACING));
+    if (fit < MIN_FIT) return null;
+    const result: { baseline: number; scale: number }[] = [];
+    let baseline = front;
+    for (let r = 0; r < rows; r++) {
+      const scale = base * perspective(baseline) * fit;
+      const h = item.h * scale;
+      if (baseline < floorTop || baseline - h < top) return null;
+      result.push({ baseline, scale });
+      baseline -= h * (1 - ROW_TUCK);
+    }
+    return result;
+  };
+
   for (let rows = 1; rows <= (zone.singleRow ? 1 : count); rows++) {
     const cols = Math.ceil(count / rows);
-    const scale = Math.min(ITEM_SCALE, cellW / (cols * item.w * SPACING), cellH / (rows * item.h * SPACING));
-    if (scale > best.scale) best = { scale, rows, cols };
+    const tight = stack(rows, cols, bottom);
+    if (!tight) continue;
+
+    // Push the group a random way back into the band so groups sit at different depths.
+    const room = tight[tight.length - 1].baseline - floorTop;
+    const rowsInfo = stack(rows, cols, bottom - room * rng.next() * 0.8) ?? tight;
+
+    const boxes: Box[] = [];
+    rowsInfo.forEach(({ baseline, scale }, r) => {
+      // Back rows are full; any remainder goes in the front row.
+      const inRow = r === 0 ? count - cols * (rows - 1) : cols;
+      const slotW = cellW / cols;
+      const w = item.w * scale;
+      const h = item.h * scale;
+      const rowOffset = ((cols - inRow) * slotW) / 2 + (r % 2 ? slotW * 0.2 : 0);
+      for (let c = 0; c < inRow; c++) {
+        const x = cell.x0 + rowOffset + c * slotW + (slotW - w) * (0.3 + 0.4 * rng.next());
+        boxes.push({ x: Math.min(x, cell.x1 - w), y: baseline - h, scale });
+      }
+    });
+    return boxes;
   }
-  if (best.scale < MIN_SCALE) return null;
+  return null;
+}
 
-  const { scale, rows, cols } = best;
-  const slotW = cellW / cols;
-  const slotH = cellH / rows;
-  const w = item.w * scale;
-  const h = item.h * scale;
-
-  return Array.from({ length: count }, (_, i) => {
-    const row = Math.floor(i / cols);
-    const col = i % cols;
-    const inRow = row === rows - 1 ? count - cols * (rows - 1) : cols;
-    const rowOffset = ((cols - inRow) * slotW) / 2;
-    const x = region.x0 + rowOffset + col * slotW + (slotW - w) * (0.3 + 0.4 * rng.next());
-    const y = zone.ground
-      ? zone.top + row * slotH + (slotH - h) * (0.85 + 0.15 * rng.next())
-      : zone.top + row * slotH + (slotH - h) * rng.next();
-    return { x, y, scale };
+function spreadDecor(recipe: Recipe, height: number, rng: Rng): PlacedDecor[] {
+  return (recipe.decor ?? []).flatMap((decor) => {
+    const count = rng.int(decor.min, decor.max);
+    const slotW = 900 / count;
+    return Array.from({ length: count }, (_, i) => {
+      const scale = (decor.size / decor.h) * (0.8 + 0.35 * rng.next());
+      const w = decor.w * scale;
+      const h = decor.h * scale;
+      const y0 = decor.top * height;
+      const y1 = decor.bottom * height - h;
+      return {
+        kind: decor.kind,
+        box: { x: i * slotW + Math.max(0, slotW - w) * rng.next() - w * 0.1, y: y0 + Math.max(0, y1 - y0) * rng.next(), scale },
+      };
+    });
   });
 }
 
-/** Fills a recipe with random contents. The same recipe, knobs and seed always give the same scene. */
-export function generateScene(recipe: Recipe, knobs: SceneKnobs, seed: number): SceneSpec {
+/** Fills a recipe with random contents for a picture `height` tall. Same inputs, same scene. */
+export function generateScene(recipe: Recipe, knobs: SceneKnobs, seed: number, height: number): SceneSpec {
   const rng = createRng(seed);
   const variant = rng.pick(recipe.variants);
-  const cells = rng.shuffle(recipe.zones.flatMap((zone) => REGIONS.map((region) => ({ zone, region }))));
+  const cells = rng.shuffle(recipe.zones.flatMap((zone) => REGIONS.map((cell) => ({ zone, cell }))));
   const used = new Set<string>();
   const groups: PlacedGroup[] = [];
 
   for (const item of rng.shuffle(recipe.items)) {
     if (groups.length >= knobs.groups) break;
-    const cell = cells.find((c) => item.zones.includes(c.zone.id) && !used.has(`${c.zone.id}:${c.region.id}`));
-    if (!cell) continue;
-
     const most = item.countable === false ? 1 : Math.min(item.maxCount, knobs.maxCount);
-    for (let count = rng.int(1, most); count >= 1; count--) {
-      const boxes = layoutGroup(item, count, cell.zone, cell.region, rng);
-      if (!boxes) continue;
-      used.add(`${cell.zone.id}:${cell.region.id}`);
+    const wanted = rng.int(1, most);
+
+    // Try each free cell this item belongs in; take the first where at least one fits.
+    for (const { zone, cell } of cells) {
+      if (!item.zones.includes(zone.id) || used.has(`${zone.id}:${cell.id}`)) continue;
+      const layout = zone.surface === 'ground' ? layoutGround : layoutFloating;
+      let placed: { count: number; boxes: Box[] } | null = null;
+      for (let count = wanted; count >= 1 && !placed; count--) {
+        const boxes = layout(item, count, zone, cell, height, rng);
+        if (boxes) placed = { count, boxes };
+      }
+      if (!placed) continue;
+      used.add(`${zone.id}:${cell.id}`);
       groups.push({
         kind: item.kind,
-        count,
+        count: placed.count,
         colour: item.colours ? rng.pick(item.colours) : undefined,
-        zoneId: cell.zone.id,
-        region: cell.region.id,
-        boxes,
+        zoneId: zone.id,
+        region: cell.id,
+        boxes: placed.boxes,
       });
       break;
     }
   }
 
-  return { id: `${recipe.id}-${seed.toString(36)}`, seed, recipeId: recipe.id, variantId: variant.id, groups };
+  return {
+    id: `${recipe.id}-${seed.toString(36)}`,
+    seed,
+    recipeId: recipe.id,
+    variantId: variant.id,
+    height,
+    groups,
+    decor: spreadDecor(recipe, height, rng),
+  };
 }

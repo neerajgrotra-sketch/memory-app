@@ -16,15 +16,15 @@ export interface LevelConfig {
 }
 
 export const LEVELS: Record<Level, LevelConfig> = {
-  easy: { preferredTypes: ['object', 'colour'], viewSeconds: 10, groups: 4, maxCount: 3, closeCounts: false },
+  easy: { preferredTypes: ['object', 'colour'], viewSeconds: 10, groups: 5, maxCount: 3, closeCounts: false },
   medium: {
     preferredTypes: ['object', 'count', 'colour', 'position'],
     viewSeconds: 8,
-    groups: 6,
+    groups: 7,
     maxCount: 4,
     closeCounts: false,
   },
-  hard: { preferredTypes: ['count', 'position'], viewSeconds: 6, groups: 8, maxCount: 6, closeCounts: true },
+  hard: { preferredTypes: ['count', 'position'], viewSeconds: 6, groups: 9, maxCount: 6, closeCounts: true },
 };
 
 export const LEVEL_LABELS: Record<Level, string> = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };

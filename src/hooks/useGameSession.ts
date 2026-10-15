@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
+import { useWindowDimensions } from 'react-native';
 
 import { LEVELS, ROUND_SIZE, levelForRound } from '@/game/difficulty';
 import { selectQuestions, toRoundQuestion } from '@/game/selectQuestions';
@@ -72,8 +73,11 @@ function toRoundResult(
  * remount (e.g. with `key={difficulty}`) to start over with another difficulty.
  */
 export function useGameSession(difficulty: Difficulty) {
+  // Pictures are built to the screen's shape so they fill it.
+  const { width, height } = useWindowDimensions();
+  const aspect = width / height;
   const [first] = useState(() => {
-    const firstStage = createStage(levelForRound(difficulty, 0));
+    const firstStage = createStage(levelForRound(difficulty, 0), aspect);
     return { stage: firstStage, round: buildRound(difficulty, 0, firstStage.questions, new Set(), new Set()) };
   });
   const [stage, setStage] = useState<Stage>(first.stage);
@@ -89,14 +93,14 @@ export function useGameSession(difficulty: Difficulty) {
   /** Builds a brand-new picture for round `index`, in a different setting from the last one. */
   const startStage = useCallback(
     (index: number, previousRecipeId?: string) => {
-      const next = createStage(levelForRound(difficulty, index), previousRecipeId);
+      const next = createStage(levelForRound(difficulty, index), aspect, previousRecipeId);
       seenIds.current = new Set();
       setStage(next);
       setRound(buildRound(difficulty, index, next.questions, seenIds.current, new Set()));
       setAnswers([]);
       setPhase('memorise');
     },
-    [difficulty],
+    [aspect, difficulty],
   );
 
   const finishMemorising = useCallback(() => setPhase('quiz'), []);
