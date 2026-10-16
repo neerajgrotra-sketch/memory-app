@@ -54,9 +54,9 @@ export default function ProgressScreen() {
   const [confirmReset, setConfirmReset] = useState(false);
 
   const load = useCallback(() => {
-    statsStore.listResults().then((results) => {
+    Promise.all([statsStore.listResults(), statsStore.listRestarts()]).then(([results, restarts]) => {
       setSummary(summarize(results));
-      setGames(GAMES.map((g) => progressOf(results, g.id)));
+      setGames(GAMES.map((g) => progressOf(results, g.id, restarts)));
     });
   }, []);
 
@@ -226,7 +226,7 @@ export default function ProgressScreen() {
 
           <Pressable accessibilityRole="button" onPress={reset} onBlur={() => setConfirmReset(false)} style={styles.reset}>
             <Text style={[styles.resetText, confirmReset && styles.resetConfirm]}>
-              {confirmReset ? 'Tap again to delete all progress' : 'Reset progress'}
+              {confirmReset ? 'Tap again to delete every round, level and score' : 'Delete all progress'}
             </Text>
           </Pressable>
         </ScrollView>

@@ -1,4 +1,5 @@
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -10,7 +11,8 @@ import { MAX_LEVEL, ROUNDS_TO_LEVEL_UP, nextBigUnlock, nextTitle, titleFor } fro
 import { formatPoints } from '@/games/lookRemember/points';
 import { feedback } from '@/feedback';
 import { getGame } from '@/games/registry';
-import { useGameProgress } from '@/hooks/useGameProgress';
+import { useReloadableGameProgress } from '@/hooks/useGameProgress';
+import { statsStore } from '@/stats';
 import { colors, radius } from '@/theme';
 
 function goBack() {
@@ -28,7 +30,14 @@ export default function GameScreen() {
 
 function GamePage({ gameId }: { gameId: 'look-remember' }) {
   const game = getGame(gameId)!;
-  const progress = useGameProgress(gameId);
+  const { progress, reload } = useReloadableGameProgress(gameId);
+  // Starting again: ask first, then say it's done.
+  const [startAgain, setStartAgain] = useState<'idle' | 'confirm' | 'done'>('idle');
+  const restart = async () => {
+    await statsStore.restart(gameId);
+    setStartAgain('done');
+    reload();
+  };
   const play = (mode: string) => {
     feedback('start');
     router.push({ pathname: '/play', params: { game: gameId, mode } });
@@ -75,6 +84,25 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
               </View>
 
               <Button label={`Play level ${progress.ladder.level}`} onPress={() => play('levels')} />
+
+              {startAgain === 'done' ? (
+                <Text style={styles.startedAgain}>You’re back at Level 1. Your high score, best level and history are kept.</Text>
+              ) : startAgain === 'confirm' ? (
+                <View style={styles.confirmCard}>
+                  <Text style={styles.confirmTitle}>Start again from Level 1?</Text>
+                  <Text style={styles.note}>
+                    You’ll leave Level {progress.ladder.level}. Your high score, best level and round history stay. To delete everything instead, use Progress → Delete all progress.
+                  </Text>
+                  <Button label="Start again from Level 1" onPress={restart} />
+                  <Button label={`Stay on Level ${progress.ladder.level}`} variant="secondary" onPress={() => setStartAgain('idle')} />
+                </View>
+              ) : (
+                (progress.ladder.level > 1 || progress.ladder.progress > 0) && (
+                  <Pressable accessibilityRole="button" onPress={() => setStartAgain('confirm')} hitSlop={6} style={styles.startAgainLink}>
+                    <Text style={styles.startAgainText}>Start again from Level 1</Text>
+                  </Pressable>
+                )
+              )}
 
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Practice</Text>
@@ -173,6 +201,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pressed: { opacity: 0.8 },
+  startAgainLink: { alignSelf: 'center', padding: 8, marginTop: -8 },
+  startAgainText: { color: colors.textMuted, fontSize: 15, fontWeight: '600', textDecorationLine: 'underline' },
+  confirmCard: { backgroundColor: colors.surface, borderRadius: radius.md, padding: 16, gap: 12, borderWidth: 1, borderColor: colors.border },
+  confirmTitle: { color: colors.text, fontSize: 18, fontWeight: '800' },
+  startedAgain: { color: colors.correct, fontSize: 14, lineHeight: 20, textAlign: 'center', marginTop: -8 },
   practiceLabel: { color: colors.text, fontSize: 16, fontWeight: '700' },
   step: { flexDirection: 'row', gap: 12, alignItems: 'flex-start' },
   stepNumber: {

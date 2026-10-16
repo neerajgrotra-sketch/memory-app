@@ -10,9 +10,8 @@ import { SoundToggle } from '@/components/SoundToggle';
 import { QuizStage } from '@/components/QuizStage';
 import { ResultStage } from '@/components/ResultStage';
 import { isPlayMode } from '@/game/difficulty';
-import { progressOf } from '@/hooks/useGameProgress';
+import { loadProgress } from '@/hooks/useGameProgress';
 import { useGameSession, type SessionStart } from '@/hooks/useGameSession';
-import { statsStore } from '@/stats';
 import { colors } from '@/theme';
 import type { PlayMode } from '@/types/game';
 
@@ -28,8 +27,7 @@ export default function PlayScreen() {
   const [start, setStart] = useState<SessionStart | null>(null);
   useEffect(() => {
     let live = true;
-    statsStore.listResults().then((all) => {
-      const progress = progressOf(all, 'look-remember');
+    loadProgress('look-remember').then((progress) => {
       if (live) setStart({ mode, ladder: progress.ladder, highScore: progress.highScore });
     });
     return () => {

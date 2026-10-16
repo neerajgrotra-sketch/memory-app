@@ -10,6 +10,12 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.25 (2026-10-16)
+
+- **Start again from Level 1,** on the game page under Play. It asks first, then puts you back at Level 1 while **keeping** your high score, best level and round history (charts and "Your levels" too). It only shows once you're past Level 1 or partway through it.
+- **Delete all progress** (formerly "Reset progress", bottom of the Progress tab) is the clean-slate option: it deletes every round, level and score, and says so when it asks you to tap again.
+- You still carry on from where you left off by default: your level is saved after every round.
+
 ## 4.0.0-beta.24 (2026-10-16)
 
 - **New kinds of question,** so rounds stop being "how many / what colour / where" every time:

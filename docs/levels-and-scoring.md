@@ -17,7 +17,12 @@ How a player's level moves, what each level changes, and how points are worked o
 
 **Why this shape:** going up should feel earned but reachable (3 good rounds is a few minutes of play). Going down should be rare and never caused by one unlucky picture. That's why it needs two very poor rounds in a row, and why 2–3 right never costs anything.
 
-**Saving it:** every levelled round saves the level it was played at and your level afterwards (`ladder` in `RoundResult`, `src/types/stats.ts`). Your current level is the last round's `after`, so it survives old rounds being trimmed from storage, and resetting progress starts you again at Level 1.
+**Saving it:** every levelled round saves the level it was played at and your level afterwards (`ladder` in `RoundResult`, `src/types/stats.ts`). Your current level is the last round's `after`, so it survives old rounds being trimmed from storage, and you always carry on where you left off.
+
+**Starting again:** two ways, for different needs:
+
+- **Start again from Level 1** (on the game page, under Play; asks first). Your level goes back to 1 but your rounds stay, so the high score, best level, charts and history are kept. The store saves when you started again (`statsStore.restart`, key `glance.restarts.v1`); `ladderStateOf(results, restartedAt)` then ignores levelled rounds from before that moment for your level, and keeps the best level ever. Shown only once you're past Level 1 or partway through it.
+- **Delete all progress** (bottom of the Progress tab; tap twice). Deletes every round and every "start again": a clean slate.
 
 **Players from before levels** (no levelled rounds yet) start at a level worked out from their Easy / Medium / Hard rounds: the hardest band where they averaged 3.5 or more over their last rounds (at least 3), Hard → Level 14, Medium → Level 8, Easy → Level 3, otherwise Level 1. The game page says so.
 
