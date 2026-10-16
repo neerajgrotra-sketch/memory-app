@@ -68,6 +68,18 @@ export interface PracticeSummary {
   earlyFinish: { recent: number; before: number | null } | null;
 }
 
+/** How you did at one level, or in one Practice band. */
+export interface PlayedLevel {
+  key: string;
+  /** Set for levelled play; missing for a Practice band. */
+  level?: number;
+  band?: Level;
+  rounds: number;
+  /** Average right answers out of 5. */
+  average: number;
+  bestPoints: number;
+}
+
 export interface StatsSummary {
   rounds: number;
   sessions: number;
@@ -78,6 +90,8 @@ export interface StatsSummary {
   types: TypeSummary[];
   /** Most recent first. */
   recentSessions: SessionSummary[];
+  /** Every level played, highest first, then each Practice band (same-picture replays are left out). */
+  playedLevels: PlayedLevel[];
   /** Oldest first, for the chart. */
   recentRounds: RoundResult[];
   practice: PracticeSummary;
@@ -147,6 +161,24 @@ export function practiceOf(results: RoundResult[], now = new Date()): PracticeSu
   return { daysPlayed: days.size, streak, spread, typeChanges, earlyFinish };
 }
 
+export function playedLevelsOf(results: RoundResult[]): PlayedLevel[] {
+  const rows = new Map<string, PlayedLevel & { total: number }>();
+  for (const r of results) {
+    if (r.replay) continue;
+    const key = r.ladder ? `level-${r.ladder.level}` : `practice-${r.level}`;
+    const row = rows.get(key) ?? { key, level: r.ladder?.level, band: r.ladder ? undefined : r.level, rounds: 0, average: 0, bestPoints: 0, total: 0 };
+    row.rounds += 1;
+    row.total += r.score;
+    row.average = row.total / row.rounds;
+    row.bestPoints = Math.max(row.bestPoints, r.points ?? 0);
+    rows.set(key, row);
+  }
+  const all = [...rows.values()].map(({ total: _total, ...row }) => row);
+  const levels = all.filter((r) => r.level !== undefined).sort((a, b) => b.level! - a.level!);
+  const practice = LEVEL_ORDER.flatMap((band) => all.filter((r) => r.band === band));
+  return [...levels, ...practice];
+}
+
 export function summarize(
   allResults: RoundResult[],
   { chartRounds = 20, sessionCount = 10 } = {},
@@ -209,6 +241,7 @@ export function summarize(
     levels,
     types,
     recentSessions: sessions.slice(0, sessionCount),
+    playedLevels: playedLevelsOf(results),
     recentRounds: results.slice(-chartRounds),
     practice: practiceOf(results),
   };

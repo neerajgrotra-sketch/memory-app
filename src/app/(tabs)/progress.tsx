@@ -7,13 +7,13 @@ import { Button } from '@/components/Button';
 import { LevelChart } from '@/components/LevelChart';
 import { LevelRing } from '@/components/LevelRing';
 import { ScoreChart } from '@/components/ScoreChart';
-import { LEVEL_LABELS, MODE_LABELS } from '@/game/difficulty';
+import { LEVEL_LABELS } from '@/game/difficulty';
 import { BAND_LEVELS, titleFor } from '@/games/lookRemember/ladder';
 import { formatPoints } from '@/games/lookRemember/points';
 import { GAMES } from '@/games/registry';
 import { progressOf, type GameProgress } from '@/hooks/useGameProgress';
 import { statsStore } from '@/stats';
-import { summarize, type SessionSummary, type StatsSummary, type Trend } from '@/stats/summarize';
+import { summarize, type StatsSummary, type Trend } from '@/stats/summarize';
 import { colors, levelColors, radius } from '@/theme';
 import type { QuestionType } from '@/types/game';
 
@@ -46,11 +46,6 @@ function trendText(trend: Trend | null) {
   if (trend.direction === 'up') return `↑ ${fmt(delta)}`;
   if (trend.direction === 'down') return `↓ ${fmt(-delta)}`;
   return '→ steady';
-}
-
-function formatDate(iso: string) {
-  const date = new Date(iso);
-  return `${date.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' })}, ${date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}`;
 }
 
 export default function ProgressScreen() {
@@ -200,24 +195,31 @@ export default function ProgressScreen() {
             )}
           </Section>
 
-          <Section title="Recent sessions">
+          <Section title="Your levels">
             <View style={styles.sessions}>
-              {summary.recentSessions.map((s, i) => (
-                <View key={s.id} style={[styles.sessionRow, i > 0 && styles.sessionDivider]}>
-                  <View style={styles.sessionMain}>
-                    <Text style={styles.td}>{sessionTitle(s)}</Text>
-                    <Text style={styles.sessionMeta}>
-                      {formatDate(s.startedAt)} · {s.rounds} {s.rounds === 1 ? 'round' : 'rounds'}
-                      {s.points > 0 ? ` · ${formatPoints(s.points)} points` : ''}
+              {summary.playedLevels.map((row, i) => {
+                const now = row.level !== undefined && row.level === games[0]?.ladder.level;
+                return (
+                  <View key={row.key} style={[styles.sessionRow, i > 0 && styles.sessionDivider]}>
+                    <View style={styles.sessionMain}>
+                      <View style={styles.levelTitleRow}>
+                        <Text style={styles.td}>{row.level !== undefined ? `Level ${row.level}` : `Practice · ${LEVEL_LABELS[row.band!]}`}</Text>
+                        {now && <Text style={styles.nowBadge}>Now</Text>}
+                      </View>
+                      <Text style={styles.sessionMeta}>
+                        {row.rounds} {row.rounds === 1 ? 'round' : 'rounds'}
+                        {row.bestPoints > 0 ? ` · best ${formatPoints(row.bestPoints)} points` : ''}
+                      </Text>
+                    </View>
+                    <Text style={styles.sessionScore}>
+                      {fmt(row.average)}
+                      <Text style={styles.tdMuted}> avg</Text>
                     </Text>
                   </View>
-                  <Text style={styles.sessionScore}>
-                    {fmt(s.average)}
-                    <Text style={styles.tdMuted}> avg</Text>
-                  </Text>
-                </View>
-              ))}
+                );
+              })}
             </View>
+            <Text style={styles.note}>Average right answers out of 5 at each level.</Text>
           </Section>
 
           <Text style={styles.disclaimer}>glance is a memory game, not a medical test. These numbers compare you only with yourself.</Text>
@@ -231,14 +233,6 @@ export default function ProgressScreen() {
       )}
     </SafeAreaView>
   );
-}
-
-/** "Level 4", "Level 3 → 5" when you moved during the session, or the Practice band. */
-function sessionTitle(s: SessionSummary) {
-  if (s.mode === 'levels' && s.levelFrom !== undefined && s.levelTo !== undefined) {
-    return s.levelFrom === s.levelTo ? `Level ${s.levelTo}` : `Level ${s.levelFrom} → ${s.levelTo}`;
-  }
-  return MODE_LABELS[s.mode] ?? s.mode;
 }
 
 function steadiness(spread: number | null) {
@@ -362,6 +356,19 @@ const styles = StyleSheet.create({
   },
   sessionDivider: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
   sessionMain: { flex: 1, gap: 2 },
+  levelTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  nowBadge: {
+    color: colors.accentText,
+    backgroundColor: colors.accent,
+    fontSize: 11,
+    fontWeight: '900',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: radius.pill,
+    overflow: 'hidden',
+  },
   sessionMeta: { color: colors.textMuted, fontSize: 13 },
   sessionScore: { color: colors.text, fontSize: 18, fontWeight: '800', fontVariant: ['tabular-nums'] },
   reset: { alignSelf: 'center', padding: 12 },

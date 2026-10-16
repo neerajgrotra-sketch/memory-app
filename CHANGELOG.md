@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.8 (2026-10-16)
+
+- **Your levels** replaces Recent sessions on the Progress tab: one row per level you've played, highest first, with rounds, best points and average, and a **Now** badge on your current level. Practice bands are listed underneath. (The "Level 3 → 5" session lines were confusing.)
+- **Animated level-up ring** (about 1.8 s): the ring shows your old level and its last segment fills, the full ring spins once as a glow ripples out and sparks fly, the old number drops away as the new level pops in, then the segments fade back to empty for the new level. With Reduce Motion on it just shows the new level. The rest of the screen fades in after the ring's moment.
+
 ## 4.0.0-beta.7 (2026-10-16)
 
 - **Progress says which level, not just "Levels".**

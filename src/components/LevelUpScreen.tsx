@@ -4,7 +4,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withDelay, withSpring, with
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/Button';
-import { LevelRing } from '@/components/LevelRing';
+import { LevelUpRing } from '@/components/LevelUpRing';
 import { titleFor, unlocksAt } from '@/games/lookRemember/ladder';
 import { colors, radius } from '@/theme';
 
@@ -22,7 +22,8 @@ export function LevelUpScreen({ level, onPlay, onContinue }: LevelUpScreenProps)
   const fade = useSharedValue(0);
   useEffect(() => {
     pop.value = withSpring(1, { damping: 9, stiffness: 140 });
-    fade.value = withDelay(250, withTiming(1, { duration: 350 }));
+    // The text waits for the ring's moment (the new number pops in at about 0.8 s).
+    fade.value = withDelay(900, withTiming(1, { duration: 400 }));
   }, [fade, pop]);
   const ringStyle = useAnimatedStyle(() => ({ transform: [{ scale: pop.value }] }));
   const textStyle = useAnimatedStyle(() => ({ opacity: fade.value }));
@@ -35,7 +36,7 @@ export function LevelUpScreen({ level, onPlay, onContinue }: LevelUpScreenProps)
       <View style={styles.center}>
         <Text style={styles.kicker}>Level up!</Text>
         <Animated.View style={ringStyle}>
-          <LevelRing ladder={{ level, progress: 0, poorStreak: 0, best: level }} size={150} />
+          <LevelUpRing level={level} size={150} />
         </Animated.View>
         <Animated.View style={[styles.textBlock, textStyle]}>
           <Text style={styles.title}>{milestone ? `You’re now: ${titleFor(level)}` : `Welcome to Level ${level}`}</Text>
