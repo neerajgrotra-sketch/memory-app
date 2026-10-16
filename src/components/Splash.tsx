@@ -26,8 +26,11 @@ export const TAGLINE = 'Look closer. Remember more.';
 export const HOOK = 'How much can you\nremember at a glance?';
 export const HOOK_DETAIL = 'Quick picture games for your memory.\nA few minutes a day.';
 
-/** Timings in ms. The animation is about 1.5 s: long enough to feel made, short enough not to wait for. */
-const T = { open: 80, word: 280, tag: 520, blink: 980, leave: 1220 };
+/**
+ * Timings in ms. The tagline is fully shown at about 0.9 s, then held so it can be read: longer on the
+ * first launch, shorter once you've seen it (a tap always skips).
+ */
+const T = { open: 80, word: 280, tag: 520, blink: 1500, leaveFirst: 2600, leaveAgain: 1700 };
 const ease = Easing.out(Easing.cubic);
 
 /** Set once "Let's go" has been tapped, so the welcome only shows on the first launch. */
@@ -104,7 +107,14 @@ export function Splash() {
         ),
       );
     }
-    timer.current = setTimeout(next, reduceMotion ? 700 : T.leave);
+    // Whether this is the first launch is known well before the hold ends; check it then.
+    timer.current = setTimeout(
+      () => {
+        if (welcomed.current === false) timer.current = setTimeout(next, T.leaveFirst - T.leaveAgain);
+        else next();
+      },
+      reduceMotion ? 1200 : T.leaveAgain,
+    );
     return () => {
       if (timer.current) clearTimeout(timer.current);
     };

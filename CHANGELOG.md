@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.16 (2026-10-16)
+
+- **Time to read the launch screen.** "glance / Look closer. Remember more." now stays up for about 1.6 seconds after it appears on the first launch (before the welcome), and about 0.8 seconds on later launches. The eye's blink moved into that pause. A tap still skips it.
+
 ## 4.0.0-beta.15 (2026-10-16)
 
 - **Welcome screen on the first launch.** After the eye animation, three postcards of the places (living room, beach, city street, drawn by the game) fan out, then the **glance** logo, the hook **"How much can you remember at a glance?"**, the line "Quick picture games for your memory. A few minutes a day.", a **Let's go** button and "Free to play · No account needed".
