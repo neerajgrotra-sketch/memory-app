@@ -147,3 +147,46 @@ Scene `living-room-c29hz`, colour scheme `blue`.
 | position | Where were the cushions? | **✓ On the floor, on the right** · On the floor, on the left · On the floor, in the middle · On the wall, on the right | cushion |
 | object | Which of these was in the picture? | **✓ Clock** · Cat · Sofa · Pile of books | wall-clock |
 | object | Which of these was NOT in the picture? | **✓ Teddy bear** · Dog · Window · Mirror | teddy |
+
+## On the farm
+
+Scene `farm-c29hz`, colour scheme `summer`.
+
+### Facts
+
+| Thing | Count | Colour | Band | Side |
+| --- | --- | --- | --- | --- |
+| tractor | 1 | Green | In the field | right |
+| horse | 1 | Black | In the farmyard | right |
+| cows | 2 | Black and white | In the farmyard | spread (not asked) |
+| hot-air balloon | 1 | Green | In the sky | left |
+| farmer | 1 | White | In the farmyard | right |
+| pigs | 2 | fixed | In the farmyard | centre |
+| crow | 1 | fixed | In the sky | right |
+
+### Questions (22)
+
+| Type | Question | Options (✓ = answer) | Subject |
+| --- | --- | --- | --- |
+| colour | What colour was the tractor? | **✓ Green** · Red · Yellow · Blue | tractor |
+| position | Where was the tractor? | **✓ In the field, on the right** · In the field, on the left · In the field, in the middle · In the sky, in the middle | tractor |
+| object | What was in the field, on the right? | **✓ A tractor** · A scarecrow · A pumpkin · A hay bale | tractor |
+| count | How many horses were there? | **✓ 1** · 3 · 4 · 2 | horse |
+| colour | What colour was the horse? | **✓ Black** · Brown · White · Blue | horse |
+| position | Where was the horse? | **✓ In the farmyard, on the right** · In the farmyard, on the left · In the farmyard, in the middle · In the sky, in the middle | horse |
+| count | How many cows were there? | **✓ 2** · 5 · 4 · 3 | cow |
+| colour | What colour were the cows? | **✓ Black and white** · Brown · Green · Purple | cow |
+| count | How many hot-air balloons were there? | **✓ 1** · 2 · 4 · 3 | balloon |
+| colour | What colour was the hot-air balloon? | **✓ Green** · Purple · Blue · Red | balloon |
+| position | Where was the hot-air balloon? | **✓ In the sky, on the left** · In the sky, on the right · In the sky, in the middle · In the field, in the middle | balloon |
+| object | What was in the sky, on the left? | **✓ A hot-air balloon** · A crow · A sun · A milk churn | balloon |
+| colour | What colour was the farmer’s shirt? | **✓ White** · Green · Red · Blue | farmer |
+| position | Where was the farmer? | **✓ In the farmyard, on the right** · In the farmyard, in the middle · In the farmyard, on the left · In the sky, on the left | farmer |
+| count | How many pigs were there? | **✓ 2** · 5 · 1 · 4 | pig |
+| position | Where were the pigs? | **✓ In the farmyard, in the middle** · In the farmyard, on the right · In the farmyard, on the left · In the sky, on the right | pig |
+| count | How many crows were there? | **✓ 1** · 2 · 3 · 4 | crow |
+| position | Where was the crow? | **✓ In the sky, on the right** · In the sky, on the left · In the sky, in the middle · In the farmyard, on the right | crow |
+| object | What was in the sky, on the right? | **✓ A crow** · A sun · A hot-air balloon · A chicken | crow |
+| colour | What colour was the barn? | **✓ Red** · Blue · Green · Yellow | barn-colour |
+| object | Which of these was in the picture? | **✓ Cow** · Dog · Wheelbarrow · Chicken | cow |
+| object | Which of these was NOT in the picture? | **✓ Goat** · Crow · Pig · Cow | goat |

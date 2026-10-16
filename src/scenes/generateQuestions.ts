@@ -8,7 +8,7 @@ import type { ItemDef, PlacedGroup, Recipe, Region, SceneSpec, ZoneDef } from '.
 export interface QuestionKnobs {
   /** Wrong counts right next to the answer (4 vs 5) instead of further away. */
   closeCounts: boolean;
-  /** Ask about house numbers and house colours (Medium and Hard). */
+  /** Ask about the backdrop's details: house numbers and colours, the barn's colour (Medium and Hard, Level 8+). */
   houseNumbers?: boolean;
 }
 
@@ -198,6 +198,21 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
           ['Yellow', 'Blue', 'Green', 'Pink', 'Orange', 'Purple'],
           rng,
         ),
+      });
+    }
+  }
+
+  // Any recipe's backdrop facts ("What colour was the barn?"), asked on the same levels as house numbers.
+  if (knobs.houseNumbers) {
+    for (const fact of spec.details?.facts ?? []) {
+      questions.push({
+        id: `${spec.id}-fact-${fact.id}`,
+        sceneId: spec.id,
+        answerIndex: 0,
+        type: fact.type,
+        subject: fact.id,
+        prompt: fact.prompt,
+        options: withDistractors(fact.answer, fact.wrong, [], rng),
       });
     }
   }

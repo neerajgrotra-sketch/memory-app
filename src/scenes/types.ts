@@ -154,14 +154,32 @@ export interface House {
 }
 
 /**
- * Per-picture details of the backdrop, chosen when the scene is made (city house colours and numbers).
- * They are facts the questions can ask about, and they override the variant's palette.
+ * Something about the backdrop a question can ask (the barn's colour). Any recipe can add these in
+ * `details`; they're asked on levels with detail questions, like the city's house numbers.
+ */
+export interface DetailFact {
+  /** Unique in the scene; also the question's subject, so a round asks one question per fact. */
+  id: string;
+  type: 'colour' | 'number' | 'object' | 'position' | 'count';
+  prompt: string;
+  answer: string;
+  /** Believable wrong answers (at least 3), e.g. the other colours a barn can be. */
+  wrong: string[];
+}
+
+/**
+ * Per-picture details of the backdrop, chosen when the scene is made (city house colours and numbers,
+ * the farm's barn colour). They are facts the questions can ask about, and they override the variant's palette.
  */
 export interface SceneDetails {
   /** Left to right, one per third. */
   houses?: House[];
   /** Surface colours for this picture, over the variant's palette (e.g. `facade0`). */
   palette?: Record<string, string>;
+  /** Questions about the backdrop (see `DetailFact`). */
+  facts?: DetailFact[];
+  /** Other per-picture choices the backdrop draws from (e.g. which side the barn is on). */
+  values?: Record<string, string>;
 }
 
 export interface VariantDef {

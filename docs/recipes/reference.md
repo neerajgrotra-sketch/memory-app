@@ -34,27 +34,27 @@ See [Levels and scoring](../levels-and-scoring.md).
 | 7 | Sharp Eyes | beach, living-room, city | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 160 |
 | 8 | Sharp Eyes | beach, living-room, city | 6 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 170 |
 | 9 | Sharp Eyes | beach, living-room, city | 7 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 180 |
-| 10 | Keen Observer | beach, living-room, city | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 190 |
-| 11 | Keen Observer | beach, living-room, city | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 200 |
-| 12 | Keen Observer | beach, living-room, city | 7 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 210 |
-| 13 | Keen Observer | beach, living-room, city | 8 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 220 |
-| 14 | Keen Observer | beach, living-room, city | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 230 |
-| 15 | Detail Spotter | beach, living-room, city | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 240 |
-| 16 | Detail Spotter | beach, living-room, city | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
-| 17 | Detail Spotter | beach, living-room, city | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
-| 18 | Detail Spotter | beach, living-room, city | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
-| 19 | Detail Spotter | beach, living-room, city | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
-| 20 | Eagle Eye | beach, living-room, city | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
-| 21 | Eagle Eye | beach, living-room, city | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
-| 22 | Eagle Eye | beach, living-room, city | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
-| 23 | Eagle Eye | beach, living-room, city | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
-| 24 | Eagle Eye | beach, living-room, city | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
-| 25 | Total Recall | beach, living-room, city | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
-| 26 | Total Recall | beach, living-room, city | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
-| 27 | Total Recall | beach, living-room, city | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
-| 28 | Total Recall | beach, living-room, city | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
-| 29 | Total Recall | beach, living-room, city | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
-| 30 | Photographic Memory | beach, living-room, city | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
+| 10 | Keen Observer | beach, living-room, city, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 190 |
+| 11 | Keen Observer | beach, living-room, city, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 200 |
+| 12 | Keen Observer | beach, living-room, city, farm | 7 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 210 |
+| 13 | Keen Observer | beach, living-room, city, farm | 8 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 220 |
+| 14 | Keen Observer | beach, living-room, city, farm | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 230 |
+| 15 | Detail Spotter | beach, living-room, city, farm | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 240 |
+| 16 | Detail Spotter | beach, living-room, city, farm | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
+| 17 | Detail Spotter | beach, living-room, city, farm | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
+| 18 | Detail Spotter | beach, living-room, city, farm | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
+| 19 | Detail Spotter | beach, living-room, city, farm | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
+| 20 | Eagle Eye | beach, living-room, city, farm | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
+| 21 | Eagle Eye | beach, living-room, city, farm | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
+| 22 | Eagle Eye | beach, living-room, city, farm | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
+| 23 | Eagle Eye | beach, living-room, city, farm | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
+| 24 | Eagle Eye | beach, living-room, city, farm | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
+| 25 | Total Recall | beach, living-room, city, farm | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
+| 26 | Total Recall | beach, living-room, city, farm | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
+| 27 | Total Recall | beach, living-room, city, farm | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
+| 28 | Total Recall | beach, living-room, city, farm | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
+| 29 | Total Recall | beach, living-room, city, farm | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
+| 30 | Photographic Memory | beach, living-room, city, farm | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
 
 ## At the beach (`beach`)
 
@@ -184,3 +184,45 @@ Rug: an oval centred at 50% across, 80% down, 72% wide and 18% of the height tal
 | teddy bear | floor | small 11% | 3 | fixed (`#a0612b`) | – |
 | toy car | floor | small 11% | 4 | Red, Blue, Yellow, Green, Orange | – |
 | pile of books | floor | small 12% | 3 | fixed (`#1d70d6`) | never on the rug |
+
+## On the farm (`farm`)
+
+### Bands
+
+| Band | Height | Surface | Slot rows | Rules |
+| --- | --- | --- | --- | --- |
+| In the sky (`sky`) | 0% – 24% | air | 1 | – |
+| By the barn (`hills`) | 24% – 38% | ground | 0 | – |
+| In the field (`field`) | 38% – 55.5% | ground | 1 | at most 2 kinds; everything faces one way |
+| In the farmyard (`yard`) | 58.5% – 100% | ground | 2 | – |
+
+Per-picture details: three houses with different named colours and rising house numbers (see `details` in the recipe).
+
+### Colour schemes
+
+| Scheme | Surface colours |
+| --- | --- |
+| summer | sky `#8fd3f4`, hillsFar `#9fcf6b`, hills `#7fbf55`, field `#b5d86a`, rows `#7a9a3a`, yard `#7cb24a`, fence `#f1e7d0`, barn `#e63946` |
+| harvest | sky `#ffd8a8`, hillsFar `#c9b458`, hills `#a8a24a`, field `#c4cf7a`, rows `#8f9a45`, yard `#7f9a45`, fence `#f1e7d0`, barn `#e63946` |
+
+### Things (17)
+
+| Thing | Band | Size | Most | Colours | Habits |
+| --- | --- | --- | --- | --- | --- |
+| sun | sky | medium 16% | 1 | fixed (`#ffd93b`) | one only, not counted |
+| crow | sky | small 10% | 4 | fixed (`#222222`) | – |
+| hot-air balloon | sky | medium 14% | 2 | Red, Blue, Purple, Green, Orange, Pink | – |
+| tractor | field | xl 32% | 1 | Red, Green, Blue, Yellow | may span columns; one only, not counted |
+| scarecrow | field | medium 14% | 2 | Red, Blue, Purple, Green, Orange | copies spread one per third, on one line |
+| pumpkin | field | small 11% | 5 | fixed (`#f77f00`) | – |
+| hay bale | field, yard | medium 15% | 3 | fixed (`#f2cf63`) | copies spread one per third, on one line |
+| cow | yard | large 22% | 3 | Black and white, Brown | copies spread one per third, on one line |
+| horse | yard | large 22% | 2 | Brown, Black, White | copies spread one per third, on one line |
+| pig | yard | medium 14% | 4 | fixed (`#f4a3b5`) | – |
+| sheep | field, yard | medium 14% | 5 | White, Black | copies may differ in colour on Hard |
+| goat | yard | medium 14% | 2 | White, Brown | – |
+| chicken | yard | small 10% | 6 | White, Brown | – |
+| dog | yard | medium 14% | 1 | Brown, Black, White | – |
+| farmer | yard | small 10% | 1 | Red, Blue, Yellow, Green, Orange, Purple, Pink, White | – |
+| wheelbarrow | yard | medium 16% | 1 | Red, Green, Blue | – |
+| milk churn | yard | small 10% | 3 | fixed (`#c9d2dc`) | at the front edge |

@@ -37,15 +37,18 @@ A recipe is one file in `src/scenes/recipes/` that exports a `Recipe` (`src/scen
 6. **Optional:**
    - `rug` (an oval things are fully on or off)
    - `keepClear` (areas nothing may cover)
-   - `details(random)` (per-picture facts, such as house numbers, which also need questions in `generateQuestions.ts`).
+   - `details(random)`: per-picture choices for the backdrop (`palette` overrides, `values` such as which side the barn is on) and `facts` the questions can ask ("What colour was the barn?"). Facts need no code in `generateQuestions.ts`; see the farm.
 7. **Register it** in `src/scenes/recipes/index.ts`, and give it a level in `RECIPE_UNLOCKS` (`src/games/lookRemember/ladder.ts`). A new place is the most exciting thing a level-up can bring, so prefer unlocking it mid-way rather than at Level 1.
 
 ## Checklist before shipping
 
-- [ ] `npm run check:scenes` passes (18,000 scenes on three iPhone sizes, Practice bands and levels)
+- [ ] `ONLY=<id> npm run check:scenes` passes for the new recipe while you work, then the full `npm run check:scenes`
+- [ ] `npm run check:scenes` passes (24,600 scenes on three iPhone sizes, Practice bands and levels)
 - [ ] Decided which level it unlocks at (`RECIPE_UNLOCKS` in `src/games/lookRemember/ladder.ts`), and checked it at that level
 - [ ] Played on a phone with only this setting switched on (Profile → Testing), on Easy, Medium and Hard, reading every question against the picture
 - [ ] `npm run gallery` reviewed by eye, with and without `OVERLAY=0`. Ask of every thing: is it where it would really be, the right size next to its neighbours, and not floating, bunched, or covering something it shouldn't?
+- [ ] Every fixed colour (`tone`) stands out on the band it goes in, or the thing will never appear (the checker reports "never fits anywhere"); pick backdrop colours with that in mind
+- [ ] Shared things (sun, birds, people, dog, balloon…) reused from `src/scenes/items/common.tsx`, and anything another setting could use added there
 - [ ] At least 12 things, so Hard has enough to fill the picture and enough absent things for "NOT in the picture" questions
 - [ ] Every thing can stand out somewhere (the checker reports any that can't)
 - [ ] `npm run docs:recipes` run, a page added in `docs/recipes/`, and the README's recipe list updated

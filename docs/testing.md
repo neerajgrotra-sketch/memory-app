@@ -4,7 +4,7 @@
 | --- | --- |
 | `npm run typecheck` | TypeScript |
 | `npm run lint` | ESLint (Expo config) |
-| `npm run check:scenes` | Checks the level rules and points, then generates 18,000 scenes and checks every rule (below) |
+| `npm run check:scenes` | Checks the level rules and points, then generates 24,600 scenes and checks every rule (below) |
 | `npm run gallery` | Renders pictures to `gallery.html` for reviewing by eye |
 | `npm run docs:recipes` | Regenerates `docs/recipes/reference.md` and `docs/questions-examples.md` from the code |
 
@@ -14,7 +14,7 @@ Run all of them before shipping a change to recipes, layout or questions.
 
 First it checks the [level rules](levels-and-scoring.md): 3 good rounds go up, 2 very poor rounds in a row go down, never below 1 or above 30, best never drops, no level easier than the one before, and a worked points example.
 
-Then, for iPhone SE (375 × 575 pt picture), iPhone 15 (393 × 687) and Pro Max (430 × 767), every recipe, the three Practice bands and levels 1, 4, 6, 8, 12, 14, 17 and 30 (each with only the places it has reached), it generates 200 scenes (`SCENES=40 npm run check:scenes` for a quick run). For each scene:
+Then, for iPhone SE (375 × 575 pt picture), iPhone 15 (393 × 687) and Pro Max (430 × 767), every recipe, the three Practice bands and levels 1, 4, 6, 8, 10, 12, 14, 17 and 30 (each with only the places it has reached), it generates 200 scenes (`SCENES=40 npm run check:scenes` for a quick run, `ONLY=farm npm run check:scenes` for one recipe). For each scene:
 
 - runs `validateScene`; any problem fails the run, with a count per problem
 - checks that the level's kinds were placed. One kind short in more than 20% of pictures, two short in more than 2%, or three short ever, fails.

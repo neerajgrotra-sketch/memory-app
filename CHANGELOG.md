@@ -10,6 +10,21 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.18 (2026-10-16)
+
+- **A new place: On the farm**, unlocked at **Level 10** (and in Practice Easy, Medium and Hard).
+  - **Bands:** sky, the barn and hills behind, a field with crop rows (the tractor drives one way; at most 2 kinds of thing), a fence, and the farmyard.
+  - **17 things:** sun, crows, hot-air balloons; a tractor, scarecrows, pumpkins, hay bales and grazing sheep in the field; cows, horses, pigs, sheep, goats, chickens, a dog, the farmer (straw hat), a wheelbarrow and milk churns in the farmyard.
+  - **Real-world habits:** one tractor at most, facing the way it drives; cows, horses, hay bales and scarecrows spread out; milk churns at the front; chickens and sheep can bunch together.
+  - **New questions:** "What colour was the barn?" (the barn's colour and side change every picture; asked from Level 8 settings, like house numbers), and on Hard a flock can include a **black sheep** ("What colours were the sheep?").
+  - Two colour schemes: summer and harvest. The farmyard is grass so golden hay, pink pigs and silver churns all stand out.
+- **Built for many more places:**
+  - Any recipe can now declare **facts** about its backdrop (like the barn's colour) and they're asked automatically; no question code per place.
+  - The sun is now a shared thing, like birds, people and the dog.
+  - `ONLY=<recipe> npm run check:scenes` checks one place while it's being built.
+  - New [recipe questionnaire](docs/recipe-questionnaire.md), and [farm docs](docs/recipes/farm.md).
+- The scene checker now also plays Level 10, and covers 24,600 pictures.
+
 ## 4.0.0-beta.17 (2026-10-16)
 
 - **Sound on iPhone web again.** Since 4.0.0-beta.11 the web version used Web Audio, which iPhones mute when the ring/silent switch is on silent. The page now asks for the "playback" audio session (iOS 17 and later), so web sounds play as they did before, and falls back to ordinary audio elements wherever Web Audio can't start. More kinds of first touch now switch sound on. (The phone app in Expo Go still follows the silent switch, on purpose.)

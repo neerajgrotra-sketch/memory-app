@@ -15,7 +15,7 @@ export interface LevelConfig {
   closeCounts: boolean;
   /** Copies of some things (fire hydrants) may each be a different colour. */
   mixedColours: boolean;
-  /** Ask about house numbers and house colours in the street. */
+  /** Ask about the backdrop's details: house numbers and colours in the street, the barn's colour on the farm. */
   houseNumbers: boolean;
 }
 

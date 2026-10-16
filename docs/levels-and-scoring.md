@@ -30,19 +30,19 @@ How a player's level moves, what each level changes, and how points are worked o
 | Kinds of thing | 5 | +1 every 4 levels | 9 from Level 17 |
 | Most of one kind | 3 | 4 at Level 4, 5 at 10, 6 at 16 | 6 |
 | View time | 10 s | −1 s about every 4 levels | 4 s from Level 24 |
-| Places | the beach | living room at Level 3, city street at 6 | all three |
+| Places | the beach | living room at Level 3, city street at 6, farm at 10 | all four |
 | House numbers | no | from Level 8 | |
 | Hydrants in mixed colours | no | from Level 12 | |
 | Close counting choices | no | from Level 14 | |
 | Questions asked first | object, colour | + count, position at Level 5; + number at 8; count, position, number from 18 | |
 
-The scene checker plays levels 1, 4, 6, 8, 12, 14, 17 and 30 on three phones with the places each has reached, and checks that no level is easier than the one before or asks for more than Hard.
+The scene checker plays levels 1, 4, 6, 8, 10, 12, 14, 17 and 30 on three phones with the places each has reached, and checks that no level is easier than the one before or asks for more than Hard.
 
 **What's new** on the level-up screen is worked out from the difference between two levels' settings, so it's always true. Every level also raises what a right answer is worth, so there's always something.
 
 **Titles** every 5 levels: Fresh Eyes (1), Sharp Eyes (5), Keen Observer (10), Detail Spotter (15), Eagle Eye (20), Total Recall (25), Photographic Memory (30).
 
-**Known gap:** from about Level 20 only the view time and points change. New places (recipes) and new kinds of question are what will make the top levels feel different, and they slot into `RECIPE_UNLOCKS` and `knobsForLevel`.
+**Known gap:** from about Level 20 only the view time and points change (the farm, at Level 10, was the first place added after launch). New places (recipes) and new kinds of question are what will make the top levels feel different, and they slot into `RECIPE_UNLOCKS` and `knobsForLevel`.
 
 ## Points
 

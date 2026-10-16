@@ -80,6 +80,10 @@ Asked on Medium and Hard (`houseNumbers`), for each of the three houses:
 
 House numbers rise left to right with uneven gaps, so remembering one doesn't give away the others.
 
+### Any recipe's detail facts
+
+A recipe can add facts about its backdrop in `details` (`DetailFact` in `src/scenes/types.ts`): an id, a type, a prompt, the answer and believable wrong answers. They're asked on the same levels as house numbers, with no other code. The farm uses one: "What colour was the barn?", answered from the barn colour chosen for that picture. New recipes should use facts rather than adding code here.
+
 ## 5. Picking the 5 for a round
 
 `selectQuestions(pool, { count: 5, preferredTypes, seenIds, previousIds })`:

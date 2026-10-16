@@ -33,7 +33,7 @@ const fail = (msg: string) => {
 };
 
 // Rules for every item: a size inside its tier, something to check contrast with, a colour that can show somewhere.
-for (const recipe of RECIPES) {
+for (const recipe of RECIPES.filter((r) => !process.env.ONLY || r.id === process.env.ONLY)) {
   for (const item of recipe.items) {
     const [lo, hi] = TIERS[item.tier];
     if (item.size < lo || item.size > hi) fail(`${recipe.id}: ${item.kind} size ${item.size} outside ${item.tier} ${lo}–${hi}`);
@@ -94,14 +94,14 @@ for (const i of [0, 1, 2]) {
 /** Practice bands, plus levels where the knobs change, for the settings each level has reached. */
 const CASES: { label: string; knobs: LevelConfig; recipes?: string[] }[] = [
   ...(['easy', 'medium', 'hard'] as const).map((level) => ({ label: level, knobs: LEVELS[level] })),
-  ...[1, 4, 6, 8, 12, 14, 17, 30].map((level) => ({ label: `level ${level}`, knobs: knobsForLevel(level), recipes: recipesForLevel(level) })),
+  ...[1, 4, 6, 8, 10, 12, 14, 17, 30].map((level) => ({ label: `level ${level}`, knobs: knobsForLevel(level), recipes: recipesForLevel(level) })),
 ];
 
 const started = Date.now();
 let scenes = 0;
 let slowest = 0;
 for (const phone of PHONES) {
-  for (const recipe of RECIPES) {
+  for (const recipe of RECIPES.filter((r) => !process.env.ONLY || r.id === process.env.ONLY)) {
     for (const { label: level, knobs, recipes } of CASES) {
       if (recipes && !recipes.includes(recipe.id)) continue;
       const problems = new Map<string, number>();

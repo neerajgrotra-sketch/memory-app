@@ -1,7 +1,7 @@
 import { Circle, Ellipse, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
-import { ball, balloon, bird, cloudShape, kite, person, plane } from '../items/common';
+import { ball, balloon, bird, cloudShape, kite, person, plane, sun } from '../items/common';
 import { lineMarks, markIfClear, scatterMarks } from '../marks';
 import type { ItemDef, Mark, Recipe, Rect as Box, VariantDef } from '../types';
 
@@ -14,21 +14,7 @@ const SEA = ['sea'];
 const SAND = ['sand'];
 
 const items: ItemDef[] = [
-  {
-    kind: 'sun',
-    singular: 'sun',
-    plural: 'suns',
-    article: 'a',
-    w: 140,
-    h: 140,
-    tier: 'medium',
-    size: 0.16,
-    zones: SKY,
-    maxCount: 1,
-    tone: '#ffd93b',
-    countable: false,
-    draw: () => <Circle cx={70} cy={70} r={62} fill="#ffd93b" />,
-  },
+  { ...sun, zones: SKY, maxCount: 1 },
   { ...bird, zones: SKY, maxCount: 6 },
   { ...kite, zones: SKY, maxCount: 3 },
   { ...balloon, zones: SKY, maxCount: 3 },

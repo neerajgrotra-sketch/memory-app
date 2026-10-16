@@ -9,6 +9,20 @@ import type { ItemDef } from '../types';
  */
 type CommonItem = Omit<ItemDef, 'zones' | 'maxCount'>;
 
+export const sun: CommonItem = {
+  kind: 'sun',
+  singular: 'sun',
+  plural: 'suns',
+  article: 'a',
+  w: 140,
+  h: 140,
+  tier: 'medium',
+  size: 0.16,
+  tone: '#ffd93b',
+  countable: false,
+  draw: () => <Circle cx={70} cy={70} r={62} fill="#ffd93b" />,
+};
+
 export const bird: CommonItem = {
   kind: 'bird',
   singular: 'bird',
