@@ -20,7 +20,7 @@ interface MemoriseStageProps {
 
 /** "I'm ready" ignores taps this soon after the picture appears, so a stray tap can't skip it unseen. */
 const READY_DELAY_MS = 1000;
-/** Ticks start when this many seconds are left. */
+/** The louder ticks start when this many seconds are left. */
 const TICK_FROM = 4;
 
 /**
@@ -40,9 +40,9 @@ export function MemoriseStage({ scene, seconds, onDone, onQuit }: MemoriseStageP
     return () => clearTimeout(t);
   }, []);
 
-  /** A quiet tick as the countdown shows each of its last 4 numbers: 4, 3, 2, 1. */
+  /** A soft tick as each number appears, and a louder one for the last 4: 4, 3, 2, 1. */
   const onTick = (left: number) => {
-    if (left <= TICK_FROM && !done.current) feedback('tick');
+    if (!done.current) feedback(left <= TICK_FROM ? 'tick' : 'tickSoft');
   };
 
   const finish = (lookedSeconds: number) => {

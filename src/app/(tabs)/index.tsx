@@ -7,12 +7,16 @@ import { LevelRing } from '@/components/LevelRing';
 import { titleFor } from '@/games/lookRemember/ladder';
 import { GAMES, SKILLS, SKILL_ORDER, type GameDef } from '@/games/registry';
 import { useGameProgress } from '@/hooks/useGameProgress';
+import { feedback } from '@/feedback';
 import { EXTRA_SECONDS, useProfile } from '@/profile';
 import { RECIPES } from '@/scenes/recipes';
 import { colors, radius } from '@/theme';
 import { APP_VERSION } from '@/version';
 
-const playLevels = (game: GameDef) => router.push({ pathname: '/play', params: { game: game.id, mode: 'levels' } });
+const playLevels = (game: GameDef) => {
+  feedback('start');
+  router.push({ pathname: '/play', params: { game: game.id, mode: 'levels' } });
+};
 const openGame = (game: GameDef) => router.push({ pathname: '/game/[id]', params: { id: game.id } });
 
 export default function GamesScreen() {

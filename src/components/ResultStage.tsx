@@ -145,12 +145,25 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
           const next = nextStep(mode, outcome, score, questions.length, nextLevel);
           return (
             <>
-              <Button label={next.label} onPress={onNextPicture} accessibilityHint={next.detail} />
+              <Button
+                label={next.label}
+                onPress={() => {
+                  feedback('start');
+                  onNextPicture();
+                }}
+                accessibilityHint={next.detail}
+              />
               {next.detail && <Text style={styles.next}>{next.detail}</Text>}
               <View style={styles.row}>
                 {next.offerReplay && (
                   <View style={styles.rowItem}>
-                    <Button label="Same picture again" variant="secondary" onPress={onPlayAgain} accessibilityHint="Practice: different questions, doesn’t change your level" />
+                    <Button
+                      label="Same picture again"
+                      variant="secondary"
+                      onPress={() => {
+                        feedback('start');
+                        onPlayAgain();
+                      }} accessibilityHint="Practice: different questions, doesn’t change your level" />
                   </View>
                 )}
                 <View style={styles.rowItem}>

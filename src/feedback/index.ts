@@ -7,9 +7,21 @@ import { playSound, preloadSound } from './player';
  * Sounds and vibration for the game's moments. To change a sound, replace its file in `assets/sounds/`
  * (same name); nothing else needs to change. See `assets/sounds/README.md`.
  */
-export type Moment = 'correct' | 'wrong' | 'tick' | 'levelUp' | 'highScore' | 'roundPerfect' | 'roundGood' | 'roundMiss';
+export type Moment =
+  | 'start'
+  | 'tickSoft'
+  | 'tick'
+  | 'correct'
+  | 'wrong'
+  | 'levelUp'
+  | 'highScore'
+  | 'roundPerfect'
+  | 'roundGood'
+  | 'roundMiss';
 
 const SOUNDS: Record<Moment, number> = {
+  start: require('../../assets/sounds/start.mp3'),
+  tickSoft: require('../../assets/sounds/tick-soft.mp3'),
   correct: require('../../assets/sounds/correct.mp3'),
   wrong: require('../../assets/sounds/wrong.mp3'),
   tick: require('../../assets/sounds/tick.mp3'),
@@ -22,9 +34,12 @@ const SOUNDS: Record<Moment, number> = {
 
 /** Kept quiet so they sit under the game, never over it. */
 const VOLUME: Record<Moment, number> = {
+  start: 0.55,
+  // A soft clock under the picture every second, then the last 4 clearly louder.
+  tickSoft: 0.18,
+  tick: 0.6,
   correct: 0.6,
   wrong: 0.5,
-  tick: 0.35,
   levelUp: 0.75,
   highScore: 0.7,
   roundPerfect: 0.6,
@@ -32,7 +47,10 @@ const VOLUME: Record<Moment, number> = {
   roundMiss: 0.35,
 };
 
-const HAPTICS: Record<Moment, () => Promise<void>> = {
+/** No vibration for the soft ticks: a buzz every second would be too much. */
+const HAPTICS: Record<Moment, (() => Promise<void>) | null> = {
+  start: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
+  tickSoft: null,
   correct: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
   wrong: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium),
   tick: () => Haptics.selectionAsync(),
@@ -60,7 +78,8 @@ export function feedback(moment: Moment) {
       // No audio: the game carries on silently.
     }
   }
-  if (prefs.haptics && Platform.OS !== 'web') HAPTICS[moment]().catch(() => {});
+  const buzz = HAPTICS[moment];
+  if (buzz && prefs.haptics && Platform.OS !== 'web') buzz().catch(() => {});
 }
 
 /** Loads the sounds before they're needed, so the first one isn't late. */

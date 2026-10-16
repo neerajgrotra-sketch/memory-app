@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.12 (2026-10-16)
+
+- **A "start" sound on every button that begins a round:** Play on the Games tab and game page, Practice, Try again / Keep going / Play Level N, Same picture again, and Play on the level-up screen (with a light tap on phones).
+- **Ticks for the whole countdown:** a soft clock tick as each number appears, then clearly louder ticks for 4, 3, 2, 1. The soft ticks don't vibrate.
+
 ## 4.0.0-beta.11 (2026-10-16)
 
 - **Countdown ticks on 4, 3, 2, 1**, exactly as each number appears. They're now driven by the countdown itself, so they can't drift from it.

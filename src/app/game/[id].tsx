@@ -8,6 +8,7 @@ import { LevelRing } from '@/components/LevelRing';
 import { PRACTICE_OPTIONS } from '@/game/difficulty';
 import { MAX_LEVEL, ROUNDS_TO_LEVEL_UP, nextBigUnlock, nextTitle, titleFor } from '@/games/lookRemember/ladder';
 import { formatPoints } from '@/games/lookRemember/points';
+import { feedback } from '@/feedback';
 import { getGame } from '@/games/registry';
 import { useGameProgress } from '@/hooks/useGameProgress';
 import { colors, radius } from '@/theme';
@@ -28,7 +29,10 @@ export default function GameScreen() {
 function GamePage({ gameId }: { gameId: 'look-remember' }) {
   const game = getGame(gameId)!;
   const progress = useGameProgress(gameId);
-  const play = (mode: string) => router.push({ pathname: '/play', params: { game: gameId, mode } });
+  const play = (mode: string) => {
+    feedback('start');
+    router.push({ pathname: '/play', params: { game: gameId, mode } });
+  };
 
   return (
     <View style={styles.screen}>

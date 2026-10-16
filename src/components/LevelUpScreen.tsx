@@ -66,7 +66,13 @@ export function LevelUpScreen({ level, onPlay, onContinue, onClose }: LevelUpScr
         </Animated.View>
       </View>
       <View style={styles.actions}>
-        <Button label={`Play Level ${level}`} onPress={onPlay} />
+        <Button
+          label={`Play Level ${level}`}
+          onPress={() => {
+            feedback('start');
+            onPlay();
+          }}
+        />
         <Button label="See my results" variant="secondary" onPress={onContinue} />
       </View>
     </SafeAreaView>

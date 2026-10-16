@@ -4,9 +4,11 @@ Each file is one moment in the game. **To change a sound, replace the file with 
 
 | File | When it plays | Source |
 | --- | --- | --- |
+| `start.mp3` | Tapping a button that starts a round (Play, Practice, Try again, Same picture again…) | uisfx "studio" `start` |
+| `tick-soft.mp3` | A soft tick each second of the countdown, until the last 4 | uisfx "studio" `release` |
 | `correct.mp3` | A right answer | uisfx "studio" `success` |
 | `wrong.mp3` | A wrong answer | uisfx "studio" `error` |
-| `tick.mp3` | As the countdown shows 4, 3, 2 and 1 | uisfx "studio" `progress-step` |
+| `tick.mp3` | Louder, as the countdown shows 4, 3, 2 and 1 | uisfx "studio" `progress-step` |
 | `level-up.mp3` | The level-up screen, as the ring spins | uisfx "studio" `level-up` |
 | `high-score.mp3` | A result with a new high score (not perfect) | uisfx "studio" `bonus` |
 | `round-perfect.mp3` | Applause: a perfect round, and on the level-up screen | made by `scripts/sounds/make-round-sounds.py` |
