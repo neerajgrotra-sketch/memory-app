@@ -32,29 +32,29 @@ See [Levels and scoring](../levels-and-scoring.md).
 | 5 | Sharp Eyes | beach, living-room, park | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 140 |
 | 6 | Sharp Eyes | beach, living-room, park, city | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 150 |
 | 7 | Sharp Eyes | beach, living-room, park, city | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 160 |
-| 8 | Sharp Eyes | beach, living-room, park, city | 6 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 170 |
-| 9 | Sharp Eyes | beach, living-room, park, city | 7 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 180 |
-| 10 | Keen Observer | beach, living-room, park, city, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 190 |
-| 11 | Keen Observer | beach, living-room, park, city, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 200 |
-| 12 | Keen Observer | beach, living-room, park, city, farm, under-sea | 7 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 210 |
-| 13 | Keen Observer | beach, living-room, park, city, farm, under-sea | 8 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 220 |
-| 14 | Keen Observer | beach, living-room, park, city, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 230 |
-| 15 | Detail Spotter | beach, living-room, park, city, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 240 |
-| 16 | Detail Spotter | beach, living-room, park, city, farm, under-sea, supermarket | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
-| 17 | Detail Spotter | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
-| 18 | Detail Spotter | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
-| 19 | Detail Spotter | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
-| 20 | Eagle Eye | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
-| 21 | Eagle Eye | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
-| 22 | Eagle Eye | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
-| 23 | Eagle Eye | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
-| 24 | Eagle Eye | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
-| 25 | Total Recall | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
-| 26 | Total Recall | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
-| 27 | Total Recall | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
-| 28 | Total Recall | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
-| 29 | Total Recall | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
-| 30 | Photographic Memory | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
+| 8 | Sharp Eyes | beach, living-room, park, city, kitchen | 6 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 170 |
+| 9 | Sharp Eyes | beach, living-room, park, city, kitchen | 7 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 180 |
+| 10 | Keen Observer | beach, living-room, park, city, kitchen, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 190 |
+| 11 | Keen Observer | beach, living-room, park, city, kitchen, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 200 |
+| 12 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea | 7 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 210 |
+| 13 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea | 8 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 220 |
+| 14 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 230 |
+| 15 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 240 |
+| 16 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
+| 17 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
+| 18 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
+| 19 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
+| 20 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
+| 21 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
+| 22 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
+| 23 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
+| 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
+| 25 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
+| 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
+| 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
+| 28 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
+| 29 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
+| 30 | Photographic Memory | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
 
 ## At the beach (`beach`)
 
@@ -231,6 +231,56 @@ Per-picture details: "What number was on the rowing boat?" (when there's a boat)
 | tree | grass | large 28% | 2 | fixed (`#2f8f3a`) | tall anchor (stands at the back, rises above its band); copies spread one per third, on one line |
 | person | path, grass | small 10% | 3 | Red, Blue, Yellow, Green, Orange, Purple, Pink, White | – |
 | dog | path, grass | medium 14% | 2 | Brown, Black, White | – |
+
+## In the kitchen (`kitchen`)
+
+### Bands
+
+| Band | Height | Surface | Slot rows | Rules |
+| --- | --- | --- | --- | --- |
+| On the shelf (`shelf`) | 5.5% – 20.5% | ground | 1 | things stand exactly on its bottom line |
+| On the wall (`wall`) | 24% – 43% | wall | 1 | – |
+| On the worktop (`counter`) | 45% – 63% | ground | 1 | things stand exactly on its bottom line |
+| On the floor (`floor`) | 70% – 100% | ground | 1 | at most 3 kinds; things stand exactly on its bottom line |
+
+Per-picture details: "What time was on the microwave?" (when there's a microwave) on every level; "What was in the fruit bowl?" (when there's a fruit-bowl).
+
+### Colour schemes
+
+| Scheme | Surface colours |
+| --- | --- |
+| modern | wall `#f3efe6`, grout `#b8b0a0`, shelf `#8a5a2b`, worktop `#495057`, cupboard `#2f4858`, cupboardEdge `#24384a`, handle `#ced4da`, floor `#d9d9d9`, floorLine `#b0b0b0` |
+| farmhouse | wall `#cfe3e8`, grout `#9fbcc4`, shelf `#a0703c`, worktop `#c8955a`, cupboard `#7a9e7e`, cupboardEdge `#5f7f63`, handle `#f1e7d0`, floor `#e3d3b0`, floorLine `#b39470` |
+
+### Things (25)
+
+| Thing | Band | Size | Most | Colours | Habits |
+| --- | --- | --- | --- | --- | --- |
+| plate | shelf | medium 14% | 3 | Blue, Red, Green, Yellow, Orange | copies may differ in colour on Hard |
+| cookbook | shelf | small 11% | 3 | Red, Blue, Green, Orange, Purple | – |
+| jar of pasta | shelf | small 10% | 3 | Red, Blue, Green, Yellow, White | – |
+| teapot | shelf, counter | medium 14% | 1 | Blue, Red, Yellow, Green, Pink | one only, not counted |
+| cookie jar | shelf, counter | small 11% | 1 | fixed (`#c8955a`) | one only, not counted |
+| pot of herbs | shelf | small 11% | 3 | Orange, Blue, White, Yellow, Pink | – |
+| frying pan | wall | medium 14% | 2 | fixed (`#343a40`) | copies spread one per third, on one line |
+| oven glove | wall | small 11% | 2 | Red, Blue, Green, Yellow, Orange, Pink | – |
+| tea towel | wall | medium 15% | 1 | Red, Blue, Green, Yellow | one only, not counted |
+| utensil rail | wall | large 26% | 1 | fixed (`#868e96`) | one only, not counted |
+| window | wall | large 28% | 1 | fixed (`#5aa9e6`) | one only, not counted |
+| microwave | counter | large 28% | 1 | fixed (`#868e96`) | one only, not counted |
+| kettle | counter | small 12% | 1 | Red, Blue, White, Green, Yellow | one only, not counted |
+| toaster | counter | medium 16% | 1 | Red, Blue, Yellow, Green, White | one only, not counted |
+| fruit bowl | counter | medium 16% | 1 | fixed (`#b07d45`) | one only, not counted |
+| chopping board | counter | large 21% | 1 | fixed (`#c8955a`) | one only, not counted |
+| saucepan | counter | medium 18% | 2 | Red, Blue, Orange, Green | – |
+| coffee machine | counter | small 12% | 1 | fixed (`#343a40`) | one only, not counted |
+| food mixer | counter | medium 14% | 1 | Red, Blue, Yellow, Pink, Green | one only, not counted |
+| pedal bin | floor | medium 17% | 1 | Red, White, Yellow, Green | one only, not counted |
+| mop and bucket | floor | medium 17% | 1 | Blue, Red, Yellow, Green | one only, not counted |
+| step stool | floor | large 20% | 1 | Red, Blue, Yellow, Green, White | one only, not counted |
+| recycling box | floor | large 21% | 1 | fixed (`#2b9348`) | one only, not counted |
+| basket of vegetables | floor | medium 18% | 1 | fixed (`#c8955a`) | one only, not counted |
+| pet bowl | floor | small 12% | 2 | Red, Blue, Green, Yellow, Pink | – |
 
 ## On the farm (`farm`)
 

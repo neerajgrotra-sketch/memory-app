@@ -233,6 +233,63 @@ Detail `clock`: 7:30.
 | count | true-false | True or false? There were two kites. | True · **✓ False** | kite |
 | object | true-false | True or false? There was a swan in the picture. | True · **✓ False** | swan |
 
+## In the kitchen
+
+Scene `kitchen-c29hz`, colour scheme `modern`.
+
+### Facts
+
+| Thing | Count | Colour | Band | Side |
+| --- | --- | --- | --- | --- |
+| pedal bin | 1 | Yellow | On the floor | left |
+| mop and bucket | 1 | Yellow | On the floor | right |
+| frying pans | 2 | fixed | On the wall | spread (not asked) |
+| tea towel | 1 | Blue | On the wall | centre |
+| basket of vegetables | 1 | fixed | On the floor | centre |
+| kettle | 1 | Blue | On the worktop | right |
+| pot of herbs | 1 | Orange | On the shelf | left |
+
+Detail `microwave`: 2:00.
+
+Detail `fruit`: Lemons.
+
+### Questions (32)
+
+| Type | Kind | Question | Options (✓ = answer) | Subject |
+| --- | --- | --- | --- | --- |
+| colour | colour | What colour was the pedal bin? | **✓ Yellow** · Red · Green · White | bin |
+| position | where | Where was the pedal bin? | **✓ On the floor, on the left** · On the floor, in the middle · On the floor, on the right · On the shelf, in the middle | bin |
+| object | what-here | What was on the floor, on the left? | **✓ A pedal bin** · A pet bowl · A step stool · A basket of vegetables | bin |
+| colour | colour | What colour was the bucket? | **✓ Yellow** · Green · Blue · Red | bucket |
+| position | where | Where was the mop and bucket? | **✓ On the floor, on the right** · On the floor, on the left · On the floor, in the middle · On the wall, on the left | bucket |
+| object | what-here | What was on the floor, on the right? | **✓ A mop and bucket** · A pedal bin · A step stool · A basket of vegetables | bucket |
+| count | count | How many frying pans were there? | **✓ 2** · 4 · 5 · 1 | frying-pan |
+| colour | colour | What colour were the stripes on the tea towel? | **✓ Blue** · Green · Yellow · Red | tea-towel |
+| position | where | Where was the tea towel? | **✓ On the wall, in the middle** · On the wall, on the left · On the wall, on the right · On the shelf, in the middle | tea-towel |
+| object | what-here | What was on the wall, in the middle? | **✓ A tea towel** · An oven glove · A window · A utensil rail | tea-towel |
+| position | where | Where was the basket of vegetables? | **✓ On the floor, in the middle** · On the floor, on the right · On the floor, on the left · On the worktop, on the right | veg-basket |
+| object | what-here | What was on the floor, in the middle? | **✓ A basket of vegetables** · A pedal bin · A mop and bucket · A recycling box | veg-basket |
+| colour | colour | What colour was the kettle? | **✓ Blue** · Yellow · Green · Red | kettle |
+| position | where | Where was the kettle? | **✓ On the worktop, on the right** · On the worktop, in the middle · On the worktop, on the left · On the wall, in the middle | kettle |
+| object | what-here | What was on the worktop, on the right? | **✓ A kettle** · A chopping board · A microwave · A toaster | kettle |
+| count | count | How many pots of herbs were there? | **✓ 1** · 3 · 2 · 4 | herbs |
+| colour | colour | What colour was the herb pot? | **✓ Orange** · White · Blue · Pink | herbs |
+| position | where | Where was the pot of herbs? | **✓ On the shelf, on the left** · On the shelf, in the middle · On the shelf, on the right · On the floor, on the right | herbs |
+| object | what-here | What was on the shelf, on the left? | **✓ A pot of herbs** · A plate · A cookie jar · A jar of pasta | herbs |
+| object | seen | Which of these was in the picture? | **✓ Pedal bin** · Toaster · Coffee machine · Microwave | bin |
+| object | seen | Which of these was NOT in the picture? | **✓ Saucepan** · Frying pan · Basket of vegetables · Tea towel | saucepan |
+| count | compare | Were there more frying pans or more pots of herbs? | **✓ Frying pans** · Pots of herbs · The same number | compare-frying-pan-herbs |
+| position | relation | What was below the tea towel? | **✓ A basket of vegetables** · A frying pan · A pedal bin · A kettle | tea-towel |
+| position | relation | What was above the basket of vegetables? | **✓ A tea towel** · A kettle · A pedal bin · A frying pan | veg-basket |
+| position | relation | What was below the kettle? | **✓ A mop and bucket** · A pedal bin · A frying pan · A basket of vegetables | kettle |
+| colour | twins | What else was the same colour as the pedal bin? | **✓ The bucket** · The herb pot · The kettle · The stripes on the tea towel | bin |
+| colour | twins | What else was the same colour as the bucket? | **✓ The pedal bin** · The kettle · The herb pot · The stripes on the tea towel | bucket |
+| colour | twins | What else was the same colour as the stripes on the tea towel? | **✓ The kettle** · The herb pot · The bucket · The pedal bin | tea-towel |
+| colour | twins | What else was the same colour as the kettle? | **✓ The stripes on the tea towel** · The herb pot · The bucket · The pedal bin | kettle |
+| colour | true-false | True or false? The herb pot was white. | True · **✓ False** | herbs |
+| colour | true-false | True or false? The kettle was white. | True · **✓ False** | kettle |
+| colour | true-false | True or false? The pedal bin was yellow. | **✓ True** · False | bin |
+
 ## On the farm
 
 Scene `farm-c29hz`, colour scheme `summer`.

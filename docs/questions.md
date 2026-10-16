@@ -111,16 +111,17 @@ Optional fields:
 - `spotlight`: asked first in a round when it can be
 - `fallback`: more wrong answers when `wrong` runs short.
 
-### Clocks (living room, city, park)
+### Clocks (living room, city, park, kitchen)
 
-When the picture has a clock (the living room's wall clock, the city's street clock or the park clock), it shows a time chosen for that picture (`details.values.clock`) and the game asks **"What time was on the clock?"** ("…on the street clock?", "…on the park clock?") on every level. Shared code in `src/scenes/clock.tsx` (`ClockFace`, `randomTime`, `timeLookalikes`), ready for a kitchen, a classroom or a train station.
+When the picture has a clock (the living room's wall clock, the city's street clock or the park clock), it shows a time chosen for that picture (`details.values.clock`) and the game asks **"What time was on the clock?"** ("…on the street clock?", "…on the park clock?") on every level. Shared code in `src/scenes/clock.tsx` (`ClockFace`, `randomTime`, `timeLookalikes`), ready for a classroom or a train station (`randomDigitalTime` and `digitalLookalikes` for digital displays).
 
 - **The time gets more exact as you level up** (`clockStep` in the level knobs):
   - whole hours up to Level 7 (3:00)
   - half past from Level 8 (3:30)
   - quarter past and quarter to from Level 18 (3:15, 3:45).
 
-  A clock face never shows odd minutes: nobody reads 4:17 off a small clock at a glance. Digital clocks (any minute) are for later places.
+  A clock face never shows odd minutes: nobody reads 4:17 off a small clock at a glance.
+- **Digital clocks** (the kitchen's microwave) follow the same steps below Hard, but on Hard show **any minute** (12:17), since digits read at a glance. Their wrong answers are digit slips: minutes swapped (7:45 → 7:54), an hour or ten minutes off, a 1 and a 7 mixed up.
 - **Wrong answers tempt someone who only half looked:** the hands mirrored (3:00 → 9:00), the hands swapped (3:00 → 12:15), an hour off; then the minute hand a step off, or two hours off.
 - **The face is drawn to read at a glance:** bold ticks at 12, 3, 6 and 9, a short thick hour hand and a long thin minute hand, 16% of the picture width (about 60 pt on a phone). It's never drawn mirrored (`noFlip`), even though other things flip for variety.
 - It's a **spotlight** question: whenever the clock is in the picture, the time is asked (unless this picture already asked it).

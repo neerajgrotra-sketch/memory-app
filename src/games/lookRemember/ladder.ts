@@ -83,6 +83,7 @@ export const RECIPE_UNLOCKS: { recipeId: string; level: number; name: string }[]
   { recipeId: 'living-room', level: 2, name: 'the living room' },
   { recipeId: 'park', level: 4, name: 'the park' },
   { recipeId: 'city', level: 6, name: 'the city street' },
+  { recipeId: 'kitchen', level: 8, name: 'the kitchen' },
   { recipeId: 'farm', level: 10, name: 'the farm' },
   { recipeId: 'under-sea', level: 12, name: 'under the sea' },
   { recipeId: 'supermarket', level: 14, name: 'the supermarket' },

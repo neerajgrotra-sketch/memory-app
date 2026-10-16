@@ -2,13 +2,14 @@ import type { Recipe } from '../types';
 import { beach } from './beach';
 import { city } from './city';
 import { farm } from './farm';
+import { kitchen } from './kitchen';
 import { livingRoom } from './livingRoom';
 import { park } from './park';
 import { supermarket } from './supermarket';
 import { underSea } from './underSea';
 
 /** Every setting the game can build. Add a recipe file and list it here. */
-export const RECIPES: Recipe[] = [beach, city, livingRoom, park, farm, underSea, supermarket];
+export const RECIPES: Recipe[] = [beach, city, livingRoom, park, kitchen, farm, underSea, supermarket];
 
 export function getRecipe(id: string): Recipe {
   const recipe = RECIPES.find((r) => r.id === id);

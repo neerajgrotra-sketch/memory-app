@@ -10,6 +10,16 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.31 (2026-10-16)
+
+- **A new place: In the kitchen**, unlocked at **Level 8** (and in Practice).
+  - **Bands:** an open shelf, the tiled wall, the worktop, and the floor in front of the cupboards.
+  - **25 things:** plates, cookbooks, pasta jars, a teapot, a cookie jar and herb pots on the shelf; frying pans, oven gloves, a tea towel, a utensil rail and a window on the wall; a microwave, kettle, toaster, fruit bowl, chopping board, saucepans, coffee machine and food mixer on the worktop; a bin, mop and bucket, step stool, recycling box, basket of vegetables and pet bowls on the floor.
+  - **A close-up, at one scale:** objects only (no people or pets), everything sized so 1 m ≈ half the screen width. Mugs, spoons and spice jars are left out because they'd have to be drawn too big.
+  - **New questions:** "What time was on the microwave?", the game's first **digital clock** (any minute on Hard, with digit-slip wrong answers like 7:45 vs 7:54), and "What was in the fruit bowl?" (apples, oranges, bananas or lemons). Plus lid, stripe, pot and bucket colours, and on Hard a rack of plates in mixed colours.
+  - Two looks: modern and farmhouse.
+- Scene checker: 44,400 pictures.
+
 ## 4.0.0-beta.30 (2026-10-16)
 
 - **A new place: In the park**, unlocked at **Level 4** (and in Practice).

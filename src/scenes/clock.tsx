@@ -79,3 +79,28 @@ export function ClockFace({ time, rim = '#343a40' }: { time: string; rim?: strin
     </G>
   );
 }
+
+/**
+ * Digital clocks (a microwave, an oven, a station board) are read as digits, so on Hard they can show
+ * any minute (4:17); below Hard they follow the same steps as clock faces.
+ */
+export function randomDigitalTime(rng: Rng, step: ClockStep): string {
+  if (step !== 15) return randomTime(rng, step);
+  return formatTime(rng.int(1, 12) * 60 + rng.int(0, 59));
+}
+
+/**
+ * Wrong answers for a digital time, best first: the minute digits swapped (7:45 → 7:54), an hour off,
+ * ten minutes off, and a 1 and a 7 mixed up; then twenty minutes or two hours off.
+ */
+export function digitalLookalikes(time: string): { close: string[]; other: string[] } {
+  const t = parseTime(time);
+  const m = t % 60;
+  const [h, mm] = time.split(':');
+  const swapped = Number(mm[1] + mm[0]) < 60 ? `${h}:${mm[1]}${mm[0]}` : null;
+  const sevenOne = h.includes('1') ? `${h.replace('1', '7')}:${mm}` : h.includes('7') ? `${h.replace('7', '1')}:${mm}` : null;
+  const close = [swapped, formatTime(t + 60), formatTime(t - 60), formatTime(t - m + ((m + 10) % 60)), sevenOne].filter((x): x is string => !!x && Number(x.split(':')[0]) <= 12 && Number(x.split(':')[0]) >= 1);
+  const other = [formatTime(t + 20), formatTime(t - 20), formatTime(t + 120), formatTime(t - 120)];
+  const clean = (list: string[]) => [...new Set(list)].filter((x) => x !== time);
+  return { close: clean(close), other: clean(other) };
+}
