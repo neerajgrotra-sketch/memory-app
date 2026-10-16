@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.17 (2026-10-16)
+
+- **Sound on iPhone web again.** Since 4.0.0-beta.11 the web version used Web Audio, which iPhones mute when the ring/silent switch is on silent. The page now asks for the "playback" audio session (iOS 17 and later), so web sounds play as they did before, and falls back to ordinary audio elements wherever Web Audio can't start. More kinds of first touch now switch sound on. (The phone app in Expo Go still follows the silent switch, on purpose.)
+
 ## 4.0.0-beta.16 (2026-10-16)
 
 - **Time to read the launch screen.** "glance / Look closer. Remember more." now stays up for about 1.6 seconds after it appears on the first launch (before the welcome), and about 0.8 seconds on later launches. The eye's blink moved into that pause. A tap still skips it.
