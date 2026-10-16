@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AgeBandPicker } from '@/components/AgeBandPicker';
@@ -94,6 +94,34 @@ export default function ProfileScreen() {
               accessibilityLabel="More time to look"
             />
           </View>
+          <View style={styles.switchRow}>
+            <View style={styles.switchText}>
+              <Text style={styles.rowTitle}>Sounds</Text>
+              <Text style={styles.rowDetail}>For answers, the last seconds and level ups. A phone on silent stays silent.</Text>
+            </View>
+            <Switch
+              value={profile?.sound ?? true}
+              onValueChange={(sound) => update({ sound })}
+              trackColor={{ true: colors.accent, false: colors.border }}
+              thumbColor={colors.text}
+              accessibilityLabel="Sounds"
+            />
+          </View>
+          {Platform.OS !== 'web' && (
+            <View style={styles.switchRow}>
+              <View style={styles.switchText}>
+                <Text style={styles.rowTitle}>Vibration</Text>
+                <Text style={styles.rowDetail}>A light tap for answers and a buzz for level ups.</Text>
+              </View>
+              <Switch
+                value={profile?.haptics ?? true}
+                onValueChange={(haptics) => update({ haptics })}
+                trackColor={{ true: colors.accent, false: colors.border }}
+                thumbColor={colors.text}
+                accessibilityLabel="Vibration"
+              />
+            </View>
+          )}
         </Section>
 
         <Section

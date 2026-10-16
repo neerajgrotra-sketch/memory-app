@@ -2,7 +2,7 @@
   "expo": {
     "name": "glance",
     "slug": "glance",
-    "version": "4.0.0-beta.9",
+    "version": "4.0.0-beta.10",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -28,6 +28,14 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#0f1115"
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "enableBackgroundPlayback": false
         }
       ]
     ],

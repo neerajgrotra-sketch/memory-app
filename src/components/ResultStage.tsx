@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { LevelRing } from '@/components/LevelRing';
+import { feedback } from '@/feedback';
 import { PictureViewer } from '@/components/PictureViewer';
 import { ProfilePrompt } from '@/components/ProfilePrompt';
 import type { Answers } from '@/game/quizNavigation';
@@ -35,6 +36,11 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
   // Picked once per result screen so it doesn't change on re-render.
   const [message] = useState(() => randomScoreMessage(score));
   const [enlarged, setEnlarged] = useState(false);
+  useEffect(() => {
+    if (outcome.newHighScore) feedback('highScore');
+    // Once, when the result appears.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <View style={styles.screen}>

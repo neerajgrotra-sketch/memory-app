@@ -10,6 +10,15 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.10 (2026-10-16)
+
+- **Sounds** for the game's moments: a soft chime for a right answer, a gentle low sound for a wrong one, quiet ticks in the last 3 seconds of looking, a flourish as the level-up ring spins, and a sparkle for a new high score. No sounds on ordinary taps and no music.
+  - A phone on silent stays silent.
+  - The sounds are free ones from uisfx (MIT licence). Each is one file in `assets/sounds/`, so a premium pack can replace them one by one with no code changes (see `assets/sounds/README.md`).
+- **Vibration** on phones at the same moments: a light tap for a right answer, a firmer one for a wrong answer, a tick for each last second, and a success buzz for a level up or high score.
+- **Profile → Playing** has **Sounds** and **Vibration** switches (both on to start).
+- Uses Expo's `expo-audio` (playback only, so the app never asks for the microphone) and `expo-haptics`. Run `npm ci` after pulling.
+
 ## 4.0.0-beta.9 (2026-10-16)
 
 - **A way out of the level-up screen:** the ✕ in the top-left corner (as on the picture and quiz screens) goes back to where you started. Your new level is already saved.

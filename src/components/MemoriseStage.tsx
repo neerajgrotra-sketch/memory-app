@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Countdown } from '@/components/Countdown';
 import { QuitButton } from '@/components/QuitButton';
+import { feedback } from '@/feedback';
 import { toggleLayoutOverlay, useLayoutOverlay } from '@/scenes/debugOverlay';
 import { SceneView } from '@/scenes/SceneView';
 import type { SceneSpec } from '@/scenes/types';
@@ -36,6 +37,23 @@ export function MemoriseStage({ scene, seconds, onDone, onQuit }: MemoriseStageP
     const t = setTimeout(() => setArmed(true), READY_DELAY_MS);
     return () => clearTimeout(t);
   }, []);
+
+  // A quiet tick for each of the last 3 seconds. Not once the dev layout overlay has held the timer
+  // (the ticks would no longer line up with it).
+  const overlayUsed = useRef(false);
+  useEffect(() => {
+    if (overlay) overlayUsed.current = true;
+  }, [overlay]);
+  useEffect(() => {
+    const ticks = [3, 2, 1]
+      .filter((left) => left < seconds)
+      .map((left) =>
+        setTimeout(() => {
+          if (!done.current && !overlayUsed.current) feedback('tick');
+        }, (seconds - left) * 1000),
+      );
+    return () => ticks.forEach(clearTimeout);
+  }, [seconds]);
 
   const finish = (lookedSeconds: number) => {
     if (done.current) return;

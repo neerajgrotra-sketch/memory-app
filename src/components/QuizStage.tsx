@@ -4,6 +4,7 @@ import Animated, { FadeIn, FadeInRight } from 'react-native-reanimated';
 
 import { AnswerOption, type OptionStatus } from '@/components/AnswerOption';
 import { Button } from '@/components/Button';
+import { feedback as playFeedback } from '@/feedback';
 import { nextUnanswered, unansweredCount, type Answers } from '@/game/quizNavigation';
 import { colors, radius } from '@/theme';
 import type { QuestionType, RoundQuestion } from '@/types/game';
@@ -71,9 +72,11 @@ export function QuizStage({ questions, answers, onAnswer }: QuizStageProps) {
     if (feedback !== 'choosing') return;
     setSelected(index);
     if (index === question.answerIndex) {
+      playFeedback('correct');
       setFeedback('correct');
       timer.current = setTimeout(() => commit(index), CORRECT_ADVANCE_MS);
     } else {
+      playFeedback('wrong');
       setFeedback('shaking');
     }
   };

@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/Button';
 import { LevelUpRing } from '@/components/LevelUpRing';
 import { QuitButton } from '@/components/QuitButton';
+import { feedback } from '@/feedback';
 import { titleFor, unlocksAt } from '@/games/lookRemember/ladder';
 import { colors, radius } from '@/theme';
 
@@ -27,6 +28,9 @@ export function LevelUpScreen({ level, onPlay, onContinue, onClose }: LevelUpScr
     pop.value = withSpring(1, { damping: 9, stiffness: 140 });
     // The text waits for the ring's moment (the new number pops in at about 0.8 s).
     fade.value = withDelay(900, withTiming(1, { duration: 400 }));
+    // The flourish lands as the ring spins and the new number pops in.
+    const t = setTimeout(() => feedback('levelUp'), 500);
+    return () => clearTimeout(t);
   }, [fade, pop]);
   const ringStyle = useAnimatedStyle(() => ({ transform: [{ scale: pop.value }] }));
   const textStyle = useAnimatedStyle(() => ({ opacity: fade.value }));

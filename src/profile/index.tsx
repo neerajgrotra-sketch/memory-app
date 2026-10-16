@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
+import { preloadFeedback, setFeedbackPrefs } from '@/feedback';
 import type { AgeBand, Profile } from '@/types/profile';
 
 import { createDeviceProfileStore, type ProfileStore } from './profileStore';
@@ -39,7 +40,13 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     profileStore.load().then(setProfile);
+    preloadFeedback();
   }, []);
+
+  // Sounds and vibration follow the profile's switches.
+  useEffect(() => {
+    setFeedbackPrefs({ sound: profile?.sound ?? true, haptics: profile?.haptics ?? true });
+  }, [profile?.sound, profile?.haptics]);
 
   const update = useCallback<ProfileContextValue['update']>(async (patch) => {
     const current = await profileStore.load();

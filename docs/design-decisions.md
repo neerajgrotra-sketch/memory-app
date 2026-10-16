@@ -55,6 +55,7 @@ Why the rules are what they are. Most came from play-testing: a screenshot showe
 - **Points reward accuracy, not speed.** Right answers (worth more at higher levels), runs of right answers, and being ready early score; slow answers never cost points. A score that punished slowness would push players to guess and put off older players.
 - **No overall "brain score" and no comparing with other people.** Level, points and trends compare you only with yourself. A single brain index would read as a health measure, which glance isn't.
 - **A launch animation, kept short.** About 1.5 seconds, once per launch, tap to skip, and none with Reduce Motion. People open the app several times a day; a long intro gets in the way by the second day. The eye blinking once ("taking its glance") says what the app is about without words. The native splash is the same plain background, so the hand-over doesn't flash.
+- **Sounds sparingly.** Only for moments that matter (answers, the last seconds, level up, high score), never on ordinary taps and no music; quiet volumes; a phone on silent stays silent; vibration alongside on phones. Each sound is a file with a fixed name so a better pack can replace it without code changes.
 - **Our own look.** The layout borrows a familiar structure (a big "carry on" card, games by skill, a game page with records), but keeps glance's dark theme and amber accent, and the art is drawn by the game itself.
 
 ## The player

@@ -18,6 +18,10 @@ export interface Profile {
    * Temporary, for testing and tuning: only these recipes (ids) are played. Null means all of them.
    */
   recipeFilter: string[] | null;
+  /** Sounds for answers, the last seconds and level ups. Missing means on (profiles saved before sounds). */
+  sound?: boolean;
+  /** Vibration at the same moments (phones only). Missing means on. */
+  haptics?: boolean;
   createdAt: string;
   updatedAt: string;
 }
