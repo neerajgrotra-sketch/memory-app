@@ -8,12 +8,12 @@ import { LevelChart } from '@/components/LevelChart';
 import { LevelRing } from '@/components/LevelRing';
 import { ScoreChart } from '@/components/ScoreChart';
 import { LEVEL_LABELS, MODE_LABELS } from '@/game/difficulty';
-import { titleFor } from '@/games/lookRemember/ladder';
+import { BAND_LEVELS, titleFor } from '@/games/lookRemember/ladder';
 import { formatPoints } from '@/games/lookRemember/points';
 import { GAMES } from '@/games/registry';
 import { progressOf, type GameProgress } from '@/hooks/useGameProgress';
 import { statsStore } from '@/stats';
-import { summarize, type StatsSummary, type Trend } from '@/stats/summarize';
+import { summarize, type SessionSummary, type StatsSummary, type Trend } from '@/stats/summarize';
 import { colors, levelColors, radius } from '@/theme';
 import type { QuestionType } from '@/types/game';
 
@@ -127,10 +127,10 @@ export default function ProgressScreen() {
             <ScoreChart rounds={summary.recentRounds} />
           </Section>
 
-          <Section title="By band (levels and practice)">
+          <Section title="By band">
             <View style={styles.table}>
               <View style={[styles.tableRow, styles.tableHead]}>
-                <Text style={[styles.th, styles.colName]}>Level</Text>
+                <Text style={[styles.th, styles.colName]}>Band</Text>
                 <Text style={styles.th}>Rounds</Text>
                 <Text style={styles.th}>Avg</Text>
                 <Text style={styles.th}>Best</Text>
@@ -140,7 +140,12 @@ export default function ProgressScreen() {
                 <View key={level.level} style={styles.tableRow}>
                   <View style={[styles.colName, styles.levelName]}>
                     <View style={[styles.swatch, { backgroundColor: levelColors[level.level] }]} />
-                    <Text style={styles.td}>{LEVEL_LABELS[level.level]}</Text>
+                    <View>
+                      <Text style={styles.td}>{LEVEL_LABELS[level.level]}</Text>
+                      <Text style={styles.bandRange}>
+                        Levels {BAND_LEVELS[level.level][0]}–{BAND_LEVELS[level.level][1]}
+                      </Text>
+                    </View>
                   </View>
                   <Text style={styles.tdNum}>{level.rounds}</Text>
                   <Text style={styles.tdNum}>{level.rounds ? fmt(level.average) : '–'}</Text>
@@ -149,6 +154,7 @@ export default function ProgressScreen() {
                 </View>
               ))}
             </View>
+            <Text style={styles.note}>Practice rounds count in the band you picked. Scores are out of 5.</Text>
           </Section>
 
           <Section title="By question type">
@@ -199,9 +205,10 @@ export default function ProgressScreen() {
               {summary.recentSessions.map((s, i) => (
                 <View key={s.id} style={[styles.sessionRow, i > 0 && styles.sessionDivider]}>
                   <View style={styles.sessionMain}>
-                    <Text style={styles.td}>{MODE_LABELS[s.mode] ?? s.mode}</Text>
+                    <Text style={styles.td}>{sessionTitle(s)}</Text>
                     <Text style={styles.sessionMeta}>
                       {formatDate(s.startedAt)} · {s.rounds} {s.rounds === 1 ? 'round' : 'rounds'}
+                      {s.points > 0 ? ` · ${formatPoints(s.points)} points` : ''}
                     </Text>
                   </View>
                   <Text style={styles.sessionScore}>
@@ -224,6 +231,14 @@ export default function ProgressScreen() {
       )}
     </SafeAreaView>
   );
+}
+
+/** "Level 4", "Level 3 → 5" when you moved during the session, or the Practice band. */
+function sessionTitle(s: SessionSummary) {
+  if (s.mode === 'levels' && s.levelFrom !== undefined && s.levelTo !== undefined) {
+    return s.levelFrom === s.levelTo ? `Level ${s.levelTo}` : `Level ${s.levelFrom} → ${s.levelTo}`;
+  }
+  return MODE_LABELS[s.mode] ?? s.mode;
 }
 
 function steadiness(spread: number | null) {
@@ -325,6 +340,7 @@ const styles = StyleSheet.create({
   th: { flex: 1, color: colors.textMuted, fontSize: 12, fontWeight: '700', textAlign: 'right' },
   colName: { flex: 1.6, textAlign: 'left' },
   colTrend: { flex: 1.4 },
+  bandRange: { color: colors.textMuted, fontSize: 12 },
   levelName: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   swatch: { width: 10, height: 10, borderRadius: 2 },
   td: { color: colors.text, fontSize: 15, fontWeight: '600' },

@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.7 (2026-10-16)
+
+- **Progress says which level, not just "Levels".**
+  - Recent sessions show **Level 4**, or **Level 3 → 5** when you moved during the session, plus the points scored. Practice sessions show **Practice · Easy** and so on.
+  - The score chart's details say **Level 4** for a levelled round and **Practice · Hard** for a practice one.
+- **Bands explained:** the "By band" table shows the levels in each band: Easy is Levels 1–7, Medium 8–17 (house numbers start at 8), Hard 18–30 (mostly harder questions from 18). Practice rounds count in the band you picked.
+
 ## 4.0.0-beta.6 (2026-10-15)
 
 - **Launch animation.** When the app starts, an amber eye opens, **glance** and the tagline **"Look closer. Remember more."** rise in, the eye blinks once, and it all fades into the Games tab, in about 1.5 seconds.

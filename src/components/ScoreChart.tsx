@@ -14,6 +14,10 @@ function formatWhen(iso: string) {
   return `${date.toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}, ${date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}`;
 }
 
+/** "Level 4" for levelled rounds, otherwise the band ("Practice · Easy" and older rounds). */
+const roundLabel = (r: RoundResult) =>
+  r.ladder ? `Level ${r.ladder.level}` : r.mode === 'levels' ? `${LEVEL_LABELS[r.level]} · same picture again` : `Practice · ${LEVEL_LABELS[r.level]}`;
+
 interface ScoreChartProps {
   /** Oldest first. */
   rounds: RoundResult[];
@@ -33,7 +37,7 @@ export function ScoreChart({ rounds }: ScoreChartProps) {
           <Text style={styles.readoutScore}>
             {active.score}/{active.total}
           </Text>
-          {`  ${LEVEL_LABELS[active.level]} · ${formatWhen(active.playedAt)}`}
+          {`  ${roundLabel(active)} · ${formatWhen(active.playedAt)}`}
         </Text>
       )}
 
@@ -62,7 +66,7 @@ export function ScoreChart({ rounds }: ScoreChartProps) {
                   onPress={() => setSelected(i)}
                   style={styles.hit}
                   accessibilityRole="button"
-                  accessibilityLabel={`${LEVEL_LABELS[round.level]}, ${round.score} out of ${round.total}, ${formatWhen(round.playedAt)}`}
+                  accessibilityLabel={`${roundLabel(round)}, ${round.score} out of ${round.total}, ${formatWhen(round.playedAt)}`}
                 >
                   <View
                     style={[

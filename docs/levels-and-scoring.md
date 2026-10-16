@@ -58,6 +58,10 @@ The scene checker plays levels 1, 4, 6, 8, 12, 14, 17 and 30 on three phones wit
 - **High score** is the best points in one round, over levelled and Practice rounds. "New high score!" shows only when you beat an earlier one.
 - **Practice** rounds use the level they play like: Easy 2, Medium 9, Hard 18.
 
+## Bands
+
+For charts and the Progress tab's "By band" table, levels are grouped into the old names: **Easy** is Levels 1–7, **Medium** 8–17 (house numbers start at 8) and **Hard** 18–30 (mostly harder questions from 18). Practice rounds count in the band picked. (`BAND_LEVELS` and `bandOf` in `ladder.ts`.)
+
 ## Practice
 
 Easy, Medium and Hard are the fixed settings from before levels (`LEVELS` in `src/game/difficulty.ts`), with every place. They earn points and never change your level.

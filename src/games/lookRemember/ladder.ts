@@ -148,6 +148,9 @@ export function bandOf(level: number): Level {
   return level < 8 ? 'easy' : level < 18 ? 'medium' : 'hard';
 }
 
+/** The levels in each band. Medium starts with house numbers (8), Hard with mostly harder questions (18). */
+export const BAND_LEVELS: Record<Level, [number, number]> = { easy: [1, 7], medium: [8, 17], hard: [18, MAX_LEVEL] };
+
 /**
  * Where a player starts who played before levels existed: the hardest band they did well at
  * (average 3.5 or more over their last rounds there, at least 3 rounds).

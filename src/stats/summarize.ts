@@ -35,6 +35,11 @@ export interface SessionSummary {
   id: string;
   startedAt: string;
   mode: PlayMode | Difficulty;
+  /** Levelled sessions: the level the first round was played at, and your level after the last. */
+  levelFrom?: number;
+  levelTo?: number;
+  /** Points scored over the session (rounds from before points count as 0). */
+  points: number;
   rounds: number;
   correct: number;
   total: number;
@@ -180,7 +185,13 @@ export function summarize(
       correct: 0,
       total: 0,
       average: 0,
+      points: 0,
     };
+    if (r.ladder) {
+      session.levelFrom ??= r.ladder.level;
+      session.levelTo = r.ladder.after.level;
+    }
+    session.points += r.points ?? 0;
     session.rounds += 1;
     session.correct += r.score;
     session.total += r.total;
