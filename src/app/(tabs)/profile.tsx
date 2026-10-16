@@ -4,7 +4,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AgeBandPicker } from '@/components/AgeBandPicker';
 import { EXTRA_SECONDS, initialOf, useProfile } from '@/profile';
-import { RECIPES } from '@/scenes/recipes';
 import { colors, radius } from '@/theme';
 import { APP_VERSION } from '@/version';
 
@@ -18,17 +17,6 @@ export default function ProfileScreen() {
   const [draft, setDraft] = useState<string | null>(null);
   const name = draft ?? profile?.name ?? '';
   const [confirmClear, setConfirmClear] = useState(false);
-
-  // Temporary testing filter: which settings are played (null = all).
-  const filter = profile?.recipeFilter?.length ? profile.recipeFilter : null;
-  const isOn = (id: string) => !filter || filter.includes(id);
-  const onCount = filter ? filter.length : RECIPES.length;
-  const toggleRecipe = (id: string) => {
-    const current = filter ?? RECIPES.map((r) => r.id);
-    const next = current.includes(id) ? current.filter((r) => r !== id) : [...current, id];
-    if (!next.length) return;
-    update({ recipeFilter: next.length === RECIPES.length ? null : next });
-  };
 
   const saveName = () => {
     if (draft === null) return;
@@ -124,33 +112,6 @@ export default function ProfileScreen() {
           )}
         </Section>
 
-        <Section
-          title="Testing (temporary)"
-          footer="Only the settings switched on are played, so you can focus on one while tuning it. At least one stays on."
-        >
-          {RECIPES.map((recipe) => {
-            const on = isOn(recipe.id);
-            return (
-              <View key={recipe.id} style={styles.switchRow}>
-                <Text style={[styles.rowTitle, styles.switchText]}>{recipe.title}</Text>
-                <Switch
-                  value={on}
-                  disabled={on && onCount === 1}
-                  onValueChange={() => toggleRecipe(recipe.id)}
-                  trackColor={{ true: colors.accent, false: colors.border }}
-                  thumbColor={colors.text}
-                  accessibilityLabel={`Play ${recipe.title}`}
-                />
-              </View>
-            );
-          })}
-          {filter && (
-            <Pressable accessibilityRole="button" onPress={() => update({ recipeFilter: null })} style={styles.useAll}>
-              <Text style={styles.useAllText}>Use all settings</Text>
-            </Pressable>
-          )}
-        </Section>
-
         <Section title="About">
           <Text style={styles.rowDetail}>glance is a memory game, not a medical test. Its scores aren’t a measure of brain health.</Text>
           <Text style={styles.rowDetail}>Version {APP_VERSION}</Text>
@@ -204,8 +165,6 @@ const styles = StyleSheet.create({
   switchText: { flex: 1, gap: 2 },
   rowTitle: { color: colors.text, fontSize: 16, fontWeight: '700' },
   rowDetail: { color: colors.textMuted, fontSize: 14, lineHeight: 20 },
-  useAll: { alignSelf: 'flex-start', minHeight: 44, justifyContent: 'center' },
-  useAllText: { color: colors.accent, fontSize: 15, fontWeight: '700' },
   clear: { alignSelf: 'center', minHeight: 44, justifyContent: 'center', paddingHorizontal: 12 },
   clearText: { color: colors.textMuted, fontSize: 14, textDecorationLine: 'underline' },
   clearConfirm: { color: colors.wrong, fontWeight: '700' },

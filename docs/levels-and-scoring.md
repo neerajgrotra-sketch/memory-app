@@ -19,6 +19,8 @@ How a player's level moves, what each level changes, and how points are worked o
 
 **Saving it:** every levelled round saves the level it was played at and your level afterwards (`ladder` in `RoundResult`, `src/types/stats.ts`). Your current level is the last round's `after`, so it survives old rounds being trimmed from storage, and you always carry on where you left off.
 
+**My places:** players can switch places off to train on the ones they choose (`src/games/lookRemember/places.ts`, saved as `placesOff` in the profile). Only places the current level has reached can be switched; the rest show a lock and their level. It's saved as the places switched *off*, so a newly unlocked place always joins, as the level-up screen promises. Levels play the reached places that are on; Practice plays every place that isn't off. If nothing would be left, everything allowed plays. Profiles from the old testing switch (`recipeFilter`, places switched *on*) are read as the matching `placesOff`.
+
 **Starting again:** two ways, for different needs:
 
 - **Start again from Level 1** (on the game page, under Play; asks first). Your level goes back to 1 but your rounds stay, so the high score, best level, charts and history are kept. The store saves when you started again (`statsStore.restart`, key `glance.restarts.v1`); `ladderStateOf(results, restartedAt)` then ignores levelled rounds from before that moment for your level, and keeps the best level ever. Shown only once you're past Level 1 or partway through it.

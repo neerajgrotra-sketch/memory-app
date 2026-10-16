@@ -1,4 +1,5 @@
 import type { LevelConfig } from '@/game/difficulty';
+import { placesToPlay } from '@/games/lookRemember/places';
 import type { Question } from '@/types/game';
 
 import { generateQuestions } from './generateQuestions';
@@ -28,18 +29,17 @@ export function createStage(
   seed = randomSeed(),
   {
     unlocked,
-    testing,
+    off = [],
   }: {
-    /** Settings this level has reached (all when missing). */
+    /** Settings this level has reached (all when missing, e.g. Practice). */
     unlocked?: string[];
-    /** The profile's testing filter. When set it wins, so a setting can be tuned at any level. */
-    testing?: string[] | null;
+    /** My Places: settings the player switched off. Never leaves nothing to play. */
+    off?: string[];
   } = {},
 ): Stage {
-  const pick = (ids: string[] | null | undefined) => (ids?.length ? RECIPES.filter((r) => ids.includes(r.id)) : []);
-  const tested = pick(testing);
-  const reached = pick(unlocked);
-  const pool = tested.length ? tested : reached.length ? reached : RECIPES;
+  const allowed = unlocked?.length ? unlocked : RECIPES.map((r) => r.id);
+  const ids = placesToPlay(allowed, off);
+  const pool = RECIPES.filter((r) => ids.includes(r.id));
   const choices = pool.length > 1 ? pool.filter((r) => r.id !== previousRecipeId) : pool;
   const recipe = choices[seed % choices.length];
 

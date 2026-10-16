@@ -14,9 +14,9 @@ export interface Profile {
   moreTime: boolean;
   /** The "what should we call you?" card has been answered or skipped, so it never shows again. */
   asked: boolean;
-  /**
-   * Temporary, for testing and tuning: only these recipes (ids) are played. Null means all of them.
-   */
+  /** My Places: the places (recipe ids) switched off, so they're never played. Missing means all on. */
+  placesOff?: string[];
+  /** The old testing switch: only these recipes were played. Read once to fill `placesOff`, then cleared. */
   recipeFilter: string[] | null;
   /** Sounds for answers, the last seconds and level ups. Missing means on (profiles saved before sounds). */
   sound?: boolean;

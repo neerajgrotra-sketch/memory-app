@@ -74,5 +74,5 @@ The checks prove nothing overlaps; only real-world rules stop silly pictures (a 
 
 1. The answers become `src/scenes/recipes/<name>.tsx`, with drawings for each thing, and the setting is given its level in `RECIPE_UNLOCKS`.
 2. `npm run check:scenes` generates thousands of pictures on three iPhone sizes and every level, and fails on any rule broken.
-3. You review pictures by eye (`npm run gallery`, or the testing switch in Profile) and say what looks wrong; each fix becomes a rule.
+3. You review pictures by eye (`npm run gallery`, or My places on the game page) and say what looks wrong; each fix becomes a rule.
 4. The docs (`docs/recipes/<name>.md`, the reference tables) are updated, the version is bumped, and it ships.

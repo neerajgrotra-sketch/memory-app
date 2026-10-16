@@ -11,7 +11,9 @@ import { MAX_LEVEL, ROUNDS_TO_LEVEL_UP, nextBigUnlock, nextTitle, titleFor } fro
 import { formatPoints } from '@/games/lookRemember/points';
 import { feedback } from '@/feedback';
 import { getGame } from '@/games/registry';
+import { myPlaces, placesOff, togglePlace } from '@/games/lookRemember/places';
 import { useReloadableGameProgress } from '@/hooks/useGameProgress';
+import { useProfile } from '@/profile';
 import { statsStore } from '@/stats';
 import { colors, radius } from '@/theme';
 
@@ -104,6 +106,8 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
                 )
               )}
 
+              <MyPlaces level={progress.ladder.level} />
+
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Practice</Text>
                 <Text style={styles.note}>Pick a difficulty to warm up. Practice earns points but never changes your level.</Text>
@@ -138,6 +142,67 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
           </View>
         </View>
       </ScrollView>
+    </View>
+  );
+}
+
+/**
+ * My Places: switch places on or off to train on the ones you choose. Places your level hasn't reached
+ * show when they unlock; they join automatically then.
+ */
+function MyPlaces({ level }: { level: number }) {
+  const { profile, update } = useProfile();
+  const off = placesOff(profile);
+  const places = myPlaces(level, off);
+  const reached = places.filter((p) => p.reached);
+  const onCount = reached.filter((p) => p.on).length;
+  const toggle = (id: string) => {
+    const next = togglePlace(level, off, id);
+    if (next) {
+      feedback('tick');
+      update({ placesOff: next, recipeFilter: null });
+    }
+  };
+  return (
+    <View style={styles.section}>
+      <View style={styles.placesHeader}>
+        <Text style={styles.sectionTitle}>My places</Text>
+        <Text style={styles.placesCount}>{onCount === reached.length ? `All ${reached.length} on` : `${onCount} of ${reached.length} on`}</Text>
+      </View>
+      <Text style={styles.note}>
+        {reached.length > 1
+          ? 'Train on the places you choose. Tap to switch one off; new places join as you unlock them.'
+          : 'Level up to unlock more places, then pick the ones you want to train on.'}
+      </Text>
+      <View style={styles.places}>
+        {places.map((p) => {
+          const last = p.on && onCount === 1;
+          return (
+            <Pressable
+              key={p.id}
+              accessibilityRole="switch"
+              accessibilityLabel={p.reached ? p.title : `${p.title}, unlocks at Level ${p.level}`}
+              accessibilityState={{ checked: p.on, disabled: !p.reached || last }}
+              disabled={!p.reached || last}
+              onPress={() => toggle(p.id)}
+              style={({ pressed }) => [styles.place, p.on && styles.placeOn, !p.reached && styles.placeLocked, pressed && styles.pressed]}
+            >
+              <Text style={[styles.placeMark, p.on && styles.placeMarkOn]}>{p.reached ? (p.on ? '✓' : '') : '🔒'}</Text>
+              <View style={styles.placeText}>
+                <Text style={[styles.placeTitle, !p.on && styles.placeTitleOff]} numberOfLines={2}>
+                  {p.title}
+                </Text>
+                {!p.reached && <Text style={styles.placeLevel}>Level {p.level}</Text>}
+              </View>
+            </Pressable>
+          );
+        })}
+      </View>
+      {onCount < reached.length && (
+        <Pressable accessibilityRole="button" onPress={() => update({ placesOff: [], recipeFilter: null })} hitSlop={6} style={styles.allPlaces}>
+          <Text style={styles.startAgainText}>Play all places</Text>
+        </Pressable>
+      )}
     </View>
   );
 }
@@ -201,6 +266,43 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pressed: { opacity: 0.8 },
+  placesHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  placesCount: { color: colors.accent, fontSize: 13, fontWeight: '700' },
+  places: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  place: {
+    flexBasis: '47%',
+    flexGrow: 1,
+    minHeight: 52,
+    paddingVertical: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 12,
+    borderRadius: radius.md,
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.border,
+  },
+  placeOn: { borderColor: colors.accent },
+  placeLocked: { opacity: 0.55, borderStyle: 'dashed' },
+  placeMark: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    textAlign: 'center',
+    lineHeight: 24,
+    fontSize: 13,
+    fontWeight: '900',
+    color: colors.background,
+    backgroundColor: colors.surfaceRaised,
+    overflow: 'hidden',
+  },
+  placeMarkOn: { backgroundColor: colors.accent },
+  placeText: { flex: 1 },
+  placeTitle: { color: colors.text, fontSize: 15, fontWeight: '700' },
+  placeTitleOff: { color: colors.textMuted },
+  placeLevel: { color: colors.textMuted, fontSize: 12, fontWeight: '600' },
+  allPlaces: { alignSelf: 'flex-start', paddingVertical: 4 },
   startAgainLink: { alignSelf: 'center', padding: 8, marginTop: -8 },
   startAgainText: { color: colors.textMuted, fontSize: 15, fontWeight: '600', textDecorationLine: 'underline' },
   confirmCard: { backgroundColor: colors.surface, borderRadius: radius.md, padding: 16, gap: 12, borderWidth: 1, borderColor: colors.border },

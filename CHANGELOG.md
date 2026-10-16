@@ -10,6 +10,14 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.27 (2026-10-16)
+
+- **My places**, a proper feature replacing the temporary testing switch. On the Look & Remember page, pick the places you want to train on: only the beach, say, or just the city and the supermarket.
+  - Places your level hasn't reached show a lock and the level they unlock at, a preview of what's coming. They join automatically when you unlock them.
+  - At least one place stays on. "Play all places" switches everything back on.
+  - Works in levelled play and Practice. The Games tab shows a quiet "My places: …  Change" line while some are off (the red testing banner is gone).
+- Profile no longer has the "Testing (temporary)" section. An existing testing selection carries over into My places.
+
 ## 4.0.0-beta.26 (2026-10-16)
 
 - **A new place: In the supermarket**, unlocked at **Level 14** (and in Practice).

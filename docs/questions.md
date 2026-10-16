@@ -178,4 +178,4 @@ When the living room has its wall clock, the clock shows a time chosen for that 
 1. Add the type to `QuestionType`, plus its labels in `src/components/QuizStage.tsx` and `src/app/stats.tsx`, and add it to `QUESTION_TYPES` in `src/stats/summarize.ts`.
 2. Write it in `generateQuestions` from scene facts only, with a `subject` so a round doesn't double up and a `family` for the variety rule (add a new `QuestionFamily` if it's a new kind, and its cap in `selectQuestions`).
 3. Decide which levels ask it (a knob in `src/game/difficulty.ts`) and whether any level prefers it.
-4. Run `npm run docs:recipes` and read the examples. Then play it with the [testing filter](testing.md#on-a-phone-expo-go), reading every question against the picture.
+4. Run `npm run docs:recipes` and read the examples. Then play it with [My places](testing.md#on-a-phone-expo-go) set to the place you're checking, reading every question against the picture.

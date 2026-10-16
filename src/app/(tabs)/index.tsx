@@ -10,7 +10,7 @@ import { GAMES, SKILLS, SKILL_ORDER, type GameDef } from '@/games/registry';
 import { useGameProgress } from '@/hooks/useGameProgress';
 import { feedback } from '@/feedback';
 import { EXTRA_SECONDS, useProfile } from '@/profile';
-import { RECIPES } from '@/scenes/recipes';
+import { myPlaces, placesOff } from '@/games/lookRemember/places';
 import { colors, radius } from '@/theme';
 import { APP_VERSION } from '@/version';
 
@@ -62,13 +62,7 @@ export default function GamesScreen() {
         )}
         {progress && !played && <Text style={styles.intro}>New here? Tap a game to see how it works, then play.</Text>}
 
-        {!!profile?.recipeFilter?.length && (
-          <Pressable accessibilityRole="button" onPress={() => router.push('/profile')} style={styles.noteWrap}>
-            <Text style={styles.testing}>
-              Testing: only {RECIPES.filter((r) => profile.recipeFilter!.includes(r.id)).map((r) => r.title).join(', ')}. Change in your profile.
-            </Text>
-          </Pressable>
-        )}
+        {progress && <MyPlacesNote level={progress.ladder.level} gameId={featured.id} />}
         {profile?.moreTime && <Text style={styles.moreTime}>More time to look is on: every picture stays {EXTRA_SECONDS} seconds longer.</Text>}
 
         {/* Games grouped by skill. A skill only shows once it has a game. */}
@@ -114,6 +108,21 @@ function GameCard({ game }: { game: GameDef }) {
   );
 }
 
+/** When some places are switched off (My Places), says which are played; tap to change them. */
+function MyPlacesNote({ level, gameId }: { level: number; gameId: string }) {
+  const { profile } = useProfile();
+  const places = myPlaces(level, placesOff(profile)).filter((p) => p.reached);
+  const on = places.filter((p) => p.on);
+  if (on.length === places.length) return null;
+  return (
+    <Pressable accessibilityRole="button" onPress={() => router.push({ pathname: '/game/[id]', params: { id: gameId } })} style={styles.noteWrap}>
+      <Text style={styles.placesNote}>
+        My places: {on.map((p) => p.title).join(', ')}. <Text style={styles.placesLink}>Change</Text>
+      </Text>
+    </Pressable>
+  );
+}
+
 const styles = StyleSheet.create({
   screen: { flex: 1 },
   // Phone-width column, centred on tablets and wide windows so nothing is blown up.
@@ -140,7 +149,8 @@ const styles = StyleSheet.create({
   playPillText: { color: colors.accentText, fontSize: 16, fontWeight: '800' },
   intro: { color: colors.textMuted, fontSize: 15, lineHeight: 21, paddingHorizontal: 4, marginBottom: -8 },
   noteWrap: { minHeight: 44, justifyContent: 'center', marginVertical: -12 },
-  testing: { color: colors.wrong, fontSize: 14, fontWeight: '700', textAlign: 'center' },
+  placesNote: { color: colors.textMuted, fontSize: 14, textAlign: 'center' },
+  placesLink: { color: colors.accent, fontWeight: '700' },
   moreTime: { color: colors.accent, fontSize: 14, textAlign: 'center', marginVertical: -8 },
   section: { gap: 12 },
   sectionHead: { paddingHorizontal: 4, gap: 2 },
