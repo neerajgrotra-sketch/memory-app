@@ -517,7 +517,7 @@ function backdrop(height: number, palette: Palette, details?: SceneDetails) {
                   x={((f.plaque.x0 + f.plaque.x1) / 2) * 900}
                   y={((f.plaque.y0 + f.plaque.y1) / 2) * height}
                   fontSize={Math.min(30, (f.plaque.y1 - f.plaque.y0) * height * 0.7)}
-                  fontWeight="bold"
+                  fontWeight="bold" fontFamily="Arial"
                   fill="#212529"
                   textAnchor="middle"
                   alignmentBaseline="central"

@@ -10,6 +10,18 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.26 (2026-10-16)
+
+- **A new place: In the supermarket**, unlocked at **Level 14** (and in Practice).
+  - **Bands:** signs hanging from the ceiling, the top, middle and bottom shelves, and the floor.
+  - **17 things:** cereal boxes, toilet rolls, bottles of water, tins, jars of honey, bottles of juice, milk, eggs and bread on the shelves; trolleys, baskets, shoppers, crates of apples and oranges, watermelons, a wet floor sign and cardboard boxes on the floor.
+  - **Like a real aisle:** each section of a shelf (left, middle, right) holds one kind of product, standing in a neat row on the shelf. "Where were the tins?" → "On the middle shelf, on the right".
+  - **New questions:** "What was the aisle number?" and "What was on special offer?" (apples, bananas, bread, milk or cheese, shown on the red sign), plus the lid colour on the honey jars, and on Hard a row of juice bottles in different flavours.
+  - Two looks: a bright modern shop and a cosy corner shop.
+- **New placement habit, `lineUp`:** copies stand side by side in one row, a little apart so they're easy to count. Ready for a kitchen, a toy shop or a classroom.
+- Sign and house-number text now uses a sans-serif font everywhere (it showed as serif on the web).
+- Scene checker: 32,400 pictures. [Supermarket docs](docs/recipes/supermarket.md); the recipe reference (now listing each place's real detail questions) and question examples are regenerated.
+
 ## 4.0.0-beta.25 (2026-10-16)
 
 - **Start again from Level 1,** on the game page under Play. It asks first, then puts you back at Level 1 while **keeping** your high score, best level and round history (charts and "Your levels" too). It only shows once you're past Level 1 or partway through it.

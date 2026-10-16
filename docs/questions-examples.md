@@ -287,3 +287,66 @@ Detail `chest`: Red jewels.
 | count | true-false | True or false? There were two jellyfish. | True · **✓ False** | jellyfish |
 | colour | true-false | True or false? The jellyfish was pink. | True · **✓ False** | jellyfish |
 | count | true-false | True or false? There was one sea turtle. | True · **✓ False** | turtle |
+
+## In the supermarket
+
+Scene `supermarket-c29hz`, colour scheme `modern`.
+
+### Facts
+
+| Thing | Count | Colour | Band | Side |
+| --- | --- | --- | --- | --- |
+| shopping trolley | 1 | Blue | On the floor | right |
+| bottles of water | 2 | fixed | On the top shelf | left |
+| cartons of milk | 2 | fixed | On the middle shelf | centre |
+| wet floor sign | 1 | fixed | On the floor | centre |
+| packs of toilet rolls | 2 | fixed | On the top shelf | right |
+| cardboard boxes | 2 | fixed | On the floor | left |
+| loaf of bread | 1 | fixed | On the bottom shelf | centre |
+
+Detail `aisle`: 8.
+
+Detail `offer`: Bread.
+
+Detail `aisleSide`: right.
+
+### Questions (36)
+
+| Type | Kind | Question | Options (✓ = answer) | Subject |
+| --- | --- | --- | --- | --- |
+| count | count | How many shopping trolleys were there? | **✓ 1** · 2 · 4 · 3 | trolley |
+| colour | colour | What colour was the shopping trolley? | **✓ Blue** · Green · Red · Pink | trolley |
+| position | where | Where was the shopping trolley? | **✓ On the floor, on the right** · On the floor, on the left · On the floor, in the middle · On the top shelf, on the right | trolley |
+| object | what-here | What was on the floor, on the right? | **✓ A shopping trolley** · A watermelon · A shopping basket · A crate of apples | trolley |
+| count | count | How many bottles of water were there? | **✓ 2** · 4 · 3 · 1 | water |
+| position | where | Where were the bottles of water? | **✓ On the top shelf, on the left** · On the bottom shelf, on the left · On the bottom shelf, in the middle · On the bottom shelf, on the right | water |
+| object | what-here | What was on the top shelf, on the left? | **✓ Bottles of water** · Cereal boxes · Loaves of bread · Packs of toilet rolls | water |
+| count | count | How many cartons of milk were there? | **✓ 2** · 5 · 1 · 4 | milk |
+| position | where | Where were the cartons of milk? | **✓ On the middle shelf, in the middle** · On the bottom shelf, in the middle · On the bottom shelf, on the right · On the middle shelf, on the right | milk |
+| object | what-here | What was on the middle shelf, in the middle? | **✓ Cartons of milk** · Tins · Cereal boxes · Boxes of eggs | milk |
+| position | where | Where was the wet floor sign? | **✓ On the floor, in the middle** · On the floor, on the right · On the floor, on the left · On the top shelf, in the middle | wet-floor |
+| object | what-here | What was on the floor, in the middle? | **✓ A wet floor sign** · A cardboard box · A crate of oranges · A shopping basket | wet-floor |
+| count | count | How many packs of toilet rolls were there? | **✓ 2** · 1 · 3 · 4 | toilet-rolls |
+| position | where | Where were the packs of toilet rolls? | **✓ On the top shelf, on the right** · On the top shelf, on the left · On the top shelf, in the middle · On the floor, in the middle | toilet-rolls |
+| object | what-here | What was on the top shelf, on the right? | **✓ Packs of toilet rolls** · Loaves of bread · Bottles of juice · Cereal boxes | toilet-rolls |
+| count | count | How many cardboard boxes were there? | **✓ 2** · 4 · 3 · 5 | box |
+| position | where | Where were the cardboard boxes? | **✓ On the floor, on the left** · On the floor, in the middle · On the floor, on the right · On the bottom shelf, on the right | box |
+| object | what-here | What was on the floor, on the left? | **✓ Cardboard boxes** · Shopping baskets · Watermelons · Shoppers | box |
+| count | count | How many loaves of bread were there? | **✓ 1** · 2 · 4 · 3 | bread |
+| position | where | Where was the loaf of bread? | **✓ On the bottom shelf, in the middle** · On the top shelf, in the middle · On the bottom shelf, on the right · On the bottom shelf, on the left | bread |
+| object | what-here | What was on the bottom shelf, in the middle? | **✓ A loaf of bread** · A carton of milk · A tin · A box of eggs | bread |
+| number | detail | What was the aisle number? | **✓ 8** · 10 · 6 · 9 | aisle-number |
+| object | detail | What was on special offer? | **✓ Bread** · Bananas · Cheese · Milk | offer |
+| object | seen | Which of these was in the picture? | **✓ Loaf of bread** · Watermelon · Tin · Jar of honey | bread |
+| object | seen | Which of these was NOT in the picture? | **✓ Shopping basket** · Wet floor sign · Loaf of bread · Carton of milk | basket |
+| count | compare | Were there more shopping trolleys or more loaves of bread? | Shopping trolleys · Loaves of bread · **✓ The same number** | compare-trolley-bread |
+| count | compare | Were there more shopping trolleys or more packs of toilet rolls? | Shopping trolleys · **✓ Packs of toilet rolls** · The same number | compare-trolley-toilet-rolls |
+| position | relation | What was above the shopping trolley? | **✓ Packs of toilet rolls** · Loaves of bread · Cardboard boxes · Cartons of milk | trolley |
+| position | relation | What was below the bottles of water? | **✓ Cardboard boxes** · Packs of toilet rolls · Shopping trolleys · Loaves of bread | water |
+| position | relation | What was below the packs of toilet rolls? | **✓ A shopping trolley** · A cardboard box · A bottle of water · A wet floor sign | toilet-rolls |
+| position | relation | What was above the cardboard boxes? | **✓ Bottles of water** · Cartons of milk · Packs of toilet rolls · Loaves of bread | box |
+| position | relation | What was above the loaf of bread? | **✓ Cartons of milk** · Cardboard boxes · Bottles of water · Shopping trolleys | bread |
+| position | relation | What was below the loaf of bread? | **✓ A wet floor sign** · A carton of milk · A shopping trolley · A bottle of water | bread |
+| count | true-false | True or false? There was one shopping trolley. | **✓ True** · False | trolley |
+| count | true-false | True or false? There were two bottles of water. | **✓ True** · False | water |
+| count | true-false | True or false? There were two cartons of milk. | **✓ True** · False | milk |

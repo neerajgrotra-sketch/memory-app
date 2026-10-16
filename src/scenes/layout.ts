@@ -21,6 +21,11 @@ export const DUPLICATE_GAP = 0.6;
 /** …unless they are staggered: offset by at least half a width across and a quarter of a height down. */
 export const STAGGER_X = 0.5;
 export const STAGGER_Y = 0.25;
+/**
+ * Things that line up (products on a shelf, `lineUp`) stand side by side on one line, closer than
+ * other copies but always this far apart (× their width), so they're easy to count.
+ */
+export const LINE_GAP = 0.3;
 /** A group's centre stays this far from the lines between left / middle / right, so its side is never in doubt. */
 export const THIRD_MARGIN = 0.05;
 /** A group may reach this far past its third (fraction of the width) unless its band has `panels`. */
@@ -64,8 +69,10 @@ export const boundsOf = (rects: Rect[]): Rect => ({
 /**
  * Two copies of the same thing are fine if they are clearly apart (a gap of 0.6 × their width), or
  * staggered diagonally (offset both across and down) without touching. Never touching in a tight line.
+ * Things that line up (`lineUp`) instead stand on one line, `LINE_GAP` apart.
  */
-export function duplicatesOk(a: Rect, b: Rect): boolean {
+export function duplicatesOk(a: Rect, b: Rect, lineUp = false): boolean {
+  if (lineUp) return Math.abs(a.y1 - b.y1) < 1e-9 && gapBetween(a, b) >= LINE_GAP * (a.x1 - a.x0) - 1e-9;
   const w = a.x1 - a.x0;
   const h = a.y1 - a.y0;
   const gap = gapBetween(a, b);
@@ -170,8 +177,10 @@ export function samplePoints(r: Rect, ratio: number): [number, number][] {
  * Every arrangement keeps copies apart by the duplicate rule: a row or column with wide gaps, a
  * zigzag, a diagonal, an arc, or two staggered rows.
  */
-export function arrangements(n: number, w: number, h: number): { offsets: [number, number][]; straight: boolean }[] {
+export function arrangements(n: number, w: number, h: number, lineUp = false): { offsets: [number, number][]; straight: boolean }[] {
   if (n === 1) return [{ offsets: [[0, 0]], straight: false }];
+  // Products on a shelf: one neat row, nothing else.
+  if (lineUp) return [{ offsets: Array.from({ length: n }, (_, i) => [i * w * (1 + LINE_GAP), 0]), straight: true }];
   const wide = w * (1 + DUPLICATE_GAP);
   const clearX = w + GAP;
   const clearY = h + GAP;

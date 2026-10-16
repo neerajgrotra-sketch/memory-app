@@ -8,7 +8,7 @@ Answer these to define a new setting (a recipe). Plain words are fine: the answe
 | --- | --- | --- |
 | 1.1 | What's the place called, as players will see it? | "In the park" |
 | 1.2 | Indoors or outdoors? Time of day or season? | Outdoors, a sunny afternoon in summer |
-| 1.3 | At which level should it first appear? (Today: beach 1, living room 3, city 6.) | Level 10 |
+| 1.3 | At which level should it first appear? (Today: beach 1, living room 3, city 6, farm 10, under the sea 12, supermarket 14.) | Level 10 |
 | 1.4 | What makes it different from the settings we already have? | Grass and trees everywhere, a pond, people relaxing |
 
 ## 2. The bands (top to bottom)
@@ -45,7 +45,7 @@ Answer these for **each** thing. Twelve or more is needed so Hard pictures can b
 | 4.4 | Most there would really be at once? | 4 |
 | 4.5 | Which colours can it be, or is it always one colour? | Always brown and green (fixed) |
 | 4.6 | If only part of it changes colour, which part? (e.g. "the sail on the boat") | — |
-| 4.7 | Where would it really be? Pick any that apply: hangs at eye level, stands against the back, stays at the front, spread out (never side by side), tall, wide, on/off the rug, leans on something, moves in one direction. | In the water near the edge, can be in a little group |
+| 4.7 | Where would it really be? Pick any that apply: hangs at eye level, stands against the back, stays at the front, spread out (never side by side), lined up in a row (products on a shelf), tall, wide, on/off the rug, leans on something, moves in one direction. | In the water near the edge, can be in a little group |
 | 4.8 | Can copies be different colours on Hard (like the fire hydrants)? | No |
 | 4.9 | Is it worth counting ("How many ducks?"), or is there only ever one (like a sun)? | Yes, count it |
 | 4.10 | Anything it must never be next to, or always be near? | Never on the path |

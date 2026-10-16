@@ -74,7 +74,9 @@ Every box keeps **4% of the width** (`GAP`) from every other box. Copies of one 
 | `hangAt` | Hung with its centre this far above the bottom of the wall band, give or take 1%. Pictures, mirrors and windows share an eye-level line; the clock hangs above it and uses the wall's top row of slots (`HIGH_HANG` = 0.45). |
 | `backRow` / `tall` | Stands against the back: its feet 5–17% into the band's first row (`AGAINST_BACK`), i.e. where the floor meets the wall or at the back of the sand. Anchors are placed before everything else. |
 | `frontRow` | Stands at the front edge of its band, within 10% of the room left in the row (`AT_FRONT`): fire hydrants at the kerb. |
-| `flush` band | Feet exactly on the band's bottom line: flags and dishes on the roofline. |
+| `flush` band | Feet exactly on the band's bottom line: flags and dishes on the roofline, products on a shelf. |
+| `lineUp` | Copies stand side by side in one straight row on the band's line, `LINE_GAP` (0.3 × their width) apart, instead of the staggered arrangements: products on a supermarket shelf. `duplicatesOk(a, b, true)` checks the same baseline and that gap. |
+| `noFlip` | Never drawn mirrored: the clock (a mirrored face shows the wrong time). |
 | `avoidRug` | Never touches the rug. Everything else touching the rug must be fully on it (all four corners inside the oval). |
 | `keepClear` (recipe) | Nothing may come within 1% of these areas: building doors and the house numbers above them. |
 | `oneWay` band | Everything in it faces the same way, fixed by the scene's seed. Vehicle drawings all face right; the whole road is mirrored together. |

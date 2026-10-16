@@ -38,23 +38,23 @@ See [Levels and scoring](../levels-and-scoring.md).
 | 11 | Keen Observer | beach, living-room, city, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 200 |
 | 12 | Keen Observer | beach, living-room, city, farm, under-sea | 7 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 210 |
 | 13 | Keen Observer | beach, living-room, city, farm, under-sea | 8 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 220 |
-| 14 | Keen Observer | beach, living-room, city, farm, under-sea | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 230 |
-| 15 | Detail Spotter | beach, living-room, city, farm, under-sea | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 240 |
-| 16 | Detail Spotter | beach, living-room, city, farm, under-sea | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
-| 17 | Detail Spotter | beach, living-room, city, farm, under-sea | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
-| 18 | Detail Spotter | beach, living-room, city, farm, under-sea | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
-| 19 | Detail Spotter | beach, living-room, city, farm, under-sea | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
-| 20 | Eagle Eye | beach, living-room, city, farm, under-sea | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
-| 21 | Eagle Eye | beach, living-room, city, farm, under-sea | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
-| 22 | Eagle Eye | beach, living-room, city, farm, under-sea | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
-| 23 | Eagle Eye | beach, living-room, city, farm, under-sea | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
-| 24 | Eagle Eye | beach, living-room, city, farm, under-sea | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
-| 25 | Total Recall | beach, living-room, city, farm, under-sea | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
-| 26 | Total Recall | beach, living-room, city, farm, under-sea | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
-| 27 | Total Recall | beach, living-room, city, farm, under-sea | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
-| 28 | Total Recall | beach, living-room, city, farm, under-sea | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
-| 29 | Total Recall | beach, living-room, city, farm, under-sea | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
-| 30 | Photographic Memory | beach, living-room, city, farm, under-sea | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
+| 14 | Keen Observer | beach, living-room, city, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 230 |
+| 15 | Detail Spotter | beach, living-room, city, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 240 |
+| 16 | Detail Spotter | beach, living-room, city, farm, under-sea, supermarket | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
+| 17 | Detail Spotter | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
+| 18 | Detail Spotter | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
+| 19 | Detail Spotter | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
+| 20 | Eagle Eye | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
+| 21 | Eagle Eye | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
+| 22 | Eagle Eye | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
+| 23 | Eagle Eye | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
+| 24 | Eagle Eye | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
+| 25 | Total Recall | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
+| 26 | Total Recall | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
+| 27 | Total Recall | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
+| 28 | Total Recall | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
+| 29 | Total Recall | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
+| 30 | Photographic Memory | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
 
 ## At the beach (`beach`)
 
@@ -109,7 +109,7 @@ See [Levels and scoring](../levels-and-scoring.md).
 
 Keep-clear areas (nothing may cover them): 3 (building doors and their house numbers).
 
-Per-picture details: three houses with different named colours and rising house numbers (see `details` in the recipe).
+Per-picture details: three houses with different named colours and rising house numbers.
 
 ### Colour schemes
 
@@ -155,7 +155,7 @@ Per-picture details: three houses with different named colours and rising house 
 
 Rug: an oval centred at 50% across, 80% down, 72% wide and 18% of the height tall.
 
-Per-picture details: three houses with different named colours and rising house numbers (see `details` in the recipe).
+Per-picture details: "What time was on the clock?" (when there's a wall-clock) on every level.
 
 ### Colour schemes
 
@@ -198,7 +198,7 @@ Per-picture details: three houses with different named colours and rising house 
 | In the field (`field`) | 38% – 55.5% | ground | 1 | at most 2 kinds; everything faces one way |
 | In the farmyard (`yard`) | 58.5% – 100% | ground | 2 | – |
 
-Per-picture details: three houses with different named colours and rising house numbers (see `details` in the recipe).
+Per-picture details: "What colour was the barn?".
 
 ### Colour schemes
 
@@ -241,7 +241,7 @@ Per-picture details: three houses with different named colours and rising house 
 
 Keep-clear areas (nothing may cover them): 2 (building doors and their house numbers).
 
-Per-picture details: three houses with different named colours and rising house numbers (see `details` in the recipe).
+Per-picture details: "What was in the treasure chest?".
 
 ### Colour schemes
 
@@ -269,3 +269,46 @@ Per-picture details: three houses with different named colours and rising house 
 | seashell | bed | small 10% | 4 | Pink, White, Orange | – |
 | seaweed plant | bed | medium 13% | 3 | fixed (`#2f9e44`) | tall anchor (stands at the back, rises above its band); copies spread one per third, on one line; one only, not counted |
 | coral | bed | medium 15% | 3 | Pink, Orange, Purple | – |
+
+## In the supermarket (`supermarket`)
+
+### Bands
+
+| Band | Height | Surface | Slot rows | Rules |
+| --- | --- | --- | --- | --- |
+| Hanging from the ceiling (`ceiling`) | 0% – 13.5% | air | 0 | – |
+| On the top shelf (`top`) | 15% – 32% | ground | 1 | things stand exactly on its bottom line |
+| On the middle shelf (`middle`) | 34.5% – 50.5% | ground | 1 | things stand exactly on its bottom line |
+| On the bottom shelf (`bottom`) | 53% – 68.5% | ground | 1 | things stand exactly on its bottom line |
+| On the floor (`floor`) | 72% – 100% | ground | 2 | – |
+
+Per-picture details: "What was the aisle number?"; "What was on special offer?".
+
+### Colour schemes
+
+| Scheme | Surface colours |
+| --- | --- |
+| modern | ceiling `#f1f4f7`, light `#ffffff`, backing `#3b4a5c`, board `#e9eef2`, tag `#ffd60a`, upright `#2b3644`, floor `#dfe5ea`, tile `#8c99a6` |
+| corner | ceiling `#f6efe2`, light `#fffaf0`, backing `#4b3a2c`, board `#a0703c`, tag `#f8f9fa`, upright `#3a2c20`, floor `#e6d2b5`, tile `#9c7a50` |
+
+### Things (17)
+
+| Thing | Band | Size | Most | Colours | Habits |
+| --- | --- | --- | --- | --- | --- |
+| cereal box | top, middle | small 11% | 3 | Red, Blue, Yellow, Green, Orange, Pink | – |
+| pack of toilet rolls | top | small 12% | 2 | fixed (`#f8f9fa`) | – |
+| bottle of water | top, bottom | small 10% | 3 | fixed (`#5fb3e8`) | – |
+| tin | middle, bottom | small 10% | 3 | Red, Blue, Yellow, Green, Orange, Pink | – |
+| jar of honey | middle | small 10% | 3 | Red, Blue, Yellow, Green | – |
+| bottle of juice | top, middle | small 10% | 3 | Orange, Red, Green, Yellow, Pink | copies may differ in colour on Hard |
+| carton of milk | bottom, middle | small 10% | 3 | fixed (`#f8f9fa`) | – |
+| box of eggs | bottom, middle | small 12% | 2 | fixed (`#d8b98a`) | – |
+| loaf of bread | bottom, top | small 12% | 2 | fixed (`#c98b4a`) | – |
+| shopping trolley | floor | medium 17% | 2 | Red, Blue, Green | – |
+| shopping basket | floor | small 12% | 3 | Red, Blue, Green, Yellow | – |
+| shopper | floor | small 10% | 3 | Red, Blue, Yellow, Green, Orange, Purple, Pink, White | – |
+| crate of apples | floor | medium 14% | 2 | fixed (`#8a5a2b`) | – |
+| crate of oranges | floor | medium 14% | 2 | fixed (`#8a5a2b`) | – |
+| watermelon | floor | small 11% | 3 | fixed (`#3a8f3a`) | – |
+| wet floor sign | floor | small 10% | 1 | fixed (`#ffd60a`) | one only, not counted |
+| cardboard box | floor | small 12% | 3 | fixed (`#b07d45`) | – |

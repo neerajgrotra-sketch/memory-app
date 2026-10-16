@@ -115,6 +115,11 @@ export interface ItemDef {
    * each roof, palm trees along the beach), never bunched in one spot.
    */
   spread?: boolean;
+  /**
+   * Copies stand side by side in one neat row, a little apart (products on a shelf), instead of the
+   * staggered groups other things make. For bands where things stand on a line (`flush`).
+   */
+  lineUp?: boolean;
   /** Never drawn mirrored: a clock face read backwards shows the wrong time. */
   noFlip?: boolean;
   /** For things with a fixed colour: their main colour, used for the contrast rules and the outline. */

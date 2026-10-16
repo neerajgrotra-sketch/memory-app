@@ -121,14 +121,14 @@ export function validateScene(spec: SceneSpec, width: number, height: number): S
     }
     if (rects.length > 1) {
       const step = baseSpread(rects);
-      if ((spread || item.hangAt !== undefined) && step > EPS) add('placement', `${name} not on one line`, item.kind);
+      if ((spread || item.hangAt !== undefined || item.lineUp) && step > EPS) add('placement', `${name} not on one line`, item.kind);
       else if (zone && zone.surface === 'ground' && step > MAX_GROUND_STEP + EPS) add('placement', `${name} stacked up instead of standing side by side`, item.kind);
     }
 
     // Copies apart, or staggered.
     for (let a = 0; a < rects.length; a++) {
       for (let b = a + 1; b < rects.length; b++) {
-        if (!duplicatesOk(rects[a], rects[b])) add('duplicates', `${name} too close together`, item.kind);
+        if (!duplicatesOk(rects[a], rects[b], item.lineUp)) add('duplicates', `${name} too close together`, item.kind);
       }
     }
 

@@ -11,6 +11,7 @@ import { MAX_LEVEL, knobsForLevel, recipesForLevel, titleFor } from '@/games/loo
 import { pointsPerAnswer } from '@/games/lookRemember/points';
 import { generateQuestions } from '@/scenes/generateQuestions';
 import { generateScene } from '@/scenes/generateScene';
+import { createRng } from '@/scenes/random';
 import { RECIPES } from '@/scenes/recipes';
 import { TIERS, type ItemDef, type ZoneDef } from '@/scenes/types';
 
@@ -80,7 +81,15 @@ for (const recipe of RECIPES) {
   out.push('### Bands', '', '| Band | Height | Surface | Slot rows | Rules |', '| --- | --- | --- | --- | --- |', ...recipe.zones.map(zoneRow), '');
   if (recipe.rug) out.push(`Rug: an oval centred at ${pct(recipe.rug.cx)} across, ${pct(recipe.rug.cy)} down, ${pct(recipe.rug.rx * 2)} wide and ${pct(recipe.rug.ry * 2)} of the height tall.`, '');
   if (recipe.keepClear?.length) out.push(`Keep-clear areas (nothing may cover them): ${recipe.keepClear.length} (building doors and their house numbers).`, '');
-  if (recipe.details) out.push('Per-picture details: three houses with different named colours and rising house numbers (see `details` in the recipe).', '');
+  if (recipe.details) {
+    // What one picture's details hold: houses and/or detail facts (see `details` in the recipe).
+    const sample = recipe.details(createRng(1), { clockStep: 60 });
+    const parts = [
+      ...(sample.houses ? ['three houses with different named colours and rising house numbers'] : []),
+      ...(sample.facts ?? []).map((f) => `"${f.prompt}"${f.needs ? ` (when there's a ${f.needs})` : ''}${f.everyLevel ? ' on every level' : ''}`),
+    ];
+    out.push(`Per-picture details: ${parts.join('; ')}.`, '');
+  }
   out.push('### Colour schemes', '', '| Scheme | Surface colours |', '| --- | --- |');
   for (const v of recipe.variants) out.push(`| ${v.id} | ${Object.entries(v.palette).map(([k, c]) => `${k} \`${c}\``).join(', ')} |`);
   out.push('', `### Things (${recipe.items.length})`, '', '| Thing | Band | Size | Most | Colours | Habits |', '| --- | --- | --- | --- | --- | --- |');
