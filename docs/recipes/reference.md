@@ -302,13 +302,13 @@ Per-picture details: "What was the aisle number?"; "What was on special offer?".
 | jar of honey | middle | small 10% | 3 | Red, Blue, Yellow, Green | – |
 | bottle of juice | top, middle | small 10% | 3 | Orange, Red, Green, Yellow, Pink | copies may differ in colour on Hard |
 | carton of milk | bottom, middle | small 10% | 3 | fixed (`#f8f9fa`) | – |
-| box of eggs | bottom, middle | small 12% | 2 | fixed (`#d8b98a`) | – |
-| loaf of bread | bottom, top | small 12% | 2 | fixed (`#c98b4a`) | – |
-| shopping trolley | floor | medium 17% | 2 | Red, Blue, Green | – |
-| shopping basket | floor | small 12% | 3 | Red, Blue, Green, Yellow | – |
-| shopper | floor | small 10% | 3 | Red, Blue, Yellow, Green, Orange, Purple, Pink, White | – |
-| crate of apples | floor | medium 14% | 2 | fixed (`#8a5a2b`) | – |
-| crate of oranges | floor | medium 14% | 2 | fixed (`#8a5a2b`) | – |
-| watermelon | floor | small 11% | 3 | fixed (`#3a8f3a`) | – |
-| wet floor sign | floor | small 10% | 1 | fixed (`#ffd60a`) | one only, not counted |
-| cardboard box | floor | small 12% | 3 | fixed (`#b07d45`) | – |
+| box of eggs | bottom, middle | medium 15% | 2 | fixed (`#d8b98a`) | – |
+| loaf of bread | bottom, top | medium 15% | 2 | fixed (`#c98b4a`) | – |
+| shopping basket | floor | large 22% | 2 | Red, Blue, Green, Yellow | – |
+| crate of apples | floor | large 26% | 1 | fixed (`#8a5a2b`) | – |
+| crate of oranges | floor | large 26% | 1 | fixed (`#8a5a2b`) | – |
+| watermelon | floor | medium 16% | 3 | fixed (`#3a8f3a`) | – |
+| wet floor sign | floor | medium 16% | 1 | fixed (`#ffd60a`) | one only, not counted |
+| cardboard box | floor | large 21% | 2 | fixed (`#b07d45`) | – |
+| shopping bag | floor | medium 16% | 2 | fixed (`#c8955a`) | – |
+| sack of potatoes | floor | large 20% | 2 | fixed (`#a68a64`) | – |

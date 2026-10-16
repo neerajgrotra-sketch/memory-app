@@ -2,7 +2,6 @@ import type { ReactElement } from 'react';
 import { Circle, Ellipse, G, Path, Rect, Text as SvgText } from 'react-native-svg';
 
 import { C } from '../colours';
-import { person } from '../items/common';
 import { lineMarks } from '../marks';
 import type { Rng } from '../random';
 import type { ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
@@ -31,7 +30,14 @@ const FLOOR = ['floor'];
 /** Product colours; purple, black and brown are left out because they'd vanish on the dark shelves. */
 const PRODUCT = [C.red, C.blue, C.yellow, C.green, C.orange, C.pink];
 
-/** Things on a shelf: one neat row, small enough that two or three fit in a third of the shelf. */
+/**
+ * Things on a shelf: one neat row, small enough that two or three fit in a third of the shelf.
+ *
+ * Scale: the shelves are a close-up (products must be at least 44 pt wide to read on a phone), so a
+ * 30 cm cereal box is about 0.16 of the picture width tall: 1 m ≈ 0.53. Everything on the floor is
+ * drawn at that same scale, which is why there are no shoppers or trolleys here: a person would be
+ * taller than the floor and cover the shelves, and a smaller one looks like a toy next to the boxes.
+ */
 const shelved = { tier: 'small' as const, lineUp: true, maxCount: 3 };
 
 const items: ItemDef[] = [
@@ -198,9 +204,10 @@ const items: ItemDef[] = [
     article: 'a',
     w: 100,
     h: 55,
-    size: 0.12,
+    size: 0.15,
     zones: [...BOTTOM, ...MIDDLE],
     ...shelved,
+    tier: 'medium',
     maxCount: 2,
     tone: '#d8b98a',
     draw: () => (
@@ -223,9 +230,10 @@ const items: ItemDef[] = [
     article: 'a',
     w: 100,
     h: 60,
-    size: 0.12,
+    size: 0.15,
     zones: [...BOTTOM, ...TOP],
     ...shelved,
+    tier: 'medium',
     maxCount: 2,
     tone: '#c98b4a',
     draw: () => (
@@ -236,40 +244,16 @@ const items: ItemDef[] = [
     ),
   },
   {
-    kind: 'trolley',
-    singular: 'shopping trolley',
-    plural: 'shopping trolleys',
-    article: 'a',
-    w: 130,
-    h: 100,
-    tier: 'medium',
-    // About as high as a shopper's waist.
-    size: 0.17,
-    zones: FLOOR,
-    maxCount: 2,
-    colours: [C.red, C.blue, C.green],
-    draw: (colour) => (
-      <G>
-        <Path d="M24,58 L30,84 H110" fill="none" stroke="#6c757d" strokeWidth={6} strokeLinejoin="round" />
-        <Path d="M118,10 L128,0" fill="none" stroke="#343a40" strokeWidth={7} strokeLinecap="round" />
-        <Path d="M8,10 H120 L108,60 H22 Z" fill={colour} />
-        <Path d="M38,14 L42,56 M62,14 L64,56 M86,14 L86,56 M12,28 H114 M17,44 H110" fill="none" stroke="#ffffff" strokeOpacity={0.55} strokeWidth={3} />
-        <Circle cx={36} cy={92} r={8} fill="#343a40" stroke="none" />
-        <Circle cx={104} cy={92} r={8} fill="#343a40" stroke="none" />
-      </G>
-    ),
-  },
-  {
     kind: 'basket',
     singular: 'shopping basket',
     plural: 'shopping baskets',
     article: 'a',
     w: 90,
     h: 65,
-    tier: 'small',
-    size: 0.12,
+    tier: 'large',
+    size: 0.22,
     zones: FLOOR,
-    maxCount: 3,
+    maxCount: 2,
     colours: [C.red, C.blue, C.green, C.yellow],
     draw: (colour) => (
       <G>
@@ -283,7 +267,6 @@ const items: ItemDef[] = [
       </G>
     ),
   },
-  { ...person, singular: 'shopper', plural: 'shoppers', zones: FLOOR, maxCount: 3, colourPrompt: (plural) => (plural ? 'What colour were the shoppers’ shirts?' : 'What colour was the shopper’s shirt?') },
   {
     kind: 'apples',
     singular: 'crate of apples',
@@ -291,10 +274,10 @@ const items: ItemDef[] = [
     article: 'a',
     w: 110,
     h: 70,
-    tier: 'medium',
-    size: 0.14,
+    tier: 'large',
+    size: 0.26,
     zones: FLOOR,
-    maxCount: 2,
+    maxCount: 1,
     tone: '#8a5a2b',
     draw: () => fruitCrate(C.red.hex, '#8f1d26'),
   },
@@ -305,10 +288,10 @@ const items: ItemDef[] = [
     article: 'a',
     w: 110,
     h: 70,
-    tier: 'medium',
-    size: 0.14,
+    tier: 'large',
+    size: 0.26,
     zones: FLOOR,
-    maxCount: 2,
+    maxCount: 1,
     tone: '#8a5a2b',
     draw: () => fruitCrate(C.orange.hex, '#8a4500'),
   },
@@ -319,8 +302,8 @@ const items: ItemDef[] = [
     article: 'a',
     w: 90,
     h: 62,
-    tier: 'small',
-    size: 0.11,
+    tier: 'medium',
+    size: 0.16,
     zones: FLOOR,
     maxCount: 3,
     tone: '#3a8f3a',
@@ -338,8 +321,8 @@ const items: ItemDef[] = [
     article: 'a',
     w: 60,
     h: 90,
-    tier: 'small',
-    size: 0.1,
+    tier: 'medium',
+    size: 0.16,
     zones: FLOOR,
     maxCount: 1,
     countable: false,
@@ -360,16 +343,61 @@ const items: ItemDef[] = [
     article: 'a',
     w: 90,
     h: 75,
-    tier: 'small',
-    size: 0.12,
+    tier: 'large',
+    size: 0.21,
     zones: FLOOR,
-    maxCount: 3,
+    maxCount: 2,
     tone: '#b07d45',
     draw: () => (
       <G>
         <Rect x={0} y={10} width={90} height={65} fill="#b07d45" />
         <Path d="M0,10 L10,0 H80 L90,10 Z" fill="#c8955a" />
         <Rect x={39} y={10} width={12} height={28} fill="#e8d3a8" stroke="none" />
+      </G>
+    ),
+  },
+  {
+    kind: 'shopping-bag',
+    singular: 'shopping bag',
+    plural: 'shopping bags',
+    article: 'a',
+    w: 80,
+    h: 95,
+    tier: 'medium',
+    size: 0.16,
+    zones: FLOOR,
+    maxCount: 2,
+    tone: '#c8955a',
+    draw: () => (
+      <G>
+        <Path d="M22,22 L30,4 M44,4 L36,22" fill="none" stroke="#2b9348" strokeWidth={6} strokeLinecap="round" />
+        <Path d="M48,24 L58,2 L66,6 L58,26" fill="#e9c46a" stroke="#a07800" strokeWidth={3} strokeLinejoin="round" />
+        <Path d="M4,24 H76 L72,95 H8 Z" fill="#c8955a" />
+        <Path d="M4,24 L12,34 H68 L76,24" fill="none" stroke="#8a5a2b" strokeWidth={3} />
+      </G>
+    ),
+  },
+  {
+    kind: 'potatoes',
+    singular: 'sack of potatoes',
+    plural: 'sacks of potatoes',
+    article: 'a',
+    w: 90,
+    h: 100,
+    tier: 'large',
+    size: 0.2,
+    zones: FLOOR,
+    maxCount: 2,
+    tone: '#a68a64',
+    draw: () => (
+      <G>
+        <Path d="M14,20 Q4,60 8,92 Q45,102 82,92 Q86,60 76,20 Z" fill="#a68a64" />
+        <Path d="M14,20 Q30,8 45,16 Q60,8 76,20 Q60,28 45,22 Q30,28 14,20 Z" fill="#c4a77d" />
+        <G fill="#c9a26b" stroke="#7a5a32" strokeWidth={3}>
+          <Ellipse cx={34} cy={14} rx={10} ry={7} />
+          <Ellipse cx={54} cy={12} rx={10} ry={7} />
+        </G>
+        <Rect x={26} y={48} width={38} height={24} rx={4} fill="#f1e7d0" stroke="none" />
       </G>
     ),
   },

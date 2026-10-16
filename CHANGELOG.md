@@ -10,6 +10,14 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.29 (2026-10-16)
+
+- **Supermarket: everything at one real-world scale.** Testers said the shoppers looked like toys. The cause: the shelves are a close-up (every product at least 44 pt wide, so a 30 cm cereal box is 0.16 of the screen tall), but the floor was drawn at a far smaller scale, so a person was barely taller than a cereal box and a trolley shorter than one.
+  - **Shoppers and trolleys are gone** from the supermarket: at the shelves' scale a person would be taller than the whole floor and cover the shelves.
+  - **Everything on the floor is now drawn at the products' scale:** baskets (about 45 cm), crates of apples and oranges (50 cm, one each), watermelons, cardboard boxes, the wet floor sign (60 cm tall).
+  - **Two new floor things:** paper shopping bags and sacks of potatoes.
+  - Eggs and bread are a little wider, to match a cereal box.
+
 ## 4.0.0-beta.28 (2026-10-16)
 
 - **Tester mode,** for testing every place at any level again: in Profile, tap the version number 7 times. Every place is then unlocked in My places, so you can play just one place (a brand-new one, say) whatever your level. A "Tester mode" section appears in Profile to turn it off (which switches every place back on), and the game page shows a red reminder while it's on. Players never see it unless they tap the version 7 times.
