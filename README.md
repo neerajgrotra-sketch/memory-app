@@ -67,6 +67,7 @@ Every picture is generated on the device from a **recipe** in a few milliseconds
 | [How questions are generated](docs/questions.md) | Question types, when they're asked, wrong options, picking a round |
 | [Question examples](docs/questions-examples.md) | Real pictures and every question written from them (generated) |
 | [Recipes](docs/recipes/README.md) | One page per setting, plus generated reference tables |
+| [Recipe questionnaire](docs/recipe-questionnaire.md) | The questions that define a new setting |
 | [Adding a recipe](docs/adding-a-recipe.md) | Step by step, with a checklist |
 | [Testing and reviewing](docs/testing.md) | Scene checker, gallery, overlay in Expo Go |
 | [Levels and scoring](docs/levels-and-scoring.md) | Look & Remember's 30 levels, moving up and down, points |

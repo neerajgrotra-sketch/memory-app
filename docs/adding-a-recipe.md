@@ -2,6 +2,8 @@
 
 A recipe is one file in `src/scenes/recipes/` that exports a `Recipe` (`src/scenes/types.ts`). Start by copying the closest existing one.
 
+**Start with the [recipe questionnaire](recipe-questionnaire.md):** the setting, its bands, backdrop, at least 12 things with their real-world habits, and the rules that keep pictures believable. Each step below maps to a section of it.
+
 ## Steps
 
 1. **Bands (`zones`).** Split the picture into horizontal bands. For each band set:
