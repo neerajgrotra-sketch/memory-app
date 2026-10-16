@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.14 (2026-10-16)
+
+- **Every countdown tick is identical:** the same sound at the same volume for every number, from the first down to 1. No vibration on the ticks.
+
 ## 4.0.0-beta.13 (2026-10-16)
 
 - **One countdown sound:** every tick from the first number down to 1 is now the same tick, quiet until the last 4 and clearly louder for 4, 3, 2, 1. (The early ticks were a different click before, which didn't match.)

@@ -9,7 +9,6 @@ import { playSound, preloadSound } from './player';
  */
 export type Moment =
   | 'start'
-  | 'tickSoft'
   | 'tick'
   | 'correct'
   | 'wrong'
@@ -21,7 +20,6 @@ export type Moment =
 
 const SOUNDS: Record<Moment, number> = {
   start: require('../../assets/sounds/start.mp3'),
-  tickSoft: require('../../assets/sounds/tick-soft.mp3'),
   correct: require('../../assets/sounds/correct.mp3'),
   wrong: require('../../assets/sounds/wrong.mp3'),
   tick: require('../../assets/sounds/tick.mp3'),
@@ -35,9 +33,8 @@ const SOUNDS: Record<Moment, number> = {
 /** Kept quiet so they sit under the game, never over it. */
 const VOLUME: Record<Moment, number> = {
   start: 0.55,
-  // The same tick all the way down: quiet under the picture each second, then clearly louder for 4-3-2-1.
-  tickSoft: 0.2,
-  tick: 0.65,
+  // One tick for every number of the countdown, all the same.
+  tick: 0.5,
   correct: 0.6,
   wrong: 0.5,
   levelUp: 0.75,
@@ -47,13 +44,12 @@ const VOLUME: Record<Moment, number> = {
   roundMiss: 0.35,
 };
 
-/** No vibration for the soft ticks: a buzz every second would be too much. */
+/** No vibration for the countdown ticks: a buzz every second would be too much. */
 const HAPTICS: Record<Moment, (() => Promise<void>) | null> = {
   start: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
-  tickSoft: null,
   correct: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
   wrong: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium),
-  tick: () => Haptics.selectionAsync(),
+  tick: null,
   levelUp: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
   highScore: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
   roundPerfect: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
