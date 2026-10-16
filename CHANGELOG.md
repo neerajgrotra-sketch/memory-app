@@ -10,6 +10,17 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.20 (2026-10-16)
+
+- **A new place: Under the sea**, unlocked at **Level 12** (and in Practice).
+  - **Bands:** near the surface, the open water, and the seabed, under a wavy surface with sunlight rays.
+  - **15 things:** a whale, dolphins, sea turtles and jellyfish near the surface; fish, clownfish, a shark, divers and a submarine in the open water; an octopus, crabs, starfish, seashells, coral and tall seaweed on the seabed.
+  - **Real-world habits:** whales and dolphins stay near the surface; one shark, one whale and one submarine at most; seaweed grows from the sand up into the water; divers are bigger than the fish.
+  - **New questions:** "What was in the treasure chest?" (gold coins, pearls, red jewels, or nothing because it was closed; chosen per picture, with the chest in a corner nobody covers), the diver's wetsuit colour, and on Hard a school of fish in different colours.
+  - Two colour schemes: tropical and deep blue.
+- The dolphin, crab and starfish are now shared things (beach and sea).
+- Scene checker: 28,800 pictures.
+
 ## 4.0.0-beta.19 (2026-10-16)
 
 - **Farm drawings:**

@@ -9,7 +9,7 @@ How glance's first game, Look & Remember, builds its pictures and questions, how
 | [Drawing](drawing.md) | Layers, outlines, contrast, faint marks, wide screens, the dev overlay |
 | [How questions are generated](questions.md) | Every question type, when it's asked, how wrong options are chosen, how a round's 5 are picked |
 | [Question examples](questions-examples.md) | Real pictures, their facts and every question written from them (generated) |
-| [Recipes](recipes/) | One page per setting: [beach](recipes/beach.md), [city street](recipes/city.md), [living room](recipes/living-room.md), [farm](recipes/farm.md), plus the generated [reference tables](recipes/reference.md) |
+| [Recipes](recipes/) | One page per setting: [beach](recipes/beach.md), [city street](recipes/city.md), [living room](recipes/living-room.md), [farm](recipes/farm.md), [under the sea](recipes/under-sea.md), plus the generated [reference tables](recipes/reference.md) |
 | [Recipe questionnaire](recipe-questionnaire.md) | The questions that define a new setting, with a worked example (a park) |
 | [Adding a recipe](adding-a-recipe.md) | Step by step, with a checklist |
 | [Testing and reviewing](testing.md) | The scene checker, the gallery, the overlay in Expo Go |

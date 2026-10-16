@@ -223,3 +223,65 @@ export const ball: CommonItem = {
     </G>
   ),
 };
+
+export const dolphin: CommonItem = {
+  kind: 'dolphin',
+  singular: 'dolphin',
+  plural: 'dolphins',
+  article: 'a',
+  w: 130,
+  h: 75,
+  tier: 'medium',
+  size: 0.16,
+  tone: '#ced4da',
+  draw: () => (
+    <G>
+      <Polygon points="62,14 75,0 80,18" fill="#ced4da" />
+      <Polygon points="8,62 0,50 16,56" fill="#ced4da" />
+      <Path d="M8,62 C20,15 85,2 118,30 C108,30 100,36 98,40 C80,22 40,25 22,62 Z" fill="#ced4da" />
+      <Circle cx={104} cy={30} r={3} fill="#222" stroke="none" />
+    </G>
+  ),
+};
+
+export const crab: CommonItem = {
+  kind: 'crab',
+  singular: 'crab',
+  plural: 'crabs',
+  article: 'a',
+  w: 80,
+  h: 50,
+  tier: 'small',
+  size: 0.12,
+  tone: '#e63946',
+  draw: () => (
+    <G>
+      <G stroke="#9d0208" strokeWidth={4} strokeLinecap="round" fill="none">
+        <Line x1={22} y1={34} x2={8} y2={46} />
+        <Line x1={28} y1={38} x2={20} y2={50} />
+        <Line x1={58} y1={34} x2={72} y2={46} />
+        <Line x1={52} y1={38} x2={60} y2={50} />
+        <Path d="M20,24 C10,20 6,10 10,4" />
+        <Path d="M60,24 C70,20 74,10 70,4" />
+      </G>
+      <Ellipse cx={40} cy={30} rx={24} ry={15} fill="#e63946" />
+      <Circle cx={10} cy={4} r={6} fill="#e63946" />
+      <Circle cx={70} cy={4} r={6} fill="#e63946" />
+      <Circle cx={33} cy={20} r={3} fill="#111" stroke="none" />
+      <Circle cx={47} cy={20} r={3} fill="#111" stroke="none" />
+    </G>
+  ),
+};
+
+export const starfish: CommonItem = {
+  kind: 'starfish',
+  singular: 'starfish',
+  plural: 'starfish',
+  article: 'a',
+  w: 55,
+  h: 55,
+  tier: 'small',
+  size: 0.1,
+  colours: [C.orange, C.pink, C.red, C.purple],
+  draw: (colour) => <Polygon points="27.5,0 34,19 54,20 38,32 44,52 27.5,40 11,52 17,32 1,20 21,19" fill={colour} />,
+};

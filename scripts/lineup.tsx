@@ -21,4 +21,4 @@ const parts = kinds.map((k: string) => {
   const el = `<g transform="translate(${x} ${base - h}) scale(${s})" stroke="${shade(colour, 0.5)}" stroke-width="${2.5 / s}">${renderToStaticMarkup(it.draw(colour))}</g><text x="${x}" y="${base + 22}" font-size="14" fill="#ddd">${k} ${it.size}</text>`;
   x += w + 30; return el;
 });
-writeFileSync(process.env.OUT ?? 'lineup.html', `<!doctype html><body style="margin:0;background:#9aa"><svg xmlns="http://www.w3.org/2000/svg" width="${x}" height="300"><line x1="0" y1="${base}" x2="${x}" y2="${base}" stroke="#355" stroke-width="2"/>${parts.join('')}</svg></body>`);
+writeFileSync(process.env.OUT ?? 'lineup.html', `<!doctype html><body style="margin:0;background:#2aa3d8"><svg xmlns="http://www.w3.org/2000/svg" width="${x}" height="300"><line x1="0" y1="${base}" x2="${x}" y2="${base}" stroke="#355" stroke-width="2"/>${parts.join('')}</svg></body>`);

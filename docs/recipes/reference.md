@@ -36,25 +36,25 @@ See [Levels and scoring](../levels-and-scoring.md).
 | 9 | Sharp Eyes | beach, living-room, city | 7 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 180 |
 | 10 | Keen Observer | beach, living-room, city, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 190 |
 | 11 | Keen Observer | beach, living-room, city, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 200 |
-| 12 | Keen Observer | beach, living-room, city, farm | 7 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 210 |
-| 13 | Keen Observer | beach, living-room, city, farm | 8 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 220 |
-| 14 | Keen Observer | beach, living-room, city, farm | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 230 |
-| 15 | Detail Spotter | beach, living-room, city, farm | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 240 |
-| 16 | Detail Spotter | beach, living-room, city, farm | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
-| 17 | Detail Spotter | beach, living-room, city, farm | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
-| 18 | Detail Spotter | beach, living-room, city, farm | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
-| 19 | Detail Spotter | beach, living-room, city, farm | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
-| 20 | Eagle Eye | beach, living-room, city, farm | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
-| 21 | Eagle Eye | beach, living-room, city, farm | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
-| 22 | Eagle Eye | beach, living-room, city, farm | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
-| 23 | Eagle Eye | beach, living-room, city, farm | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
-| 24 | Eagle Eye | beach, living-room, city, farm | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
-| 25 | Total Recall | beach, living-room, city, farm | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
-| 26 | Total Recall | beach, living-room, city, farm | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
-| 27 | Total Recall | beach, living-room, city, farm | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
-| 28 | Total Recall | beach, living-room, city, farm | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
-| 29 | Total Recall | beach, living-room, city, farm | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
-| 30 | Photographic Memory | beach, living-room, city, farm | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
+| 12 | Keen Observer | beach, living-room, city, farm, under-sea | 7 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 210 |
+| 13 | Keen Observer | beach, living-room, city, farm, under-sea | 8 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 220 |
+| 14 | Keen Observer | beach, living-room, city, farm, under-sea | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 230 |
+| 15 | Detail Spotter | beach, living-room, city, farm, under-sea | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 240 |
+| 16 | Detail Spotter | beach, living-room, city, farm, under-sea | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
+| 17 | Detail Spotter | beach, living-room, city, farm, under-sea | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
+| 18 | Detail Spotter | beach, living-room, city, farm, under-sea | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
+| 19 | Detail Spotter | beach, living-room, city, farm, under-sea | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
+| 20 | Eagle Eye | beach, living-room, city, farm, under-sea | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
+| 21 | Eagle Eye | beach, living-room, city, farm, under-sea | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
+| 22 | Eagle Eye | beach, living-room, city, farm, under-sea | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
+| 23 | Eagle Eye | beach, living-room, city, farm, under-sea | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
+| 24 | Eagle Eye | beach, living-room, city, farm, under-sea | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
+| 25 | Total Recall | beach, living-room, city, farm, under-sea | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
+| 26 | Total Recall | beach, living-room, city, farm, under-sea | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
+| 27 | Total Recall | beach, living-room, city, farm, under-sea | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
+| 28 | Total Recall | beach, living-room, city, farm, under-sea | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
+| 29 | Total Recall | beach, living-room, city, farm, under-sea | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
+| 30 | Photographic Memory | beach, living-room, city, farm, under-sea | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
 
 ## At the beach (`beach`)
 
@@ -226,3 +226,44 @@ Per-picture details: three houses with different named colours and rising house 
 | farmer | yard | small 10% | 1 | Red, Blue, Yellow, Green, Orange, Purple, Pink, White | – |
 | wheelbarrow | yard | medium 16% | 1 | Red, Green, Blue | – |
 | milk churn | yard | small 10% | 3 | fixed (`#c9d2dc`) | at the front edge |
+
+## Under the sea (`under-sea`)
+
+### Bands
+
+| Band | Height | Surface | Slot rows | Rules |
+| --- | --- | --- | --- | --- |
+| Near the surface (`top`) | 7.5% – 30% | air | 1 | – |
+| In the open water (`open`) | 31% – 63% | air | 2 | – |
+| On the seabed (`bed`) | 68% – 100% | ground | 2 | – |
+
+Keep-clear areas (nothing may cover them): 2 (building doors and their house numbers).
+
+Per-picture details: three houses with different named colours and rising house numbers (see `details` in the recipe).
+
+### Colour schemes
+
+| Scheme | Surface colours |
+| --- | --- |
+| tropical | sky `#bde8ff`, top `#4cc3e8`, open `#2aa3d8`, deep `#1f86c2`, sand `#ecd9a4`, rock `#8d8a7a`, ray `#ffffff` |
+| deep | sky `#a9d6f5`, top `#3b8fd0`, open `#2a6fb6`, deep `#1d5596`, sand `#d6c08a`, rock `#6f6d63`, ray `#e0f4ff` |
+
+### Things (15)
+
+| Thing | Band | Size | Most | Colours | Habits |
+| --- | --- | --- | --- | --- | --- |
+| whale | top | xl 42% | 1 | fixed (`#3d5a80`) | may span columns; one only, not counted |
+| dolphin | top | medium 16% | 2 | fixed (`#ced4da`) | – |
+| sea turtle | top, open | medium 15% | 2 | fixed (`#4f9d69`) | – |
+| jellyfish | top, open | small 11% | 3 | Pink, Purple, White | – |
+| fish | open | small 11% | 6 | Orange, Yellow, Pink, Purple, Red | copies may differ in colour on Hard |
+| clownfish | open | small 11% | 3 | fixed (`#f77f00`) | – |
+| shark | open | large 26% | 1 | fixed (`#bcc5ce`) | one only, not counted |
+| diver | open | large 24% | 2 | Red, Yellow, Orange, Pink, White | – |
+| submarine | open | large 24% | 1 | Yellow, Red, Orange | one only, not counted |
+| octopus | bed | medium 15% | 1 | Red, Purple, Orange | – |
+| crab | bed | small 12% | 3 | fixed (`#e63946`) | – |
+| starfish | bed | small 10% | 4 | Orange, Pink, Red, Purple | – |
+| seashell | bed | small 10% | 4 | Pink, White, Orange | – |
+| seaweed | bed | medium 13% | 3 | fixed (`#2f9e44`) | tall anchor (stands at the back, rises above its band); copies spread one per third, on one line; one only, not counted |
+| coral | bed | medium 15% | 3 | Pink, Orange, Purple | – |

@@ -190,3 +190,48 @@ Scene `farm-c29hz`, colour scheme `summer`.
 | colour | What colour was the barn? | **✓ Red** · Blue · Green · Yellow | barn-colour |
 | object | Which of these was in the picture? | **✓ Cow** · Dog · Wheelbarrow · Chicken | cow |
 | object | Which of these was NOT in the picture? | **✓ Goat** · Crow · Pig · Cow | goat |
+
+## Under the sea
+
+Scene `under-sea-c29hz`, colour scheme `tropical`.
+
+### Facts
+
+| Thing | Count | Colour | Band | Side |
+| --- | --- | --- | --- | --- |
+| seaweed | 1 | fixed | On the seabed | centre |
+| submarine | 1 | Yellow | In the open water | right |
+| shark | 1 | fixed | In the open water | left |
+| jellyfish | 1 | White | Near the surface | left |
+| sea turtles | 2 | fixed | Near the surface | right |
+| starfish | 2 | Red | On the seabed | left |
+| clownfish | 2 | fixed | In the open water | centre |
+
+### Questions (24)
+
+| Type | Question | Options (✓ = answer) | Subject |
+| --- | --- | --- | --- |
+| position | Where was the seaweed? | **✓ On the seabed, in the middle** · On the seabed, on the left · On the seabed, on the right · Near the surface, on the right | seaweed |
+| object | What was on the seabed, in the middle? | **✓ A seaweed** · A starfish · A crab · A coral | seaweed |
+| colour | What colour was the submarine? | **✓ Yellow** · Red · Orange · Grey | submarine |
+| position | Where was the submarine? | **✓ In the open water, on the right** · In the open water, in the middle · In the open water, on the left · On the seabed, in the middle | submarine |
+| object | What was in the open water, on the right? | **✓ A submarine** · A fish · A shark · A diver | submarine |
+| position | Where was the shark? | **✓ In the open water, on the left** · In the open water, on the right · In the open water, in the middle · On the seabed, in the middle | shark |
+| object | What was in the open water, on the left? | **✓ A shark** · A sea turtle · A fish · A clownfish | shark |
+| count | How many jellyfish were there? | **✓ 1** · 2 · 4 · 3 | jellyfish |
+| colour | What colour was the jellyfish? | **✓ White** · Purple · Pink · Red | jellyfish |
+| position | Where was the jellyfish? | **✓ Near the surface, on the left** · In the open water, on the right · In the open water, in the middle · In the open water, on the left | jellyfish |
+| object | What was near the surface, on the left? | **✓ A jellyfish** · A dolphin · A whale · A sea turtle | jellyfish |
+| count | How many sea turtles were there? | **✓ 2** · 4 · 5 · 3 | turtle |
+| position | Where were the sea turtles? | **✓ Near the surface, on the right** · Near the surface, on the left · In the open water, in the middle · Near the surface, in the middle | turtle |
+| object | What was near the surface, on the right? | **✓ Sea turtles** · Jellyfish · Dolphins · Fish | turtle |
+| count | How many starfish were there? | **✓ 2** · 1 · 3 · 5 | starfish |
+| colour | What colour were the starfish? | **✓ Red** · Pink · Orange · Purple | starfish |
+| position | Where were the starfish? | **✓ On the seabed, on the left** · On the seabed, on the right · On the seabed, in the middle · Near the surface, on the right | starfish |
+| object | What was on the seabed, on the left? | **✓ Starfish** · Seashells · Corals · Crabs | starfish |
+| count | How many clownfish were there? | **✓ 2** · 3 · 1 · 4 | clownfish |
+| position | Where were the clownfish? | **✓ In the open water, in the middle** · In the open water, on the left · In the open water, on the right · Near the surface, on the right | clownfish |
+| object | What was in the open water, in the middle? | **✓ Clownfish** · Sea turtles · Divers · Fish | clownfish |
+| object | What was in the treasure chest? | **✓ Red jewels** · Nothing, it was closed · Gold coins · Pearls | chest |
+| object | Which of these was in the picture? | **✓ Jellyfish** · Seashell · Fish · Whale | jellyfish |
+| object | Which of these was NOT in the picture? | **✓ Fish** · Clownfish · Shark · Seaweed | fish |
