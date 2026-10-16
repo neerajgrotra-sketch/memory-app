@@ -4,8 +4,8 @@ import { Asset } from 'expo-asset';
  * Web sound, two ways:
  *
  * - **iPhone and iPad: audio elements.** iOS mutes Web Audio in many situations (the silent switch, some
- *   in-app browsers), but plays audio elements reliably once each has been started inside a tap. So every
- *   element is preloaded, and the first taps start each one silently to unlock it for later timed playback.
+ *   in-app browsers), but plays audio elements reliably once each has been started inside a tap. So a
+ *   small pool of players is switched on by the first tap (with silence) and then plays every sound.
  * - **Everywhere else: Web Audio**, with every sound decoded up front, so playback starts instantly and
  *   countdown ticks land on the number. Audio elements are the fallback if Web Audio can't run.
  *
@@ -21,52 +21,87 @@ const isAppleTouch =
 
 // ---- Audio elements --------------------------------------------------------------------------------
 
-const elements = new Map<number, HTMLAudioElement>();
-const unlocked = new Set<HTMLAudioElement>();
+/**
+ * A small pool of players shared by every sound. iOS gives permission per player (once it has played
+ * inside a tap it may play anything later, even on a timer), so a few players switched on by the first
+ * tap can play every sound.
+ */
+const POOL_SIZE = 4;
+/** A tenth of a second of silence (WAV), used to switch players on without a sound. */
+const SILENCE = 'data:audio/wav;base64,UklGRkQDAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YSADAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgA==';
 
-function elementFor(source: number): HTMLAudioElement | null {
-  if (typeof Audio === 'undefined') return null;
-  let el = elements.get(source);
-  if (!el) {
-    const asset = Asset.fromModule(source);
-    el = new Audio(asset.localUri ?? asset.uri);
-    el.preload = 'auto';
-    el.load();
-    elements.set(source, el);
-  }
-  return el;
+interface Player {
+  el: HTMLAudioElement;
+  /** Switched on by a tap. */
+  allowed: boolean;
+  /** Bumped by every real play, so a late "stop" from switching on never cuts a real sound off. */
+  ticket: number;
 }
 
-/** Inside a tap: start each element silently once, so iOS lets it play later on a timer. */
+const pool: Player[] = [];
+let nextPlayer = 0;
+const sources = new Map<number, string>();
+
+function uriOf(source: number) {
+  let uri = sources.get(source);
+  if (!uri) {
+    const asset = Asset.fromModule(source);
+    uri = asset.localUri ?? asset.uri;
+    sources.set(source, uri);
+  }
+  return uri;
+}
+
+function players(): Player[] {
+  if (!pool.length && typeof Audio !== 'undefined') {
+    for (let i = 0; i < POOL_SIZE; i++) {
+      const el = new Audio();
+      el.preload = 'auto';
+      pool.push({ el, allowed: false, ticket: 0 });
+    }
+  }
+  return pool;
+}
+
+/** Inside a tap: play a moment of silence on each player not yet switched on. */
 function unlockElements() {
-  elements.forEach((el) => {
-    if (unlocked.has(el)) return;
-    el.muted = true;
-    el.play()
+  for (const p of players()) {
+    if (p.allowed) continue;
+    const ticket = p.ticket;
+    p.el.src = SILENCE;
+    p.el
+      .play()
       .then(() => {
-        el.pause();
-        el.currentTime = 0;
-        unlocked.add(el);
+        p.allowed = true;
+        // Only stop it if no real sound has started on this player since.
+        if (p.ticket === ticket) p.el.pause();
       })
-      .catch(() => {})
-      .finally(() => {
-        el.muted = false;
-      });
-  });
+      .catch(() => {});
+  }
 }
 
 function playElement(source: number, volume: number) {
-  const el = elementFor(source);
-  if (!el) return;
-  el.muted = false;
+  const list = players();
+  if (!list.length) return;
+  // Prefer a player that's switched on; take turns so overlapping sounds don't cut each other off.
+  const order = Array.from({ length: list.length }, (_, i) => list[(nextPlayer + i) % list.length]);
+  const p = order.find((x) => x.allowed) ?? order[0];
+  nextPlayer = (list.indexOf(p) + 1) % list.length;
+  p.ticket += 1;
+  const uri = uriOf(source);
+  if (p.el.src !== uri) p.el.src = uri;
+  p.el.muted = false;
   // iOS ignores element volume (it's always full); other browsers honour it.
-  el.volume = volume;
+  p.el.volume = volume;
   try {
-    el.currentTime = 0;
+    p.el.currentTime = 0;
   } catch {
     // Not loaded enough to seek yet: it plays from the start anyway.
   }
-  el.play().catch(() => {});
+  p.el
+    .play()
+    .then(() => (p.allowed = true))
+    .catch(() => {});
 }
 
 // ---- Web Audio -----------------------------------------------------------------------------------
@@ -121,7 +156,8 @@ function listenForTaps() {
 
 export function preloadSound(source: number) {
   listenForTaps();
-  elementFor(source);
+  players();
+  uriOf(source);
   const c = context();
   if (!c || buffers.has(source) || loading.has(source)) return;
   loading.add(source);

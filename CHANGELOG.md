@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.22 (2026-10-16)
+
+- **iPhone web: every sound plays again, not just the countdown.** Sounds started by a tap (Play, answers, the result after your last answer) were being cut off instantly: switching a player on (a silent start and stop) finished just after the real sound began and stopped it. Now:
+  - a real sound is never stopped by that "switch on" step (each play gets a ticket, and the stop only applies if nothing has played since)
+  - a pool of 4 players, switched on by your first tap with a moment of silence, plays every sound (iPhone grants permission per player).
+- Checked as an iPhone in the browser: start, 10 ticks, 5 answers and the round result all played, none cut off.
+
 ## 4.0.0-beta.21 (2026-10-16)
 
 - **Sound on iPhone and iPad (web), properly this time.** On iOS the web version now plays every sound through ordinary audio elements, the method that worked on iPhone in 4.0.0-beta.10, instead of Web Audio (which iOS mutes in many situations, and which 4.0.0-beta.17 didn't fix on a real iPhone). Each sound is preloaded and unlocked by your first tap. Every tap also checks sound is still on, in case iOS paused it (after the screen locks, say). Desktop and Android keep Web Audio.
