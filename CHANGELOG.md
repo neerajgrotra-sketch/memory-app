@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.19 (2026-10-16)
+
+- **Farm drawings:**
+  - The **wheelbarrow** is redrawn the way one really stands: wheel at the front, a deep tray over it, two handles sloping back to a grip, and legs under the back on the ground. Same size: about as long as the farmer is tall.
+  - The **goat's** head now joins its neck.
+- **`npm run lineup`** draws a recipe's things side by side at their real sizes, to check sizes and shapes before reviewing whole pictures (added to the recipe checklist).
+
 ## 4.0.0-beta.18 (2026-10-16)
 
 - **A new place: On the farm**, unlocked at **Level 10** (and in Practice Easy, Medium and Hard).

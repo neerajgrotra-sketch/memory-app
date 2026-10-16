@@ -46,6 +46,7 @@ A recipe is one file in `src/scenes/recipes/` that exports a `Recipe` (`src/scen
 - [ ] `npm run check:scenes` passes (24,600 scenes on three iPhone sizes, Practice bands and levels)
 - [ ] Decided which level it unlocks at (`RECIPE_UNLOCKS` in `src/games/lookRemember/ladder.ts`), and checked it at that level
 - [ ] Played on a phone with only this setting switched on (Profile → Testing), on Easy, Medium and Hard, reading every question against the picture
+- [ ] `RECIPE=<id> npm run lineup` reviewed: every thing the right size next to the person and its neighbours, and its shape reads at a glance
 - [ ] `npm run gallery` reviewed by eye, with and without `OVERLAY=0`. Ask of every thing: is it where it would really be, the right size next to its neighbours, and not floating, bunched, or covering something it shouldn't?
 - [ ] Every fixed colour (`tone`) stands out on the band it goes in, or the thing will never appear (the checker reports "never fits anywhere"); pick backdrop colours with that in mind
 - [ ] Shared things (sun, birds, people, dog, balloon…) reused from `src/scenes/items/common.tsx`, and anything another setting could use added there

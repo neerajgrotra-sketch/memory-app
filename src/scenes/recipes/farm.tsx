@@ -264,14 +264,17 @@ const items: ItemDef[] = [
     colours: [C.white, C.brown],
     draw: (colour) => (
       <G>
-        <Rect x={20} y={58} width={9} height={36} rx={3} fill={colour} />
-        <Rect x={64} y={58} width={9} height={36} rx={3} fill={colour} />
-        <Rect x={12} y={34} width={72} height={34} rx={14} fill={colour} />
-        <Path d="M74,40 L82,14 L98,14 L92,42 Z" fill={colour} />
-        <Path d="M84,14 C82,4 76,0 70,2 M94,14 C96,4 102,0 104,4" fill="none" stroke="#7a6a58" strokeWidth={4} strokeLinecap="round" />
-        <Path d="M94,30 L92,44 L88,32 Z" fill="#7a6a58" stroke="none" />
-        <Circle cx={92} cy={22} r={2.5} fill="#111" stroke="none" />
-        <Path d="M12,40 L4,32" stroke={colour} strokeWidth={5} strokeLinecap="round" />
+        <Rect x={18} y={58} width={9} height={36} rx={3} fill={colour} />
+        <Rect x={62} y={58} width={9} height={36} rx={3} fill={colour} />
+        <Path d="M14,40 L6,30" stroke={colour} strokeWidth={5} strokeLinecap="round" />
+        <Rect x={10} y={36} width={70} height={30} rx={14} fill={colour} />
+        {/* Neck rising into the head, so the head is part of the goat. */}
+        <Path d="M64,44 C68,30 74,20 82,14 L94,22 C88,30 82,40 78,52 Z" fill={colour} />
+        <Path d="M80,14 C86,6 98,8 102,16 L104,26 C104,32 96,34 92,30 Z" fill={colour} />
+        <Path d="M84,12 C82,4 76,0 70,2 M90,10 C92,2 98,-1 102,2" fill="none" stroke="#7a6a58" strokeWidth={4} strokeLinecap="round" />
+        <Path d="M80,16 L70,18 L78,22 Z" fill={colour} />
+        <Path d="M98,30 L97,42 L92,32 Z" fill="#7a6a58" stroke="none" />
+        <Circle cx={94} cy={18} r={2.5} fill="#111" stroke="none" />
       </G>
     ),
   },
@@ -324,20 +327,26 @@ const items: ItemDef[] = [
     singular: 'wheelbarrow',
     plural: 'wheelbarrows',
     article: 'a',
-    w: 130,
-    h: 75,
+    w: 140,
+    h: 80,
+    // About as long as the farmer is tall, like a real one.
     tier: 'medium',
     size: 0.16,
     zones: YARD_Z,
     maxCount: 1,
     colours: [C.red, C.green, C.blue],
+    // Parked the way a wheelbarrow stands: wheel at the front, the tray over it, handles sloping back
+    // to their grips, and a leg under the back resting on the ground.
     draw: (colour) => (
       <G>
-        <Path d="M74,16 L128,4" stroke="#5c3a1b" strokeWidth={6} strokeLinecap="round" />
-        <Path d="M26,52 L22,58 M68,46 L84,72" stroke="#555" strokeWidth={5} strokeLinecap="round" />
-        <Path d="M10,10 H84 L72,48 H24 Z" fill={colour} />
-        <Circle cx={22} cy={58} r={15} fill="#2b2b2b" stroke="#111" />
-        <Circle cx={22} cy={58} r={5} fill="#adb5bd" stroke="none" />
+        <Path d="M24,62 L104,44 M24,62 L96,52" stroke="#5c3a1b" strokeWidth={5} strokeLinecap="round" />
+        <Path d="M84,48 L86,78 M96,46 L100,78" stroke="#555" strokeWidth={5} strokeLinecap="round" />
+        <Path d="M90,32 L134,42" stroke="#5c3a1b" strokeWidth={6} strokeLinecap="round" />
+        <Rect x={124} y={36} width={14} height={9} rx={4} fill="#333" stroke="none" transform="rotate(13 131 40)" />
+        <Path d="M4,16 L98,24 L84,56 L28,56 Z" fill={colour} />
+        <Path d="M4,16 L98,24" stroke="#00000040" strokeWidth={4} strokeLinecap="round" />
+        <Circle cx={24} cy={62} r={17} fill="#2b2b2b" stroke="#111" />
+        <Circle cx={24} cy={62} r={6} fill="#adb5bd" stroke="none" />
       </G>
     ),
   },
