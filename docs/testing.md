@@ -51,5 +51,6 @@ npx expo start --tunnel --clear
 
 - **Layout overlay:** in the memorise header, ▦ turns it on. The timer waits while it's on, so you can check the layout on the real screen.
 - **"I'm ready"** skips to the questions, so you can check them quickly.
-- **My places** (on the Look & Remember page): switch off the places you're not tuning. It only covers places your level has reached; **Practice** plays every place (minus those switched off), so use Practice to see a place your level hasn't reached yet, or `npm run gallery` for exact pictures.
+- **My places** (on the Look & Remember page): switch off the places you're not tuning.
+- **Tester mode** (hidden): in Profile, tap the version number 7 times. Every place then counts as unlocked in My places, so you can play any one place at any level, in levelled play and Practice. A "Tester mode" section appears in Profile to turn it off again (which also switches every place back on); the game page shows a red reminder while it's on.
 - **Fresh install:** to see the first-launch welcome and the first-round profile prompt again, use a private browser window (web), or clear the app's data.

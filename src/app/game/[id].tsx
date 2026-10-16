@@ -153,11 +153,12 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
 function MyPlaces({ level }: { level: number }) {
   const { profile, update } = useProfile();
   const off = placesOff(profile);
-  const places = myPlaces(level, off);
+  const tester = profile?.tester === true;
+  const places = myPlaces(level, off, tester);
   const reached = places.filter((p) => p.reached);
   const onCount = reached.filter((p) => p.on).length;
   const toggle = (id: string) => {
-    const next = togglePlace(level, off, id);
+    const next = togglePlace(level, off, id, tester);
     if (next) {
       feedback('tick');
       update({ placesOff: next, recipeFilter: null });
@@ -169,6 +170,7 @@ function MyPlaces({ level }: { level: number }) {
         <Text style={styles.sectionTitle}>My places</Text>
         <Text style={styles.placesCount}>{onCount === reached.length ? `All ${reached.length} on` : `${onCount} of ${reached.length} on`}</Text>
       </View>
+      {tester && <Text style={styles.testerNote}>Tester mode: every place is unlocked. Turn it off in Profile.</Text>}
       <Text style={styles.note}>
         {reached.length > 1
           ? 'Train on the places you choose. Tap to switch one off; new places join as you unlock them.'
@@ -267,6 +269,7 @@ const styles = StyleSheet.create({
   },
   pressed: { opacity: 0.8 },
   placesHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  testerNote: { color: colors.wrong, fontSize: 13, fontWeight: '700' },
   placesCount: { color: colors.accent, fontSize: 13, fontWeight: '700' },
   places: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   place: {

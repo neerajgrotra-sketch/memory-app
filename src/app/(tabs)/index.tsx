@@ -111,7 +111,7 @@ function GameCard({ game }: { game: GameDef }) {
 /** When some places are switched off (My Places), says which are played; tap to change them. */
 function MyPlacesNote({ level, gameId }: { level: number; gameId: string }) {
   const { profile } = useProfile();
-  const places = myPlaces(level, placesOff(profile)).filter((p) => p.reached);
+  const places = myPlaces(level, placesOff(profile), profile?.tester === true).filter((p) => p.reached);
   const on = places.filter((p) => p.on);
   if (on.length === places.length) return null;
   return (

@@ -16,6 +16,11 @@ export interface Profile {
   asked: boolean;
   /** My Places: the places (recipe ids) switched off, so they're never played. Missing means all on. */
   placesOff?: string[];
+  /**
+   * Tester mode (hidden: tap the version in Profile 7 times): every place counts as unlocked in My places,
+   * so any one place can be played at any level. Missing means off.
+   */
+  tester?: boolean;
   /** The old testing switch: only these recipes were played. Read once to fill `placesOff`, then cleared. */
   recipeFilter: string[] | null;
   /** Sounds for answers, the last seconds and level ups. Missing means on (profiles saved before sounds). */

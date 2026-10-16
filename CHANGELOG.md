@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.28 (2026-10-16)
+
+- **Tester mode,** for testing every place at any level again: in Profile, tap the version number 7 times. Every place is then unlocked in My places, so you can play just one place (a brand-new one, say) whatever your level. A "Tester mode" section appears in Profile to turn it off (which switches every place back on), and the game page shows a red reminder while it's on. Players never see it unless they tap the version 7 times.
+
 ## 4.0.0-beta.27 (2026-10-16)
 
 - **My places**, a proper feature replacing the temporary testing switch. On the Look & Remember page, pick the places you want to train on: only the beach, say, or just the city and the supermarket.

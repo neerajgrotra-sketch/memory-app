@@ -10,6 +10,8 @@ import { RECIPE_UNLOCKS, recipesForLevel } from './ladder';
  * Saved as the places switched **off**, so a place unlocked later joins automatically (the level-up
  * screen promises it). Only places your level has reached can be switched; Practice can play every
  * place, as before, minus the ones switched off. At least one place always stays on.
+ *
+ * Tester mode (`profile.tester`) treats every place as reached, so a new place can be tested at any level.
  */
 export function placesOff(profile: Pick<Profile, 'placesOff' | 'recipeFilter'> | null | undefined): string[] {
   if (!profile) return [];
@@ -25,9 +27,9 @@ export function placesToPlay(allowed: string[], off: string[]): string[] {
   return on.length ? on : allowed;
 }
 
-/** Every place in unlock order, with whether your level has reached it and whether it's on. */
-export function myPlaces(level: number, off: string[]) {
-  const unlocked = recipesForLevel(level);
+/** Every place in unlock order, with whether your level has reached it (always, in tester mode) and whether it's on. */
+export function myPlaces(level: number, off: string[], tester = false) {
+  const unlocked = tester ? RECIPES.map((r) => r.id) : recipesForLevel(level);
   return RECIPE_UNLOCKS.map((u) => {
     const recipe = RECIPES.find((r) => r.id === u.recipeId)!;
     const reached = unlocked.includes(u.recipeId);
@@ -36,7 +38,7 @@ export function myPlaces(level: number, off: string[]) {
 }
 
 /** `off` with `id` switched, or null if that would leave no reached place on. */
-export function togglePlace(level: number, off: string[], id: string): string[] | null {
+export function togglePlace(level: number, off: string[], id: string, tester = false): string[] | null {
   const next = off.includes(id) ? off.filter((x) => x !== id) : [...off, id];
-  return myPlaces(level, next).some((p) => p.on) ? next : null;
+  return myPlaces(level, next, tester).some((p) => p.on) ? next : null;
 }

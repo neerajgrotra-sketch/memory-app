@@ -17,6 +17,16 @@ export default function ProfileScreen() {
   const [draft, setDraft] = useState<string | null>(null);
   const name = draft ?? profile?.name ?? '';
   const [confirmClear, setConfirmClear] = useState(false);
+  // Tester mode is hidden: tapping the version 7 times turns it on.
+  const [versionTaps, setVersionTaps] = useState(0);
+  const tapVersion = () => {
+    const taps = versionTaps + 1;
+    setVersionTaps(taps);
+    if (taps >= 7 && !profile?.tester) {
+      update({ tester: true });
+      setVersionTaps(0);
+    }
+  };
 
   const saveName = () => {
     if (draft === null) return;
@@ -114,8 +124,25 @@ export default function ProfileScreen() {
 
         <Section title="About">
           <Text style={styles.rowDetail}>glance is a memory game, not a medical test. Its scores aren’t a measure of brain health.</Text>
-          <Text style={styles.rowDetail}>Version {APP_VERSION}</Text>
+          <Pressable onPress={tapVersion} accessibilityRole="text">
+            <Text style={styles.rowDetail}>Version {APP_VERSION}</Text>
+          </Pressable>
         </Section>
+
+        {profile?.tester && (
+          <Section title="Tester mode" footer="Every place is unlocked in My places, so any one place can be played at any level. For testing new places; levels and scores still count. Turning it off switches every place back on.">
+            <View style={styles.switchRow}>
+              <Text style={[styles.rowTitle, styles.switchText]}>Unlock every place</Text>
+              <Switch
+                value
+                onValueChange={() => update({ tester: false, placesOff: [], recipeFilter: null })}
+                trackColor={{ true: colors.accent, false: colors.border }}
+                thumbColor={colors.text}
+                accessibilityLabel="Tester mode: unlock every place"
+              />
+            </View>
+          </Section>
+        )}
 
         <Pressable accessibilityRole="button" onPress={clear} onBlur={() => setConfirmClear(false)} style={styles.clear}>
           <Text style={[styles.clearText, confirmClear && styles.clearConfirm]}>

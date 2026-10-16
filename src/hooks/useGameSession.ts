@@ -125,13 +125,15 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
   const extra = profile?.moreTime ? EXTRA_SECONDS : 0;
   // My Places: settings the player switched off.
   const off = useMemo(() => placesOff(profile), [profile]);
+  // Tester mode: every place counts as unlocked.
+  const tester = profile?.tester === true;
 
   const [ladder, setLadder] = useState<LadderState>(startLadder);
   const highScore = useRef(startHighScore);
 
   const [first] = useState(() => {
     const setup = setupFor(mode, startLadder.level);
-    const firstStage = createStage(setup.knobs, size, undefined, undefined, { unlocked: setup.unlocked, off });
+    const firstStage = createStage(setup.knobs, size, undefined, undefined, { unlocked: tester ? undefined : setup.unlocked, off });
     return { stage: firstStage, round: buildRound(setup, 0, firstStage.questions, new Set(), new Set(), extra) };
   });
   const [stage, setStage] = useState<Stage>(first.stage);
@@ -149,7 +151,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
   const startStage = useCallback(
     (index: number, ladderLevel: number, previousRecipeId?: string) => {
       const setup = setupFor(mode, ladderLevel);
-      const next = createStage(setup.knobs, size, previousRecipeId, undefined, { unlocked: setup.unlocked, off });
+      const next = createStage(setup.knobs, size, previousRecipeId, undefined, { unlocked: tester ? undefined : setup.unlocked, off });
       seenIds.current = new Set();
       setStage(next);
       const nextRound = buildRound(setup, index, next.questions, seenIds.current, new Set(), extra);
@@ -158,7 +160,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       setOutcome(null);
       setPhase('memorise');
     },
-    [size, mode, extra, off],
+    [size, mode, extra, off, tester],
   );
 
   /** How long the player looked at the current picture before answering. */
