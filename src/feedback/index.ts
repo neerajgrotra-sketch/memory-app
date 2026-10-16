@@ -35,9 +35,9 @@ const SOUNDS: Record<Moment, number> = {
 /** Kept quiet so they sit under the game, never over it. */
 const VOLUME: Record<Moment, number> = {
   start: 0.55,
-  // A soft clock under the picture every second, then the last 4 clearly louder.
-  tickSoft: 0.18,
-  tick: 0.6,
+  // The same tick all the way down: quiet under the picture each second, then clearly louder for 4-3-2-1.
+  tickSoft: 0.2,
+  tick: 0.65,
   correct: 0.6,
   wrong: 0.5,
   levelUp: 0.75,
