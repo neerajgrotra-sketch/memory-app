@@ -10,6 +10,12 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.15 (2026-10-16)
+
+- **Welcome screen on the first launch.** After the eye animation, three postcards of the places (living room, beach, city street, drawn by the game) fan out, then the **glance** logo, the hook **"How much can you remember at a glance?"**, the line "Quick picture games for your memory. A few minutes a day.", a **Let's go** button and "Free to play · No account needed".
+  - It shows only until **Let's go** is tapped once; later launches go from the eye animation straight into the app.
+  - The hook is set in a classic serif, the one place glance uses one.
+
 ## 4.0.0-beta.14 (2026-10-16)
 
 - **Every countdown tick is identical:** the same sound at the same volume for every number, from the first down to 1. No vibration on the ticks.
