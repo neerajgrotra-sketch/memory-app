@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/Button';
 import { LevelUpRing } from '@/components/LevelUpRing';
+import { QuitButton } from '@/components/QuitButton';
 import { titleFor, unlocksAt } from '@/games/lookRemember/ladder';
 import { colors, radius } from '@/theme';
 
@@ -14,10 +15,12 @@ interface LevelUpScreenProps {
   onPlay: () => void;
   /** To the round's results and answers first. */
   onContinue: () => void;
+  /** Leave the game (the new level is already saved). */
+  onClose: () => void;
 }
 
 /** Shown after a round that took you up a level: the new level, its title if it's a milestone, and what's new. */
-export function LevelUpScreen({ level, onPlay, onContinue }: LevelUpScreenProps) {
+export function LevelUpScreen({ level, onPlay, onContinue, onClose }: LevelUpScreenProps) {
   const pop = useSharedValue(0.6);
   const fade = useSharedValue(0);
   useEffect(() => {
@@ -33,6 +36,9 @@ export function LevelUpScreen({ level, onPlay, onContinue }: LevelUpScreenProps)
 
   return (
     <SafeAreaView style={styles.screen}>
+      <View style={styles.close}>
+        <QuitButton onPress={onClose} label="Close, your new level is saved" />
+      </View>
       <View style={styles.center}>
         <Text style={styles.kicker}>Level up!</Text>
         <Animated.View style={ringStyle}>
@@ -60,6 +66,7 @@ export function LevelUpScreen({ level, onPlay, onContinue }: LevelUpScreenProps)
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
+  close: { paddingHorizontal: 16, paddingTop: 16, alignItems: 'flex-start' },
   center: { flex: 1, width: '100%', maxWidth: 520, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', padding: 24, gap: 20 },
   kicker: { color: colors.accent, fontSize: 18, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 2 },
   textBlock: { alignItems: 'center', gap: 20, alignSelf: 'stretch' },

@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.9 (2026-10-16)
+
+- **A way out of the level-up screen:** the ✕ in the top-left corner (as on the picture and quiz screens) goes back to where you started. Your new level is already saved.
+
 ## 4.0.0-beta.8 (2026-10-16)
 
 - **Your levels** replaces Recent sessions on the Progress tab: one row per level you've played, highest first, with rounds, best points and average, and a **Now** badge on your current level. Practice bands are listed underneath. (The "Level 3 → 5" session lines were confusing.)

@@ -92,6 +92,7 @@ function Game({ start }: { start: SessionStart }) {
             nextPicture();
           }}
           onContinue={() => setCelebrated(levelUpKey)}
+          onClose={goBack}
         />
       )}
 
