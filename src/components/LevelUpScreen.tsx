@@ -30,7 +30,12 @@ export function LevelUpScreen({ level, onPlay, onContinue, onClose }: LevelUpScr
     fade.value = withDelay(900, withTiming(1, { duration: 400 }));
     // The flourish lands as the ring spins and the new number pops in.
     const t = setTimeout(() => feedback('levelUp'), 500);
-    return () => clearTimeout(t);
+    // And the crowd joins in as the new number lands.
+    const cheer = setTimeout(() => feedback('roundPerfect'), 950);
+    return () => {
+      clearTimeout(t);
+      clearTimeout(cheer);
+    };
   }, [fade, pop]);
   const ringStyle = useAnimatedStyle(() => ({ transform: [{ scale: pop.value }] }));
   const textStyle = useAnimatedStyle(() => ({ opacity: fade.value }));

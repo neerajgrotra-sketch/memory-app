@@ -1,12 +1,13 @@
-import { createAudioPlayer, setAudioModeAsync, type AudioPlayer } from 'expo-audio';
 import * as Haptics from 'expo-haptics';
 import { Platform } from 'react-native';
+
+import { playSound, preloadSound } from './player';
 
 /**
  * Sounds and vibration for the game's moments. To change a sound, replace its file in `assets/sounds/`
  * (same name); nothing else needs to change. See `assets/sounds/README.md`.
  */
-export type Moment = 'correct' | 'wrong' | 'tick' | 'levelUp' | 'highScore';
+export type Moment = 'correct' | 'wrong' | 'tick' | 'levelUp' | 'highScore' | 'roundPerfect' | 'roundGood' | 'roundMiss';
 
 const SOUNDS: Record<Moment, number> = {
   correct: require('../../assets/sounds/correct.mp3'),
@@ -14,10 +15,22 @@ const SOUNDS: Record<Moment, number> = {
   tick: require('../../assets/sounds/tick.mp3'),
   levelUp: require('../../assets/sounds/level-up.mp3'),
   highScore: require('../../assets/sounds/high-score.mp3'),
+  roundPerfect: require('../../assets/sounds/round-perfect.mp3'),
+  roundGood: require('../../assets/sounds/round-good.mp3'),
+  roundMiss: require('../../assets/sounds/round-miss.mp3'),
 };
 
 /** Kept quiet so they sit under the game, never over it. */
-const VOLUME: Record<Moment, number> = { correct: 0.6, wrong: 0.5, tick: 0.35, levelUp: 0.75, highScore: 0.7 };
+const VOLUME: Record<Moment, number> = {
+  correct: 0.6,
+  wrong: 0.5,
+  tick: 0.35,
+  levelUp: 0.75,
+  highScore: 0.7,
+  roundPerfect: 0.6,
+  roundGood: 0.6,
+  roundMiss: 0.35,
+};
 
 const HAPTICS: Record<Moment, () => Promise<void>> = {
   correct: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
@@ -25,6 +38,9 @@ const HAPTICS: Record<Moment, () => Promise<void>> = {
   tick: () => Haptics.selectionAsync(),
   levelUp: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
   highScore: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
+  roundPerfect: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
+  roundGood: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
+  roundMiss: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft),
 };
 
 const prefs = { sound: true, haptics: true };
@@ -35,42 +51,22 @@ export function setFeedbackPrefs(next: { sound: boolean; haptics: boolean }) {
   prefs.haptics = next.haptics;
 }
 
-const players = new Map<Moment, AudioPlayer>();
-let audioReady = false;
-
-function playerFor(moment: Moment): AudioPlayer {
-  let player = players.get(moment);
-  if (!player) {
-    player = createAudioPlayer(SOUNDS[moment]);
-    player.volume = VOLUME[moment];
-    players.set(moment, player);
-  }
-  return player;
-}
-
 /** Plays a moment's sound and vibration, as the player's settings allow. Never throws. */
 export function feedback(moment: Moment) {
   if (prefs.sound) {
     try {
-      if (!audioReady) {
-        audioReady = true;
-        // The phone's silent switch wins: a muted phone plays nothing.
-        setAudioModeAsync({ playsInSilentMode: false }).catch(() => {});
-      }
-      const player = playerFor(moment);
-      player.seekTo(0).catch(() => {});
-      player.play();
+      playSound(SOUNDS[moment], VOLUME[moment]);
     } catch {
-      // No audio (e.g. a browser that blocks it): the game carries on silently.
+      // No audio: the game carries on silently.
     }
   }
   if (prefs.haptics && Platform.OS !== 'web') HAPTICS[moment]().catch(() => {});
 }
 
-/** Loads the players before they're needed, so the first chime isn't late. */
+/** Loads the sounds before they're needed, so the first one isn't late. */
 export function preloadFeedback() {
   try {
-    (Object.keys(SOUNDS) as Moment[]).forEach(playerFor);
+    (Object.keys(SOUNDS) as Moment[]).forEach((m) => preloadSound(SOUNDS[m], VOLUME[m]));
   } catch {
     // Loading again on first play is fine.
   }

@@ -3,7 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { LevelRing } from '@/components/LevelRing';
-import { feedback } from '@/feedback';
+import { feedback, type Moment } from '@/feedback';
 import { PictureViewer } from '@/components/PictureViewer';
 import { ProfilePrompt } from '@/components/ProfilePrompt';
 import type { Answers } from '@/game/quizNavigation';
@@ -37,7 +37,8 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
   const [message] = useState(() => randomScoreMessage(score));
   const [enlarged, setEnlarged] = useState(false);
   useEffect(() => {
-    if (outcome.newHighScore) feedback('highScore');
+    const moment = roundSound(outcome, score, questions.length);
+    if (moment) feedback(moment);
     // Once, when the result appears.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -162,6 +163,21 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
       </View>
     </View>
   );
+}
+
+/**
+ * The sound as the result appears. One at a time, so they never pile up:
+ * a level up was already celebrated on its own screen; then applause for a perfect round, a sparkle for
+ * a new high score, a bright chime for 4 right, a gentle "aww" for 0 or 1 right, and nothing for 2–3
+ * (an ordinary round shouldn't feel like a failure).
+ */
+function roundSound(outcome: RoundOutcome, score: number, total: number): Moment | null {
+  if (outcome.ladder && outcome.ladder.after.level > outcome.ladder.before.level) return null;
+  if (score === total) return 'roundPerfect';
+  if (outcome.newHighScore) return 'highScore';
+  if (score === total - 1) return 'roundGood';
+  if (score <= 1) return 'roundMiss';
+  return null;
 }
 
 /**

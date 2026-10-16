@@ -20,6 +20,8 @@ interface MemoriseStageProps {
 
 /** "I'm ready" ignores taps this soon after the picture appears, so a stray tap can't skip it unseen. */
 const READY_DELAY_MS = 1000;
+/** Ticks start when this many seconds are left. */
+const TICK_FROM = 4;
 
 /**
  * The controls sit in a bar above the picture, never on top of it. The timer is on the left next to
@@ -38,22 +40,10 @@ export function MemoriseStage({ scene, seconds, onDone, onQuit }: MemoriseStageP
     return () => clearTimeout(t);
   }, []);
 
-  // A quiet tick for each of the last 3 seconds. Not once the dev layout overlay has held the timer
-  // (the ticks would no longer line up with it).
-  const overlayUsed = useRef(false);
-  useEffect(() => {
-    if (overlay) overlayUsed.current = true;
-  }, [overlay]);
-  useEffect(() => {
-    const ticks = [3, 2, 1]
-      .filter((left) => left < seconds)
-      .map((left) =>
-        setTimeout(() => {
-          if (!done.current && !overlayUsed.current) feedback('tick');
-        }, (seconds - left) * 1000),
-      );
-    return () => ticks.forEach(clearTimeout);
-  }, [seconds]);
+  /** A quiet tick as the countdown shows each of its last 4 numbers: 4, 3, 2, 1. */
+  const onTick = (left: number) => {
+    if (left <= TICK_FROM && !done.current) feedback('tick');
+  };
 
   const finish = (lookedSeconds: number) => {
     if (done.current) return;
@@ -76,7 +66,7 @@ export function MemoriseStage({ scene, seconds, onDone, onQuit }: MemoriseStageP
           </Pressable>
         )}
         {/* While the layout overlay is on, the timer waits so the layout can be checked. */}
-        <Countdown seconds={seconds} running={!overlay} onComplete={() => finish(seconds)} />
+        <Countdown seconds={seconds} running={!overlay} onComplete={() => finish(seconds)} onTick={onTick} />
         {/* Ready before the time is up: a deliberate button, never a tap on the picture itself. */}
         <Pressable
           accessibilityRole="button"

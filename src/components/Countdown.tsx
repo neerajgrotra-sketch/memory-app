@@ -18,6 +18,8 @@ interface CountdownProps {
   /** The countdown starts when this becomes true (e.g. once the image has loaded). */
   running: boolean;
   onComplete: () => void;
+  /** Called as the number changes to each new value (e.g. for a tick on the last seconds). */
+  onTick?: (secondsLeft: number) => void;
 }
 
 /**
@@ -25,19 +27,24 @@ interface CountdownProps {
  * Renders inline as a number in a ring followed by a shrinking bar. The ring comes first (on the left)
  * so it is never hidden by anything floating in the top-right corner.
  */
-export function Countdown({ seconds, running, onComplete }: CountdownProps) {
+export function Countdown({ seconds, running, onComplete, onTick }: CountdownProps) {
   const remaining = useSharedValue(seconds);
   const pulse = useSharedValue(1);
   const [display, setDisplay] = useState(seconds);
 
   const onCompleteRef = useRef(onComplete);
+  const onTickRef = useRef(onTick);
   useEffect(() => {
     onCompleteRef.current = onComplete;
-  }, [onComplete]);
+    onTickRef.current = onTick;
+  }, [onComplete, onTick]);
+  const tick = (left: number) => onTickRef.current?.(left);
 
   useEffect(() => {
     if (!running) return;
     const complete = () => onCompleteRef.current();
+    // The first number is shown without a change, so announce it as the countdown starts.
+    onTickRef.current?.(seconds);
     remaining.value = seconds;
     remaining.value = withTiming(0, { duration: seconds * 1000, easing: Easing.linear }, (finished) => {
       if (finished) scheduleOnRN(complete);
@@ -50,6 +57,7 @@ export function Countdown({ seconds, running, onComplete }: CountdownProps) {
     (current, previous) => {
       if (previous === null || current === previous) return;
       scheduleOnRN(setDisplay, current);
+      scheduleOnRN(tick, current);
       pulse.value = withSequence(withTiming(1.2, { duration: 120 }), withTiming(1, { duration: 220 }));
     },
   );
