@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.21 (2026-10-16)
+
+- **Sound on iPhone and iPad (web), properly this time.** On iOS the web version now plays every sound through ordinary audio elements, the method that worked on iPhone in 4.0.0-beta.10, instead of Web Audio (which iOS mutes in many situations, and which 4.0.0-beta.17 didn't fix on a real iPhone). Each sound is preloaded and unlocked by your first tap. Every tap also checks sound is still on, in case iOS paused it (after the screen locks, say). Desktop and Android keep Web Audio.
+  - On iPhone the volume of each sound can't be set from a web page, so web sounds there play at full volume.
+
 ## 4.0.0-beta.20 (2026-10-16)
 
 - **A new place: Under the sea**, unlocked at **Level 12** (and in Practice).
