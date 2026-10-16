@@ -111,9 +111,9 @@ Optional fields:
 - `spotlight`: asked first in a round when it can be
 - `fallback`: more wrong answers when `wrong` runs short.
 
-### The clock (living room)
+### Clocks (living room, city, park)
 
-When the living room has its wall clock, the clock shows a time chosen for that picture (`details.values.clock`) and the game asks **"What time was on the clock?"** on every level. Shared code in `src/scenes/clock.tsx` (`ClockFace`, `randomTime`, `timeLookalikes`), ready for the city's clock tower, a kitchen or a classroom.
+When the picture has a clock (the living room's wall clock, the city's street clock or the park clock), it shows a time chosen for that picture (`details.values.clock`) and the game asks **"What time was on the clock?"** ("…on the street clock?", "…on the park clock?") on every level. Shared code in `src/scenes/clock.tsx` (`ClockFace`, `randomTime`, `timeLookalikes`), ready for a kitchen, a classroom or a train station.
 
 - **The time gets more exact as you level up** (`clockStep` in the level knobs):
   - whole hours up to Level 7 (3:00)

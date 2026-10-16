@@ -80,7 +80,8 @@ export function knobsForLevel(rawLevel: number): LevelConfig {
 /** The level each place first appears at. */
 export const RECIPE_UNLOCKS: { recipeId: string; level: number; name: string }[] = [
   { recipeId: 'beach', level: 1, name: 'the beach' },
-  { recipeId: 'living-room', level: 3, name: 'the living room' },
+  { recipeId: 'living-room', level: 2, name: 'the living room' },
+  { recipeId: 'park', level: 4, name: 'the park' },
   { recipeId: 'city', level: 6, name: 'the city street' },
   { recipeId: 'farm', level: 10, name: 'the farm' },
   { recipeId: 'under-sea', level: 12, name: 'under the sea' },

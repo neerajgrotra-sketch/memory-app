@@ -333,12 +333,14 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   const NEXT: Record<Region, Region[]> = { left: ['centre'], centre: ['left', 'right'], right: ['centre'] };
   const isWide = (g: PlacedGroup) => itemOf(g.kind).wide === true;
   const reaches = (g: PlacedGroup, region: Region) => sidesOf(g).has(region) || (isWide(g) && NEXT[g.region].includes(region));
-  const single = spec.groups.filter((g) => !(itemOf(g.kind).spread && g.count > 1) && !isWide(g));
+  // One-off things in the sky (the sun, a plane) are far away, not above anything: "below the sun" reads oddly.
+  const faraway = (g: PlacedGroup) => itemOf(g.kind).countable === false && zoneOf(g.zoneId).surface === 'air';
+  const single = spec.groups.filter((g) => !(itemOf(g.kind).spread && g.count > 1) && !isWide(g) && !faraway(g));
   for (const group of single) {
     const item = itemOf(group.kind);
     for (const dir of ['above', 'below'] as const) {
       const isDir = (g: PlacedGroup) => (dir === 'above' ? zoneIndex(g) < zoneIndex(group) : zoneIndex(g) > zoneIndex(group));
-      const near = spec.groups.filter((g) => g !== group && isDir(g) && reaches(g, group.region));
+      const near = spec.groups.filter((g) => g !== group && isDir(g) && reaches(g, group.region) && !faraway(g));
       if (near.length !== 1 || !single.includes(near[0])) continue;
       const target = near[0];
       const answerItem = itemOf(target.kind);
@@ -410,7 +412,8 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   }
   if (absent.length) {
     const item = rng.pick(absent);
-    statements.push({ subject: item.kind, type: 'object', text: `There was ${item.article} ${item.singular} in the picture.`, truth: false });
+    const text = item.article === 'the' ? `The ${item.singular} was in the picture.` : `There was ${item.article} ${item.singular} in the picture.`;
+    statements.push({ subject: item.kind, type: 'object', text, truth: false });
   }
   for (const s of rng.shuffle(statements).slice(0, 3)) {
     questions.push({

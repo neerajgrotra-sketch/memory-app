@@ -29,7 +29,7 @@ Code: `src/scenes/recipes/city.tsx`. Exact sizes, counts and colours: [reference
 - **Roofs:** flags on poles, satellite dishes. Both are `spread`, one per roof.
 - **Pavement:**
   - market stalls, people, dogs, benches and rubbish bins
-  - street lamps, trees and the street clock (a clock on its own post). They stand within the pavement's depth, so they never cover a window or door. Lamps and trees are spread one per third.
+  - street lamps, trees and the street clock (a clock on its own post, showing a time chosen per picture: "What time was on the street clock?" is asked on every level whenever it's there). They stand within the pavement's depth, so they never cover a window or door. Lamps and trees are spread one per third.
   - **bicycles** are parked against the building fronts (`backRow`): a bicycle can't stand on its own. They sit side by side, clear of doors.
   - **fire hydrants** stand at the kerb (`frontRow`), at most one per building and as far apart as possible. On Hard, half of the pairs are different colours (red, yellow, orange).
 - **Road:**

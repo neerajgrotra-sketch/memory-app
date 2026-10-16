@@ -1,10 +1,11 @@
 import { Circle, G, Line, Path, Polygon, Rect, Text as SvgText } from 'react-native-svg';
 
+import { ClockFace, randomTime, timeLookalikes } from '../clock';
 import { C } from '../colours';
 import { balloon, bird, cloudShape, dog, person, plane, tree } from '../items/common';
 import { markIfClear, scatterMarks } from '../marks';
 import type { Rng } from '../random';
-import type { ColourDef, ItemDef, Mark, Recipe, Rect as Box, SceneDetails } from '../types';
+import type { ColourDef, DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, SceneDetails } from '../types';
 
 /** Band edges, as fractions of the picture height. */
 const ROOF = 0.25;
@@ -116,13 +117,15 @@ const items: ItemDef[] = [
     // A clock on its own post, standing on the pavement like a street lamp (and, like it, never in front of the buildings).
     tone: '#343a40',
     countable: false,
-    draw: () => (
+    noFlip: true,
+    // The time is chosen per picture (see `details`).
+    draw: (_colour, details) => (
       <G>
         <Rect x={39} y={78} width={12} height={140} fill="#343a40" />
         <Rect x={27} y={214} width={36} height={16} rx={3} fill="#343a40" />
-        <Circle cx={45} cy={42} r={38} fill="#ffffff" stroke="#343a40" strokeWidth={8} />
-        <Line x1={45} y1={42} x2={45} y2={16} stroke="#343a40" strokeWidth={6} strokeLinecap="round" />
-        <Line x1={45} y1={42} x2={62} y2={50} stroke="#343a40" strokeWidth={6} strokeLinecap="round" />
+        <G transform="translate(4 1) scale(0.82)">
+          <ClockFace time={details?.values?.clock ?? '10:10'} />
+        </G>
       </G>
     ),
   },
@@ -471,14 +474,22 @@ const SIDE_BUILDINGS = ['#cfc6b8', '#bdb4a6', '#d8d1c5'];
  * This street's three houses, left to right: different named colours, and house numbers that rise
  * along the street with uneven gaps (like 1204, 1210, 1236), so each one has to be remembered.
  */
-function details(random: Rng): SceneDetails {
+function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
   const colours = random.shuffle(HOUSE_COLOURS).slice(0, 3);
   let number = 2 * random.int(50, 4800);
   const houses = colours.map((colour, i) => {
     if (i > 0) number += random.pick([2, 4, 6, 8, 10, 12, 16, 20, 24, 30]);
     return { colour, number };
   });
-  return { houses, palette: Object.fromEntries(houses.map((h, i) => [`facade${i}`, h.colour.hex])) };
+  // The street clock's time: asked on every level whenever the clock is in the picture.
+  const time = randomTime(random, clockStep);
+  const { close, other } = timeLookalikes(time, clockStep);
+  return {
+    houses,
+    palette: Object.fromEntries(houses.map((h, i) => [`facade${i}`, h.colour.hex])),
+    values: { clock: time },
+    facts: [{ id: 'clock-time', type: 'number', prompt: 'What time was on the street clock?', answer: time, wrong: close, fallback: other, needs: 'clock', everyLevel: true, spotlight: true }],
+  };
 }
 
 function backdrop(height: number, palette: Palette, details?: SceneDetails) {

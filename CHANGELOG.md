@@ -10,6 +10,20 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.30 (2026-10-16)
+
+- **A new place: In the park**, unlocked at **Level 4** (and in Practice).
+  - **Bands:** the sky, a pond with trees on the far bank, a gravel path, and the grass.
+  - **19 things:** sun, birds, kites, hot-air balloons and a plane; a rowing boat, swans and a fountain on the pond; bicycles with riders and an ice-cream cart on the path; benches, picnic blankets, flower beds, swings, a slide, the park clock and trees on the grass; people and dogs.
+  - **At one real-world scale:** everything is sized against a person (a bench 1.8 m, the boat 3 m, the clock 3.5 m tall). Ducks, balls and butterflies are left out: at the 44 pt minimum they'd look giant next to people.
+  - **New questions:** "What time was on the park clock?" (every level) and "What number was on the rowing boat?" (from Level 8), plus bicycle, umbrella, flower and slide colours.
+  - Two looks: summer and spring.
+- **The living room now unlocks at Level 2** (was 3), so new players get variety sooner.
+- **The city's street clock shows a real time** too, asked on every level whenever it's in the picture.
+- **"The sun"**, never "A sun", in answers; and the sun and planes are never used in "What was above / below…?" (they're far away, not above anything).
+- `npm run lineup` makes room for tall things (trees, clocks on posts).
+- Scene checker: 39,000 pictures.
+
 ## 4.0.0-beta.29 (2026-10-16)
 
 - **Supermarket: everything at one real-world scale.** Testers said the shoppers looked like toys. The cause: the shelves are a close-up (every product at least 44 pt wide, so a 30 cm cereal box is 0.16 of the screen tall), but the floor was drawn at a far smaller scale, so a person was barely taller than a cereal box and a trolley shorter than one.

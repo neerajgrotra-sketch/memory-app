@@ -13,7 +13,7 @@ export const sun: CommonItem = {
   kind: 'sun',
   singular: 'sun',
   plural: 'suns',
-  article: 'a',
+  article: 'the',
   w: 140,
   h: 140,
   tier: 'medium',

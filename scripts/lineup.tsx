@@ -13,7 +13,10 @@ import { getRecipe } from '@/scenes/recipes';
 
 const recipe = getRecipe(process.env.RECIPE ?? 'farm');
 const kinds = process.env.KINDS?.split(',') ?? recipe.items.map((i) => i.kind);
-const W = 900; let x = 20; const base = 260;
+const W = 900; let x = 20;
+// The baseline sits low enough for the tallest thing (a tree, a clock on a post) to fit above it.
+const tallest = Math.max(...kinds.map((k: string) => { const it = recipe.items.find((i) => i.kind === k)!; return it.size * W * (it.h / it.w); }));
+const base = Math.max(260, Math.ceil(tallest) + 20);
 const parts = kinds.map((k: string) => {
   const it = recipe.items.find((i) => i.kind === k)!;
   const w = it.size * W; const h = w * (it.h / it.w); const s = w / it.w;
@@ -21,4 +24,4 @@ const parts = kinds.map((k: string) => {
   const el = `<g transform="translate(${x} ${base - h}) scale(${s})" stroke="${shade(colour, 0.5)}" stroke-width="${2.5 / s}">${renderToStaticMarkup(it.draw(colour))}</g><text x="${x}" y="${base + 22}" font-size="14" fill="#ddd">${k} ${it.size}</text>`;
   x += w + 30; return el;
 });
-writeFileSync(process.env.OUT ?? 'lineup.html', `<!doctype html><body style="margin:0;background:#2aa3d8"><svg xmlns="http://www.w3.org/2000/svg" width="${x}" height="300"><line x1="0" y1="${base}" x2="${x}" y2="${base}" stroke="#355" stroke-width="2"/>${parts.join('')}</svg></body>`);
+writeFileSync(process.env.OUT ?? 'lineup.html', `<!doctype html><body style="margin:0;background:#2aa3d8"><svg xmlns="http://www.w3.org/2000/svg" width="${x}" height="${base + 40}"><line x1="0" y1="${base}" x2="${x}" y2="${base}" stroke="#355" stroke-width="2"/>${parts.join('')}</svg></body>`);

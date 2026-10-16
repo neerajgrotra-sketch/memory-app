@@ -26,35 +26,35 @@ See [Levels and scoring](../levels-and-scoring.md).
 | Level | Title | Places | Kinds | Most | View time | House numbers | Mixed colours | Close counts | Asked first | Points per answer |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | Fresh Eyes | beach | 5 | 3 | 10 s |  |  |  | object, colour | 100 |
-| 2 | Fresh Eyes | beach | 5 | 3 | 10 s |  |  |  | object, colour | 110 |
+| 2 | Fresh Eyes | beach, living-room | 5 | 3 | 10 s |  |  |  | object, colour | 110 |
 | 3 | Fresh Eyes | beach, living-room | 5 | 3 | 10 s |  |  |  | object, colour | 120 |
-| 4 | Fresh Eyes | beach, living-room | 5 | 4 | 9 s |  |  |  | object, colour | 130 |
-| 5 | Sharp Eyes | beach, living-room | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 140 |
-| 6 | Sharp Eyes | beach, living-room, city | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 150 |
-| 7 | Sharp Eyes | beach, living-room, city | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 160 |
-| 8 | Sharp Eyes | beach, living-room, city | 6 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 170 |
-| 9 | Sharp Eyes | beach, living-room, city | 7 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 180 |
-| 10 | Keen Observer | beach, living-room, city, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 190 |
-| 11 | Keen Observer | beach, living-room, city, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 200 |
-| 12 | Keen Observer | beach, living-room, city, farm, under-sea | 7 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 210 |
-| 13 | Keen Observer | beach, living-room, city, farm, under-sea | 8 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 220 |
-| 14 | Keen Observer | beach, living-room, city, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 230 |
-| 15 | Detail Spotter | beach, living-room, city, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 240 |
-| 16 | Detail Spotter | beach, living-room, city, farm, under-sea, supermarket | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
-| 17 | Detail Spotter | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
-| 18 | Detail Spotter | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
-| 19 | Detail Spotter | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
-| 20 | Eagle Eye | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
-| 21 | Eagle Eye | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
-| 22 | Eagle Eye | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
-| 23 | Eagle Eye | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
-| 24 | Eagle Eye | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
-| 25 | Total Recall | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
-| 26 | Total Recall | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
-| 27 | Total Recall | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
-| 28 | Total Recall | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
-| 29 | Total Recall | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
-| 30 | Photographic Memory | beach, living-room, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
+| 4 | Fresh Eyes | beach, living-room, park | 5 | 4 | 9 s |  |  |  | object, colour | 130 |
+| 5 | Sharp Eyes | beach, living-room, park | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 140 |
+| 6 | Sharp Eyes | beach, living-room, park, city | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 150 |
+| 7 | Sharp Eyes | beach, living-room, park, city | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 160 |
+| 8 | Sharp Eyes | beach, living-room, park, city | 6 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 170 |
+| 9 | Sharp Eyes | beach, living-room, park, city | 7 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 180 |
+| 10 | Keen Observer | beach, living-room, park, city, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 190 |
+| 11 | Keen Observer | beach, living-room, park, city, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 200 |
+| 12 | Keen Observer | beach, living-room, park, city, farm, under-sea | 7 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 210 |
+| 13 | Keen Observer | beach, living-room, park, city, farm, under-sea | 8 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 220 |
+| 14 | Keen Observer | beach, living-room, park, city, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 230 |
+| 15 | Detail Spotter | beach, living-room, park, city, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 240 |
+| 16 | Detail Spotter | beach, living-room, park, city, farm, under-sea, supermarket | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
+| 17 | Detail Spotter | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
+| 18 | Detail Spotter | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
+| 19 | Detail Spotter | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
+| 20 | Eagle Eye | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
+| 21 | Eagle Eye | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
+| 22 | Eagle Eye | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
+| 23 | Eagle Eye | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
+| 24 | Eagle Eye | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
+| 25 | Total Recall | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
+| 26 | Total Recall | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
+| 27 | Total Recall | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
+| 28 | Total Recall | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
+| 29 | Total Recall | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
+| 30 | Photographic Memory | beach, living-room, park, city, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
 
 ## At the beach (`beach`)
 
@@ -109,7 +109,7 @@ See [Levels and scoring](../levels-and-scoring.md).
 
 Keep-clear areas (nothing may cover them): 3 (building doors and their house numbers).
 
-Per-picture details: three houses with different named colours and rising house numbers.
+Per-picture details: three houses with different named colours and rising house numbers; "What time was on the street clock?" (when there's a clock) on every level.
 
 ### Colour schemes
 
@@ -186,6 +186,51 @@ Per-picture details: "What time was on the clock?" (when there's a wall-clock) o
 | teddy bear | floor | small 11% | 3 | fixed (`#a0612b`) | – |
 | toy car | floor | small 11% | 4 | Red, Blue, Yellow, Green, Orange | – |
 | pile of books | floor | small 12% | 3 | fixed (`#1d70d6`) | never on the rug |
+
+## In the park (`park`)
+
+### Bands
+
+| Band | Height | Surface | Slot rows | Rules |
+| --- | --- | --- | --- | --- |
+| In the sky (`sky`) | 0% – 24% | air | 1 | – |
+| By the trees (`bushes`) | 24% – 29% | ground | 0 | – |
+| On the pond (`pond`) | 29% – 45.5% | ground | 1 | at most 2 kinds |
+| On the path (`path`) | 47% – 61.5% | ground | 1 | at most 2 kinds; everything faces one way |
+| On the grass (`grass`) | 64% – 100% | ground | 2 | – |
+
+Per-picture details: "What number was on the rowing boat?" (when there's a boat); "What time was on the park clock?" (when there's a park-clock) on every level.
+
+### Colour schemes
+
+| Scheme | Surface colours |
+| --- | --- |
+| summer | sky `#8fd3f4`, bushes `#5a9e3e`, bushesDark `#3f7f2e`, pond `#5fa8d3`, ripple `#ffffff`, grass `#9ccc5a`, tuft `#5d8f2a`, path `#e3d3b0`, edge `#c2ad84` |
+| spring | sky `#a5d8f3`, bushes `#6bb04a`, bushesDark `#4c8f36`, pond `#4f97c4`, ripple `#ffffff`, grass `#b5d77a`, tuft `#6f9a3a`, path `#e9dcc0`, edge `#c9b48c` |
+
+### Things (19)
+
+| Thing | Band | Size | Most | Colours | Habits |
+| --- | --- | --- | --- | --- | --- |
+| sun | sky | medium 16% | 1 | fixed (`#ffd93b`) | one only, not counted |
+| bird | sky | small 10% | 4 | fixed (`#222222`) | – |
+| kite | sky | medium 13% | 3 | Red, Blue, Yellow, Green, Purple, Orange | – |
+| hot-air balloon | sky | medium 14% | 2 | Red, Blue, Purple, Green, Orange, Pink | – |
+| plane | sky | medium 18% | 1 | fixed (`#ffffff`) | one only, not counted |
+| rowing boat | pond | xl 34% | 1 | Red, Yellow, Green, Orange, White | may span columns; one only, not counted |
+| swan | pond | medium 14% | 3 | fixed (`#f8f9fa`) | – |
+| fountain | pond | large 28% | 1 | fixed (`#495057`) | one only, not counted |
+| bicycle | path | large 20% | 2 | Red, Blue, Green, Orange, Purple | – |
+| ice-cream cart | path, grass | large 21% | 1 | Red, Blue, Pink, Green, Yellow | one only, not counted |
+| bench | grass | large 21% | 2 | Green, Brown, Red, Blue | against the back (feet at the back line); copies spread one per third, on one line |
+| picnic blanket | grass | large 23% | 2 | Red, Blue, Yellow, Purple, Orange | – |
+| flower bed | grass | large 23% | 2 | Red, Yellow, Pink, Purple, Orange, White | – |
+| swing set | grass | large 28% | 1 | fixed (`#d62828`) | one only, not counted |
+| slide | grass | large 28% | 1 | Red, Blue, Orange | one only, not counted |
+| park clock | grass | small 12% | 1 | fixed (`#2d3436`) | tall anchor (stands at the back, rises above its band); one only, not counted |
+| tree | grass | large 28% | 2 | fixed (`#2f8f3a`) | tall anchor (stands at the back, rises above its band); copies spread one per third, on one line |
+| person | path, grass | small 10% | 3 | Red, Blue, Yellow, Green, Orange, Purple, Pink, White | – |
+| dog | path, grass | medium 14% | 2 | Brown, Black, White | – |
 
 ## On the farm (`farm`)
 

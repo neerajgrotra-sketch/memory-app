@@ -74,7 +74,8 @@ export interface ItemDef {
   kind: string;
   singular: string;
   plural: string;
-  article: 'a' | 'an';
+  /** 'the' for things there's only one of in the world (the sun): "The sun", never "A sun". */
+  article: 'a' | 'an' | 'the';
   /** Design box the `draw` function uses; its shape sets the height from the width. */
   w: number;
   h: number;
