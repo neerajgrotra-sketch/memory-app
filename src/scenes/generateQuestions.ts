@@ -1,4 +1,4 @@
-import type { Question } from '@/types/game';
+import type { Question, QuestionFamily } from '@/types/game';
 
 import { ALL_COLOURS } from './colours';
 import { createRng, type Rng } from './random';
@@ -70,6 +70,29 @@ function countOptions(n: number, close: boolean, rng: Rng): string[] {
   return [n, ...picked].map(String);
 }
 
+const NUMBER_WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+
+/** "the kites", or the part that's coloured: "the sail on the boat", "the person’s shirt". */
+function colourNoun(item: ItemDef, plural: boolean): string {
+  const prompt = item.colourPrompt?.(plural);
+  const match = prompt?.match(/^What colours? (?:was|were) (.+)\?$/);
+  return match ? match[1] : `the ${plural ? item.plural : item.singular}`;
+}
+
+/** The named colour closest to a hex (for things with a fixed colour: a red crab, a green tree). */
+function nearestColour(hex: string): string {
+  const rgb = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const [r, g, b] = rgb(hex);
+  let best = ALL_COLOURS[0];
+  let bestDistance = Infinity;
+  for (const c of ALL_COLOURS) {
+    const [cr, cg, cb] = rgb(c.hex);
+    const distance = (r - cr) ** 2 + (g - cg) ** 2 + (b - cb) ** 2;
+    if (distance < bestDistance) [best, bestDistance] = [c, distance];
+  }
+  return best.name;
+}
+
 /** Writes every question the scene can answer. Answers come straight from the scene, so they are always right. */
 export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: QuestionKnobs): Question[] {
   const rng = createRng(spec.seed ^ 0x9e3779b9);
@@ -87,8 +110,15 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   // Only bands things can go in make believable wrong answers (not the room's bare ceiling).
   const zones = recipe.zones.filter((z) => z.rows > 0);
 
-  const add = (template: string, group: PlacedGroup | null, q: Omit<Question, 'id' | 'sceneId' | 'answerIndex'>) =>
-    questions.push({ ...q, id: `${spec.id}-${template}-${group?.kind ?? q.subject}`, sceneId: spec.id, answerIndex: 0 });
+  const FAMILY: Record<string, QuestionFamily> = { colours: 'colour', missing: 'seen' };
+  const add = (template: string, group: PlacedGroup | null, q: Omit<Question, 'id' | 'sceneId' | 'answerIndex'>, answerIndex = 0) =>
+    questions.push({
+      family: FAMILY[template] ?? (template as QuestionFamily),
+      ...q,
+      id: `${spec.id}-${template}-${group?.kind ?? q.subject}`,
+      sceneId: spec.id,
+      answerIndex,
+    });
 
   for (const group of spec.groups) {
     const item = itemOf(group.kind);
@@ -181,6 +211,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         sceneId: spec.id,
         answerIndex: 0,
         type: 'number',
+        family: 'detail',
         ...subject,
         prompt: `What number was on the ${house.colour.name.toLowerCase()} house?`,
         options: withDistractors(n, numbers, numberLookalikes(house.number), rng),
@@ -190,6 +221,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         sceneId: spec.id,
         answerIndex: 0,
         type: 'colour',
+        family: 'detail',
         ...subject,
         prompt: `What colour was house number ${n}?`,
         options: withDistractors(
@@ -202,17 +234,22 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     }
   }
 
-  // Any recipe's backdrop facts ("What colour was the barn?"), asked on the same levels as house numbers.
-  if (knobs.houseNumbers) {
-    for (const fact of spec.details?.facts ?? []) {
+  // Any recipe's backdrop facts ("What colour was the barn?"), asked on the same levels as house numbers;
+  // a few (the clock) on every level, and some only when their thing is in the picture.
+  for (const fact of spec.details?.facts ?? []) {
+    if (!(knobs.houseNumbers || fact.everyLevel)) continue;
+    if (fact.needs && !spec.groups.some((g) => g.kind === fact.needs)) continue;
+    {
       questions.push({
         id: `${spec.id}-fact-${fact.id}`,
         sceneId: spec.id,
         answerIndex: 0,
         type: fact.type,
+        family: 'detail',
+        spotlight: fact.spotlight,
         subject: fact.id,
         prompt: fact.prompt,
-        options: withDistractors(fact.answer, fact.wrong, [], rng),
+        options: withDistractors(fact.answer, fact.wrong, fact.fallback ?? [], rng),
       });
     }
   }
@@ -231,6 +268,161 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       subject: missing.kind,
       prompt: 'Which of these was NOT in the picture?',
       options: withDistractors(cap(missing.singular), present.map((i) => cap(i.singular)), [], rng),
+    });
+  }
+
+  // ---- Questions that link two things, or the whole picture ----------------------------------------
+
+  /** Groups that can be counted (never the sun or the sofa). */
+  const countable = spec.groups.filter((g) => canBeSeveral(itemOf(g.kind)));
+
+  // "Were there more kites or birds?": two things to remember and weigh up. Sometimes it's a tie.
+  const pairs = rng.shuffle(combinations(countable, 2)).slice(0, 2);
+  for (const [a, b] of pairs) {
+    const [ia, ib] = [itemOf(a.kind), itemOf(b.kind)];
+    const options = [cap(ia.plural), cap(ib.plural), 'The same number'];
+    add(
+      'compare',
+      null,
+      {
+        type: 'count',
+        subject: `compare-${a.kind}-${b.kind}`,
+        prompt: `Were there more ${ia.plural} or more ${ib.plural}?`,
+        options,
+        fixedOrder: true,
+      },
+      a.count > b.count ? 0 : b.count > a.count ? 1 : 2,
+    );
+  }
+
+  // "Which was there the most of?": a clear winner, at least two ahead of nothing.
+  const byCount = [...countable].sort((a, b) => b.count - a.count);
+  if (byCount.length >= 4 && byCount[0].count > byCount[1].count) {
+    const top = itemOf(byCount[0].kind);
+    add('most', null, {
+      type: 'count',
+      subject: `most-${top.kind}`,
+      prompt: 'Which was there the most of?',
+      options: withDistractors(cap(top.plural), byCount.slice(1).map((g) => cap(itemOf(g.kind).plural)), [], rng),
+    });
+  }
+
+  // "Which was there just one of?": only one countable thing was on its own. Anything else that was
+  // single (the sun, the sofa) is never a wrong option, since it was "just one" too.
+  const singles = countable.filter((g) => g.count === 1);
+  const several = countable.filter((g) => g.count > 1);
+  if (singles.length === 1 && several.length >= 2) {
+    const only = itemOf(singles[0].kind);
+    add('most', null, {
+      type: 'count',
+      subject: `only-${only.kind}`,
+      prompt: 'Which was there just one of?',
+      options: withDistractors(
+        nounPhrase(only, false),
+        several.map((g) => nounPhrase(itemOf(g.kind), false)),
+        absent.filter(canBeSeveral).map((i) => nounPhrase(i, false)),
+        rng,
+      ),
+    });
+  }
+
+  // "What was above the buoys?": the only thing above (or below) it, in the same third and another band.
+  // Thirds, not exact positions: they never change when the picture is laid out again for another
+  // screen. Wide things (a sofa, a bus) reach into the next third, so they're never asked about here.
+  const zoneIndex = (g: PlacedGroup) => recipe.zones.findIndex((z) => z.id === g.zoneId);
+  const NEXT: Record<Region, Region[]> = { left: ['centre'], centre: ['left', 'right'], right: ['centre'] };
+  const isWide = (g: PlacedGroup) => itemOf(g.kind).wide === true;
+  const reaches = (g: PlacedGroup, region: Region) => sidesOf(g).has(region) || (isWide(g) && NEXT[g.region].includes(region));
+  const single = spec.groups.filter((g) => !(itemOf(g.kind).spread && g.count > 1) && !isWide(g));
+  for (const group of single) {
+    const item = itemOf(group.kind);
+    for (const dir of ['above', 'below'] as const) {
+      const isDir = (g: PlacedGroup) => (dir === 'above' ? zoneIndex(g) < zoneIndex(group) : zoneIndex(g) > zoneIndex(group));
+      const near = spec.groups.filter((g) => g !== group && isDir(g) && reaches(g, group.region));
+      if (near.length !== 1 || !single.includes(near[0])) continue;
+      const target = near[0];
+      const answerItem = itemOf(target.kind);
+      const plural = target.count > 1;
+      const fits = (i: ItemDef) => i.kind !== answerItem.kind && i.kind !== item.kind && (!plural || canBeSeveral(i));
+      const elsewhere = spec.groups.filter((g) => g !== group && g !== target).map((g) => itemOf(g.kind));
+      add(dir, group, {
+        type: 'position',
+        family: 'relation',
+        subject: item.kind,
+        prompt: `What was ${dir} ${group.count > 1 ? `the ${item.plural}` : `the ${item.singular}`}?`,
+        options: withDistractors(
+          nounPhrase(answerItem, plural),
+          elsewhere.filter(fits).map((i) => nounPhrase(i, plural)),
+          absent.filter(fits).map((i) => nounPhrase(i, plural)),
+          rng,
+        ),
+      });
+    }
+  }
+
+  // "What else was the same colour as the kites?": only when exactly one other thing shares the colour,
+  // and nothing with a fixed colour (a red crab), a house or the barn could be argued as an answer too.
+  const backdropColours = new Set([
+    ...(spec.details?.houses ?? []).map((h) => h.colour.name),
+    ...(spec.details?.facts ?? []).filter((f) => f.type === 'colour').map((f) => f.answer),
+  ]);
+  const fixedColours = new Set(spec.groups.map((g) => itemOf(g.kind)).filter((i) => !i.colours && i.tone).map((i) => nearestColour(i.tone!)));
+  const mixedColours = new Set(spec.groups.flatMap((g) => (g.colours ?? []).map((c) => c.name)));
+  const coloured = spec.groups.filter((g) => g.colour && itemOf(g.kind).colours);
+  for (const group of coloured) {
+    const name = group.colour!.name;
+    if (backdropColours.has(name) || fixedColours.has(name) || mixedColours.has(name)) continue;
+    const twins = coloured.filter((g) => g !== group && g.colour!.name === name);
+    if (twins.length !== 1) continue;
+    const twin = twins[0];
+    const item = itemOf(group.kind);
+    const label = (g: PlacedGroup) => cap(colourNoun(itemOf(g.kind), g.count > 1));
+    add('twins', group, {
+      type: 'colour',
+      subject: item.kind,
+      prompt: `What else was the same colour as ${colourNoun(item, group.count > 1)}?`,
+      options: withDistractors(
+        label(twin),
+        coloured.filter((g) => g.colour!.name !== name).map(label),
+        absent.filter((i) => i.colours).map((i) => cap(colourNoun(i, false))),
+        rng,
+      ),
+    });
+  }
+
+  // True or false: a quick change of pace. Half are true, half false.
+  const statements: { subject: string; type: Question['type']; text: string; truth: boolean }[] = [];
+  for (const group of countable) {
+    const item = itemOf(group.kind);
+    const truth = rng.next() < 0.5;
+    const n = truth ? group.count : group.count === 1 ? 2 : group.count + (rng.next() < 0.5 ? -1 : 1);
+    if (n < 1 || n >= NUMBER_WORDS.length) continue;
+    const text = n === 1 ? `There was one ${item.singular}.` : `There were ${NUMBER_WORDS[n]} ${item.plural}.`;
+    statements.push({ subject: item.kind, type: 'count', text, truth });
+  }
+  for (const group of coloured) {
+    const item = itemOf(group.kind);
+    const truth = rng.next() < 0.5;
+    const others = item.colours!.filter((c) => c.name !== group.colour!.name);
+    const colour = truth ? group.colour!.name : rng.pick(others).name;
+    const plural = group.count > 1;
+    statements.push({ subject: item.kind, type: 'colour', text: `${cap(colourNoun(item, plural))} ${plural ? 'were' : 'was'} ${colour.toLowerCase()}.`, truth });
+  }
+  if (absent.length) {
+    const item = rng.pick(absent);
+    statements.push({ subject: item.kind, type: 'object', text: `There was ${item.article} ${item.singular} in the picture.`, truth: false });
+  }
+  for (const s of rng.shuffle(statements).slice(0, 3)) {
+    questions.push({
+      id: `${spec.id}-true-false-${s.subject}`,
+      sceneId: spec.id,
+      type: s.type,
+      family: 'true-false',
+      subject: s.subject,
+      prompt: `True or false?\n${s.text}`,
+      options: ['True', 'False'],
+      answerIndex: s.truth ? 0 : 1,
+      fixedOrder: true,
     });
   }
 

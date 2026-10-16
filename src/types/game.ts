@@ -9,6 +9,23 @@ export type Level = Exclude<Difficulty, 'progressive'>;
 /** How a round is played: on your own level (which moves), or as Practice at a fixed band. */
 export type PlayMode = 'levels' | Level;
 
+/**
+ * The kind of question, finer than its type: a round mixes kinds (see `selectQuestions`), so it's never
+ * five "where was…" questions in a row.
+ */
+export type QuestionFamily =
+  | 'count'
+  | 'colour'
+  | 'where'
+  | 'what-here'
+  | 'seen'
+  | 'compare'
+  | 'most'
+  | 'relation'
+  | 'twins'
+  | 'true-false'
+  | 'detail';
+
 /** A question about a picture, before it is prepared for a round. */
 export interface Question {
   id: string;
@@ -16,12 +33,17 @@ export interface Question {
   sceneId: string;
   type: QuestionType;
   prompt: string;
-  /** Exactly four options. */
+  /** Two to four options (two for true or false). */
   options: string[];
   /** Index into `options` of the correct answer. */
   answerIndex: number;
   /** What the question is about; a round avoids asking about the same thing twice. */
   subject?: string;
+  family?: QuestionFamily;
+  /** Asked first when it's in the picture (the time on a clock: rare, so always worth asking). */
+  spotlight?: boolean;
+  /** Keep the options in this order (True before False; "The same number" last). */
+  fixedOrder?: boolean;
 }
 
 /** A question prepared for one round: options shuffled, answer re-indexed. */

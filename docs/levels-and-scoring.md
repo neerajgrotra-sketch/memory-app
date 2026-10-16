@@ -34,6 +34,7 @@ How a player's level moves, what each level changes, and how points are worked o
 | House numbers | no | from Level 8 | |
 | Hydrants in mixed colours | no | from Level 12 | |
 | Close counting choices | no | from Level 14 | |
+| Clock times (living room) | whole hours | half past from Level 8, quarter past and to from Level 18 | quarters |
 | Questions asked first | object, colour | + count, position at Level 5; + number at 8; count, position, number from 18 | |
 
 The scene checker plays levels 1, 4, 6, 8, 10, 12, 14, 17 and 30 on three phones with the places each has reached, and checks that no level is easier than the one before or asks for more than Hard.

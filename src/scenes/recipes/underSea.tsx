@@ -279,8 +279,8 @@ const items: ItemDef[] = [
   },
   {
     kind: 'seaweed',
-    singular: 'seaweed',
-    plural: 'seaweed',
+    singular: 'seaweed plant',
+    plural: 'seaweed plants',
     article: 'a',
     w: 70,
     h: 220,

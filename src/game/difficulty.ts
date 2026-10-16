@@ -1,3 +1,4 @@
+import type { ClockStep } from '@/scenes/clock';
 import type { Difficulty, Level, PlayMode, QuestionType } from '@/types/game';
 
 export const ROUND_SIZE = 5;
@@ -17,10 +18,12 @@ export interface LevelConfig {
   mixedColours: boolean;
   /** Ask about the backdrop's details: house numbers and colours in the street, the barn's colour on the farm. */
   houseNumbers: boolean;
+  /** How exact the time on a clock is: whole hours (Easy), half past (Medium), quarters (Hard). */
+  clockStep: ClockStep;
 }
 
 export const LEVELS: Record<Level, LevelConfig> = {
-  easy: { preferredTypes: ['object', 'colour'], viewSeconds: 10, groups: 5, maxCount: 3, closeCounts: false, mixedColours: false, houseNumbers: false },
+  easy: { preferredTypes: ['object', 'colour'], viewSeconds: 10, groups: 5, maxCount: 3, closeCounts: false, mixedColours: false, houseNumbers: false, clockStep: 60 },
   medium: {
     preferredTypes: ['object', 'count', 'colour', 'position'],
     viewSeconds: 8,
@@ -29,8 +32,9 @@ export const LEVELS: Record<Level, LevelConfig> = {
     closeCounts: false,
     mixedColours: false,
     houseNumbers: true,
+    clockStep: 30,
   },
-  hard: { preferredTypes: ['count', 'position', 'number'], viewSeconds: 6, groups: 9, maxCount: 6, closeCounts: true, mixedColours: true, houseNumbers: true },
+  hard: { preferredTypes: ['count', 'position', 'number'], viewSeconds: 6, groups: 9, maxCount: 6, closeCounts: true, mixedColours: true, houseNumbers: true, clockStep: 15 },
 };
 
 export const LEVEL_LABELS: Record<Level, string> = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };

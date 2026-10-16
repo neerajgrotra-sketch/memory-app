@@ -1,4 +1,5 @@
 import { standsOut } from './contrast';
+import type { ClockStep } from './clock';
 import {
   AGAINST_BACK,
   AT_FRONT,
@@ -36,6 +37,8 @@ export interface SceneKnobs {
   maxCount: number;
   /** Copies of things with `mixedColours` may each be a different colour. */
   mixedColours?: boolean;
+  /** How exact clock times are (whole hours when missing). */
+  clockStep?: ClockStep;
 }
 
 /** Fresh placements tried before showing the best one found. */
@@ -68,7 +71,11 @@ const cellKey = (zone: string, col: number, row: number) => `${zone}:${col}:${ro
  * Which way a thing faces. In a one-way band (a road) everything faces the same way, fixed by the
  * scene's seed so laying the scene out again keeps it; elsewhere each thing faces either way.
  */
-const facing = (ctx: Context, zone: ZoneDef) => (zone.oneWay ? ctx.oneWayFlip : ctx.rng.next() < 0.5);
+/** Which way a thing faces. Things that must read correctly (a clock face) are never mirrored. */
+const facing = (ctx: Context, zone: ZoneDef, item: ItemDef) => {
+  const flip = zone.oneWay ? ctx.oneWayFlip : ctx.rng.next() < 0.5;
+  return flip && !item.noFlip;
+};
 
 /** True if `colour` stands out from every surface each rect is drawn over. */
 const colourFits = (ctx: Context, colour: string, rects: Rect[]) =>
@@ -169,7 +176,7 @@ function placeSpread(ctx: Context, want: Want): Placement | null {
       return [Math.max(b.x0, b.centreMin - w / 2, mid - SPREAD_JITTER - w / 2), Math.min(b.x1 - w, b.centreMax - w / 2, mid + SPREAD_JITTER - w / 2)];
     });
     if (spans.some(([lo, hi]) => hi < lo)) return null;
-    const boxes = spans.map(([lo, hi]) => ({ x: lo + (hi - lo) * rng.next(), y: y0 / ratio, w, flip: facing(ctx, zone) }));
+    const boxes = spans.map(([lo, hi]) => ({ x: lo + (hi - lo) * rng.next(), y: y0 / ratio, w, flip: facing(ctx, zone, item) }));
     const rects = boxes.map((b) => rectOf(item, b, ratio));
     if (rects.some((r, i) => rects.some((q, j) => j > i && !duplicatesOk(r, q)))) continue;
     if (!clearToPlace(ctx, want, rects)) continue;
@@ -240,7 +247,7 @@ function place(ctx: Context, want: Want): Placement | null {
         const y0 = verticalSpot(ctx, item, zone, top, bottom, bh);
         if (y0 === null) break;
         const x0 = xMin + (xMax - xMin) * rng.next();
-        const boxes = offsets.map(([dx, dy]) => ({ x: x0 + dx, y: (y0 + dy) / ratio, w, flip: facing(ctx, zone) }));
+        const boxes = offsets.map(([dx, dy]) => ({ x: x0 + dx, y: (y0 + dy) / ratio, w, flip: facing(ctx, zone, item) }));
         const rects = boxes.map((b) => rectOf(item, b, ratio));
         const group = boundsOf(rects);
         if (regionOf(centreOf(group).x) !== REGIONS[col]) continue;
@@ -283,7 +290,7 @@ function shares(recipe: Recipe, total: number): { zone: ZoneDef; quota: number }
 function build(recipe: Recipe, knobs: SceneKnobs, seed: number, rng: Rng, size: SceneSize): SceneSpec {
   const ratio = ratioOf(size);
   const base = rng.pick(recipe.variants);
-  const details = recipe.details?.(rng);
+  const details = recipe.details?.(rng, { clockStep: knobs.clockStep ?? 60 });
   const variant = variantOf(recipe, { variantId: base.id, details });
   const ctx: Context = { recipe, variant, ratio, size, rng, taken: [], cells: new Set(), oneWayFlip: (seed & 1) === 1 };
   const pool = rng.shuffle(recipe.items);

@@ -73,6 +73,7 @@ export function knobsForLevel(rawLevel: number): LevelConfig {
     closeCounts: level >= 14,
     mixedColours: level >= 12,
     houseNumbers: level >= 8,
+    clockStep: level < 8 ? 60 : level < 18 ? 30 : 15,
   };
 }
 
@@ -96,6 +97,7 @@ export function unlocksAt(level: number): string[] {
   for (const r of RECIPE_UNLOCKS) if (r.level === level) news.push(`A new place: ${r.name}`);
   if (now.houseNumbers && !before.houseNumbers) news.push('House numbers to remember in the street');
   if (now.mixedColours && !before.mixedColours) news.push('Fire hydrants can each be a different colour');
+  if (now.clockStep < before.clockStep) news.push(now.clockStep === 30 ? 'Clocks can show half past' : 'Clocks can show quarter past and quarter to');
   if (now.closeCounts && !before.closeCounts) news.push('Closer choices when counting');
   if (now.groups > before.groups) news.push('One more kind of thing in each picture');
   if (now.maxCount > before.maxCount) news.push(`Up to ${now.maxCount} of the same thing`);
@@ -117,6 +119,7 @@ export function nextBigUnlock(level: number): { level: number; text: string } | 
     if (place) return { level: l, text: `A new place: ${place.name}` };
     if (now.houseNumbers && !before.houseNumbers) return { level: l, text: 'House numbers' };
     if (now.mixedColours && !before.mixedColours) return { level: l, text: 'Hydrants in different colours' };
+    if (now.clockStep < before.clockStep) return { level: l, text: now.clockStep === 30 ? 'Clocks at half past' : 'Clocks at quarter past and quarter to' };
     if (now.closeCounts && !before.closeCounts) return { level: l, text: 'Closer choices when counting' };
   }
   return null;

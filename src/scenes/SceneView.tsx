@@ -54,12 +54,12 @@ export function SceneContent({ spec, pointsPerUnit, overlay }: SceneContentProps
         return (
           <G
             key={key}
-            transform={box.flip ? `translate(${x + item.w * scale} ${y}) scale(${-scale} ${scale})` : `translate(${x} ${y}) scale(${scale})`}
+            transform={box.flip && !item.noFlip ? `translate(${x + item.w * scale} ${y}) scale(${-scale} ${scale})` : `translate(${x} ${y}) scale(${scale})`}
             stroke={outline}
             strokeWidth={OUTLINE_POINTS / (scale * pointsPerUnit)}
             strokeLinejoin="round"
           >
-            {item.draw(colour)}
+            {item.draw(colour, spec.details)}
           </G>
         );
       })}

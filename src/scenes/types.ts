@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 
+import type { ClockStep } from './clock';
 import type { Rng } from './random';
 
 export type Region = 'left' | 'centre' | 'right';
@@ -114,13 +115,16 @@ export interface ItemDef {
    * each roof, palm trees along the beach), never bunched in one spot.
    */
   spread?: boolean;
+  /** Never drawn mirrored: a clock face read backwards shows the wrong time. */
+  noFlip?: boolean;
   /** For things with a fixed colour: their main colour, used for the contrast rules and the outline. */
   tone?: string;
   /**
    * Draws the thing in its w × h box. Shapes without their own `stroke` get the outline: 2–3 pt in a
-   * darker shade of the thing's own colour. Small details set `stroke="none"`.
+   * darker shade of the thing's own colour. Small details set `stroke="none"`. Things that show a
+   * per-picture detail (the time on a clock) read it from `details`.
    */
-  draw: (colour: string) => ReactElement;
+  draw: (colour: string, details?: SceneDetails) => ReactElement;
 }
 
 /** An oval on the floor; things are either fully on it or clear of it. Fractions of width (x) and height (y). */
@@ -163,8 +167,16 @@ export interface DetailFact {
   type: 'colour' | 'number' | 'object' | 'position' | 'count';
   prompt: string;
   answer: string;
-  /** Believable wrong answers (at least 3), e.g. the other colours a barn can be. */
+  /** Believable wrong answers (at least 3), e.g. the other colours a barn can be. Best first. */
   wrong: string[];
+  /** More wrong answers, used only when `wrong` has fewer than 3 left. */
+  fallback?: string[];
+  /** Only asked when this kind of thing is in the picture (the time, when there's a clock). */
+  needs?: string;
+  /** Asked first in a round whenever it can be (see `Question.spotlight`). */
+  spotlight?: boolean;
+  /** Asked on every level, not just from Level 8 (the clock, whose times get harder instead). */
+  everyLevel?: boolean;
 }
 
 /**
@@ -193,6 +205,12 @@ export interface VariantDef {
   background: (height: number, details?: SceneDetails) => ReactElement;
 }
 
+/** What a recipe's `details` may vary by level. */
+export interface DetailKnobs {
+  /** How exact clock times are: whole hours, half past, or quarters. */
+  clockStep: ClockStep;
+}
+
 /** A setting: its bands, backdrop and the things that belong in it. */
 export interface Recipe {
   id: string;
@@ -202,8 +220,8 @@ export interface Recipe {
   rug?: Rug;
   /** Areas nothing may cover (building doors), as fractions: x of the width, y of the height. */
   keepClear?: Rect[];
-  /** Chooses this picture's backdrop details (house colours and numbers). */
-  details?: (random: Rng) => SceneDetails;
+  /** Chooses this picture's backdrop details (house colours and numbers, the time on the clock). */
+  details?: (random: Rng, knobs: DetailKnobs) => SceneDetails;
   /** Which surface (a key of each variant's palette) is behind the point (x, y), as fractions of width and height. */
   surfaceAt: (x: number, y: number) => string;
   /**

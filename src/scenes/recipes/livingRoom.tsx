@@ -1,9 +1,11 @@
 import { Circle, Ellipse, G, Line, Path, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
+import { ClockFace, randomTime, timeLookalikes } from '../clock';
 import { ball, dog, plantPot } from '../items/common';
 import { lineMarks } from '../marks';
-import type { ItemDef, Mark, Recipe, Rect as Box, Rug } from '../types';
+import type { DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, Rug, SceneDetails } from '../types';
+import type { Rng } from '../random';
 
 /** Band edges, as fractions of the picture height: a thin ceiling, the wall, then the floor. */
 const CEILING = 0.1;
@@ -51,20 +53,17 @@ const items: ItemDef[] = [
     w: 100,
     h: 100,
     tier: 'medium',
-    size: 0.13,
+    // Big enough to read the hands on a phone.
+    size: 0.16,
     zones: WALL,
     maxCount: 1,
     // Above everything else on the wall.
     hangAt: 0.52,
     tone: '#343a40',
     countable: false,
-    draw: () => (
-      <G>
-        <Circle cx={50} cy={50} r={46} fill="#ffffff" stroke="#343a40" strokeWidth={8} />
-        <Line x1={50} y1={50} x2={50} y2={18} stroke="#343a40" strokeWidth={6} strokeLinecap="round" />
-        <Line x1={50} y1={50} x2={28} y2={62} stroke="#343a40" strokeWidth={6} strokeLinecap="round" />
-      </G>
-    ),
+    noFlip: true,
+    // The time is chosen per picture (see `details`); 10:10 when drawn on its own.
+    draw: (_colour, details) => <ClockFace time={details?.values?.clock ?? '10:10'} />,
   },
   {
     kind: 'mirror',
@@ -387,6 +386,16 @@ const PALETTES: Record<string, Palette> = {
   sage: { wall: '#dce5d1', ceiling: '#f1f5ec', floor: '#c9a47a', plank: '#7d5d38', rug: '#f4e6ea', rugEdge: '#9d4e6a' },
 };
 
+/** The time on the clock: something to remember whenever the clock is in the picture, on every level. */
+function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
+  const time = randomTime(random, clockStep);
+  const { close, other } = timeLookalikes(time, clockStep);
+  return {
+    values: { clock: time },
+    facts: [{ id: 'clock-time', type: 'number', prompt: 'What time was on the clock?', answer: time, wrong: close, fallback: other, needs: 'wall-clock', everyLevel: true, spotlight: true }],
+  };
+}
+
 function surfaceAt(x: number, y: number): string {
   if (y < CEILING) return 'ceiling';
   if (y < FLOOR) return 'wall';
@@ -396,6 +405,7 @@ function surfaceAt(x: number, y: number): string {
 export const livingRoom: Recipe = {
   id: 'living-room',
   title: 'Living room',
+  details,
   zones: [
     { id: 'ceiling', label: 'On the ceiling', surface: 'air', top: 0, bottom: CEILING, rows: 0 },
     // Things on the wall hang on two lines: a clock high up (top row of slots), the rest at eye level.

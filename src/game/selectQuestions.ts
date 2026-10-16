@@ -1,4 +1,4 @@
-import type { Question, QuestionType, RoundQuestion } from '@/types/game';
+import type { Question, QuestionFamily, QuestionType, RoundQuestion } from '@/types/game';
 
 export function shuffle<T>(items: readonly T[]): T[] {
   const result = [...items];
@@ -19,31 +19,56 @@ interface SelectOptions {
 }
 
 /**
- * Picks `count` questions from the pool: unseen before seen, preferred types
- * before others, random within each group, and about different things where possible.
+ * The variety rule: at most this many of one kind of question in a round, so every round of five mixes
+ * at least three kinds. "Where" and "what colour" are the most common in any picture, so one each.
+ */
+const FAMILY_CAP: Partial<Record<QuestionFamily, number>> = { count: 1, where: 1, colour: 1, 'what-here': 1, seen: 1, compare: 1, most: 1, relation: 1, twins: 1 };
+const DEFAULT_CAP = 2;
+/** And at most two of one type, so "how many", "more or fewer" and "the most of" don't fill a round together. */
+const TYPE_CAP = 2;
+
+/**
+ * Picks `count` questions from the pool: unseen before seen, spotlight questions (the clock) first, preferred types
+ * before others, random within each group, about different things where possible, and following the
+ * variety rule (`FAMILY_CAP`) unless the picture has too few kinds of question.
  */
 export function selectQuestions(pool: Question[], options: SelectOptions): Question[] {
   const { count, preferredTypes, seenIds, previousIds } = options;
   const candidates = pool.filter((question) => !previousIds.has(question.id));
   const source = candidates.length >= count ? candidates : pool;
 
-  const rank = (question: Question) =>
-    (seenIds.has(question.id) ? 2 : 0) + (preferredTypes.includes(question.type) ? 0 : 1);
+  const rank = (question: Question) => {
+    const preferred = preferredTypes.includes(question.type) ? 0 : 1;
+    if (seenIds.has(question.id)) return 3 + preferred;
+    return question.spotlight ? 0 : 1 + preferred;
+  };
 
   const ranked = source
     .map((question) => ({ question, rank: rank(question), tiebreak: Math.random() }))
     .sort((a, b) => a.rank - b.rank || a.tiebreak - b.tiebreak)
     .map(({ question }) => question);
 
-  // First pass skips questions about something already asked about; second pass fills any gap.
+  // First pass keeps to the variety rule and skips questions about something already asked about;
+  // the second relaxes the rule; the last fills any gap.
   const picked: Question[] = [];
   const subjects = new Set<string>();
-  for (const question of ranked) {
-    if (picked.length >= count) break;
-    if (question.subject && subjects.has(question.subject)) continue;
-    picked.push(question);
-    if (question.subject) subjects.add(question.subject);
-  }
+  const families = new Map<QuestionFamily, number>();
+  const types = new Map<QuestionType, number>();
+  const pass = (keepVariety: boolean) => {
+    for (const question of ranked) {
+      if (picked.length >= count) break;
+      if (picked.includes(question) || (question.subject && subjects.has(question.subject))) continue;
+      const family = question.family;
+      if (keepVariety && family && (families.get(family) ?? 0) >= (FAMILY_CAP[family] ?? DEFAULT_CAP)) continue;
+      if (keepVariety && (types.get(question.type) ?? 0) >= TYPE_CAP) continue;
+      picked.push(question);
+      types.set(question.type, (types.get(question.type) ?? 0) + 1);
+      if (question.subject) subjects.add(question.subject);
+      if (family) families.set(family, (families.get(family) ?? 0) + 1);
+    }
+  };
+  pass(true);
+  pass(false);
   for (const question of ranked) {
     if (picked.length >= count) break;
     if (!picked.includes(question)) picked.push(question);
@@ -53,7 +78,8 @@ export function selectQuestions(pool: Question[], options: SelectOptions): Quest
 
 /** Shuffles a question's options and re-points the answer at its new position. */
 export function toRoundQuestion(question: Question): RoundQuestion {
-  const order = shuffle(question.options.map((_, index) => index));
+  const indexes = question.options.map((_, index) => index);
+  const order = question.fixedOrder ? indexes : shuffle(indexes);
   return {
     id: question.id,
     type: question.type,

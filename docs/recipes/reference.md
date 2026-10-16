@@ -155,6 +155,8 @@ Per-picture details: three houses with different named colours and rising house 
 
 Rug: an oval centred at 50% across, 80% down, 72% wide and 18% of the height tall.
 
+Per-picture details: three houses with different named colours and rising house numbers (see `details` in the recipe).
+
 ### Colour schemes
 
 | Scheme | Surface colours |
@@ -168,7 +170,7 @@ Rug: an oval centred at 50% across, 80% down, 72% wide and 18% of the height tal
 | Thing | Band | Size | Most | Colours | Habits |
 | --- | --- | --- | --- | --- | --- |
 | picture frame | wall | medium 14% | 2 | Red, Blue, Yellow, Green, Black, White, Purple | copies spread one per third, on one line; hangs with its centre 0.34 × width above the band's bottom |
-| clock | wall | medium 13% | 1 | fixed (`#343a40`) | hangs with its centre 0.52 × width above the band's bottom; one only, not counted |
+| clock | wall | medium 16% | 1 | fixed (`#343a40`) | hangs with its centre 0.52 × width above the band's bottom; one only, not counted |
 | mirror | wall | medium 15% | 1 | fixed (`#b08d57`) | hangs with its centre 0.36 × width above the band's bottom |
 | window | wall | large 22% | 1 | fixed (`#5aa9e6`) | hangs with its centre 0.36 × width above the band's bottom |
 | sofa | floor | xl 44% | 1 | Red, Blue, Green, Grey, Yellow, Purple, Brown | against the back (feet at the back line); may span columns; never on the rug |
@@ -265,5 +267,5 @@ Per-picture details: three houses with different named colours and rising house 
 | crab | bed | small 12% | 3 | fixed (`#e63946`) | – |
 | starfish | bed | small 10% | 4 | Orange, Pink, Red, Purple | – |
 | seashell | bed | small 10% | 4 | Pink, White, Orange | – |
-| seaweed | bed | medium 13% | 3 | fixed (`#2f9e44`) | tall anchor (stands at the back, rises above its band); copies spread one per third, on one line; one only, not counted |
+| seaweed plant | bed | medium 13% | 3 | fixed (`#2f9e44`) | tall anchor (stands at the back, rises above its band); copies spread one per third, on one line; one only, not counted |
 | coral | bed | medium 15% | 3 | Pink, Orange, Purple | – |

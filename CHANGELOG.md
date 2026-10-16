@@ -10,6 +10,23 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.24 (2026-10-16)
+
+- **New kinds of question,** so rounds stop being "how many / what colour / where" every time:
+  - **Compare:** "Were there more kites or more birds?" (or the same number)
+  - **The most / just one:** "Which was there the most of?", "Which was there just one of?"
+  - **Above and below:** "What was above the buoys?"
+  - **Colour twins:** "What else was the same colour as the kites?"
+  - **True or false:** "There were three kites." Two big buttons, for a quick change of pace.
+- **The variety rule:** every round mixes at least three kinds of question: at most one "where", one "what colour", one "how many", and so on, and at most two of any one type.
+- **The living-room clock shows a real time,** and the game asks "What time was on the clock?" on every level whenever the clock is in the picture:
+  - whole hours up to Level 7, half past from Level 8, quarter past and quarter to from Level 18
+  - wrong answers tempt anyone who only half looked: the hands mirrored (3:00 → 9:00), swapped (3:00 → 12:15), or an hour off
+  - a clearer, bigger face (bold ticks at 12, 3, 6 and 9; a short thick hour hand and a long thin minute hand), never drawn mirrored.
+- Seaweed is now "seaweed plants", so "There were three seaweed plants" reads right.
+- Dropped after review: "Which way was the boat sailing?" and "What time of day was it?" (too hard to judge), and "How many green things?" (the grass and trees are green too, so the answer could be argued).
+- Docs: [Questions](docs/questions.md) covers the new kinds, the clock and the variety rule; the question examples are regenerated.
+
 ## 4.0.0-beta.23 (2026-10-16)
 
 - **One-tap mute:** a speaker button on the Games tab (top right), in the bar above the picture (next to the countdown), and next to ✕ during the questions. It shows a speaker when sound is on and a crossed-out speaker when it's off, takes effect at once (even mid-countdown), and is the same setting as Profile → Sounds, so it's remembered.
