@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.23 (2026-10-16)
+
+- **One-tap mute:** a speaker button on the Games tab (top right), in the bar above the picture (next to the countdown), and next to ✕ during the questions. It shows a speaker when sound is on and a crossed-out speaker when it's off, takes effect at once (even mid-countdown), and is the same setting as Profile → Sounds, so it's remembered.
+
 ## 4.0.0-beta.22 (2026-10-16)
 
 - **iPhone web: every sound plays again, not just the countdown.** Sounds started by a tap (Play, answers, the result after your last answer) were being cut off instantly: switching a player on (a silent start and stop) finished just after the real sound began and stopped it. Now:

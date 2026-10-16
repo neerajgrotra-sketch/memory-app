@@ -19,7 +19,7 @@ It opens with a short launch animation (an eye opens, **glance** and "Look close
 
 - **Games**: once you've played, a slim **Continue** strip (your level ring and **Play**), then games grouped by skill. A skill only appears once it has a game, so today there's **Memory** with Look & Remember. Tapping a game opens its page.
 - **Progress**: each game's level, best level, high score and a chart of your level over time, then your scores, accuracy per question type, practice habits, and **Your levels** (one row per level played, with rounds, best points and average).
-- **Profile**: name and age band (optional, asked once after the first round), "More time to look" (+3 s per picture, on by default for 55+), **Sounds** and **Vibration** switches, the temporary testing filter, and "Clear my details". glance is a game, not a medical test: nothing compares you with other people or claims to measure brain health.
+- **Profile**: name and age band (optional, asked once after the first round), "More time to look" (+3 s per picture, on by default for 55+), **Sounds** and **Vibration** switches (sound can also be muted in one tap with the speaker button on the Games tab and during a round), the temporary testing filter, and "Clear my details". glance is a game, not a medical test: nothing compares you with other people or claims to measure brain health.
 
 ## Look & Remember
 

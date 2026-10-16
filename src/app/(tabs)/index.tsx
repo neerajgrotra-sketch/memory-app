@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { GameArt } from '@/components/GameArt';
 import { LevelRing } from '@/components/LevelRing';
+import { SoundToggle } from '@/components/SoundToggle';
 import { titleFor } from '@/games/lookRemember/ladder';
 import { GAMES, SKILLS, SKILL_ORDER, type GameDef } from '@/games/registry';
 import { useGameProgress } from '@/hooks/useGameProgress';
@@ -28,9 +29,12 @@ export default function GamesScreen() {
   return (
     <SafeAreaView style={styles.screen} edges={['top', 'left', 'right']}>
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.brand}>glance</Text>
-          <Text style={styles.greeting}>{profile?.name ? `Hi, ${profile.name}` : 'Brain games, one glance at a time'}</Text>
+        <View style={styles.headerRow}>
+          <View style={styles.header}>
+            <Text style={styles.brand}>glance</Text>
+            <Text style={styles.greeting}>{profile?.name ? `Hi, ${profile.name}` : 'Brain games, one glance at a time'}</Text>
+          </View>
+          <SoundToggle />
         </View>
 
         {/* Once you've played, a slim strip to carry on at your level. New players start from the game card below. */}
@@ -114,7 +118,8 @@ const styles = StyleSheet.create({
   screen: { flex: 1 },
   // Phone-width column, centred on tablets and wide windows so nothing is blown up.
   container: { padding: 16, paddingBottom: 32, gap: 24, width: '100%', maxWidth: 520, alignSelf: 'center' },
-  header: { gap: 2, paddingHorizontal: 4 },
+  headerRow: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 },
+  header: { flex: 1, gap: 2, paddingHorizontal: 4 },
   brand: { color: colors.accent, fontSize: 34, fontWeight: '900', letterSpacing: -0.5 },
   greeting: { color: colors.textMuted, fontSize: 16 },
   continue: {

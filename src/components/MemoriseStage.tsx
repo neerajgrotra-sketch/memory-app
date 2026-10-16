@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Countdown } from '@/components/Countdown';
 import { QuitButton } from '@/components/QuitButton';
+import { SoundToggle } from '@/components/SoundToggle';
 import { feedback } from '@/feedback';
 import { toggleLayoutOverlay, useLayoutOverlay } from '@/scenes/debugOverlay';
 import { SceneView } from '@/scenes/SceneView';
@@ -65,6 +66,7 @@ export function MemoriseStage({ scene, seconds, onDone, onQuit }: MemoriseStageP
         )}
         {/* While the layout overlay is on, the timer waits so the layout can be checked. */}
         <Countdown seconds={seconds} running={!overlay} onComplete={() => finish(seconds)} onTick={onTick} />
+        <SoundToggle />
         {/* Ready before the time is up: a deliberate button, never a tap on the picture itself. */}
         <Pressable
           accessibilityRole="button"

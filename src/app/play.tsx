@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LevelUpScreen } from '@/components/LevelUpScreen';
 import { MemoriseStage } from '@/components/MemoriseStage';
 import { QuitButton } from '@/components/QuitButton';
+import { SoundToggle } from '@/components/SoundToggle';
 import { QuizStage } from '@/components/QuizStage';
 import { ResultStage } from '@/components/ResultStage';
 import { isPlayMode } from '@/game/difficulty';
@@ -100,6 +101,7 @@ function Game({ start }: { start: SessionStart }) {
         <SafeAreaView style={styles.closeWrap} pointerEvents="box-none">
           <View style={styles.close}>
             <QuitButton onPress={goBack} />
+            <SoundToggle />
           </View>
         </SafeAreaView>
       )}
@@ -111,5 +113,5 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   loading: { alignItems: 'center', justifyContent: 'center' },
   closeWrap: { position: 'absolute', top: 0, left: 0 },
-  close: { margin: 16 },
+  close: { margin: 16, flexDirection: 'row', gap: 10 },
 });
