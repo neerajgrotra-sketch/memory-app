@@ -10,7 +10,9 @@ import { SoundToggle } from '@/components/SoundToggle';
 import { QuizStage } from '@/components/QuizStage';
 import { ResultStage } from '@/components/ResultStage';
 import { isPlayMode } from '@/game/difficulty';
+import { dailyResultOn, streakOf, type Streak } from '@/games/lookRemember/daily';
 import { loadProgress } from '@/hooks/useGameProgress';
+import { statsStore } from '@/stats';
 import { useGameSession, type SessionStart } from '@/hooks/useGameSession';
 import { colors } from '@/theme';
 import type { PlayMode } from '@/types/game';
@@ -24,11 +26,14 @@ export default function PlayScreen() {
   const params = useLocalSearchParams<{ mode?: string }>();
   const mode: PlayMode = isPlayMode(params.mode) ? params.mode : 'levels';
   // Your level and high score come from saved rounds, so wait for them before the first picture.
-  const [start, setStart] = useState<SessionStart | null>(null);
+  const [start, setStart] = useState<(SessionStart & { streak: Streak }) | null>(null);
   useEffect(() => {
     let live = true;
-    loadProgress('look-remember').then((progress) => {
-      if (live) setStart({ mode, ladder: progress.ladder, highScore: progress.highScore });
+    Promise.all([loadProgress('look-remember'), statsStore.listResults()]).then(([progress, all]) => {
+      if (!live) return;
+      // One Daily Challenge a day.
+      if (mode === 'daily' && dailyResultOn(all)) return goBack();
+      setStart({ mode, ladder: progress.ladder, highScore: progress.highScore, streak: streakOf(all) });
     });
     return () => {
       live = false;
@@ -45,13 +50,16 @@ export default function PlayScreen() {
   return <Game key={mode} start={start} />;
 }
 
-function Game({ start }: { start: SessionStart }) {
+function Game({ start }: { start: SessionStart & { streak: Streak } }) {
   const { stage, round, phase, answers, score, outcome, ladder, finishMemorising, answer, playAgain, nextPicture } =
     useGameSession(start);
   // The level-up screen shows once per level gained, before the round's results.
   const [celebrated, setCelebrated] = useState<string | null>(null);
   const levelUpKey = outcome?.ladder && outcome.ladder.after.level > outcome.ladder.before.level ? `${round.index}` : null;
   const showLevelUp = phase === 'result' && levelUpKey !== null && celebrated !== levelUpKey;
+  // The first round today extends the streak (or starts one); later rounds today keep it.
+  const firstToday = !start.streak.playedToday && round.index === 0;
+  const streak = { days: start.streak.playedToday ? start.streak.current : start.streak.current + 1, isNew: firstToday };
 
   return (
     <View style={styles.container}>
@@ -76,6 +84,7 @@ function Game({ start }: { start: SessionStart }) {
             mode={start.mode}
             outcome={outcome}
             nextLevel={ladder.level}
+            streak={streak}
             onPlayAgain={playAgain}
             onNextPicture={nextPicture}
             onHome={goBack}

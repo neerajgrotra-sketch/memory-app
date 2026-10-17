@@ -7,7 +7,8 @@ export type Difficulty = 'easy' | 'medium' | 'hard' | 'progressive';
 export type Level = Exclude<Difficulty, 'progressive'>;
 
 /** How a round is played: on your own level (which moves), or as Practice at a fixed band. */
-export type PlayMode = 'levels' | Level;
+/** Levels (your level moves), the Daily Challenge (one picture a day, at your level), or Practice at a fixed band. */
+export type PlayMode = 'levels' | 'daily' | Level;
 
 /**
  * The kind of question, finer than its type: a round mixes kinds (see `selectQuestions`), so it's never

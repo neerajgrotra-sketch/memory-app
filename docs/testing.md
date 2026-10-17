@@ -4,6 +4,7 @@
 | --- | --- |
 | `npm run typecheck` | TypeScript |
 | `npm run lint` | ESLint (Expo config) |
+| `npm run check:daily` | Checks the streak and Daily Challenge rules (days in a row, midnight, daylight saving, the week strip), in two time zones |
 | `npm run check:scenes` | Checks the level rules and points, then generates 44,400 scenes and checks every rule (below) |
 | `npm run gallery` | Renders pictures to `gallery.html` for reviewing by eye |
 | `RECIPE=farm npm run lineup` | Draws a recipe's things side by side at their real sizes (`lineup.html`), to check sizes and shapes against each other |

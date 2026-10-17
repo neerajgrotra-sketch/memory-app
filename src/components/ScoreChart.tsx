@@ -16,7 +16,7 @@ function formatWhen(iso: string) {
 
 /** "Level 4" for levelled rounds, otherwise the band ("Practice · Easy" and older rounds). */
 const roundLabel = (r: RoundResult) =>
-  r.ladder ? `Level ${r.ladder.level}` : r.mode === 'levels' ? `${LEVEL_LABELS[r.level]} · same picture again` : `Practice · ${LEVEL_LABELS[r.level]}`;
+  r.ladder ? `Level ${r.ladder.level}` : r.mode === 'daily' ? 'Daily challenge' : r.mode === 'levels' ? `${LEVEL_LABELS[r.level]} · same picture again` : `Practice · ${LEVEL_LABELS[r.level]}`;
 
 interface ScoreChartProps {
   /** Oldest first. */

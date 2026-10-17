@@ -164,7 +164,7 @@ export const BAND_LEVELS: Record<Level, [number, number]> = { easy: [1, 7], medi
  * (average 3.5 or more over their last rounds there, at least 3 rounds).
  */
 export function startingLevel(results: RoundResult[]): number {
-  const legacy = results.filter((r) => r.mode !== 'levels');
+  const legacy = results.filter((r) => r.mode !== 'levels' && r.mode !== 'daily');
   const goodAt = (level: Level) => {
     const own = legacy.filter((r) => r.level === level).slice(-10);
     return own.length >= 3 && own.reduce((n, r) => n + r.score, 0) / own.length >= 3.5;

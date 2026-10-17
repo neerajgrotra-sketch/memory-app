@@ -10,6 +10,17 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.32 (2026-10-17)
+
+- **Daily challenge and streak**, on a card at the top of the Games tab (once you've played a round):
+  - **🔥 Streak:** days in a row you've played at least one round, in any mode. It stays alive until midnight ("Play today to keep your 3-day streak"). Your best streak is kept.
+  - **This week:** Monday to Sunday, with a tick on each day you played and today outlined.
+  - **Today's challenge:** one special picture a day, the same all day, at your level, from every place you've reached. **Double points, one try.** Afterwards the card shows "Done ✓" with your score until tomorrow. It never changes your level or high score.
+  - The result screen celebrates the first round of each day ("🔥 3-day streak!") and shows a "Daily ×2" points chip for the challenge.
+- **Progress tab:** "Day streak" now shows 🔥, and there's a new "Best streak" tile.
+- **New check:** `npm run check:daily` tests the streak rules (midnight, daylight saving, the week strip) in two time zones; it's part of the project, not a one-off script.
+- Reminders aren't included yet: they need notifications in a real phone build.
+
 ## 4.0.0-beta.31 (2026-10-16)
 
 - **A new place: In the kitchen**, unlocked at **Level 8** (and in Practice).

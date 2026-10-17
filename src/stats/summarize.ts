@@ -1,6 +1,7 @@
 import { LEVEL_ORDER } from '@/game/difficulty';
 import type { Difficulty, Level, PlayMode, QuestionType } from '@/types/game';
 import type { RoundResult } from '@/types/stats';
+import { localDay, streakOf } from '@/games/lookRemember/daily';
 
 const TREND_WINDOW = 5;
 /** Change in average score (out of 5) that counts as a real move up or down. */
@@ -58,6 +59,8 @@ export interface PracticeSummary {
   daysPlayed: number;
   /** Days in a row with at least one round, ending today (or yesterday, if not played yet today). */
   streak: number;
+  /** The longest run of days in a row. */
+  bestStreak: number;
   /** How much scores vary over the last rounds (standard deviation, out of 5); null until enough rounds. */
   spread: number | null;
   typeChanges: TypeChange[];
@@ -126,13 +129,8 @@ const dayOf = (iso: string) => {
 /** Practice summary from rounds sorted oldest first. `now` is injectable for tests. */
 export function practiceOf(results: RoundResult[], now = new Date()): PracticeSummary {
   const days = new Set(results.map((r) => dayOf(r.playedAt)));
-  let streak = 0;
-  const cursor = new Date(now);
-  if (!days.has(dayOf(cursor.toISOString()))) cursor.setDate(cursor.getDate() - 1);
-  while (days.has(dayOf(cursor.toISOString()))) {
-    streak++;
-    cursor.setDate(cursor.getDate() - 1);
-  }
+  // The same streak the Games tab shows (see src/games/lookRemember/daily.ts).
+  const { current: streak, best: bestStreak } = streakOf(results, localDay(now));
 
   const last = results.slice(-SPREAD_WINDOW).map((r) => r.score);
   const mean = average(last);
@@ -158,13 +156,14 @@ export function practiceOf(results: RoundResult[], now = new Date()): PracticeSu
   const earlyFinish =
     recentTimed.length >= 3 ? { recent: spare(recentTimed), before: earlierTimed.length >= 3 ? spare(earlierTimed) : null } : null;
 
-  return { daysPlayed: days.size, streak, spread, typeChanges, earlyFinish };
+  return { daysPlayed: days.size, streak, bestStreak, spread, typeChanges, earlyFinish };
 }
 
 export function playedLevelsOf(results: RoundResult[]): PlayedLevel[] {
   const rows = new Map<string, PlayedLevel & { total: number }>();
   for (const r of results) {
-    if (r.replay) continue;
+    // Replays and the Daily Challenge (its own kind of round) aren't level or practice rows.
+    if (r.replay || r.mode === 'daily') continue;
     const key = r.ladder ? `level-${r.ladder.level}` : `practice-${r.level}`;
     const row = rows.get(key) ?? { key, level: r.ladder?.level, band: r.ladder ? undefined : r.level, rounds: 0, average: 0, bestPoints: 0, total: 0 };
     row.rounds += 1;

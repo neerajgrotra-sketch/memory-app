@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { DailyCard } from '@/components/DailyCard';
 import { GameArt } from '@/components/GameArt';
 import { LevelRing } from '@/components/LevelRing';
 import { SoundToggle } from '@/components/SoundToggle';
@@ -36,6 +37,9 @@ export default function GamesScreen() {
           </View>
           <SoundToggle />
         </View>
+
+        {/* The daily habit (streak, this week, today's challenge), once you've played a first round. */}
+        {played && <DailyCard />}
 
         {/* Once you've played, a slim strip to carry on at your level. New players start from the game card below. */}
         {played && progress && (

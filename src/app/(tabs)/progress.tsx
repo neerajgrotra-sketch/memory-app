@@ -174,7 +174,8 @@ export default function ProgressScreen() {
           <Section title="Your practice">
             <View style={styles.tiles}>
               <Tile label="Days played" value={String(summary.practice.daysPlayed)} />
-              <Tile label="Day streak" value={String(summary.practice.streak)} />
+              <Tile label="Day streak" value={`🔥 ${summary.practice.streak}`} />
+              <Tile label="Best streak" value={String(summary.practice.bestStreak)} />
             </View>
             <Text style={styles.note}>{steadiness(summary.practice.spread)}</Text>
             {summary.practice.earlyFinish && <Text style={styles.note}>{earlyText(summary.practice.earlyFinish)}</Text>}

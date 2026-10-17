@@ -11,6 +11,8 @@ export interface PointsBreakdown {
   streak: number;
   /** Ready before the time ran out. */
   ready: number;
+  /** The Daily Challenge doubles the round: this is the extra. */
+  daily?: number;
   total: number;
 }
 

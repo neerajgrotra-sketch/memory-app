@@ -26,13 +26,15 @@ interface ResultStageProps {
   outcome: RoundOutcome;
   /** Your level for the next picture. */
   nextLevel: number;
+  /** Days in a row including today, and whether this round is the one that counted today. */
+  streak?: { days: number; isNew: boolean };
   /** Same picture, other questions, as practice. */
   onPlayAgain: () => void;
   onNextPicture: () => void;
   onHome: () => void;
 }
 
-export function ResultStage({ scene, title, questions, answers, score, mode, outcome, nextLevel, onPlayAgain, onNextPicture, onHome }: ResultStageProps) {
+export function ResultStage({ scene, title, questions, answers, score, mode, outcome, nextLevel, streak, onPlayAgain, onNextPicture, onHome }: ResultStageProps) {
   // Picked once per result screen so it doesn't change on re-render.
   const [message] = useState(() => randomScoreMessage(score));
   const [enlarged, setEnlarged] = useState(false);
@@ -46,7 +48,13 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
   return (
     <View style={styles.screen}>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+        {mode === 'daily' && <Text style={styles.dailyTag}>Daily challenge</Text>}
         <Text style={styles.message}>{message}</Text>
+        {streak && (streak.isNew || mode === 'daily') && streak.days > 0 && (
+          <Text style={styles.streak} accessibilityLabel={`${streak.days} day streak`}>
+            🔥 {streak.days === 1 ? 'Day 1 of your streak' : `${streak.days}-day streak!`}
+          </Text>
+        )}
         <View style={styles.pointsBlock} accessible accessibilityLabel={`${outcome.points.total} points. ${score} out of ${questions.length} right.`}>
           {outcome.newHighScore && <Text style={styles.highScore}>New high score!</Text>}
           <Text style={styles.points}>{formatPoints(outcome.points.total)}</Text>
@@ -58,15 +66,18 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
           <Chip label={`${score} × ${outcome.points.perAnswer}`} value={outcome.points.answers} />
           {outcome.points.streak > 0 && <Chip label="In a row" value={outcome.points.streak} />}
           {outcome.points.ready > 0 && <Chip label="Ready early" value={outcome.points.ready} />}
+          {!!outcome.points.daily && <Chip label="Daily ×2" value={outcome.points.daily} />}
         </View>
 
         {outcome.ladder ? (
           <LevelPanel before={outcome.ladder.before} after={outcome.ladder.after} score={score} total={questions.length} />
         ) : (
           <Text style={styles.practice}>
-            {outcome.replay
-              ? 'Same picture again: practice, so your level and high score stay the same'
-              : 'Practice round · your level stays the same'}
+            {mode === 'daily'
+              ? 'Double points · your level and high score stay the same. A new challenge tomorrow.'
+              : outcome.replay
+                ? 'Same picture again: practice, so your level and high score stay the same'
+                : 'Practice round · your level stays the same'}
           </Text>
         )}
 
@@ -148,6 +159,7 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
               <Button
                 label={next.label}
                 onPress={() => {
+                  if (next.done) return onHome();
                   feedback('start');
                   onNextPicture();
                 }}
@@ -166,9 +178,11 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
                       }} accessibilityHint="Practice: different questions, doesn’t change your level" />
                   </View>
                 )}
-                <View style={styles.rowItem}>
-                  <Button label="Done" variant="secondary" onPress={onHome} />
-                </View>
+                {!next.done && (
+                  <View style={styles.rowItem}>
+                    <Button label="Done" variant="secondary" onPress={onHome} />
+                  </View>
+                )}
               </View>
             </>
           );
@@ -197,7 +211,15 @@ function roundSound(outcome: RoundOutcome, score: number, total: number): Moment
  * The next step, worded for what just happened. On levels, the same picture again is offered only after
  * a weak round (it's practice, for seeing what you missed); in Practice it's always there.
  */
-function nextStep(mode: PlayMode, outcome: RoundOutcome, score: number, total: number, nextLevel: number) {
+function nextStep(
+  mode: PlayMode,
+  outcome: RoundOutcome,
+  score: number,
+  total: number,
+  nextLevel: number,
+): { label: string; detail?: string; offerReplay: boolean; done?: boolean } {
+  // One Daily Challenge a day: the round ends here.
+  if (mode === 'daily') return { label: 'Done', detail: undefined, offerReplay: false, done: true };
   if (mode !== 'levels') return { label: 'Next picture', detail: undefined, offerReplay: true };
   const weak = score < total - 1;
   if (outcome.ladder && outcome.ladder.after.level > outcome.ladder.before.level) {
@@ -244,6 +266,8 @@ const styles = StyleSheet.create({
   // Phone-width column, centred on tablets and wide windows.
   container: { padding: 24, paddingTop: 72, paddingBottom: 24, gap: 20, width: '100%', maxWidth: 520, alignSelf: 'center' },
   message: { color: colors.textMuted, fontSize: 18, fontWeight: '600', textAlign: 'center' },
+  dailyTag: { alignSelf: 'center', color: colors.accent, fontSize: 13, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: -12 },
+  streak: { alignSelf: 'center', color: colors.text, fontSize: 16, fontWeight: '800', backgroundColor: colors.surface, borderRadius: radius.pill, paddingHorizontal: 14, paddingVertical: 6, overflow: 'hidden' },
   pointsBlock: { alignItems: 'center', gap: 2 },
   highScore: { color: colors.accentText, backgroundColor: colors.accent, fontSize: 13, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 1, paddingHorizontal: 10, paddingVertical: 4, borderRadius: radius.pill, overflow: 'hidden', marginBottom: 6 },
   points: { color: colors.text, fontSize: 60, fontWeight: '900', fontVariant: ['tabular-nums'] },

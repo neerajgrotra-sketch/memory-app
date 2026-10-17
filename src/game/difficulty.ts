@@ -51,6 +51,7 @@ export const LEVEL_ORDER: Level[] = ['easy', 'medium', 'hard'];
 /** Names for every mode, including ones only older saved rounds have. */
 export const MODE_LABELS: Record<PlayMode | Difficulty, string> = {
   levels: 'Levels',
+  daily: 'Daily challenge',
   easy: 'Practice · Easy',
   medium: 'Practice · Medium',
   hard: 'Practice · Hard',
@@ -58,5 +59,5 @@ export const MODE_LABELS: Record<PlayMode | Difficulty, string> = {
 };
 
 export function isPlayMode(value: unknown): value is PlayMode {
-  return value === 'levels' || LEVEL_ORDER.includes(value as Level);
+  return value === 'levels' || value === 'daily' || LEVEL_ORDER.includes(value as Level);
 }

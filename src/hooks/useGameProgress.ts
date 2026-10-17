@@ -30,7 +30,8 @@ export function progressOf(all: RoundResult[], gameId: GameId, restarts: Record<
     results,
     ladder: state,
     fromHistory,
-    highScore: results.reduce((best, r) => (r.replay ? best : Math.max(best, r.points ?? 0)), 0),
+    // Replays and the Daily Challenge (double points) never set the high score.
+    highScore: results.reduce((best, r) => (r.replay || r.mode === 'daily' ? best : Math.max(best, r.points ?? 0)), 0),
     plays: results.length,
     perfectRounds: results.filter((r) => !r.replay && r.score === r.total).length,
     lastPlayedAt: results.at(-1)?.playedAt ?? null,

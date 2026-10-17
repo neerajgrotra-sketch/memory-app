@@ -13,6 +13,7 @@ import {
   recipesForLevel,
   type LadderState,
 } from '@/games/lookRemember/ladder';
+import { DAILY_MULTIPLIER, dailySeed, localDay } from '@/games/lookRemember/daily';
 import { placesOff } from '@/games/lookRemember/places';
 import { pointsFor, type PointsBreakdown } from '@/games/lookRemember/points';
 import { EXTRA_SECONDS, useProfile } from '@/profile';
@@ -57,7 +58,8 @@ interface Setup {
 }
 
 function setupFor(mode: PlayMode, ladderLevel: number): Setup {
-  if (mode === 'levels') {
+  // The Daily Challenge is played at your level, from the places you've reached.
+  if (mode === 'levels' || mode === 'daily') {
     return { band: bandOf(ladderLevel), level: ladderLevel, knobs: knobsForLevel(ladderLevel), unlocked: recipesForLevel(ladderLevel) };
   }
   return { band: mode, level: PRACTICE_LEVEL[mode], knobs: LEVELS[mode] };
@@ -133,7 +135,12 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
 
   const [first] = useState(() => {
     const setup = setupFor(mode, startLadder.level);
-    const firstStage = createStage(setup.knobs, size, undefined, undefined, { unlocked: tester ? undefined : setup.unlocked, off });
+    // The Daily Challenge: the day's picture (same seed all day), from every place you've reached.
+    const daily = mode === 'daily';
+    const firstStage = createStage(setup.knobs, size, undefined, daily ? dailySeed(localDay()) : undefined, {
+      unlocked: tester ? undefined : setup.unlocked,
+      off: daily ? [] : off,
+    });
     return { stage: firstStage, round: buildRound(setup, 0, firstStage.questions, new Set(), new Set(), extra) };
   });
   const [stage, setStage] = useState<Stage>(first.stage);
@@ -175,9 +182,12 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     (final: Answers) => {
       const correct = round.questions.map((q, i) => final[i] === q.answerIndex);
       const score = correct.filter(Boolean).length;
-      const points = pointsFor({ correct, level: round.level, viewSeconds: round.viewSeconds, lookedSeconds: looked.current });
-      // Seeing a picture twice makes it easier, so a replay never counts towards your level or high score.
-      const counts = !round.replay;
+      const base = pointsFor({ correct, level: round.level, viewSeconds: round.viewSeconds, lookedSeconds: looked.current });
+      // The Daily Challenge is worth double.
+      const points = mode === 'daily' ? { ...base, daily: base.total * (DAILY_MULTIPLIER - 1), total: base.total * DAILY_MULTIPLIER } : base;
+      // Seeing a picture twice makes it easier, so a replay never counts towards your level or high score;
+      // nor does the Daily Challenge, whose points are doubled.
+      const counts = !round.replay && mode !== 'daily';
       const newHighScore = counts && highScore.current > 0 && points.total > highScore.current;
       if (counts) highScore.current = Math.max(highScore.current, points.total);
       const after = mode === 'levels' && counts ? applyRound(ladder, score, round.questions.length) : undefined;
