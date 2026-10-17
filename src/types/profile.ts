@@ -21,6 +21,8 @@ export interface Profile {
    * so any one place can be played at any level. Missing means off.
    */
   tester?: boolean;
+  /** Tester mode only: Peeks never run out (and aren't taken from your real ones), to try them without earning first. */
+  testPeeks?: boolean;
   /** The old testing switch: only these recipes were played. Read once to fill `placesOff`, then cleared. */
   recipeFilter: string[] | null;
   /** Sounds for answers, the last seconds and level ups. Missing means on (profiles saved before sounds). */

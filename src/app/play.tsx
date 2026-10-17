@@ -52,7 +52,7 @@ export default function PlayScreen() {
 }
 
 function Game({ start }: { start: SessionStart & { streak: Streak } }) {
-  const { stage, round, phase, answers, score, outcome, ladder, wallet, peeked, peek, finishMemorising, answer, playAgain, nextPicture } =
+  const { stage, round, phase, answers, score, outcome, ladder, peeksLeft, peeked, peek, finishMemorising, answer, playAgain, nextPicture } =
     useGameSession(start);
   // A Peek shows the picture again over the question for a few seconds.
   const [peeking, setPeeking] = useState(false);
@@ -81,7 +81,7 @@ function Game({ start }: { start: SessionStart & { streak: Streak } }) {
               start.mode === 'daily'
                 ? undefined
                 : {
-                    left: wallet.peeks,
+                    left: peeksLeft,
                     used: peeked,
                     onPeek: (i) => {
                       peek(i);

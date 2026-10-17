@@ -15,7 +15,7 @@ import {
   type LadderState,
 } from '@/games/lookRemember/ladder';
 import { DAILY_MULTIPLIER, dailySeed, localDay } from '@/games/lookRemember/daily';
-import { earnPeeks, spendPeek, type PeekWallet } from '@/games/lookRemember/peeks';
+import { MAX_PEEKS, earnPeeks, spendPeek, type PeekWallet } from '@/games/lookRemember/peeks';
 import { placesOff } from '@/games/lookRemember/places';
 import { pointsFor, type PointsBreakdown } from '@/games/lookRemember/points';
 import { EXTRA_SECONDS, useProfile } from '@/profile';
@@ -137,6 +137,8 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
   const off = useMemo(() => placesOff(profile), [profile]);
   // Tester mode: every place counts as unlocked.
   const tester = profile?.tester === true;
+  // Tester mode can make Peeks unlimited: the count stays full and real Peeks aren't spent.
+  const unlimitedPeeks = tester && profile?.testPeeks === true;
 
   const [ladder, setLadder] = useState<LadderState>(startLadder);
   const highScore = useRef(startHighScore);
@@ -230,7 +232,8 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
         ladder: after ? { level: round.level, after } : undefined,
         points: points.total,
         replay: round.replay || undefined,
-        peeked: peeked !== null || undefined,
+        // A tester's unlimited peek isn't recorded, so it never comes off the real Peeks.
+        peeked: (peeked !== null && !unlimitedPeeks) || undefined,
         recipeId: stage.scene.recipeId,
         sceneId: stage.scene.id,
         score,
@@ -241,7 +244,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       };
       statsStore.addResult(result).catch(() => {});
     },
-    [ladder, mode, round, stage, peeked, wallet],
+    [ladder, mode, round, stage, peeked, wallet, unlimitedPeeks],
   );
 
   /** Records the answer to question `questionIndex` (questions can be answered in any order after skipping). */
@@ -284,18 +287,21 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
   }, [finishRound, ladder.level, startStage, stage]);
 
   /** One peek per round, while answering, never in the Daily Challenge. */
-  const canPeek = phase === 'quiz' && mode !== 'daily' && wallet.peeks > 0 && peeked === null;
+  const canPeek = phase === 'quiz' && mode !== 'daily' && (wallet.peeks > 0 || unlimitedPeeks) && peeked === null;
   /** Uses a Peek on question `questionIndex`. */
   const peek = useCallback(
     (questionIndex: number) => {
       if (!canPeek) return;
       setPeeked(questionIndex);
-      setWallet(spendPeek);
+      if (!unlimitedPeeks) setWallet(spendPeek);
     },
-    [canPeek],
+    [canPeek, unlimitedPeeks],
   );
 
   const score = answers.filter((choice, i) => choice === round.questions[i]?.answerIndex).length;
 
-  return { stage, round, phase, answers, score, outcome, ladder, wallet, peeked, canPeek, peek, finishMemorising, answer, playAgain, nextPicture };
+  // What the Peek button shows: a full count for a tester's unlimited Peeks.
+  const peeksLeft = unlimitedPeeks ? MAX_PEEKS : wallet.peeks;
+
+  return { stage, round, phase, answers, score, outcome, ladder, wallet, peeksLeft, peeked, canPeek, peek, finishMemorising, answer, playAgain, nextPicture };
 }

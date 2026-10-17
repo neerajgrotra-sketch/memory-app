@@ -34,6 +34,8 @@ export default function GameScreen() {
 function GamePage({ gameId }: { gameId: 'look-remember' }) {
   const game = getGame(gameId)!;
   const { progress, reload } = useReloadableGameProgress(gameId);
+  const { profile } = useProfile();
+  const unlimitedPeeks = profile?.tester === true && profile.testPeeks === true;
   // Starting again: ask first, then say it's done.
   const [startAgain, setStartAgain] = useState<'idle' | 'confirm' | 'done'>('idle');
   const restart = async () => {
@@ -87,7 +89,9 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
               </View>
 
               <View style={styles.peeks} accessible accessibilityLabel={peeksLine(progress.peeks)}>
-                <Text style={styles.peeksCount}>👀 {progress.peeks.peeks === 1 ? '1 Peek' : `${progress.peeks.peeks} Peeks`}</Text>
+                <Text style={styles.peeksCount}>
+                  👀 {unlimitedPeeks ? 'Unlimited Peeks (tester mode)' : progress.peeks.peeks === 1 ? '1 Peek' : `${progress.peeks.peeks} Peeks`}
+                </Text>
                 <Text style={styles.peeksDetail}>{peeksLine(progress.peeks)}</Text>
               </View>
 

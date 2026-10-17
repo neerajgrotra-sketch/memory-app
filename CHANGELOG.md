@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.41 (2026-10-17)
+
+- **Tester mode: Unlimited Peeks.** A new switch under Tester mode in Profile (tap the version 7 times to show it). The Peek button never runs out, so Peeks can be tried without earning them first. Everything else stays real: one peek a round, half points for the peeked answer, no level up from it. Tester peeks aren't saved against your earned Peeks, and the game page shows "Unlimited Peeks (tester mode)". Leaving tester mode switches it off.
+
 ## 4.0.0-beta.40 (2026-10-17)
 
 - **New: Peeks.** A second look at the picture while answering.

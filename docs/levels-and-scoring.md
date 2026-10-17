@@ -83,6 +83,7 @@ A Peek is a second look at the picture while answering (`src/games/lookRemember/
 - **Why limits:** once you know the question, 3 seconds is plenty to check the answer, so an unlimited peek would turn a memory round into a search round. So a right answer after a peek earns half its points (`PEEKED_SHARE`), shown as a "👀 Peek −95" chip, and no ready-early bonus. It also can't tip a round into a good one: 4 right including the peeked one doesn't count towards a level up (5 right still does). The result screen marks the question "👀 Peeked".
 - **Nothing extra stored:** the wallet is rebuilt from saved rounds (each round's points and `peeked`), so "Delete all progress" empties it. A peek used in a round you quit isn't saved, so it comes back. "Start again from Level 1" keeps your Peeks.
 - **Never sold.** For a family brain-training game, peeks stay earned only.
+- **Testing:** Tester mode (tap the version in Profile 7 times) has an **Unlimited Peeks** switch (`profile.testPeeks`). The count stays full and those peeks aren't recorded, so they never come off your earned Peeks; the other rules still apply.
 - `npm run check:peeks` checks the rules.
 
 ## Bands

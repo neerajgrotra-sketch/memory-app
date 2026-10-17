@@ -130,15 +130,28 @@ export default function ProfileScreen() {
         </Section>
 
         {profile?.tester && (
-          <Section title="Tester mode" footer="Every place is unlocked in My places, so any one place can be played at any level. For testing new places; levels and scores still count. Turning it off switches every place back on.">
+          <Section
+            title="Tester mode"
+            footer="Unlock every place: any one place can be played at any level, from My places. Unlimited Peeks: the Peek button never runs out (still one a round, half points for the peeked answer) and your earned Peeks stay untouched. Levels and scores still count. Turning off Unlock every place leaves tester mode and switches every place back on."
+          >
             <View style={styles.switchRow}>
               <Text style={[styles.rowTitle, styles.switchText]}>Unlock every place</Text>
               <Switch
                 value
-                onValueChange={() => update({ tester: false, placesOff: [], recipeFilter: null })}
+                onValueChange={() => update({ tester: false, testPeeks: false, placesOff: [], recipeFilter: null })}
                 trackColor={{ true: colors.accent, false: colors.border }}
                 thumbColor={colors.text}
                 accessibilityLabel="Tester mode: unlock every place"
+              />
+            </View>
+            <View style={styles.switchRow}>
+              <Text style={[styles.rowTitle, styles.switchText]}>Unlimited Peeks</Text>
+              <Switch
+                value={profile.testPeeks === true}
+                onValueChange={(on) => update({ testPeeks: on })}
+                trackColor={{ true: colors.accent, false: colors.border }}
+                thumbColor={colors.text}
+                accessibilityLabel="Tester mode: unlimited Peeks"
               />
             </View>
           </Section>
