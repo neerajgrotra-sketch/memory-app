@@ -47,14 +47,14 @@ For every group in the scene (one per kind of thing), in this order:
 
 - **Asked:** for every group except things spread across the picture (`spread` with 2 or more copies, e.g. street lamps along the pavement), which have no single side.
 - **Answer:** `"<band label>, <side>"`. The side is the third of the width the group's centre is in. Placement keeps centres 5% clear of the lines between thirds, so it's never borderline.
-- **Wrong options:** the other sides of the bands this thing can go in first, then any band's sides. Bands with no slot rows (the room's ceiling, the city's building fronts) are never offered.
+- **Wrong options:** only the other sides of the bands this thing can go in ("In the sky" is never offered for a dog). A thing that only goes in one band gets three options: left, middle and right. Bands with no slot rows (the room's ceiling, the city's building fronts) are never offered.
 
 ### What was here: "What was on the wall, on the right?" → "A mirror"
 
 - **Asked:** only when exactly one kind of thing is in that band and side. Spread groups count as being in every third they have a copy in. Not asked for spread groups themselves.
 - **Answer:** "A mirror" for one, "Mirrors" for several, using the thing's `article`.
 - **Wrong options:**
-  - other things that belong in the same band first, then any other thing
+  - only things that belong in the same band (never "Zookeepers" for the sky); with only two such things the question has three options, with fewer it isn't asked
   - always in the same form (singular or plural) as the answer
   - for a plural answer, only things that can appear in groups, never "Suns" or "Buses".
 
@@ -165,7 +165,7 @@ When the picture has a clock (the living room's wall clock, the city's street cl
 
 - **Same picture, same questions.** Wording and wrong options come from `createRng(seed ^ 0x9e3779b9)`. Only the round's selection and the option order use `Math.random`.
 - **Question id:** `<scene id>-<template>-<kind>`. Templates are `count`, `colour`, `colours`, `where`, `what-here`, `seen`, `missing`, `compare`, `most`, `above`, `below`, `twins` and `true-false`. Houses use `<scene id>-house-number-<n>` and `<scene id>-house-colour-<n>`; detail facts `<scene id>-fact-<id>`.
-- **Options:** two to four. Most have four; compare has three, true or false two.
+- **Options:** two to four. Every wrong option must be believable: things that could really be in that band, places the thing could really be. When there aren't three believable ones, a question has three options; with fewer than three in all it isn't asked (true or false has its own two; compare always has three).
 - **Question types** (`QuestionType` in `src/types/game.ts`), shown on the quiz chip and tracked on the progress screen:
   - `object`: what was here, in / NOT in the picture
   - `count`: also compare, most, just one

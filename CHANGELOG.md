@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.37 (2026-10-17)
+
+- **Fix: no more silly wrong answers.** When a band had too few believable things, "What was in the sky…?" topped up its options from any band ("Zookeepers" in the sky), and "Where was…?" could offer "In the sky" for a dog. Now every wrong option is something that could really be there. When there aren't three believable ones, the question has three options instead of four, and with fewer it isn't asked.
+  - An audit of 3,000 pictures across all 10 places found 22,766 such options before (about 7 per picture) and none after. Pictures still give about 33 questions each.
+  - "What was above / below…?" only offers things not in the picture if they could be where the answer was.
+  - New `npm run check:questions` runs that audit, so a new place can't bring silly options back.
+
 ## 4.0.0-beta.36 (2026-10-17)
 
 - **A new place: At the zoo**, unlocked at **Level 18** (and in Practice).

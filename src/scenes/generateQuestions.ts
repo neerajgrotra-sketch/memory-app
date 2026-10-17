@@ -55,11 +55,14 @@ const canBeSeveral = (item: ItemDef) => item.countable !== false && item.maxCoun
 /** "A sailboat" for one, "Sailboats" for several. */
 const nounPhrase = (item: ItemDef, plural: boolean) => (plural ? cap(item.plural) : `${cap(item.article)} ${item.singular}`);
 
-/** The answer plus three different wrong options, preferring the given candidates first. */
-function withDistractors(answer: string, preferred: string[], fallback: string[], rng: Rng): [string, string, string, string] {
+/**
+ * The answer plus up to three different wrong options, the given candidates first. Only believable
+ * candidates should be passed: with fewer than three, the question has fewer options (and one with
+ * fewer than three options in all isn't asked; see the end of `generateQuestions`).
+ */
+function withDistractors(answer: string, preferred: string[], fallback: string[], rng: Rng): string[] {
   const pool = [...rng.shuffle(preferred), ...rng.shuffle(fallback)].filter((o) => o !== answer);
-  const unique = [...new Set(pool)].slice(0, 3);
-  return [answer, unique[0], unique[1], unique[2]];
+  return [answer, ...[...new Set(pool)].slice(0, 3)];
 }
 
 function countOptions(n: number, close: boolean, rng: Rng): string[] {
@@ -170,12 +173,12 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     const sameZoneCells = zones
       .filter((z) => item.zones.includes(z.id))
       .flatMap((z) => (['left', 'centre', 'right'] as Region[]).map((r) => cellLabel(z, r)));
-    const otherCells = zones.flatMap((z) => (['left', 'centre', 'right'] as Region[]).map((r) => cellLabel(z, r)));
     if (!spread) add('where', group, {
       type: 'position',
       subject: item.kind,
       prompt: plural ? `Where were the ${item.plural}?` : `Where was the ${item.singular}?`,
-      options: withDistractors(cellLabel(zone, group.region), sameZoneCells, otherCells, rng),
+      // Only places this thing could really be ("In the sky" is never offered for a dog).
+      options: withDistractors(cellLabel(zone, group.region), sameZoneCells, [], rng),
     });
 
     // Only ask "what was on the left…" when exactly one kind of thing is there.
@@ -184,15 +187,15 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     // wrong options: never "Suns" or "Buses".
     const fits = (i: ItemDef) => i.kind !== item.kind && (!plural || canBeSeveral(i));
     const sameZoneKinds = recipe.items.filter((i) => fits(i) && i.zones.includes(zone.id));
-    const otherKinds = recipe.items.filter(fits);
     if (!spread && !sharesSpot) add('what-here', group, {
       type: 'object',
       subject: item.kind,
       prompt: `What was ${lower(cellLabel(zone, group.region))}?`,
       options: withDistractors(
         nounPhrase(item, plural),
+        // Only things that belong in this band: never "Zookeepers" for the sky.
         sameZoneKinds.map((i) => nounPhrase(i, plural)),
-        otherKinds.map((i) => nounPhrase(i, plural)),
+        [],
         rng,
       ),
     });
@@ -355,7 +358,8 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         options: withDistractors(
           nounPhrase(answerItem, plural),
           elsewhere.filter(fits).map((i) => nounPhrase(i, plural)),
-          absent.filter(fits).map((i) => nounPhrase(i, plural)),
+          // Things not in the picture, but only ones that could be where the answer was.
+          absent.filter((i) => fits(i) && i.zones.includes(target.zoneId)).map((i) => nounPhrase(i, plural)),
           rng,
         ),
       });
@@ -429,5 +433,6 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     });
   }
 
-  return questions;
+  // A question needs at least three options to be a fair choice (true or false has its own two).
+  return questions.filter((q) => q.family === 'true-false' || q.options.length >= 3);
 }
