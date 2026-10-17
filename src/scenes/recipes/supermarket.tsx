@@ -5,6 +5,7 @@ import { C } from '../colours';
 import { lineMarks } from '../marks';
 import type { Rng } from '../random';
 import type { ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import { speckles } from '../texture';
 
 /**
  * A supermarket aisle: signs hang from the ceiling, three shelves of products, and the floor in front.
@@ -534,6 +535,8 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
       <Rect x={-600} y={ceiling} width={612} height={floorLine - ceiling} fill={p.upright} />
       <Rect x={888} y={ceiling} width={612} height={floorLine - ceiling} fill={p.upright} />
       <Rect x={-600} y={floorLine} width={2100} height={height - floorLine + 600} fill={p.floor} />
+      {/* The texture of the ground. */}
+      {speckles({ x0: -40, y0: floorLine, x1: 940, y1: height }, 140, '#000000', 0.05, 3)}
       <Rect x={-600} y={floorLine} width={2100} height={6} fill="#000000" fillOpacity={0.12} />
       {/* The aisle sign: what number? */}
       {hanging(

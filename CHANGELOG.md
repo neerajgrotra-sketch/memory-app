@@ -10,6 +10,14 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.47 (2026-10-17)
+
+- **Richer drawings, part 1.**
+  - **The beach, redrawn:** a far headland on the horizon, glints of sun on the sea, wet sand along the water's edge and the grain of the sand; a sailboat with seams, rigging, a flag and portholes; buoys with a light and ripples; scalloped umbrellas in panels; a bucket with a spade; fringed towels; palm trees with ringed trunks; sandcastles with battlements and windows.
+  - **Shared things, redrawn everywhere they appear:** the sun glows; birds are gulls with tapered wings; clouds have soft shading; balloons have gores, a band and a woven basket; kites have two-tone panels and bows on the tail; trees have light and shade; plant pots have more leaves and a rim; balls shine; dolphins have pale bellies and a smile; crabs have pincers and eye stalks; starfish have rounded, dotted arms; **people have faces and shoes**; dogs have a collar and tag.
+  - **Ground texture in every place:** grass blades, grit on roads, gravel paths, concrete platforms, snow sparkle, moon dust, sand under the sea, and a faint speckle on indoor floors. Faint on purpose, so it never makes anything harder to see.
+  - Same sizes and shapes as before, so layout and every check are unchanged.
+
 ## 4.0.0-beta.46 (2026-10-17)
 
 - **A new place: On the Moon** (space), unlocked at **Level 28** (and in Practice). The last of the planned places: every level from 2 to 28 now brings something new.

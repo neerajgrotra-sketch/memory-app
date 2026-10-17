@@ -6,6 +6,7 @@ import { dog, person } from '../items/common';
 import { lineMarks } from '../marks';
 import type { Rng } from '../random';
 import type { DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import { speckles } from '../texture';
 
 /**
  * A railway station, seen from the platform: the glass roof with things hanging from it and the
@@ -438,6 +439,8 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
       {/* The platform edge with its yellow safety line, then the platform. */}
       <Rect x={-600} y={edge} width={2100} height={platform - edge} fill={p.edge} />
       <Rect x={-600} y={platform} width={2100} height={height - platform + 600} fill={p.platform} />
+      {/* The texture of the ground. */}
+      {speckles({ x0: -40, y0: platform, x1: 940, y1: height }, 220, '#000000', 0.09, 3)}
       <Rect x={-600} y={platform + 10} width={2100} height={10} fill="#ffd60a" />
       {/* The departure board: time, destination and platform. */}
       <G>

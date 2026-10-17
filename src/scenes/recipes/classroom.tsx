@@ -6,6 +6,7 @@ import { HAIR, SKINS, person, plantPot } from '../items/common';
 import { lineMarks } from '../marks';
 import type { Rng } from '../random';
 import type { DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import { speckles } from '../texture';
 
 /**
  * A classroom seen from the back: the wall with the whiteboard, the front of the class (the teacher and
@@ -521,6 +522,8 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
       </G>
       <Rect x={-600} y={ceiling} width={2100} height={floor - ceiling} fill={p.wall} />
       <Rect x={-600} y={floor} width={2100} height={height - floor + 600} fill={p.floor} />
+      {/* The texture of the ground. */}
+      {speckles({ x0: -40, y0: floor, x1: 940, y1: height }, 160, '#000000', 0.06, 3)}
       <Rect x={-600} y={floor - 10} width={2100} height={12} fill={p.skirting} />
       {/* The whiteboard: the day at the top, today's sum below, and a pen tray. */}
       <G>

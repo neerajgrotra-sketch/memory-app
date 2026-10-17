@@ -5,6 +5,7 @@ import { bird, person, plane, plantPot } from '../items/common';
 import { lineMarks } from '../marks';
 import type { Rng } from '../random';
 import type { ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import { speckles } from '../texture';
 
 /**
  * An airport departure lounge with a big window onto the airfield: the sky and the airfield through the
@@ -423,6 +424,8 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
       </G>
       <Rect x={-600} y={window + 10} width={2100} height={lounge - window - 10} fill={p.wall} />
       <Rect x={-600} y={lounge} width={2100} height={height - lounge + 600} fill={p.floor} />
+      {/* The texture of the ground. */}
+      {speckles({ x0: -40, y0: lounge, x1: 940, y1: height }, 160, '#000000', 0.05, 3)}
       {/* The flight screen on its stand: flight number and city, then the gate. */}
       <G>
         <Rect x={s.x + s.w / 2 - 6} y={s.y + s.h * 0.9} width={12} height={lounge - s.y - s.h * 0.9 + 12} fill="#495057" />

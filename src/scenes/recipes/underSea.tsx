@@ -5,6 +5,7 @@ import { crab, dolphin, starfish } from '../items/common';
 import { scatterMarks } from '../marks';
 import type { Rng } from '../random';
 import type { ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import { speckles } from '../texture';
 
 /**
  * Under the sea: a sliver of sky above the wavy surface, the water near the surface (where the whale and
@@ -408,6 +409,8 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
       />
       {/* The sandy seabed, gently rolling, with rocks at the edges. */}
       <Path d={`M-600,${sand} C0,${sand - 30} 300,${sand + 20} 600,${sand - 10} C900,${sand - 30} 1200,${sand + 10} 1500,${sand} V${height + 600} H-600 Z`} fill={p.sand} />
+      {/* The grain of the sand. */}
+      {speckles({ x0: -40, y0: sand + 20, x1: 940, y1: height }, 200, '#000000', 0.1, 4)}
       <Ellipse cx={-30} cy={sand + 20} rx={90} ry={40} fill={p.rock} />
       <Ellipse cx={940} cy={sand + 30} rx={100} ry={45} fill={p.rock} />
       {chest(c.x0 * 900, c.y0 * height, CHEST.w * 900, CHEST.h * height, d?.values?.chest ?? 'Gold coins')}

@@ -6,6 +6,7 @@ import { ball, dog, plantPot } from '../items/common';
 import { lineMarks } from '../marks';
 import type { DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, Rug, SceneDetails } from '../types';
 import type { Rng } from '../random';
+import { speckles } from '../texture';
 
 /** Band edges, as fractions of the picture height: a thin ceiling, the wall, then the floor. */
 const CEILING = 0.1;
@@ -362,6 +363,8 @@ function backdrop(height: number, { wall, ceiling, floor, rug, rugEdge }: Palett
       <Rect x={-600} y={ceilingLine} width={2100} height={floorLine - ceilingLine} fill={wall} />
       <Rect x={-600} y={ceilingLine} width={2100} height={10} fill="#000000" fillOpacity={0.06} />
       <Rect x={-600} y={floorLine} width={2100} height={height - floorLine + 600} fill={floor} />
+      {/* The texture of the ground. */}
+      {speckles({ x0: -40, y0: floorLine, x1: 940, y1: height }, 140, '#000000', 0.05, 3)}
       <Rect x={-600} y={floorLine - 14} width={2100} height={14} fill="#ffffff" fillOpacity={0.7} />
       <Ellipse cx={RUG.cx * 900} cy={RUG.cy * height} rx={RUG.rx * 900} ry={RUG.ry * height} fill={rug} stroke={rugEdge} strokeOpacity={0.35} strokeWidth={8} />
     </G>

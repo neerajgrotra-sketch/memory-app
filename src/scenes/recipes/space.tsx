@@ -4,6 +4,7 @@ import { C } from '../colours';
 import { lineMarks } from '../marks';
 import type { Rng } from '../random';
 import type { ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import { speckles } from '../texture';
 
 /**
  * Space, seen from the surface of the Moon: the black sky with the Earth, grey hills, then the dusty ground
@@ -477,6 +478,9 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
       {/* Low grey hills on the horizon, then the dusty ground. */}
       <Path d={`M-600,${hills} L-600,${sky + 30} Q-300,${sky - 10} 0,${sky + 26} Q240,${sky + 50} 450,${sky + 14} Q660,${sky - 16} 900,${sky + 30} Q1200,${sky + 50} 1500,${sky + 10} V${hills} Z`} fill={p.hills} />
       <Rect x={-600} y={hills} width={2100} height={height - hills + 600} fill={p.ground} />
+      {/* The texture of the ground. */}
+      {speckles({ x0: -40, y0: hills + 10, x1: 940, y1: height }, 260, '#000000', 0.14, 4)}
+      {speckles({ x0: -40, y0: hills + 10, x1: 940, y1: height }, 120, '#ffffff', 0.12, 3, 29)}
       {/* The base sign on two posts: the mission name, then the base number. */}
       <G>
         <Rect x={s.x + s.w * 0.15} y={s.y + s.h * 0.8} width={8} height={s.h * 0.5} fill="#868e96" />

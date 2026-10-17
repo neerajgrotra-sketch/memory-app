@@ -5,6 +5,7 @@ import { dog, person, plane } from '../items/common';
 import { lineMarks } from '../marks';
 import type { Rng } from '../random';
 import type { ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import { strokes } from '../texture';
 
 /**
  * A campsite at night: the starry sky with the moon, a dark line of trees, the pitches with tents and a
@@ -427,6 +428,8 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
         })}
       </G>
       <Rect x={-600} y={trees} width={2100} height={height - trees + 600} fill={p.grass} />
+      {/* The texture of the ground. */}
+      {strokes({ x0: -40, y0: trees + 20, x1: 940, y1: height }, 220, '#000000', 0.18, 10, 3)}
       {/* The pitch number post. */}
       <G>
         <Rect x={s.x + s.w / 2 - 6} y={s.y + s.h * 0.6} width={12} height={s.h * 0.7} fill="#6b4423" />

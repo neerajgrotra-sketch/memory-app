@@ -6,6 +6,7 @@ import { balloon, bird, cloudShape, dog, person, plane, tree } from '../items/co
 import { markIfClear, scatterMarks } from '../marks';
 import type { Rng } from '../random';
 import type { ColourDef, DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, SceneDetails } from '../types';
+import { speckles } from '../texture';
 
 /** Band edges, as fractions of the picture height. */
 const ROOF = 0.25;
@@ -542,6 +543,9 @@ function backdrop(height: number, palette: Palette, details?: SceneDetails) {
       })}
       <Rect x={-900} y={ground} width={2700} height={kerb - ground} fill={palette.pavement} />
       <Rect x={-900} y={kerb} width={2700} height={height - kerb + 600} fill={palette.road} />
+      {/* The texture of the ground. */}
+      {speckles({ x0: -40, y0: kerb, x1: 940, y1: height }, 260, '#000000', 0.16, 3)}
+      {speckles({ x0: -40, y0: kerb, x1: 940, y1: height }, 120, '#ffffff', 0.1, 3, 19)}
       <Rect x={-900} y={kerb} width={2700} height={12} fill="#868e96" />
     </G>
   );

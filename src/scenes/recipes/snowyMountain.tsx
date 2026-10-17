@@ -5,6 +5,7 @@ import { bird, cloudShape, dog, person, plane, sun } from '../items/common';
 import { lineMarks, scatterMarks } from '../marks';
 import type { Rng } from '../random';
 import type { ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import { speckles } from '../texture';
 
 /**
  * A ski resort: the sky with cable cars, the snowy peaks, the ski slope, and the area by the lodge at
@@ -381,6 +382,9 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
       {/* The slope, the fence at its foot, and the snow by the lodge. */}
       <Rect x={-600} y={peaks + 4} width={2100} height={fence - peaks - 4} fill={p.snow} />
       <Rect x={-600} y={fence} width={2100} height={height - fence + 600} fill={p.base} />
+      {/* The texture of the ground. */}
+      {speckles({ x0: -40, y0: peaks + 10, x1: 940, y1: height }, 220, '#ffffff', 0.7, 4)}
+      {speckles({ x0: -40, y0: peaks + 10, x1: 940, y1: height }, 140, '#8aa4bd', 0.18, 3, 17)}
       <G fill={p.fence}>
         <Rect x={-600} y={fence - 4} width={2100} height={6} />
         <Rect x={-600} y={fence + 10} width={2100} height={6} />

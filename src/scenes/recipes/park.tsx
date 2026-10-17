@@ -6,6 +6,7 @@ import { balloon, bird, cloudShape, dog, kite, person, plane, sun, tree } from '
 import { lineMarks, scatterMarks } from '../marks';
 import type { Rng } from '../random';
 import type { DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import { strokes } from '../texture';
 
 /**
  * A city park on a sunny day: sky, a pond with trees behind it, a gravel path, and the grass in front.
@@ -387,6 +388,8 @@ function backdrop(height: number, p: Palette) {
       <Rect x={-600} y={path} width={2100} height={5} fill={p.edge} />
       <Rect x={-600} y={grass - 5} width={2100} height={5} fill={p.edge} />
       <Rect x={-600} y={grass} width={2100} height={height - grass + 600} fill={p.grass} />
+      {/* The texture of the ground. */}
+      {strokes({ x0: -40, y0: grass + 20, x1: 940, y1: height }, 220, '#1f6b2a', 0.22, 10, 3)}
     </G>
   );
 }

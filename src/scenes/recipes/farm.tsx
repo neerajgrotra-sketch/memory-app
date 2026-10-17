@@ -5,6 +5,7 @@ import { balloon, bird, cloudShape, dog, person, sun } from '../items/common';
 import { lineMarks, scatterMarks } from '../marks';
 import type { Rng } from '../random';
 import type { ColourDef, ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import { strokes } from '../texture';
 
 /**
  * On the farm: sky, the barn and hills behind, a field with crops, a fence, and the farmyard in front.
@@ -435,6 +436,8 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
         <Rect key={f} x={-600} y={field + (fence - field) * f} width={2100} height={6} fill={p.rows} />
       ))}
       <Rect x={-600} y={yard} width={2100} height={height - yard + 600} fill={p.yard} />
+      {/* The texture of the ground. */}
+      {strokes({ x0: -40, y0: yard + 20, x1: 940, y1: height }, 220, '#1f6b2a', 0.22, 10, 3)}
       {/* The fence between the field and the farmyard. */}
       <G fill={p.fence}>
         <Rect x={-600} y={fence + 6} width={2100} height={6} />

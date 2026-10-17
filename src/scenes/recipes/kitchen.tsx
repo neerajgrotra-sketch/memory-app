@@ -5,6 +5,7 @@ import { C } from '../colours';
 import type { Rng } from '../random';
 import type { DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
 import { lineMarks } from '../marks';
+import { speckles } from '../texture';
 
 /**
  * A kitchen, close up: an open shelf, the tiled wall, the worktop, and the floor in front of the
@@ -720,6 +721,8 @@ function backdrop(height: number, p: Palette) {
         </G>
       ))}
       <Rect x={-600} y={floorLine} width={2100} height={height - floorLine + 600} fill={p.floor} />
+      {/* The texture of the ground. */}
+      {speckles({ x0: -40, y0: floorLine, x1: 940, y1: height }, 120, '#000000', 0.05, 3)}
       <Rect x={-600} y={floorLine} width={2100} height={6} fill="#000000" fillOpacity={0.15} />
     </G>
   );

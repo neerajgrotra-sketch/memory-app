@@ -6,6 +6,7 @@ import { balloon, bird, cloudShape, person, plane, sun } from '../items/common';
 import { lineMarks, scatterMarks } from '../marks';
 import type { Rng } from '../random';
 import type { DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import { speckles } from '../texture';
 
 /**
  * A zoo: the sky, three enclosures side by side (one kind of animal each, like a real zoo), and the
@@ -472,6 +473,9 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
         ))}
       </G>
       <Rect x={-600} y={path} width={2100} height={height - path + 600} fill={p.path} />
+      {/* The texture of the ground. */}
+      {speckles({ x0: -40, y0: path, x1: 940, y1: height }, 240, '#000000', 0.12, 4)}
+      {speckles({ x0: -40, y0: path, x1: 940, y1: height }, 90, '#ffffff', 0.2, 3, 13)}
       {/* The feeding-time sign. */}
       <G>
         <Rect x={s.x} y={s.y} width={s.w} height={s.h} rx={8} fill="#2b9348" stroke="#f8f9fa" strokeWidth={4} />

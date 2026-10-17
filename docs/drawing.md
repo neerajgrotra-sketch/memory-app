@@ -35,6 +35,19 @@ Thumbnails, the full-size picture viewer and the screenshot tools draw the pictu
 
 `draw(colour, details, copy)` gets a `copy` number fixed for each copy in each picture (from the scene's seed). People use it for **skin tone, hair colour and hairstyle** (short, long, a bun), so a crowd isn't one person repeated. Variations are never asked about: the shirt colour, which is, comes from the scene's facts as before.
 
+## Richer drawing (detail and texture)
+
+Things are drawn in layers inside their own box: the main shape in the asked-about colour (it gets the outline and is what the contrast rules check), then details with `stroke="none"` on top. Details only use white or black at low opacity, or small fixed colours, so a thing still reads as its colour:
+
+- **Highlights:** a soft white shape where light catches (top left), e.g. the shine on a ball, a balloon's light gores.
+- **Shade:** black at 10–15% on the far side or underneath (a kite's two-tone panels, a tree's darker lower leaves).
+- **Small real details** that make a thing specific: battlements and windows on a sandcastle, a spade in the bucket, seams on a sail, bows on a kite tail, a dog's collar and tag, eyes and a smile on people.
+- Details stay inside the box and never change a thing's size, so layout and every check are unaffected.
+
+**Ground texture** (`src/scenes/texture.tsx`): `speckles` (sand grain, gravel, dust, snow sparkle), `strokes` (grass blades) and `glints` (sun on water), each hundreds of tiny marks drawn as a single path, placed with a fixed seed so a place looks the same every time. Each backdrop adds its texture right after its ground colour, under signs and boards. It's faint on purpose: the contrast rules use the band's plain colour, and texture never makes a thing harder to see.
+
+The beach was the first place redrawn this way (with a far headland, wet sand at the water's edge and glints on the sea), with the shared things it uses: sun, birds, clouds, balloons, kites, trees, plant pots, balls, dolphins, crabs, starfish, people and dogs.
+
 ## Outlines
 
 Each thing is wrapped in a group with `stroke` set to its outline. Shapes without their own `stroke` inherit it, and small details (eyes, highlights, windows) set `stroke="none"`.
