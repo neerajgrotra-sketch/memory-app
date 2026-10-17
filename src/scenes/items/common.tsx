@@ -113,6 +113,10 @@ export const plane: CommonItem = {
   ),
 };
 
+/** Skin tones and hair colours for people, so a crowd isn't all one person. */
+const SKINS = ['#f1c27d', '#e0ac69', '#c68642', '#8d5524'];
+const HAIR = ['#4a2c17', '#1c1c1c', '#a0522d', '#d9b26f'];
+
 export const person: CommonItem = {
   kind: 'person',
   singular: 'person',
@@ -124,19 +128,28 @@ export const person: CommonItem = {
   size: 0.1,
   colours: [C.red, C.blue, C.yellow, C.green, C.orange, C.purple, C.pink, C.white],
   colourPrompt: (plural) => (plural ? 'What colour were the people’s shirts?' : 'What colour was the person’s shirt?'),
-  draw: (colour) => (
-    <G>
-      <Rect x={20} y={80} width={10} height={45} rx={4} fill="#343a40" stroke="none" />
-      <Rect x={34} y={80} width={10} height={45} rx={4} fill="#343a40" stroke="none" />
-      <Rect x={4} y={36} width={11} height={40} rx={5} fill={colour} />
-      <Rect x={49} y={36} width={11} height={40} rx={5} fill={colour} />
-      <Circle cx={9.5} cy={78} r={5} fill="#e0ac69" stroke="none" />
-      <Circle cx={54.5} cy={78} r={5} fill="#e0ac69" stroke="none" />
-      <Rect x={13} y={32} width={38} height={52} rx={10} fill={colour} />
-      <Circle cx={32} cy={16} r={15} fill="#e0ac69" stroke="none" />
-      <Path d="M17,14 C19,0 45,0 47,14 C39,8 25,8 17,14 Z" fill="#4a2c17" stroke="none" />
-    </G>
-  ),
+  // Skin, hair colour and hairstyle vary per person (fixed for each copy); only the shirt is asked about.
+  draw: (colour, _details, copy = 0) => {
+    const skin = SKINS[copy % SKINS.length];
+    const hair = HAIR[Math.floor(copy / 4) % HAIR.length];
+    const style = Math.floor(copy / 16) % 3;
+    return (
+      <G>
+        {/* Long hair falls behind the head and shoulders. */}
+        {style === 1 && <Path d="M15,16 C15,-2 49,-2 49,16 L51,40 Q32,46 13,40 Z" fill={hair} stroke="none" />}
+        <Rect x={20} y={80} width={10} height={45} rx={4} fill="#343a40" stroke="none" />
+        <Rect x={34} y={80} width={10} height={45} rx={4} fill="#343a40" stroke="none" />
+        <Rect x={4} y={36} width={11} height={40} rx={5} fill={colour} />
+        <Rect x={49} y={36} width={11} height={40} rx={5} fill={colour} />
+        <Circle cx={9.5} cy={78} r={5} fill={skin} stroke="none" />
+        <Circle cx={54.5} cy={78} r={5} fill={skin} stroke="none" />
+        <Rect x={13} y={32} width={38} height={52} rx={10} fill={colour} />
+        <Circle cx={32} cy={16} r={15} fill={skin} stroke="none" />
+        <Path d="M17,14 C19,0 45,0 47,14 C39,8 25,8 17,14 Z" fill={hair} stroke="none" />
+        {style === 2 && <Circle cx={32} cy={2} r={6} fill={hair} stroke="none" />}
+      </G>
+    );
+  },
 };
 
 export const dog: CommonItem = {

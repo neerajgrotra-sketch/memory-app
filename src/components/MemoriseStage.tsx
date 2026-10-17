@@ -80,7 +80,7 @@ export function MemoriseStage({ scene, seconds, onDone, onQuit }: MemoriseStageP
         </Pressable>
       </View>
       <View style={styles.picture}>
-        <SceneView spec={scene} fitToBox overlay={overlay} />
+        <SceneView spec={scene} fitToBox overlay={overlay} animate />
       </View>
     </SafeAreaView>
   );

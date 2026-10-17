@@ -10,7 +10,27 @@ Rendering lives in `src/scenes/SceneView.tsx` (`SceneContent` draws a scene; `Sc
    - faint marks (waves, floorboards, shoreline, sand ripples, road dashes) are at most 35% opaque, so they can't be mistaken for things
    - clouds are `scenery`: white and solid, but kept clear of everything in the sky
    - no mark ever comes within 8 design units of a thing.
-3. **Things**, sorted by the bottom of their box, so nearer things are drawn over farther ones. A thing drawn with `flip` is mirrored.
+3. **Shadows.** A soft dark oval (16% opaque) under everything standing in a `ground` band (the sand, a floor, a shelf, the worktop), so nothing looks pasted on. Things in the air, underwater, hung on a wall or floating (`floats`) have none.
+4. **Things**, sorted by the bottom of their box, so nearer things are drawn over farther ones. A thing drawn with `flip` is mirrored (never one with `noFlip`, like a clock).
+
+## Movement while you look
+
+On the memorise screen only (`SceneView animate`), the picture is drawn in layers so some of it can move gently:
+
+- **Bobbing:** everything in an `air` band (the sky, the sea at the beach, the open water under the sea) moves up and down 3 pt every 3.2 s.
+- **Rocking:** things with `floats` (the park's rowing boat and swans) move 1.6 pt every 2.6 s.
+- **Drifting:** clouds slide 7 pt side to side every 9 s.
+- Each moving kind starts at a different moment, so they don't move in step.
+
+The still parts (background and marks, then shadows and everything else) are their own layers, and each moving kind gets a layer moved by Reanimated on the native side, so it stays cheap. Things never overlap (a 4% gap, at least 15 pt), and nothing moves more than 3 pt, so splitting into layers never changes what covers what, and where something is is never in doubt.
+
+**Reduce motion:** when the phone asks for reduced motion, the picture is drawn still, as one layer. (The countdown is a timer, so it always runs at real speed: `reduceMotion: ReduceMotion.Never`.)
+
+Thumbnails, the full-size picture viewer and the screenshot tools draw the picture still (`layer: 'all'`).
+
+## Small variations
+
+`draw(colour, details, copy)` gets a `copy` number fixed for each copy in each picture (from the scene's seed). People use it for **skin tone, hair colour and hairstyle** (short, long, a bun), so a crowd isn't one person repeated. Variations are never asked about: the shirt colour, which is, comes from the scene's facts as before.
 
 ## Outlines
 

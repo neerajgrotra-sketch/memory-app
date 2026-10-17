@@ -10,6 +10,15 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.33 (2026-10-17)
+
+- **Visual pass on every place:**
+  - **Soft shadows** under everything standing on the ground, a floor or a shelf, so nothing looks pasted on.
+  - **Gentle movement while you memorise:** things in the sky or underwater bob a few points, the park's boat and swans rock on the water, and clouds drift. It's small enough that where things are is never in doubt, and each thing moves at its own moment. Thumbnails and the full-size picture stay still.
+  - **People look different from each other:** four skin tones, four hair colours and three hairstyles (short, long, a bun), fixed for each person. Shirt colours, which questions ask about, are unchanged.
+- **Fix (accessibility):** with the phone's **Reduce Motion** setting on, the picture was skipped entirely and the round went straight to the questions, because the countdown ran as an animation and finished at once. The countdown now always runs at real speed, and with Reduce Motion on the picture is shown still.
+- Scripts that draw pictures in Node (gallery, lineup, scene checker, recipe reference) use a small stand-in for the animation library.
+
 ## 4.0.0-beta.32 (2026-10-17)
 
 - **Daily challenge and streak**, on a card at the top of the Games tab (once you've played a round):

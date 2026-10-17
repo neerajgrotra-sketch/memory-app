@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, {
   Easing,
+  ReduceMotion,
   cancelAnimation,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -46,7 +47,9 @@ export function Countdown({ seconds, running, onComplete, onTick }: CountdownPro
     // The first number is shown without a change, so announce it as the countdown starts.
     onTickRef.current?.(seconds);
     remaining.value = seconds;
-    remaining.value = withTiming(0, { duration: seconds * 1000, easing: Easing.linear }, (finished) => {
+    // A timer, not decoration: it always runs at real speed. (With the phone's "reduce motion" on,
+    // animations otherwise finish at once, which skipped the picture entirely.)
+    remaining.value = withTiming(0, { duration: seconds * 1000, easing: Easing.linear, reduceMotion: ReduceMotion.Never }, (finished) => {
       if (finished) scheduleOnRN(complete);
     });
     return () => cancelAnimation(remaining);

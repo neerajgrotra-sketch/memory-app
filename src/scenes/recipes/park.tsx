@@ -47,6 +47,7 @@ const items: ItemDef[] = [
     zones: ON_POND,
     // One, so "the number on the rowing boat" is never in doubt.
     maxCount: 1,
+    floats: true,
     countable: false,
     noFlip: true,
     colours: [C.red, C.yellow, C.green, C.orange, C.white],
@@ -77,6 +78,7 @@ const items: ItemDef[] = [
     size: 0.14,
     zones: ON_POND,
     maxCount: 3,
+    floats: true,
     tone: '#f8f9fa',
     draw: () => (
       <G>

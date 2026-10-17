@@ -121,6 +121,8 @@ export interface ItemDef {
    * staggered groups other things make. For bands where things stand on a line (`flush`).
    */
   lineUp?: boolean;
+  /** Floats on water in a ground band (a rowing boat, a swan): rocks gently while you look, and casts no shadow. */
+  floats?: boolean;
   /** Never drawn mirrored: a clock face read backwards shows the wrong time. */
   noFlip?: boolean;
   /** For things with a fixed colour: their main colour, used for the contrast rules and the outline. */
@@ -128,9 +130,10 @@ export interface ItemDef {
   /**
    * Draws the thing in its w × h box. Shapes without their own `stroke` get the outline: 2–3 pt in a
    * darker shade of the thing's own colour. Small details set `stroke="none"`. Things that show a
-   * per-picture detail (the time on a clock) read it from `details`.
+   * per-picture detail (the time on a clock) read it from `details`. `copy` is a number fixed per copy,
+   * for small variations that are never asked about (a person's hair and skin).
    */
-  draw: (colour: string, details?: SceneDetails) => ReactElement;
+  draw: (colour: string, details?: SceneDetails, copy?: number) => ReactElement;
 }
 
 /** An oval on the floor; things are either fully on it or clear of it. Fractions of width (x) and height (y). */
