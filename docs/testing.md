@@ -6,7 +6,7 @@
 | `npm run lint` | ESLint (Expo config) |
 | `npm run check:questions` | Checks every question's wrong options are believable in every place (nothing offered in a band it can't be in, no empty options) and every picture gives at least 12 questions |
 | `npm run check:daily` | Checks the streak and Daily Challenge rules (days in a row, midnight, daylight saving, the week strip), in two time zones |
-| `npm run check:scenes` | Checks the level rules and points, then generates 49,800 scenes and checks every rule (below) |
+| `npm run check:scenes` | Checks the level rules and points, then generates 52,200 scenes and checks every rule (below) |
 | `npm run gallery` | Renders pictures to `gallery.html` for reviewing by eye |
 | `RECIPE=farm npm run lineup` | Draws a recipe's things side by side at their real sizes (`lineup.html`), to check sizes and shapes against each other |
 | `npm run docs:recipes` | Regenerates `docs/recipes/reference.md` and `docs/questions-examples.md` from the code |

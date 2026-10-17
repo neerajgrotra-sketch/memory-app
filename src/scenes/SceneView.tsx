@@ -78,7 +78,8 @@ export function SceneContent({ spec, pointsPerUnit, overlay, layer = 'all' }: Sc
       return group.boxes.map((box, i) => {
         const own = group.colours?.[i] ?? group.colour;
         const colour = own?.hex ?? '';
-        const outline = shade(own?.hex ?? item.tone ?? '#555555');
+        // A colour on the thing's own frame (a signal light, a snowman's scarf) doesn't set the outline: the frame does.
+        const outline = shade((item.framedColour ? item.tone : own?.hex) ?? item.tone ?? '#555555');
         const copy = copyNumber(spec.seed, g, i);
         return { key: `${group.kind}-${i}`, kind: group.kind, item, box, colour, outline, moves, shadow, copy, bottom: rectOf(item, box, ratio).y1 };
       });

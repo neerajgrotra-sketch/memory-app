@@ -44,17 +44,17 @@ See [Levels and scoring](../levels-and-scoring.md).
 | 17 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
 | 18 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
 | 19 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
-| 20 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
-| 21 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
-| 22 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
-| 23 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
-| 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
-| 25 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
-| 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
-| 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
-| 28 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
-| 29 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
-| 30 | Photographic Memory | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
+| 20 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
+| 21 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
+| 22 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
+| 23 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
+| 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
+| 25 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
+| 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
+| 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
+| 28 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
+| 29 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
+| 30 | Photographic Memory | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
 
 ## At the beach (`beach`)
 
@@ -491,3 +491,46 @@ Per-picture details: "What time was feeding time?" on every level; "Which animal
 | pushchair | path | small 12% | 2 | Red, Blue, Green, Purple, Pink | – |
 | balloon seller | path | medium 16% | 1 | Red, Blue, Yellow, Green, Pink, Purple | one only, not counted |
 | signpost | path | medium 15% | 1 | fixed (`#8a5a2b`) | one only, not counted |
+
+## On the snowy mountain (`snowy-mountain`)
+
+### Bands
+
+| Band | Height | Surface | Slot rows | Rules |
+| --- | --- | --- | --- | --- |
+| In the sky (`sky`) | 0% – 22% | air | 1 | – |
+| On the peaks (`peaks`) | 22% – 34% | ground | 0 | – |
+| On the ski slope (`slope`) | 36% – 63.5% | ground | 2 | – |
+| By the lodge (`lodge`) | 68% – 100% | ground | 2 | – |
+
+Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
+
+Per-picture details: "What colour was the ski run sign?"; "What was the ski run called?"; "What number was on the ski racer’s bib?" (when there's a racer).
+
+### Colour schemes
+
+| Scheme | Surface colours |
+| --- | --- |
+| sunny | sky `#7cc4f0`, peaksFar `#9bb3c9`, peaks `#7d97b0`, snow `#e8eff5`, snowShade `#cfdbe6`, fence `#8a5a2b`, base `#e1e9f0`, track `#9fb3c6` |
+| dusk | sky `#b49ad6`, peaksFar `#a68fb8`, peaks `#8a76a3`, snow `#ece4f0`, snowShade `#d6cbe0`, fence `#6b4423`, base `#e4dceb`, track `#ad9fc0` |
+
+### Things (16)
+
+| Thing | Band | Size | Most | Colours | Habits |
+| --- | --- | --- | --- | --- | --- |
+| sun | sky | medium 16% | 1 | fixed (`#ffd93b`) | one only, not counted |
+| bird | sky | small 10% | 4 | fixed (`#222222`) | – |
+| plane | sky | medium 18% | 1 | fixed (`#ffffff`) | one only, not counted |
+| cable car | sky | large 22% | 2 | Red, Blue, Green, Orange | copies spread one per third, on one line |
+| skier | slope | medium 15% | 3 | Red, Blue, Green, Orange, Purple, Pink | – |
+| snowboarder | slope | medium 14% | 3 | Red, Blue, Green, Orange, Purple, Pink | – |
+| ski racer | slope | medium 16% | 1 | Red, Blue, Green, Orange, Purple, Pink | one only, not counted |
+| slalom flag | slope | small 10% | 3 | Red, Blue | copies spread one per third, on one line |
+| pine tree | slope | large 24% | 2 | fixed (`#2f6b3a`) | tall anchor (stands at the back, rises above its band); copies spread one per third, on one line |
+| person | lodge | small 10% | 3 | Red, Blue, Green, Orange, Purple, Pink | – |
+| dog | lodge | medium 14% | 2 | Brown, Black, White | – |
+| snowman | lodge | small 12% | 2 | Red, Blue, Green, Orange, Purple, Pink | – |
+| sledge | lodge | medium 15% | 2 | Red, Blue, Green, Orange | – |
+| ski rack | lodge | medium 17% | 1 | fixed (`#6b4423`) | one only, not counted |
+| hot chocolate stand | lodge | large 23% | 1 | Red, Green, Blue, Brown | one only, not counted |
+| snowmobile | lodge | large 27% | 1 | Red, Blue, Green, Orange, Black | one only, not counted |

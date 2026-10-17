@@ -10,6 +10,17 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.38 (2026-10-17)
+
+- **A new place: On the snowy mountain**, unlocked at **Level 20** (and in Practice).
+  - **Bands:** the sky with cable cars, snowy peaks, the ski slope, and the snow by the lodge below a fence.
+  - **16 things:** cable cars, the sun, birds and a plane; skiers, snowboarders, a ski racer, slalom flags and pine trees on the slope; people in winter coats, dogs, snowmen, sledges, a ski rack, a hot chocolate stand and a snowmobile by the lodge.
+  - **New questions:** "What colour was the ski run sign?" (green, blue, red or black, the real difficulty colours), "What was the ski run called?", "What number was on the ski racer's bib?", plus jacket, scarf, cabin and roof colours.
+  - **Snow and contrast:** coats never come in white or yellow (they vanish on snow). The white snowman is checked, and outlined, by its grey frame, so it always shows.
+  - Two looks: sunny and dusk.
+- Scene checker: 52,200 pictures.
+- Things whose asked-about colour sits on their own frame now take their outline from the frame (a signal's housing, a snowman's outline), not from that colour.
+
 ## 4.0.0-beta.37 (2026-10-17)
 
 - **Fix: no more silly wrong answers.** When a band had too few believable things, "What was in the sky…?" topped up its options from any band ("Zookeepers" in the sky), and "Where was…?" could offer "In the sky" for a dog. Now every wrong option is something that could really be there. When there aren't three believable ones, the question has three options instead of four, and with fewer it isn't asked.
