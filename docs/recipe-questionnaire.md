@@ -8,7 +8,7 @@ Answer these to define a new setting (a recipe). Plain words are fine: the answe
 | --- | --- | --- |
 | 1.1 | What's the place called, as players will see it? | "In the park" |
 | 1.2 | Indoors or outdoors? Time of day or season? | Outdoors, a sunny afternoon in summer |
-| 1.3 | At which level should it first appear? (Today: beach 1, living room 2, park 4, city 6, kitchen 8, farm 10, under the sea 12, supermarket 14, train station 16, zoo 18, snowy mountain 20, classroom 22.) | Level 10 |
+| 1.3 | At which level should it first appear? (Today: beach 1, living room 2, park 4, city 6, kitchen 8, farm 10, under the sea 12, supermarket 14, train station 16, zoo 18, snowy mountain 20, classroom 22, night campsite 24.) | Level 10 |
 | 1.4 | What makes it different from the settings we already have? | Grass and trees everywhere, a pond, people relaxing |
 
 ## 2. The bands (top to bottom)

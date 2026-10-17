@@ -1,7 +1,8 @@
 /**
  * Checks that every question's wrong options are believable, across every place: "What was in the
  * sky…?" only offers things that can be in the sky, "Where was the dog?" only places a dog can be, no
- * option is empty, and every picture still gives enough questions. Run with `npm run check:questions`.
+ * option is empty, every picture still gives enough questions, and no band is named after a thing that can stand
+ * in it ("Where was the campfire? Around the campfire"). Run with `npm run check:questions`.
  */
 import { LEVELS } from '@/game/difficulty';
 import { generateScene } from '@/scenes/generateScene';
@@ -10,6 +11,8 @@ import { RECIPES } from '@/scenes/recipes';
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 let bad = 0; const optCounts: Record<string, number> = {}; let minPool = 999; let total = 0; let pictures = 0;
 for (const recipe of RECIPES) {
+  for (const i of recipe.items) for (const z of recipe.zones.filter((z) => i.zones.includes(z.id)))
+    if (new RegExp(`\\b(${i.singular}|${i.plural})\\b`, 'i').test(z.label)) { bad++; console.log('BAD band name', recipe.id, `"${z.label}" names ${i.singular}, which can be there`); }
   const phrase = new Map<string, string[]>();
   for (const i of recipe.items) for (const p of [cap(i.plural), `${cap(i.article)} ${i.singular}`]) phrase.set(p, i.zones);
   for (let s = 1; s <= 300; s++) {

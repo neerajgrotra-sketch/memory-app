@@ -706,3 +706,57 @@ Detail `sum`: 9 + 3.
 | colour | true-false | True or false? The pupil’s jumper was green. | True · **✓ False** | pupil |
 | count | true-false | True or false? There was one pupil. | **✓ True** · False | pupil |
 | colour | true-false | True or false? The teacher’s jumper was purple. | **✓ True** · False | teacher |
+
+## At the campsite at night
+
+Scene `night-campsite-c29hz`, colour scheme `clear`.
+
+### Facts
+
+| Thing | Count | Colour | Band | Side |
+| --- | --- | --- | --- | --- |
+| lantern posts | 2 | fixed | On the pitches | spread (not asked) |
+| tent | 1 | Pink | On the pitches | centre |
+| campfire | 1 | fixed | At the front | centre |
+| sleeping bag | 1 | Orange | At the front | right |
+| shooting star | 1 | fixed | In the sky | right |
+| fox | 1 | fixed | At the front | left |
+| owl | 1 | fixed | In the sky | centre |
+
+Detail `moon`: Half moon.
+
+Detail `pitch`: 27.
+
+### Questions (29)
+
+| Type | Kind | Question | Options (✓ = answer) | Subject |
+| --- | --- | --- | --- | --- |
+| count | count | How many lantern posts were there? | **✓ 2** · 1 · 5 · 3 | lantern |
+| count | count | How many tents were there? | **✓ 1** · 3 · 4 · 2 | tent |
+| colour | colour | What colour was the tent? | **✓ Pink** · Red · Yellow · Green | tent |
+| position | where | Where was the tent? | **✓ On the pitches, in the middle** · On the pitches, on the right · On the pitches, on the left | tent |
+| object | what-here | What was on the pitches, in the middle? | **✓ A tent** · A picnic table · A canoe · A lantern post | tent |
+| position | where | Where was the campfire? | **✓ At the front, in the middle** · At the front, on the right · At the front, on the left | campfire |
+| object | what-here | What was at the front, in the middle? | **✓ A campfire** · A log seat · A dog · A person | campfire |
+| count | count | How many sleeping bags were there? | **✓ 1** · 3 · 4 · 2 | sleeping-bag |
+| colour | colour | What colour was the sleeping bag? | **✓ Orange** · Blue · Green · Yellow | sleeping-bag |
+| position | where | Where was the sleeping bag? | **✓ At the front, on the right** · At the front, in the middle · At the front, on the left | sleeping-bag |
+| object | what-here | What was at the front, on the right? | **✓ A sleeping bag** · A fox · A campfire · A log seat | sleeping-bag |
+| position | where | Where was the shooting star? | **✓ In the sky, on the right** · In the sky, in the middle · In the sky, on the left | shooting-star |
+| object | what-here | What was in the sky, on the right? | **✓ A shooting star** · An owl · A plane · The moon | shooting-star |
+| position | where | Where was the fox? | **✓ At the front, on the left** · At the front, in the middle · At the front, on the right | fox |
+| object | what-here | What was at the front, on the left? | **✓ A fox** · A person · A dog · A log seat | fox |
+| count | count | How many owls were there? | **✓ 1** · 2 · 4 · 3 | owl |
+| position | where | Where was the owl? | **✓ In the sky, in the middle** · In the sky, on the right · In the sky, on the left | owl |
+| object | what-here | What was in the sky, in the middle? | **✓ An owl** · The moon · A plane · A shooting star | owl |
+| number | detail | What number was on the pitch sign? | **✓ 27** · 72 · 26 · 25 | pitch |
+| object | seen | Which of these was in the picture? | **✓ Campfire** · Canoe · Pile of firewood · Campervan | campfire |
+| object | seen | Which of these was NOT in the picture? | **✓ Picnic table** · Campfire · Lantern post · Owl | picnic-table |
+| count | compare | Were there more tents or more sleeping bags? | Tents · Sleeping bags · **✓ The same number** | compare-tent-sleeping-bag |
+| count | compare | Were there more sleeping bags or more owls? | Sleeping bags · Owls · **✓ The same number** | compare-sleeping-bag-owl |
+| count | most | Which was there the most of? | **✓ Lantern posts** · Tents · Sleeping bags · Owls | most-lantern |
+| position | relation | What was above the tent? | **✓ An owl** · A lantern post · A fox · A sleeping bag | tent |
+| position | relation | What was below the tent? | **✓ A campfire** · An owl · A fox · A sleeping bag | tent |
+| count | true-false | True or false? There were two lantern posts. | **✓ True** · False | lantern |
+| count | true-false | True or false? There was one owl. | **✓ True** · False | owl |
+| object | true-false | True or false? There was a campervan in the picture. | True · **✓ False** | campervan |

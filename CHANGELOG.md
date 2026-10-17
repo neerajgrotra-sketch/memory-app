@@ -10,6 +10,17 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.44 (2026-10-17)
+
+- **A new place: At the campsite at night**, unlocked at **Level 24** (and in Practice). The first night scene.
+  - **Bands:** a starry sky, a dark line of pine trees, "On the pitches", then "At the front" round the campfire. (Bands are never named after a thing in them, which would ask "Where was the campfire? Around the campfire".)
+  - **16 things:** the moon, barn owls, a shooting star and a plane in the sky; tents, a campervan, a canoe, lantern posts and a picnic table on the pitches; the campfire, people, a dog, a fox, log seats, sleeping bags and a pile of firewood at the front.
+  - **New questions:** "What shape was the moon?" (full, half or crescent, changing per picture), "What number was on the pitch sign?", plus tent, jumper, sleeping bag, canoe and campervan colours.
+  - **Night and contrast:** dark things vanish at night, so the sky only has pale things (an owl, not bats), the camping gear comes in bright colours, and the log seat and firewood are lit by the fire. The sky lightens towards the horizon and the fire's warm glow fades out across the grass.
+  - **Usually there:** the campfire is in every picture, and tents in most (the `usual` option).
+  - Two looks: a clear navy night and a moonlit violet one.
+- Scene checker: 57,000 pictures. `check:questions` now also fails if a band is named after a thing that can stand in it.
+
 ## 4.0.0-beta.43 (2026-10-17)
 
 - **A new place: In the classroom**, unlocked at **Level 22** (and in Practice). The first new place past Level 20.

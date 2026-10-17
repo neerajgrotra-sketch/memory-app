@@ -48,13 +48,13 @@ See [Levels and scoring](../levels-and-scoring.md).
 | 21 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
 | 22 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
 | 23 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
-| 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
-| 25 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
-| 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
-| 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
-| 28 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
-| 29 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
-| 30 | Photographic Memory | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
+| 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
+| 25 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
+| 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
+| 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
+| 28 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
+| 29 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
+| 30 | Photographic Memory | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
 
 ## At the beach (`beach`)
 
@@ -577,3 +577,46 @@ Per-picture details: "What time was on the clock?" (when there's a wall-clock) o
 | beanbag | back | medium 17% | 2 | Red, Blue, Green, Yellow, Purple, Orange | – |
 | fish tank | back | large 20% | 1 | fixed (`#6b4423`) | one only, not counted |
 | computer | back | large 20% | 1 | fixed (`#495057`) | one only, not counted |
+
+## At the campsite at night (`night-campsite`)
+
+### Bands
+
+| Band | Height | Surface | Slot rows | Rules |
+| --- | --- | --- | --- | --- |
+| In the sky (`sky`) | 0% – 25% | air | 1 | – |
+| By the trees (`trees`) | 25% – 36% | ground | 0 | – |
+| On the pitches (`pitches`) | 38% – 60% | ground | 1 | – |
+| At the front (`fire`) | 68% – 100% | ground | 2 | – |
+
+Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
+
+Per-picture details: "What shape was the moon?" (when there's a moon); "What number was on the pitch sign?".
+
+### Colour schemes
+
+| Scheme | Surface colours |
+| --- | --- |
+| clear | sky `#141d3b`, stars `#fff8d6`, trees `#0e1a16`, grass `#2e4a3c`, track `#4a6655` |
+| moonlit | sky `#211a42`, stars `#f3ecff`, trees `#130f26`, grass `#33465a`, track `#536a80` |
+
+### Things (16)
+
+| Thing | Band | Size | Most | Colours | Habits |
+| --- | --- | --- | --- | --- | --- |
+| moon | sky | medium 16% | 1 | fixed (`#f1f3c8`) | one only, not counted |
+| owl | sky | medium 13% | 2 | fixed (`#e9d8b4`) | – |
+| shooting star | sky | medium 16% | 1 | fixed (`#fff3bf`) | one only, not counted |
+| plane | sky | medium 18% | 1 | fixed (`#ffffff`) | one only, not counted |
+| tent | pitches | large 25% | 3 | Red, Orange, Yellow, Green, Blue, Pink | copies spread one per third, on one line |
+| campervan | pitches | xl 56% | 1 | White, Yellow, Orange, Red, Green | may span columns; one only, not counted |
+| canoe | pitches | xl 46% | 1 | Red, Yellow, Orange, Green, Blue | may span columns; one only, not counted |
+| lantern post | pitches | small 10% | 2 | fixed (`#ffd66b`) | tall anchor (stands at the back, rises above its band); copies spread one per third, on one line |
+| picnic table | pitches | large 21% | 1 | fixed (`#b07d48`) | one only, not counted |
+| campfire | fire | small 13% | 1 | fixed (`#f77f00`) | one only, not counted |
+| person | fire | small 10% | 3 | Red, Orange, Yellow, Green, Blue, Pink | – |
+| dog | fire | medium 14% | 1 | Brown, White | – |
+| fox | fire | small 12% | 1 | fixed (`#f77f00`) | one only, not counted |
+| log seat | fire | large 21% | 2 | fixed (`#d4a46c`) | – |
+| sleeping bag | fire | large 23% | 2 | Red, Orange, Yellow, Green, Blue, Pink | – |
+| pile of firewood | fire | small 12% | 1 | fixed (`#d4a46c`) | one only, not counted |
