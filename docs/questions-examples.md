@@ -760,3 +760,64 @@ Detail `pitch`: 27.
 | count | true-false | True or false? There were two lantern posts. | **✓ True** · False | lantern |
 | count | true-false | True or false? There was one owl. | **✓ True** · False | owl |
 | object | true-false | True or false? There was a campervan in the picture. | True · **✓ False** | campervan |
+
+## At the airport
+
+Scene `airport-c29hz`, colour scheme `day`.
+
+### Facts
+
+| Thing | Count | Colour | Band | Side |
+| --- | --- | --- | --- | --- |
+| coffee kiosk | 1 | Blue | In the departure lounge | left |
+| luggage trolleys | 2 | Red | In the departure lounge | centre |
+| pilot | 1 | fixed | In the departure lounge | right |
+| control tower | 1 | fixed | Out on the airfield | centre |
+| helicopter | 1 | Orange | In the sky | right |
+| baggage train | 1 | fixed | Out on the airfield | left |
+| birds | 2 | fixed | In the sky | centre |
+
+Detail `city`: Athens.
+
+Detail `gate`: C15.
+
+Detail `flight`: GL 789.
+
+### Questions (34)
+
+| Type | Kind | Question | Options (✓ = answer) | Subject |
+| --- | --- | --- | --- | --- |
+| colour | colour | What colour was the awning on the coffee kiosk? | **✓ Blue** · Orange · Red · Green | coffee-kiosk |
+| position | where | Where was the coffee kiosk? | **✓ In the departure lounge, on the left** · In the departure lounge, in the middle · In the departure lounge, on the right | coffee-kiosk |
+| object | what-here | What was in the departure lounge, on the left? | **✓ A coffee kiosk** · A luggage trolley · A row of seats · A traveller | coffee-kiosk |
+| count | count | How many luggage trolleys were there? | **✓ 2** · 5 · 3 · 4 | trolley |
+| colour | colour | What colour were the big suitcases on the trolleys? | **✓ Red** · Purple · Blue · Orange | trolley |
+| position | where | Where were the luggage trolleys? | **✓ In the departure lounge, in the middle** · In the departure lounge, on the right · In the departure lounge, on the left | trolley |
+| object | what-here | What was in the departure lounge, in the middle? | **✓ Luggage trolleys** · Potted plants · Flight attendants · Pilots | trolley |
+| count | count | How many pilots were there? | **✓ 1** · 2 · 4 · 3 | pilot |
+| position | where | Where was the pilot? | **✓ In the departure lounge, on the right** · In the departure lounge, in the middle · In the departure lounge, on the left | pilot |
+| object | what-here | What was in the departure lounge, on the right? | **✓ A pilot** · A flight attendant · An information desk · A coffee kiosk | pilot |
+| position | where | Where was the control tower? | **✓ Out on the airfield, in the middle** · Out on the airfield, on the left · Out on the airfield, on the right | control-tower |
+| object | what-here | What was out on the airfield, in the middle? | **✓ A control tower** · A fuel truck · A baggage train · A parked plane | control-tower |
+| colour | colour | What colour was the helicopter? | **✓ Orange** · Red · White · Yellow | helicopter |
+| position | where | Where was the helicopter? | **✓ In the sky, on the right** · In the sky, on the left · In the sky, in the middle | helicopter |
+| object | what-here | What was in the sky, on the right? | **✓ A helicopter** · A bird · A plane | helicopter |
+| position | where | Where was the baggage train? | **✓ Out on the airfield, on the left** · Out on the airfield, in the middle · Out on the airfield, on the right | baggage-train |
+| object | what-here | What was out on the airfield, on the left? | **✓ A baggage train** · A fuel truck · A parked plane · A control tower | baggage-train |
+| count | count | How many birds were there? | **✓ 2** · 1 · 4 · 5 | bird |
+| position | where | Where were the birds? | **✓ In the sky, in the middle** · In the sky, on the left · In the sky, on the right | bird |
+| object | detail | Where was the flight on the screen going? | **✓ Athens** · Oslo · Rome · Lisbon | flight-city |
+| number | detail | Which gate was the flight leaving from? | **✓ C15** · C14 · C16 · C25 | flight-gate |
+| number | detail | What was the flight number? | **✓ GL 789** · GL 799 · GL 879 · GL 790 | flight-number |
+| object | seen | Which of these was in the picture? | **✓ Helicopter** · Potted plant · Traveller · Parked plane | helicopter |
+| object | seen | Which of these was NOT in the picture? | **✓ Flight attendant** · Control tower · Helicopter · Luggage trolley | flight-attendant |
+| count | compare | Were there more luggage trolleys or more pilots? | **✓ Luggage trolleys** · Pilots · The same number | compare-trolley-pilot |
+| count | compare | Were there more luggage trolleys or more birds? | Luggage trolleys · Birds · **✓ The same number** | compare-trolley-bird |
+| count | most | Which was there just one of? | **✓ A pilot** · A bird · A luggage trolley · A flight attendant | only-pilot |
+| position | relation | What was above the coffee kiosk? | **✓ A baggage train** · A luggage trolley · A helicopter · A pilot | coffee-kiosk |
+| position | relation | What was above the control tower? | **✓ Birds** · Luggage trolleys · Pilots · Planes | control-tower |
+| position | relation | What was below the control tower? | **✓ Luggage trolleys** · Birds · Pilots · Flight attendants | control-tower |
+| position | relation | What was below the baggage train? | **✓ A coffee kiosk** · A luggage trolley · A bird · A pilot | baggage-train |
+| count | true-false | True or false? There were two luggage trolleys. | **✓ True** · False | trolley |
+| count | true-false | True or false? There was one bird. | True · **✓ False** | bird |
+| count | true-false | True or false? There was one pilot. | **✓ True** · False | pilot |

@@ -50,11 +50,11 @@ See [Levels and scoring](../levels-and-scoring.md).
 | 23 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
 | 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
 | 25 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
-| 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
-| 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
-| 28 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
-| 29 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
-| 30 | Photographic Memory | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
+| 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
+| 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
+| 28 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
+| 29 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
+| 30 | Photographic Memory | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
 
 ## At the beach (`beach`)
 
@@ -620,3 +620,44 @@ Per-picture details: "What shape was the moon?" (when there's a moon); "What num
 | log seat | fire | large 21% | 2 | fixed (`#d4a46c`) | – |
 | sleeping bag | fire | large 23% | 2 | Red, Orange, Yellow, Green, Blue, Pink | – |
 | pile of firewood | fire | small 12% | 1 | fixed (`#d4a46c`) | one only, not counted |
+
+## At the airport (`airport`)
+
+### Bands
+
+| Band | Height | Surface | Slot rows | Rules |
+| --- | --- | --- | --- | --- |
+| In the sky (`sky`) | 0% – 24% | air | 1 | – |
+| Out on the airfield (`airfield`) | 26% – 42% | ground | 1 | at most 3 kinds |
+| In the departure lounge (`lounge`) | 62% – 100% | ground | 2 | – |
+
+Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
+
+Per-picture details: "Where was the flight on the screen going?"; "Which gate was the flight leaving from?"; "What was the flight number?".
+
+### Colour schemes
+
+| Scheme | Surface colours |
+| --- | --- |
+| day | sky `#8fd0f5`, airfield `#7fae6a`, runway `#6c757d`, frame `#495057`, wall `#dee2e6`, floor `#e9e4da`, floorLine `#c9c2b4` |
+| evening | sky `#f4a96a`, airfield `#6f8f5c`, runway `#5c636a`, frame `#343a40`, wall `#d6d0c8`, floor `#ddd5c8`, floorLine `#bfb6a6` |
+
+### Things (15)
+
+| Thing | Band | Size | Most | Colours | Habits |
+| --- | --- | --- | --- | --- | --- |
+| plane | sky | medium 18% | 2 | fixed (`#ffffff`) | – |
+| helicopter | sky | medium 16% | 1 | Red, Yellow, Orange, White | one only, not counted |
+| bird | sky | small 10% | 3 | fixed (`#222222`) | – |
+| parked plane | airfield | xl 50% | 1 | Red, Blue, Green, Orange, Purple | may span columns; one only, not counted |
+| fuel truck | airfield | medium 16% | 1 | fixed (`#f8f9fa`) | one only, not counted |
+| baggage train | airfield | medium 17% | 1 | fixed (`#ffd60a`) | one only, not counted |
+| control tower | airfield | small 10% | 1 | fixed (`#dee2e6`) | one only, not counted |
+| traveller | lounge | small 10% | 3 | Red, Blue, Yellow, Green, Orange, Purple, Pink, White | – |
+| pilot | lounge | small 10% | 2 | fixed (`#1f2a44`) | – |
+| flight attendant | lounge | small 13% | 2 | Red, Blue, Purple, Green | – |
+| luggage trolley | lounge | medium 16% | 2 | Red, Blue, Green, Yellow, Purple, Orange | – |
+| row of seats | lounge | large 25% | 1 | Red, Blue, Green, Orange, Grey, Purple | one only, not counted |
+| coffee kiosk | lounge | large 23% | 1 | Red, Green, Blue, Orange, Purple | one only, not counted |
+| information desk | lounge | large 23% | 1 | fixed (`#2f6fb3`) | one only, not counted |
+| potted plant | lounge | medium 13% | 2 | Orange, Blue, White, Yellow, Pink, Purple | – |

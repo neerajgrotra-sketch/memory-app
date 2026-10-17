@@ -10,6 +10,16 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.45 (2026-10-17)
+
+- **A new place: At the airport**, unlocked at **Level 26** (and in Practice).
+  - **A departure lounge with a big window onto the airfield:** the sky and the airfield through the glass, the flight screen, then the lounge.
+  - **15 things:** planes, a helicopter and birds in the sky; a parked plane, a fuel truck, a baggage train and the control tower out on the airfield; travellers, pilots, flight attendants with their cases, luggage trolleys, a row of seats, a coffee kiosk, an information desk and potted plants in the lounge.
+  - **New questions from the flight screen:** "What was the flight number?" (like GL 427), "Which gate was the flight leaving from?" (like B12), "Where was the flight on the screen going?", plus the stripe on the parked plane, the flight attendants' uniforms, the suitcases, the seats and the kiosk's awning.
+  - **Scale:** inside is true to the person; out of the window everything is far away and drawn small, as it really looks. That's how a 40 m plane and a person share one picture without either being the wrong size.
+  - Two looks: a blue day sky and an orange evening one.
+- Scene checker: 59,400 pictures.
+
 ## 4.0.0-beta.44 (2026-10-17)
 
 - **A new place: At the campsite at night**, unlocked at **Level 24** (and in Practice). The first night scene.
