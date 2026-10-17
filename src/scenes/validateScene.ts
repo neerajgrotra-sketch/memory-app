@@ -1,4 +1,4 @@
-import { standsOut } from './contrast';
+import { standsOut, surfaceColour } from './contrast';
 import {
   AGAINST_BACK,
   AT_FRONT,
@@ -177,7 +177,7 @@ export function validateScene(spec: SceneSpec, width: number, height: number): S
       if (colour) {
         for (const [x, y] of samplePoints(r, ratio)) {
           const surface = recipe.surfaceAt(x, y);
-          if (!standsOut(colour, variant.palette[surface])) add('contrast', `${own?.name ?? ''} ${item.singular} blends into the ${surface}`.trim(), item.kind);
+          if (!standsOut(colour, surfaceColour(recipe, variant.palette, x, y))) add('contrast', `${own?.name ?? ''} ${item.singular} blends into the ${surface}`.trim(), item.kind);
         }
       }
     }

@@ -246,14 +246,14 @@ Scene `kitchen-c29hz`, colour scheme `modern`.
 | frying pans | 2 | fixed | On the wall | spread (not asked) |
 | tea towel | 1 | Blue | On the wall | centre |
 | basket of vegetables | 1 | fixed | On the floor | centre |
-| kettle | 1 | Blue | On the worktop | right |
+| kettle | 1 | Red | On the worktop | right |
 | pot of herbs | 1 | Orange | On the shelf | left |
 
 Detail `microwave`: 2:00.
 
 Detail `fruit`: Lemons.
 
-### Questions (32)
+### Questions (30)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
@@ -269,7 +269,7 @@ Detail `fruit`: Lemons.
 | object | what-here | What was on the wall, in the middle? | **✓ A tea towel** · An oven glove · A window · A utensil rail | tea-towel |
 | position | where | Where was the basket of vegetables? | **✓ On the floor, in the middle** · On the floor, on the right · On the floor, on the left · On the worktop, on the right | veg-basket |
 | object | what-here | What was on the floor, in the middle? | **✓ A basket of vegetables** · A pedal bin · A mop and bucket · A recycling box | veg-basket |
-| colour | colour | What colour was the kettle? | **✓ Blue** · Yellow · Green · Red | kettle |
+| colour | colour | What colour was the kettle? | **✓ Red** · Yellow · Green · White | kettle |
 | position | where | Where was the kettle? | **✓ On the worktop, on the right** · On the worktop, in the middle · On the worktop, on the left · On the wall, in the middle | kettle |
 | object | what-here | What was on the worktop, on the right? | **✓ A kettle** · A chopping board · A microwave · A toaster | kettle |
 | count | count | How many pots of herbs were there? | **✓ 1** · 3 · 2 · 4 | herbs |
@@ -284,11 +284,9 @@ Detail `fruit`: Lemons.
 | position | relation | What was below the kettle? | **✓ A mop and bucket** · A pedal bin · A frying pan · A basket of vegetables | kettle |
 | colour | twins | What else was the same colour as the pedal bin? | **✓ The bucket** · The herb pot · The kettle · The stripes on the tea towel | bin |
 | colour | twins | What else was the same colour as the bucket? | **✓ The pedal bin** · The kettle · The herb pot · The stripes on the tea towel | bucket |
-| colour | twins | What else was the same colour as the stripes on the tea towel? | **✓ The kettle** · The herb pot · The bucket · The pedal bin | tea-towel |
-| colour | twins | What else was the same colour as the kettle? | **✓ The stripes on the tea towel** · The herb pot · The bucket · The pedal bin | kettle |
-| colour | true-false | True or false? The herb pot was white. | True · **✓ False** | herbs |
-| colour | true-false | True or false? The kettle was white. | True · **✓ False** | kettle |
-| colour | true-false | True or false? The pedal bin was yellow. | **✓ True** · False | bin |
+| colour | true-false | True or false? The pedal bin was white. | True · **✓ False** | bin |
+| object | true-false | True or false? There was a teapot in the picture. | True · **✓ False** | teapot |
+| count | true-false | True or false? There were two frying pans. | **✓ True** · False | frying-pan |
 
 ## On the farm
 
@@ -354,15 +352,15 @@ Scene `under-sea-c29hz`, colour scheme `tropical`.
 | submarine | 1 | Yellow | In the open water | right |
 | shark | 1 | fixed | In the open water | left |
 | jellyfish | 1 | White | Near the surface | left |
-| sea turtles | 2 | fixed | Near the surface | right |
-| starfish | 2 | Red | On the seabed | left |
+| sea turtles | 2 | fixed | Near the surface | centre |
+| starfish | 1 | Purple | On the seabed | right |
 | clownfish | 2 | fixed | In the open water | centre |
 
 Detail `chestSide`: right.
 
 Detail `chest`: Red jewels.
 
-### Questions (34)
+### Questions (31)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
@@ -378,28 +376,25 @@ Detail `chest`: Red jewels.
 | position | where | Where was the jellyfish? | **✓ Near the surface, on the left** · In the open water, on the right · In the open water, in the middle · In the open water, on the left | jellyfish |
 | object | what-here | What was near the surface, on the left? | **✓ A jellyfish** · A dolphin · A whale · A sea turtle | jellyfish |
 | count | count | How many sea turtles were there? | **✓ 2** · 4 · 5 · 3 | turtle |
-| position | where | Where were the sea turtles? | **✓ Near the surface, on the right** · Near the surface, on the left · In the open water, in the middle · Near the surface, in the middle | turtle |
-| object | what-here | What was near the surface, on the right? | **✓ Sea turtles** · Jellyfish · Dolphins · Fish | turtle |
-| count | count | How many starfish were there? | **✓ 2** · 1 · 3 · 5 | starfish |
-| colour | colour | What colour were the starfish? | **✓ Red** · Pink · Orange · Purple | starfish |
-| position | where | Where were the starfish? | **✓ On the seabed, on the left** · On the seabed, on the right · On the seabed, in the middle · Near the surface, on the right | starfish |
-| object | what-here | What was on the seabed, on the left? | **✓ Starfish** · Seashells · Corals · Crabs | starfish |
-| count | count | How many clownfish were there? | **✓ 2** · 3 · 1 · 4 | clownfish |
-| position | where | Where were the clownfish? | **✓ In the open water, in the middle** · In the open water, on the left · In the open water, on the right · Near the surface, on the right | clownfish |
-| object | what-here | What was in the open water, in the middle? | **✓ Clownfish** · Sea turtles · Divers · Fish | clownfish |
-| object | detail | What was in the treasure chest? | **✓ Red jewels** · Nothing, it was closed · Gold coins · Pearls | chest |
-| object | seen | Which of these was in the picture? | **✓ Jellyfish** · Seashell · Fish · Whale | jellyfish |
-| object | seen | Which of these was NOT in the picture? | **✓ Fish** · Clownfish · Shark · Seaweed plant | fish |
-| count | compare | Were there more starfish or more clownfish? | Starfish · Clownfish · **✓ The same number** | compare-starfish-clownfish |
-| count | compare | Were there more jellyfish or more starfish? | Jellyfish · **✓ Starfish** · The same number | compare-jellyfish-starfish |
-| count | most | Which was there just one of? | **✓ A jellyfish** · A clownfish · A sea turtle · A starfish | only-jellyfish |
-| position | relation | What was above the seaweed plant? | **✓ Clownfish** · Sea turtles · Starfish · Jellyfish | seaweed |
-| position | relation | What was below the jellyfish? | **✓ Starfish** · Sea turtles · Clownfish · Seashells | jellyfish |
-| position | relation | What was above the starfish? | **✓ A jellyfish** · A seaweed plant · A sea turtle · A shark | starfish |
-| position | relation | What was below the clownfish? | **✓ A seaweed plant** · A submarine · A shark · A sea turtle | clownfish |
+| position | where | Where were the sea turtles? | **✓ Near the surface, in the middle** · Near the surface, on the left · In the open water, in the middle · In the open water, on the right | turtle |
+| object | what-here | What was near the surface, in the middle? | **✓ Sea turtles** · Jellyfish · Dolphins · Fish | turtle |
+| count | count | How many starfish were there? | **✓ 1** · 2 · 3 · 4 | starfish |
+| colour | colour | What colour was the starfish? | **✓ Purple** · Orange · Pink · Red | starfish |
+| position | where | Where was the starfish? | **✓ On the seabed, on the right** · On the seabed, on the left · On the seabed, in the middle · Near the surface, in the middle | starfish |
+| object | what-here | What was on the seabed, on the right? | **✓ A starfish** · A seashell · A crab · A coral | starfish |
+| count | count | How many clownfish were there? | **✓ 2** · 5 · 4 · 3 | clownfish |
+| position | where | Where were the clownfish? | **✓ In the open water, in the middle** · In the open water, on the left · In the open water, on the right · Near the surface, in the middle | clownfish |
+| object | what-here | What was in the open water, in the middle? | **✓ Clownfish** · Divers · Fish · Jellyfish | clownfish |
+| object | detail | What was in the treasure chest? | **✓ Red jewels** · Gold coins · Pearls · Nothing, it was closed | chest |
+| object | seen | Which of these was in the picture? | **✓ Seaweed plant** · Crab · Whale · Octopus | seaweed |
+| object | seen | Which of these was NOT in the picture? | **✓ Fish** · Shark · Clownfish · Submarine | fish |
+| count | compare | Were there more jellyfish or more starfish? | Jellyfish · Starfish · **✓ The same number** | compare-jellyfish-starfish |
+| count | compare | Were there more sea turtles or more clownfish? | Sea turtles · Clownfish · **✓ The same number** | compare-turtle-clownfish |
+| position | relation | What was above the clownfish? | **✓ Sea turtles** · Jellyfish · Starfish · Corals | clownfish |
+| position | relation | What was below the clownfish? | **✓ A seaweed plant** · A submarine · A sea turtle · A starfish | clownfish |
+| colour | true-false | True or false? The starfish was red. | True · **✓ False** | starfish |
 | count | true-false | True or false? There were two jellyfish. | True · **✓ False** | jellyfish |
-| count | true-false | True or false? There were two sea turtles. | **✓ True** · False | turtle |
-| count | true-false | True or false? There were three clownfish. | True · **✓ False** | clownfish |
+| object | true-false | True or false? There was a coral in the picture. | True · **✓ False** | coral |
 
 ## In the supermarket
 

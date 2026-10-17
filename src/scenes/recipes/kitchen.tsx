@@ -649,7 +649,7 @@ const items: ItemDef[] = [
     zones: ON_FLOOR,
     maxCount: 1,
     countable: false,
-    tone: '#c8955a',
+    tone: '#a86a32',
     draw: () => (
       <G>
         <G strokeWidth={3}>
@@ -658,8 +658,8 @@ const items: ItemDef[] = [
           <Circle cx={88} cy={32} r={12} fill={C.red.hex} stroke="#8f1d26" />
           <Ellipse cx={50} cy={34} rx={12} ry={9} fill="#d4a373" stroke="#8a5a2b" />
         </G>
-        <Path d="M2,38 H108 L98,90 H12 Z" fill="#c8955a" />
-        <Path d="M8,56 H102 M12,72 H98" fill="none" stroke="#8a5a2b" strokeWidth={3} />
+        <Path d="M2,38 H108 L98,90 H12 Z" fill="#a86a32" />
+        <Path d="M8,56 H102 M12,72 H98" fill="none" stroke="#6b4420" strokeWidth={3} />
       </G>
     ),
   },
@@ -774,6 +774,15 @@ export const kitchen: Recipe = {
   ],
   items,
   details,
+  // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
+  light: [
+    // Light from above on the tiles, shade by the worktop.
+    { top: SHELF[1] + SHELF_BOARD, bottom: COUNTER[1], from: ['#ffffff', 0.08], to: ['#000000', 0.08] },
+    // Shade under the worktop's edge.
+    { top: COUNTER[1] + WORKTOP, bottom: FLOOR_LINE, from: ['#000000', 0.08], to: ['#000000', 0] },
+    // Shade on the floor by the cupboards.
+    { top: FLOOR_LINE, bottom: 1, from: ['#000000', 0.06], to: ['#000000', 0] },
+  ],
   surfaceAt,
   marks,
   variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number) => backdrop(h, p) })),

@@ -498,6 +498,15 @@ export const farm: Recipe = {
   ],
   items,
   details,
+  // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
+  light: [
+    // Haze near the hills.
+    { top: 0, bottom: HILLS, from: ['#ffffff', 0], to: ['#ffffff', 0.2] },
+    // Distant hills, paler with distance.
+    { top: HILLS, bottom: FIELD, from: ['#ffffff', 0.12], to: ['#ffffff', 0] },
+    // The farmyard, darker in front.
+    { top: YARD, bottom: 1, from: ['#000000', 0], to: ['#000000', 0.1] },
+  ],
   surfaceAt: (_x, y) => (y < HILLS ? 'sky' : y < FIELD ? 'hills' : y < YARD ? 'field' : 'yard'),
   marks,
   variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number, d?: SceneDetails) => backdrop(h, p, d) })),

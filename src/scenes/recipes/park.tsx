@@ -451,6 +451,17 @@ export const park: Recipe = {
   ],
   items,
   details,
+  // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
+  light: [
+    // Haze near the trees.
+    { top: 0, bottom: BUSHES, from: ['#ffffff', 0], to: ['#ffffff', 0.1] },
+    // The pond: deep in the middle, lighter at the bank.
+    { top: POND, bottom: BANK, from: ['#000000', 0.12], to: ['#ffffff', 0.08] },
+    // Shade along the path's far edge.
+    { top: PATH, bottom: GRASS, from: ['#000000', 0.06], to: ['#000000', 0] },
+    // Sun on the grass, a little deeper in front.
+    { top: GRASS, bottom: 1, from: ['#ffffff', 0.06], to: ['#000000', 0.1] },
+  ],
   surfaceAt,
   marks,
   variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number) => backdrop(h, p) })),

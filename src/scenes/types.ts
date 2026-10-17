@@ -214,6 +214,19 @@ export interface VariantDef {
   background: (height: number, details?: SceneDetails) => ReactElement;
 }
 
+/**
+ * Light across a band of the picture, drawn over the background (under the things): haze near the
+ * horizon, water getting deeper, shade under a shelf. A vertical gradient from `from` at the band's top
+ * to `to` at its bottom, each a colour and an opacity. Kept subtle (opacity 0.2 at most) so the
+ * colours the contrast rules check still hold.
+ */
+export interface LightBand {
+  top: number;
+  bottom: number;
+  from: [string, number];
+  to: [string, number];
+}
+
 /** What a recipe's `details` may vary by level. */
 export interface DetailKnobs {
   /** How exact clock times are: whole hours, half past, or quarters. */
@@ -229,6 +242,8 @@ export interface Recipe {
   rug?: Rug;
   /** Areas nothing may cover (building doors), as fractions: x of the width, y of the height. */
   keepClear?: Rect[];
+  /** Light across bands of the backdrop (see `LightBand`), back to front. */
+  light?: LightBand[];
   /** Chooses this picture's backdrop details (house colours and numbers, the time on the clock). */
   details?: (random: Rng, knobs: DetailKnobs) => SceneDetails;
   /** Which surface (a key of each variant's palette) is behind the point (x, y), as fractions of width and height. */

@@ -279,7 +279,7 @@ Per-picture details: "What time was on the microwave?" (when there's a microwave
 | mop and bucket | floor | medium 17% | 1 | Blue, Red, Yellow, Green | one only, not counted |
 | step stool | floor | large 20% | 1 | Red, Blue, Yellow, Green, White | one only, not counted |
 | recycling box | floor | large 21% | 1 | fixed (`#2b9348`) | one only, not counted |
-| basket of vegetables | floor | medium 18% | 1 | fixed (`#c8955a`) | one only, not counted |
+| basket of vegetables | floor | medium 18% | 1 | fixed (`#a86a32`) | one only, not counted |
 | pet bowl | floor | small 12% | 2 | Red, Blue, Green, Yellow, Pink | – |
 
 ## On the farm (`farm`)

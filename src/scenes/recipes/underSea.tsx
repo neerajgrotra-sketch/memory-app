@@ -447,6 +447,13 @@ export const underSea: Recipe = {
   details,
   // The treasure chest's corner (either side) is kept clear, so nothing hides it.
   keepClear: [chestRect('left'), chestRect('right')],
+  // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
+  light: [
+    // Sunlit near the surface, darker with depth.
+    { top: SURFACE, bottom: SEABED, from: ['#ffffff', 0.12], to: ['#000000', 0.12] },
+    // The seabed, darker in front.
+    { top: SEABED + 0.06, bottom: 1, from: ['#000000', 0.06], to: ['#000000', 0.12] },
+  ],
   surfaceAt: (_x, y) => (y < SURFACE ? 'sky' : y < TOP ? 'top' : y < SEABED ? 'open' : y < SEABED + 0.06 ? 'deep' : 'sand'),
   marks,
   variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number, d?: SceneDetails) => backdrop(h, p, d) })),

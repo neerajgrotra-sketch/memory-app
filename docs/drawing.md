@@ -5,13 +5,16 @@ Rendering lives in `src/scenes/SceneView.tsx` (`SceneContent` draws a scene; `Sc
 ## Layers (back to front)
 
 1. **Background bands.** Each colour scheme's `background(height, details)` draws only large fills: sky, sea, sand, wall, floor, the rug, building fronts with their windows, doors and house numbers, pavement and road.
-2. **Marks and clouds.** The recipe's `marks(height, boxes, random, variant)` returns small details placed around the things (helpers in `src/scenes/marks.tsx`):
+2. **Light bands.** Each recipe's `light` list (`LightBand` in `src/scenes/types.ts`) lays soft vertical gradients over the background: haze near a horizon, water deep far out and lighter in the shallows, sun on house fronts, shade at the back of each shelf, under a worktop, or where a floor meets the wall. At most 20% opaque.
+3. **Marks and clouds.** The recipe's `marks(height, boxes, random, variant)` returns small details placed around the things (helpers in `src/scenes/marks.tsx`):
    - each mark has a box, and `lineMarks` breaks a line wherever something stands on it
    - faint marks (waves, floorboards, shoreline, sand ripples, road dashes) are at most 35% opaque, so they can't be mistaken for things
    - clouds are `scenery`: white and solid, but kept clear of everything in the sky
    - no mark ever comes within 8 design units of a thing.
-3. **Shadows.** A soft dark oval (16% opaque) under everything standing in a `ground` band (the sand, a floor, a shelf, the worktop), so nothing looks pasted on. Things in the air, underwater, hung on a wall or floating (`floats`) have none.
-4. **Things**, sorted by the bottom of their box, so nearer things are drawn over farther ones. A thing drawn with `flip` is mirrored (never one with `noFlip`, like a clock).
+4. **Shadows.** A soft dark oval (16% opaque) under everything standing in a `ground` band (the sand, a floor, a shelf, the worktop), so nothing looks pasted on. Things in the air, underwater, hung on a wall or floating (`floats`) have none.
+5. **Things**, sorted by the bottom of their box, so nearer things are drawn over farther ones. A thing drawn with `flip` is mirrored (never one with `noFlip`, like a clock).
+   - **Light on every thing:** light falls from the top left. Over each thing, a gradient (white 30% at the top fading out, black 18% at the bottom) is drawn through a mask of the thing's own silhouette (`maskType="alpha"`), so it gives every drawing a rounded, lit look without changing any drawing. The light is the same for every thing in the scene, whichever way the thing faces.
+   - Gradient and mask ids are unique per picture (`useId`), since several pictures can be on one screen or web page.
 
 ## Movement while you look
 
@@ -38,6 +41,10 @@ Each thing is wrapped in a group with `stroke` set to its outline. Shapes withou
 
 - **Colour:** `shade(colour)`, the thing's own colour at half brightness (`src/scenes/contrast.ts`), so a red buoy gets a dark red outline. Things with a fixed colour use their `tone`.
 - **Width:** 2.5 pt on screen whatever the thing's size: `2.5 / (drawing scale × points per design unit)`.
+
+## Contrast and lighting
+
+The contrast rules (choosing colours while placing, and the scene checker) use the backdrop colour **as drawn**: the surface's palette colour with the recipe's light bands laid over it at that height (`surfaceColour` in `src/scenes/contrast.ts`). So lighting can never make something hard to see: when it would, the thing just isn't placed there, and the checker reports any thing that can never be placed. (Tuning the lighting found two: a white plane in a hazier park sky, and a wicker basket by shaded kitchen cupboards; the haze, the shade and the basket's colour were adjusted.)
 
 ## Contrast
 

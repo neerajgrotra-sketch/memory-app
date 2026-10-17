@@ -415,6 +415,13 @@ export const livingRoom: Recipe = {
   ],
   items,
   rug: RUG,
+  // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
+  light: [
+    // Light from above on the wall.
+    { top: CEILING, bottom: FLOOR, from: ['#ffffff', 0.12], to: ['#000000', 0.06] },
+    // Shade where the floor meets the wall.
+    { top: FLOOR, bottom: 1, from: ['#000000', 0.12], to: ['#000000', 0] },
+  ],
   surfaceAt,
   marks,
   variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number) => backdrop(h, p) })),

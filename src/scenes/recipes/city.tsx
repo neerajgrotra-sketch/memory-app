@@ -578,6 +578,17 @@ export const city: Recipe = {
     return { x0: f.plaque.x0, y0: f.plaque.y0, x1: f.plaque.x1, y1: f.door.y1 };
   }),
   details,
+  // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
+  light: [
+    // Haze near the rooftops.
+    { top: 0, bottom: ROOF, from: ['#ffffff', 0], to: ['#ffffff', 0.18] },
+    // Sun on the upper floors, shade at street level.
+    { top: ROOF, bottom: GROUND_LINE, from: ['#ffffff', 0.1], to: ['#000000', 0.08] },
+    // The buildings' shadow on the pavement.
+    { top: GROUND_LINE, bottom: KERB, from: ['#000000', 0.1], to: ['#000000', 0] },
+    // The road, darker in front.
+    { top: KERB, bottom: 1, from: ['#000000', 0], to: ['#000000', 0.12] },
+  ],
   surfaceAt,
   marks,
   variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number, d?: SceneDetails) => backdrop(h, p, d) })),

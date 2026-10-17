@@ -10,6 +10,14 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.34 (2026-10-17)
+
+- **Second visual pass: light and depth.**
+  - **Every thing is lit from the top left:** a soft highlight at the top and gentle shade at the bottom, kept inside each thing's own shape. All the drawings (balloons, kites, boxes, animals, vehicles, furniture) look rounded instead of flat, without redrawing any of them.
+  - **Every place has its own light:** haze near the horizon (beach, city, farm, park), the sea and the pond deeper far out and lighter in the shallows, sun on the house fronts, light on the living-room and kitchen walls, shade at the back of each supermarket shelf, under the kitchen worktop, and where floors meet walls.
+  - **Colours stay fair:** the contrast rules now use each backdrop's colour as lit, so lighting can never make something blend in. Tuning found two things that would have (a white plane in the park's hazier sky, the vegetable basket by shaded kitchen cupboards); both were fixed.
+- The gallery gives each picture its own ids, so pictures on one page can't borrow each other's masks.
+
 ## 4.0.0-beta.33 (2026-10-17)
 
 - **Visual pass on every place:**

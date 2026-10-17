@@ -1,4 +1,4 @@
-import { standsOut } from './contrast';
+import { standsOut, surfaceColour } from './contrast';
 import type { ClockStep } from './clock';
 import {
   AGAINST_BACK,
@@ -79,7 +79,7 @@ const facing = (ctx: Context, zone: ZoneDef, item: ItemDef) => {
 
 /** True if `colour` stands out from every surface each rect is drawn over. */
 const colourFits = (ctx: Context, colour: string, rects: Rect[]) =>
-  rects.every((r) => samplePoints(r, ctx.ratio).every(([x, y]) => standsOut(colour, ctx.variant.palette[ctx.recipe.surfaceAt(x, y)])));
+  rects.every((r) => samplePoints(r, ctx.ratio).every(([x, y]) => standsOut(colour, surfaceColour(ctx.recipe, ctx.variant.palette, x, y))));
 
 interface Placement {
   boxes: Box[];

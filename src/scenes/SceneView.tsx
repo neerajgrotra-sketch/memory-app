@@ -1,7 +1,7 @@
-import { memo, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { memo, useEffect, useId, useMemo, useState, type ReactNode } from 'react';
 import { StyleSheet, View, type LayoutChangeEvent } from 'react-native';
 import Animated, { Easing, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withRepeat, withTiming } from 'react-native-reanimated';
-import Svg, { Ellipse, G } from 'react-native-svg';
+import Svg, { Defs, Ellipse, G, LinearGradient, Mask, Rect, Stop } from 'react-native-svg';
 
 import { shade } from './contrast';
 import { relayoutScene } from './generateScene';
@@ -53,7 +53,17 @@ function copyNumber(seed: number, group: number, copy: number) {
  * The picture's layers, back to front: background bands, faint marks, then things sorted by
  * where they stand (their bottom edge). Also used by the screenshot tools.
  */
+/** Light falls from the top left: a soft highlight at the top of every thing and gentle shade at the bottom. */
+const ITEM_LIGHT: { offset: number; colour: string; opacity: number }[] = [
+  { offset: 0, colour: '#ffffff', opacity: 0.3 },
+  { offset: 0.42, colour: '#ffffff', opacity: 0 },
+  { offset: 0.58, colour: '#000000', opacity: 0 },
+  { offset: 1, colour: '#000000', opacity: 0.18 },
+];
+
 export function SceneContent({ spec, pointsPerUnit, overlay, layer = 'all' }: SceneContentProps) {
+  // Ids for gradients and masks, unique per picture: several pictures can be on screen (and in one web page).
+  const uid = `s${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
   const recipe = getRecipe(spec.recipeId);
   const variant = variantOf(recipe, spec);
   const ratio = ratioOf(spec.size);
@@ -80,9 +90,40 @@ export function SceneContent({ spec, pointsPerUnit, overlay, layer = 'all' }: Sc
   const marks = layer === 'all' || layer === 'back' || layer === 'clouds' ? marksFor(spec, recipe, ratio) : [];
   const shownMarks = layer === 'back' ? marks.filter((m) => !m.scenery) : layer === 'clouds' ? marks.filter((m) => m.scenery) : marks;
 
+  const withBack = layer === 'all' || layer === 'back';
+  const bands = withBack ? (recipe.light ?? []) : [];
+  const transformOf = (box: (typeof drawn)[number]['box'], item: ItemDef) => {
+    const scale = (box.w * SCENE_WIDTH) / item.w;
+    const x = box.x * SCENE_WIDTH;
+    const y = box.y * sceneH;
+    return { scale, x, y, t: box.flip && !item.noFlip ? `translate(${x + item.w * scale} ${y}) scale(${-scale} ${scale})` : `translate(${x} ${y}) scale(${scale})` };
+  };
+
   return (
     <>
-      {(layer === 'all' || layer === 'back') && variant.background(sceneH)}
+      <Defs>
+        <LinearGradient id={`${uid}light`} x1="0.2" y1="0" x2="0.5" y2="1">
+          {ITEM_LIGHT.map((s) => (
+            <Stop key={s.offset} offset={s.offset} stopColor={s.colour} stopOpacity={s.opacity} />
+          ))}
+        </LinearGradient>
+        {bands.map((b, i) => (
+          <LinearGradient key={i} id={`${uid}band${i}`} x1="0" y1="0" x2="0" y2="1">
+            <Stop offset={0} stopColor={b.from[0]} stopOpacity={b.from[1]} />
+            <Stop offset={1} stopColor={b.to[0]} stopOpacity={b.to[1]} />
+          </LinearGradient>
+        ))}
+        {/* Each thing's silhouette, so its light stays inside its own shape. */}
+        {drawn.map(({ key, item, box, colour, copy }) => (
+          <Mask key={key} id={`${uid}mask-${key}`} maskType="alpha">
+            <G transform={transformOf(box, item).t}>{item.draw(colour, spec.details, copy)}</G>
+          </Mask>
+        ))}
+      </Defs>
+      {withBack && variant.background(sceneH)}
+      {bands.map((b, i) => (
+        <Rect key={i} x={-600} y={b.top * sceneH} width={2100} height={(b.bottom - b.top) * sceneH} fill={`url(#${uid}band${i})`} />
+      ))}
       {shownMarks.map((m) => m.el)}
       {(layer === 'all' || layer === 'front') &&
         drawn
@@ -92,18 +133,13 @@ export function SceneContent({ spec, pointsPerUnit, overlay, layer = 'all' }: Sc
             return <Ellipse key={`shadow-${key}`} cx={(box.x + box.w / 2) * SCENE_WIDTH} cy={bottom * SCENE_WIDTH - 2} rx={w * 0.44} ry={Math.max(5, w * 0.06)} fill="#000000" fillOpacity={0.16} />;
           })}
       {drawn.map(({ key, item, box, colour, outline, copy }) => {
-        const scale = (box.w * SCENE_WIDTH) / item.w;
-        const x = box.x * SCENE_WIDTH;
-        const y = box.y * sceneH;
+        const { scale, x, y, t } = transformOf(box, item);
         return (
-          <G
-            key={key}
-            transform={box.flip && !item.noFlip ? `translate(${x + item.w * scale} ${y}) scale(${-scale} ${scale})` : `translate(${x} ${y}) scale(${scale})`}
-            stroke={outline}
-            strokeWidth={OUTLINE_POINTS / (scale * pointsPerUnit)}
-            strokeLinejoin="round"
-          >
-            {item.draw(colour, spec.details, copy)}
+          <G key={key}>
+            <G transform={t} stroke={outline} strokeWidth={OUTLINE_POINTS / (scale * pointsPerUnit)} strokeLinejoin="round">
+              {item.draw(colour, spec.details, copy)}
+            </G>
+            <Rect x={x} y={y} width={item.w * scale} height={item.h * scale} fill={`url(#${uid}light)`} mask={`url(#${uid}mask-${key})`} />
           </G>
         );
       })}

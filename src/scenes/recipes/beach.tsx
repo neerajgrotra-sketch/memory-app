@@ -237,6 +237,15 @@ export const beach: Recipe = {
     { id: 'sand', label: 'On the sand', surface: 'ground', top: SHORE, bottom: 1, rows: 2 },
   ],
   items,
+  // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
+  light: [
+    // Haze near the horizon.
+    { top: 0, bottom: HORIZON, from: ['#ffffff', 0], to: ['#ffffff', 0.2] },
+    // The sea: deep far out, lighter in the shallows.
+    { top: HORIZON, bottom: SHORE, from: ['#000000', 0.14], to: ['#ffffff', 0.08] },
+    // Sun on the sand, a little deeper in front.
+    { top: SHORE, bottom: 1, from: ['#ffffff', 0.1], to: ['#000000', 0.08] },
+  ],
   surfaceAt: (_x, y) => (y < HORIZON ? 'sky' : y < SHORE ? 'sea' : 'sand'),
   marks,
   variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number) => backdrop(h, p) })),

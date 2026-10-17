@@ -1,3 +1,5 @@
+import type { Recipe } from './types';
+
 /**
  * Colour contrast for scenes, measured as the perceptual difference between two colours in
  * OKLab (×100), which counts hue as well as lightness: a blue window on a cream wall reads
@@ -60,4 +62,21 @@ export function standsOut(fill: string, surface: string): boolean {
     contrast(fill, surface) >= MIN_CONTRAST &&
     Math.max(Math.abs(lightness(fill) - l), Math.abs(lightness(shade(fill)) - l)) >= MIN_LIGHTNESS
   );
+}
+
+/**
+ * The colour of the backdrop at (x, y) (fractions of width and height) as drawn: the surface's palette
+ * colour with the recipe's light bands (haze, shade) laid over it. The contrast rules use this, so
+ * lighting can never make something hard to see.
+ */
+export function surfaceColour(recipe: Recipe, palette: Record<string, string>, x: number, y: number): string {
+  let colour = palette[recipe.surfaceAt(x, y)];
+  for (const band of recipe.light ?? []) {
+    if (y < band.top || y > band.bottom) continue;
+    const t = (y - band.top) / Math.max(1e-6, band.bottom - band.top);
+    const opacity = band.from[1] + (band.to[1] - band.from[1]) * t;
+    // As SVG draws a gradient: colour and opacity each change evenly from one end to the other.
+    if (opacity > 0) colour = blend(colour, blend(band.from[0], band.to[0], t), opacity);
+  }
+  return colour;
 }

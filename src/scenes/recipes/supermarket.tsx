@@ -619,6 +619,17 @@ export const supermarket: Recipe = {
   ],
   items,
   details,
+  // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
+  light: [
+    // The ceiling, darker towards the shelves.
+    { top: 0, bottom: CEILING, from: ['#ffffff', 0], to: ['#000000', 0.06] },
+    // Shade at the back of each shelf, under the one above.
+    { top: CEILING, bottom: SHELVES[0][1], from: ['#000000', 0.2], to: ['#000000', 0] },
+    { top: SHELVES[0][1] + BOARD, bottom: SHELVES[1][1], from: ['#000000', 0.2], to: ['#000000', 0] },
+    { top: SHELVES[1][1] + BOARD, bottom: SHELVES[2][1], from: ['#000000', 0.2], to: ['#000000', 0] },
+    // Shade on the floor by the shelves.
+    { top: FLOOR_LINE, bottom: 1, from: ['#000000', 0.12], to: ['#000000', 0] },
+  ],
   surfaceAt,
   marks,
   variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number, d?: SceneDetails) => backdrop(h, p, d) })),

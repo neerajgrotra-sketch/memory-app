@@ -32,11 +32,13 @@ for (const recipe of recipes) {
     for (const phone of PHONES) {
       const spec = generateScene(recipe, LEVELS[level], seed, phone.size);
       const issues = validateScene(spec, phone.size.width, phone.size.height);
+      // Each picture is rendered on its own, so React's ids repeat between them: give each picture its
+      // own, or one picture's masks and gradients would be used by another on the same page.
       const svg = renderToStaticMarkup(
         <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${SCENE_WIDTH} ${SCENE_WIDTH * ratioOf(phone.size)}`} width={phone.size.width} height={phone.size.height}>
           <SceneContent spec={spec} pointsPerUnit={phone.size.width / SCENE_WIDTH} overlay={overlay} />
         </svg>,
-      );
+      ).replace(/\bs(«|R|_)/g, `p${cells.length}$1`);
       const label = `${recipe.title} · ${level} · seed ${seed} · ${phone.name} · ${issues.length ? '✗ ' + issues.map((i) => i.message).join('; ') : '✓'}`;
       cells.push(`<figure><figcaption>${label}</figcaption>${svg}</figure>`);
     }
