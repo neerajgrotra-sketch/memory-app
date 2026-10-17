@@ -19,6 +19,11 @@ export const isGoodRound = (score: number, total: number) => score >= total - 1;
 /** 0 or 1 out of 5. */
 export const isPoorRound = (score: number) => score <= 1;
 
+/** The score a round counts as for your level: right answers after a peek can't tip it into a good round. */
+export function scoreForLevel(score: number, total: number, peekedRight: number): number {
+  return isGoodRound(score, total) ? score - peekedRight : score;
+}
+
 export interface LadderState {
   level: number;
   /** Good rounds so far towards the next level (0 to ROUNDS_TO_LEVEL_UP - 1). */

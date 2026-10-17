@@ -13,7 +13,7 @@ export interface PointsBreakdown {
   streak: number;
   /** Ready before the time ran out. */
   ready: number;
-  /** A right answer after a peek earns only part of its points: this is what it didn't earn. */
+  /** Right answers after a peek earn only part of their points: this is what they didn't earn. */
   peeked?: number;
   /** The Daily Challenge doubles the round: this is the extra. */
   daily?: number;
@@ -38,14 +38,14 @@ export function pointsFor({
   level: number;
   viewSeconds: number;
   lookedSeconds: number;
-  /** The question the player peeked at, if any. */
-  peeked?: number;
+  /** The questions the player peeked at (at most one, except in tester mode). */
+  peeked?: number[];
 }): PointsBreakdown {
   const right = correct.filter(Boolean).length;
   const perAnswer = pointsPerAnswer(level);
   // A peeked answer earns part of its points and no "ready early" bonus (it had a second look).
-  const peekedRight = peeked !== undefined && correct[peeked] === true;
-  const lost = peekedRight ? Math.round(perAnswer * (1 - PEEKED_SHARE)) : 0;
+  const peekedRight = [...new Set(peeked)].filter((i) => correct[i] === true).length;
+  const lost = peekedRight * Math.round(perAnswer * (1 - PEEKED_SHARE));
   let run = 0;
   let streak = 0;
   for (const c of correct) {
@@ -53,7 +53,7 @@ export function pointsFor({
     if (run >= 2) streak += STREAK_STEP * (run - 1);
   }
   const spare = Math.max(0, Math.floor(viewSeconds - lookedSeconds));
-  const ready = spare * READY_STEP * (peekedRight ? right - 1 : right);
+  const ready = spare * READY_STEP * (right - peekedRight);
   const answers = right * perAnswer - lost;
   return { answers, perAnswer, streak, ready, ...(lost ? { peeked: lost } : {}), total: answers + streak + ready };
 }

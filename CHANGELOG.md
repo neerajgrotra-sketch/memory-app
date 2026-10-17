@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.42 (2026-10-17)
+
+- **Tester mode: Unlimited Peeks is now truly unlimited.** Peek on any question, as often as you like (the button shows **Peek · ∞**). Before, it only kept the count full, and the one-peek-a-round rule still showed "Peek used". Every right answer after a peek still earns half points, and they can't carry a round up a level.
+- **Fix: the quit and sound buttons could cover "Question 2 of 5".** On short screens (like the beta inside the Claude app) the questions scroll, and they scrolled underneath the buttons. They now scroll below them.
+
 ## 4.0.0-beta.41 (2026-10-17)
 
 - **Tester mode: Unlimited Peeks.** A new switch under Tester mode in Profile (tap the version 7 times to show it). The Peek button never runs out, so Peeks can be tried without earning them first. Everything else stays real: one peek a round, half points for the peeked answer, no level up from it. Tester peeks aren't saved against your earned Peeks, and the game page shows "Unlimited Peeks (tester mode)". Leaving tester mode switches it off.

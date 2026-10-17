@@ -8,7 +8,7 @@ import { PictureViewer } from '@/components/PictureViewer';
 import { ProfilePrompt } from '@/components/ProfilePrompt';
 import type { Answers } from '@/game/quizNavigation';
 import { randomScoreMessage } from '@/game/scoreMessages';
-import { MAX_LEVEL, ROUNDS_TO_LEVEL_UP, isGoodRound, isPoorRound, type LadderState } from '@/games/lookRemember/ladder';
+import { MAX_LEVEL, ROUNDS_TO_LEVEL_UP, isGoodRound, isPoorRound, scoreForLevel, type LadderState } from '@/games/lookRemember/ladder';
 import { formatPoints } from '@/games/lookRemember/points';
 import type { RoundOutcome } from '@/hooks/useGameSession';
 import { colors, radius } from '@/theme';
@@ -39,9 +39,9 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
   const [message] = useState(() => randomScoreMessage(score));
   const [enlarged, setEnlarged] = useState(false);
   // A right answer after a peek doesn't count towards a level up (see useGameSession).
-  const peekedRight = outcome.peeked !== null && answers[outcome.peeked] === questions[outcome.peeked]?.answerIndex;
-  const peekHeldBack = peekedRight && isGoodRound(score, questions.length) && !isGoodRound(score - 1, questions.length);
-  const levelScore = peekHeldBack ? score - 1 : score;
+  const peekedRight = outcome.peeked.filter((i) => answers[i] === questions[i]?.answerIndex).length;
+  const levelScore = scoreForLevel(score, questions.length, peekedRight);
+  const peekHeldBack = isGoodRound(score, questions.length) && !isGoodRound(levelScore, questions.length);
   useEffect(() => {
     const moment = roundSound(outcome, score, questions.length);
     if (moment) feedback(moment);
@@ -111,7 +111,7 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
             const chosen = answers[i];
             const correct = chosen === question.answerIndex;
             const answer = question.options[question.answerIndex];
-            const wasPeeked = outcome.peeked === i;
+            const wasPeeked = outcome.peeked.includes(i);
             return (
               <View
                 key={question.id}

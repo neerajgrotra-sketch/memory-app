@@ -35,8 +35,10 @@ interface QuizStageProps {
   peek?: {
     /** Peeks held. */
     left: number;
-    /** The question already peeked at this round (one per round), or null. */
-    used: number | null;
+    /** The questions already peeked at this round. */
+    used: number[];
+    /** Tester mode: peek on any question, any number of times. */
+    unlimited?: boolean;
     onPeek: (questionIndex: number) => void;
   };
 }
@@ -187,11 +189,12 @@ export function QuizStage({ questions, answers, onAnswer, peek }: QuizStageProps
 }
 
 /** A second look at the picture: one per round, while choosing. Shows how many you hold. */
-function PeekButton({ left, used, onPeek, current, choosing }: NonNullable<QuizStageProps['peek']> & { current: number; choosing: boolean }) {
-  const enabled = used === null && left > 0 && choosing;
-  const label = used !== null ? (used === current ? 'Peeked' : 'Peek used') : `Peek · ${left}`;
+function PeekButton({ left, used, unlimited, onPeek, current, choosing }: NonNullable<QuizStageProps['peek']> & { current: number; choosing: boolean }) {
+  const spent = used.length > 0 && !unlimited;
+  const enabled = !spent && (unlimited || left > 0) && choosing;
+  const label = unlimited ? 'Peek · ∞' : spent ? (used.includes(current) ? 'Peeked' : 'Peek used') : `Peek · ${left}`;
   const hint =
-    used !== null ? 'One peek per round' : left > 0 ? `See the picture again for a few seconds. Half points for this question. ${left} left.` : 'No peeks left. Points earn more.';
+    unlimited ? 'Tester mode: unlimited Peeks' : spent ? 'One peek per round' : left > 0 ? `See the picture again for a few seconds. Half points for this question. ${left} left.` : 'No peeks left. Points earn more.';
   return (
     <Pressable
       accessibilityRole="button"
@@ -212,8 +215,9 @@ const DOT = 30;
 
 const styles = StyleSheet.create({
   container: { flex: 1, width: '100%', maxWidth: 520, alignSelf: 'center' },
-  scroll: { flex: 1 },
-  scrollContent: { flexGrow: 1, paddingHorizontal: 24, paddingTop: 64, paddingBottom: 16, gap: 20 },
+  // Starts below the quit and sound buttons (16 margin + 44), so nothing scrolls underneath them.
+  scroll: { flex: 1, marginTop: 60 },
+  scrollContent: { flexGrow: 1, paddingHorizontal: 24, paddingTop: 4, paddingBottom: 16, gap: 20 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   headerRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   peek: {

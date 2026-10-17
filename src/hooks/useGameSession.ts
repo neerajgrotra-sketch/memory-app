@@ -9,7 +9,7 @@ import {
   PRACTICE_LEVEL,
   applyRound,
   bandOf,
-  isGoodRound,
+  scoreForLevel,
   knobsForLevel,
   recipesForLevel,
   type LadderState,
@@ -51,8 +51,8 @@ export interface RoundOutcome {
   ladder?: { before: LadderState; after: LadderState };
   /** Peeks this round's points earned. */
   peeksEarned: number;
-  /** The question peeked at, if any. */
-  peeked: number | null;
+  /** The questions peeked at (at most one, except with a tester's unlimited Peeks). */
+  peeked: number[];
 }
 
 interface Setup {
@@ -159,8 +159,8 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
   const [answers, setAnswers] = useState<Answers>(() => emptyAnswers(first.round.questions.length));
   const [outcome, setOutcome] = useState<RoundOutcome | null>(null);
   const [wallet, setWallet] = useState<PeekWallet>(startPeeks);
-  /** The question peeked at this round (one peek per round). */
-  const [peeked, setPeeked] = useState<number | null>(null);
+  /** The questions peeked at this round (one peek per round, except with a tester's unlimited Peeks). */
+  const [peeked, setPeeked] = useState<number[]>([]);
 
   /** Question ids already asked about the current picture. */
   const seenIds = useRef(new Set<string>());
@@ -178,7 +178,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       setRound(nextRound);
       setAnswers(emptyAnswers(nextRound.questions.length));
       setOutcome(null);
-      setPeeked(null);
+      setPeeked([]);
       setPhase('memorise');
     },
     [size, mode, extra, off, tester],
@@ -196,8 +196,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     (final: Answers) => {
       const correct = round.questions.map((q, i) => final[i] === q.answerIndex);
       const score = correct.filter(Boolean).length;
-      const peekedIndex = peeked ?? undefined;
-      const base = pointsFor({ correct, level: round.level, viewSeconds: round.viewSeconds, lookedSeconds: looked.current, peeked: peekedIndex });
+      const base = pointsFor({ correct, level: round.level, viewSeconds: round.viewSeconds, lookedSeconds: looked.current, peeked });
       // The Daily Challenge is worth double.
       const points = mode === 'daily' ? { ...base, daily: base.total * (DAILY_MULTIPLIER - 1), total: base.total * DAILY_MULTIPLIER } : base;
       // Seeing a picture twice makes it easier, so a replay never counts towards your level or high score;
@@ -207,8 +206,8 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       if (counts) highScore.current = Math.max(highScore.current, points.total);
       // A peeked answer never tips a round into a good one: peeks can't carry you up a level.
       const total = round.questions.length;
-      const peekedRight = peekedIndex !== undefined && correct[peekedIndex];
-      const levelScore = peekedRight && isGoodRound(score, total) ? score - 1 : score;
+      const peekedRight = [...new Set(peeked)].filter((i) => correct[i]).length;
+      const levelScore = scoreForLevel(score, total, peekedRight);
       const after = mode === 'levels' && counts ? applyRound(ladder, levelScore, total) : undefined;
       const earned = earnPeeks(wallet, points.total);
       setWallet(earned.wallet);
@@ -233,7 +232,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
         points: points.total,
         replay: round.replay || undefined,
         // A tester's unlimited peek isn't recorded, so it never comes off the real Peeks.
-        peeked: (peeked !== null && !unlimitedPeeks) || undefined,
+        peeked: (peeked.length > 0 && !unlimitedPeeks) || undefined,
         recipeId: stage.scene.recipeId,
         sceneId: stage.scene.id,
         score,
@@ -277,7 +276,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     setRound(nextRound);
     setAnswers(emptyAnswers(nextRound.questions.length));
     setOutcome(null);
-    setPeeked(null);
+    setPeeked([]);
     setPhase('memorise');
   }, [extra, finishRound, ladder.level, mode, round.level, stage]);
 
@@ -286,13 +285,13 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     startStage(roundCount.current, ladder.level, stage.scene.recipeId);
   }, [finishRound, ladder.level, startStage, stage]);
 
-  /** One peek per round, while answering, never in the Daily Challenge. */
-  const canPeek = phase === 'quiz' && mode !== 'daily' && (wallet.peeks > 0 || unlimitedPeeks) && peeked === null;
+  /** One peek per round (any number with a tester's unlimited Peeks), while answering, never in the Daily Challenge. */
+  const canPeek = phase === 'quiz' && mode !== 'daily' && (unlimitedPeeks || (wallet.peeks > 0 && peeked.length === 0));
   /** Uses a Peek on question `questionIndex`. */
   const peek = useCallback(
     (questionIndex: number) => {
       if (!canPeek) return;
-      setPeeked(questionIndex);
+      setPeeked((was) => (was.includes(questionIndex) ? was : [...was, questionIndex]));
       if (!unlimitedPeeks) setWallet(spendPeek);
     },
     [canPeek, unlimitedPeeks],
@@ -303,5 +302,5 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
   // What the Peek button shows: a full count for a tester's unlimited Peeks.
   const peeksLeft = unlimitedPeeks ? MAX_PEEKS : wallet.peeks;
 
-  return { stage, round, phase, answers, score, outcome, ladder, wallet, peeksLeft, peeked, canPeek, peek, finishMemorising, answer, playAgain, nextPicture };
+  return { stage, round, phase, answers, score, outcome, ladder, wallet, peeksLeft, peeked, canPeek, unlimitedPeeks, peek, finishMemorising, answer, playAgain, nextPicture };
 }

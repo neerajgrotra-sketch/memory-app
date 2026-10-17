@@ -24,12 +24,15 @@ check('rounds without points', walletOf([{ peeked: undefined } as any]), { peeks
 
 const all = [true, true, true, true, true];
 const plain = pointsFor({ correct: all, level: 10, viewSeconds: 8, lookedSeconds: 8 });
-const peekedRight = pointsFor({ correct: all, level: 10, viewSeconds: 8, lookedSeconds: 8, peeked: 2 });
+const peekedRight = pointsFor({ correct: all, level: 10, viewSeconds: 8, lookedSeconds: 8, peeked: [2] });
 check('peeked right answer: half its points', [plain.total - peekedRight.total, peekedRight.peeked], [95, 95]);
-const peekedWrong = pointsFor({ correct: [true, true, false, true, true], level: 10, viewSeconds: 8, lookedSeconds: 8, peeked: 2 });
+const peekedWrong = pointsFor({ correct: [true, true, false, true, true], level: 10, viewSeconds: 8, lookedSeconds: 8, peeked: [2] });
 check('peeked wrong answer: nothing extra lost', [peekedWrong.peeked, peekedWrong.total], [undefined, pointsFor({ correct: [true, true, false, true, true], level: 10, viewSeconds: 8, lookedSeconds: 8 }).total]);
-const early = pointsFor({ correct: all, level: 1, viewSeconds: 10, lookedSeconds: 6, peeked: 0 });
+const early = pointsFor({ correct: all, level: 1, viewSeconds: 10, lookedSeconds: 6, peeked: [0] });
 check('no "ready early" bonus for the peeked answer', early.ready, 4 * 5 * 4);
+
+const twice = pointsFor({ correct: all, level: 10, viewSeconds: 8, lookedSeconds: 8, peeked: [1, 3, 3] });
+check('tester: each peeked right answer loses half, repeats count once', twice.peeked, 190);
 
 // How often Peeks come: good rounds (4 of 5 right, at the full time) per Peek.
 for (const level of [1, 10, 20, 30]) {
