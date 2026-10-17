@@ -646,3 +646,63 @@ Detail `bib`: 27.
 | colour | true-false | True or false? The snowmen’s scarves were green. | True · **✓ False** | snowman |
 | colour | true-false | True or false? The roof of the hot chocolate stand was blue. | True · **✓ False** | cocoa-stand |
 | colour | true-false | True or false? The slalom flag was blue. | **✓ True** · False | flag |
+
+## In the classroom
+
+Scene `classroom-c29hz`, colour scheme `wood`.
+
+### Facts
+
+| Thing | Count | Colour | Band | Side |
+| --- | --- | --- | --- | --- |
+| teacher | 1 | Purple | At the front of the class | right |
+| noticeboard | 1 | fixed | On the wall | left |
+| world map | 1 | fixed | On the wall | right |
+| pupil | 1 | Purple | At the back of the class | centre |
+| potted plants | 2 | Purple | At the back of the class | right |
+| globe | 1 | fixed | At the front of the class | centre |
+| computer | 1 | fixed | At the back of the class | left |
+
+Detail `clock`: 7:30.
+
+Detail `day`: Wednesday.
+
+Detail `sum`: 9 + 3.
+
+### Questions (33)
+
+| Type | Kind | Question | Options (✓ = answer) | Subject |
+| --- | --- | --- | --- | --- |
+| colour | colour | What colour was the teacher’s jumper? | **✓ Purple** · Blue · Orange · Red | teacher |
+| position | where | Where was the teacher? | **✓ At the front of the class, on the right** · At the front of the class, on the left · At the front of the class, in the middle | teacher |
+| object | what-here | What was at the front of the class, on the right? | **✓ The teacher** · The teacher’s desk · A bookcase · A piano | teacher |
+| position | where | Where was the noticeboard? | **✓ On the wall, on the left** · On the wall, on the right · On the wall, in the middle | noticeboard |
+| object | what-here | What was on the wall, on the left? | **✓ A noticeboard** · A window · A poster · A world map | noticeboard |
+| position | where | Where was the world map? | **✓ On the wall, on the right** · On the wall, on the left · On the wall, in the middle | map |
+| object | what-here | What was on the wall, on the right? | **✓ A world map** · A clock · A poster · A window | map |
+| count | count | How many pupils were there? | **✓ 1** · 4 · 3 · 2 | pupil |
+| colour | colour | What colour was the pupil’s jumper? | **✓ Purple** · Blue · Grey · Yellow | pupil |
+| position | where | Where was the pupil? | **✓ At the back of the class, in the middle** · At the back of the class, on the right · At the back of the class, on the left | pupil |
+| object | what-here | What was at the back of the class, in the middle? | **✓ A pupil** · A fish tank · A computer · A potted plant | pupil |
+| count | count | How many potted plants were there? | **✓ 2** · 5 · 1 · 3 | plant |
+| colour | colour | What colour were the plant pots? | **✓ Purple** · White · Blue · Yellow | plant |
+| position | where | Where were the potted plants? | **✓ At the back of the class, on the right** · At the back of the class, on the left · At the back of the class, in the middle | plant |
+| object | what-here | What was at the back of the class, on the right? | **✓ Potted plants** · Beanbags · Pupils | plant |
+| position | where | Where was the globe? | **✓ At the front of the class, in the middle** · At the front of the class, on the left · At the front of the class, on the right | globe |
+| object | what-here | What was at the front of the class, in the middle? | **✓ A globe** · A piano · The teacher · A bookcase | globe |
+| position | where | Where was the computer? | **✓ At the back of the class, on the left** · At the back of the class, on the right · At the back of the class, in the middle | computer |
+| object | what-here | What was at the back of the class, on the left? | **✓ A computer** · A potted plant · A pupil · An easel | computer |
+| object | detail | What day was written on the board? | **✓ Wednesday** · Thursday · Tuesday · Monday | board-day |
+| number | detail | What sum was on the board? | **✓ 9 + 3** · 9 + 2 · 8 + 3 · 9 + 4 | board-sum |
+| object | seen | Which of these was in the picture? | **✓ Globe** · Fish tank · Easel · Piano | globe |
+| object | seen | Which of these was NOT in the picture? | **✓ Fish tank** · Noticeboard · Teacher · Computer | fish-tank |
+| count | compare | Were there more pupils or more potted plants? | Pupils · **✓ Potted plants** · The same number | compare-pupil-plant |
+| position | relation | What was above the teacher? | **✓ A world map** · A globe · A computer · A pupil | teacher |
+| position | relation | What was below the teacher? | **✓ Potted plants** · Pupils · Beanbags | teacher |
+| position | relation | What was below the noticeboard? | **✓ A computer** · A pupil · A globe · A potted plant | noticeboard |
+| position | relation | What was above the pupil? | **✓ A globe** · A potted plant · A noticeboard · The teacher | pupil |
+| position | relation | What was below the globe? | **✓ A pupil** · A potted plant · The teacher · A noticeboard | globe |
+| position | relation | What was above the computer? | **✓ A noticeboard** · A world map · A potted plant · The teacher | computer |
+| colour | true-false | True or false? The pupil’s jumper was green. | True · **✓ False** | pupil |
+| count | true-false | True or false? There was one pupil. | **✓ True** · False | pupil |
+| colour | true-false | True or false? The teacher’s jumper was purple. | **✓ True** · False | teacher |

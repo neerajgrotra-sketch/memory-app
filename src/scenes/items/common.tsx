@@ -114,8 +114,8 @@ export const plane: CommonItem = {
 };
 
 /** Skin tones and hair colours for people, so a crowd isn't all one person. */
-const SKINS = ['#f1c27d', '#e0ac69', '#c68642', '#8d5524'];
-const HAIR = ['#4a2c17', '#1c1c1c', '#a0522d', '#d9b26f'];
+export const SKINS = ['#f1c27d', '#e0ac69', '#c68642', '#8d5524'];
+export const HAIR = ['#4a2c17', '#1c1c1c', '#a0522d', '#d9b26f'];
 
 export const person: CommonItem = {
   kind: 'person',

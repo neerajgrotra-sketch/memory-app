@@ -350,9 +350,11 @@ function build(recipe: Recipe, knobs: SceneKnobs, seed: number, rng: Rng, size: 
     // thing out in front of them; the rest of the band's share goes to things that aren't anchors.
     const here = pool.filter((i) => i.zones.includes(zone.id));
     const isAnchor = (i: ItemDef) => !!(i.tall || i.backRow || i.wide);
-    const anchorsFirst = zone.anchors
-      ? [...here.filter(isAnchor).slice(0, Math.min(zone.anchors, quota - 1)), ...here.filter((i) => !isAnchor(i))]
-      : here;
+    const anchorsFirst = [
+      // Things a place usually has (pupils in a classroom) come first, when the band has room for something else too.
+      ...(quota > 1 ? here.filter((i) => i.usual) : []),
+      ...(zone.anchors ? [...here.filter(isAnchor).slice(0, Math.min(zone.anchors, quota - 1)), ...here.filter((i) => !isAnchor(i))] : here),
+    ];
     for (const item of [...new Set(anchorsFirst)]) {
       // Only one extra-wide kind per band: two buses' worth of vehicles can't share one lane.
       if (left <= 0 || (item.wide && wide)) continue;

@@ -82,6 +82,12 @@ function colourNoun(item: ItemDef, plural: boolean): string {
   return match ? match[1] : `the ${plural ? item.plural : item.singular}`;
 }
 
+/** "was" or "were" to go with `colourNoun`: from the thing's own question, so "the curtains" (one window) are plural. */
+function colourVerb(item: ItemDef, plural: boolean): 'was' | 'were' {
+  const match = item.colourPrompt?.(plural).match(/^What colours? (was|were) /);
+  return match ? (match[1] as 'was' | 'were') : plural ? 'were' : 'was';
+}
+
 /** The named colour closest to a hex (for things with a fixed colour: a red crab, a green tree). */
 function nearestColour(hex: string): string {
   const rgb = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
@@ -412,7 +418,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     const others = item.colours!.filter((c) => c.name !== group.colour!.name);
     const colour = truth ? group.colour!.name : rng.pick(others).name;
     const plural = group.count > 1;
-    statements.push({ subject: item.kind, type: 'colour', text: `${cap(colourNoun(item, plural))} ${plural ? 'were' : 'was'} ${colour.toLowerCase()}.`, truth });
+    statements.push({ subject: item.kind, type: 'colour', text: `${cap(colourNoun(item, plural))} ${colourVerb(item, plural)} ${colour.toLowerCase()}.`, truth });
   }
   if (absent.length) {
     const item = rng.pick(absent);

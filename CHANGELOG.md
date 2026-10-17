@@ -10,6 +10,19 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.43 (2026-10-17)
+
+- **A new place: In the classroom**, unlocked at **Level 22** (and in Practice). The first new place past Level 20.
+  - **Seen from the back of the room:** the wall with the whiteboard, the front of the class, then the pupils at their desks.
+  - **16 things:** a clock, a space poster, a world map, a noticeboard and a window with curtains on the wall; the teacher, the teacher's desk, a globe, a bookcase and a piano at the front; pupils at their desks, beanbags, a fish tank, a computer, an easel and potted plants at the back.
+  - **New questions:** "What day was written on the board?", "What sum was on the board?" (wrong answers change one number, or swap plus for minus), "What time was on the clock?", plus the teacher's jumper, the pupils' jumpers, the curtains, the poster, the flower in the painting and the piano.
+  - **Scale:** a closer view than the outdoor places (about 4.5 m across), so a school clock, a globe and a pupil at a junior-school desk (0.68 m) are big enough to see without being blown up. The pupils are drawn in the same style as the teacher, so they don't look like toys beside them.
+  - **Realistic layout:** the teacher and the bookcase stand against the wall, so the posters, map, noticeboard, window and clock hang above head height, as in a real classroom.
+  - Two looks: a wooden floor with a cream wall, and a blue carpet with a mint wall.
+- **Pictures:** most classrooms have pupils, thanks to a new `usual` option ("picked first for its band"). The front always gets the teacher or the bookcase.
+- Scene checker: 54,600 pictures.
+- **Fix: "The curtains was yellow."** True-or-false sentences now take "was" or "were" from the thing's own wording, which also fixes "The stripes on the tea towel was…" (kitchen) and "The balloon seller's balloons was…" (zoo).
+
 ## 4.0.0-beta.42 (2026-10-17)
 
 - **Tester mode: Unlimited Peeks is now truly unlimited.** Peek on any question, as often as you like (the button shows **Peek · ∞**). Before, it only kept the count full, and the one-peek-a-round rule still showed "Peek used". Every right answer after a peek still earns half points, and they can't carry a round up a level.

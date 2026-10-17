@@ -46,15 +46,15 @@ See [Levels and scoring](../levels-and-scoring.md).
 | 19 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
 | 20 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
 | 21 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
-| 22 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
-| 23 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
-| 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
-| 25 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
-| 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
-| 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
-| 28 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
-| 29 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
-| 30 | Photographic Memory | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
+| 22 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
+| 23 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
+| 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
+| 25 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
+| 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
+| 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
+| 28 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
+| 29 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
+| 30 | Photographic Memory | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
 
 ## At the beach (`beach`)
 
@@ -534,3 +534,46 @@ Per-picture details: "Which animal was the danger sign about?"; "What number was
 | ski rack | lodge | medium 17% | 1 | fixed (`#6b4423`) | one only, not counted |
 | hot chocolate stand | lodge | large 23% | 1 | Red, Green, Blue, Brown | one only, not counted |
 | snowmobile | lodge | large 27% | 1 | Red, Blue, Green, Orange, Black | one only, not counted |
+
+## In the classroom (`classroom`)
+
+### Bands
+
+| Band | Height | Surface | Slot rows | Rules |
+| --- | --- | --- | --- | --- |
+| On the ceiling (`ceiling`) | 0% – 5% | air | 0 | – |
+| On the wall (`wall`) | 5% – 42% | wall | 1 | at least 2 kinds |
+| At the front of the class (`front`) | 45% – 63% | ground | 1 | at least 2 kinds; at most 3 kinds; 1 anchors first |
+| At the back of the class (`back`) | 67% – 100% | ground | 2 | – |
+
+Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
+
+Per-picture details: "What time was on the clock?" (when there's a wall-clock) on every level; "What day was written on the board?"; "What sum was on the board?".
+
+### Colour schemes
+
+| Scheme | Surface colours |
+| --- | --- |
+| wood | ceiling `#fbf7ee`, wall `#f3e9d2`, skirting `#a07a4c`, floor `#d9b787`, floorLine `#c29e6c` |
+| carpet | ceiling `#f6f9f7`, wall `#d8ecdf`, skirting `#7c8a96`, floor `#9fb0c2`, floorLine `#8c9db0` |
+
+### Things (16)
+
+| Thing | Band | Size | Most | Colours | Habits |
+| --- | --- | --- | --- | --- | --- |
+| clock | wall | medium 14% | 1 | fixed (`#343a40`) | hangs with its centre 0.4 × width above the band's bottom; one only, not counted |
+| poster | wall | medium 13% | 1 | Red, Blue, Yellow, Green, Orange, Purple | hangs with its centre 0.4 × width above the band's bottom; one only, not counted |
+| world map | wall | large 22% | 1 | fixed (`#4dabf7`) | hangs with its centre 0.4 × width above the band's bottom; one only, not counted |
+| noticeboard | wall | large 22% | 1 | fixed (`#c69c6d`) | hangs with its centre 0.4 × width above the band's bottom; one only, not counted |
+| window | wall | large 22% | 1 | Red, Blue, Green, Yellow, Purple, Orange | hangs with its centre 0.4 × width above the band's bottom; one only, not counted |
+| teacher | front | medium 18% | 1 | Red, Blue, Green, Purple, Orange, Pink | tall anchor (stands at the back, rises above its band); one only, not counted |
+| teacher’s desk | front | large 27% | 1 | fixed (`#7a4e2a`) | one only, not counted |
+| globe | front | small 12% | 1 | fixed (`#1d70d6`) | one only, not counted |
+| bookcase | front | large 20% | 1 | fixed (`#6b4423`) | tall anchor (stands at the back, rises above its band); one only, not counted |
+| easel | back | medium 15% | 1 | Red, Blue, Yellow, Purple, Orange | one only, not counted |
+| potted plant | back | medium 13% | 2 | Orange, Blue, White, Yellow, Pink, Purple | – |
+| piano | front | large 28% | 1 | Black, Brown | one only, not counted |
+| pupil | back | medium 15% | 2 | Red, Blue, Green, Purple, Grey, Yellow | – |
+| beanbag | back | medium 17% | 2 | Red, Blue, Green, Yellow, Purple, Orange | – |
+| fish tank | back | large 20% | 1 | fixed (`#6b4423`) | one only, not counted |
+| computer | back | large 20% | 1 | fixed (`#495057`) | one only, not counted |

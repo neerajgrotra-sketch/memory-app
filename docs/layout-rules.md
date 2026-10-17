@@ -28,7 +28,7 @@ A recipe's `zones` split the picture into horizontal bands (`top`, `bottom` as f
 - `rows`: slot rows. 0 means no things go there (the room's ceiling, the city's building fronts). `rowSizes` gives rows different depths.
 - optional settings:
   - `minGroups` / `maxGroups`: the fewest and most kinds
-  - `anchors`: furniture first
+  - `anchors`: furniture first (and the classroom's front always gets the teacher or the bookcase)
   - `flush`: things stand exactly on its bottom line (rooftops)
   - `panels`: things stay inside their own third (rooftops)
   - `oneWay`: everything faces the same way (road traffic).
@@ -76,6 +76,7 @@ Every box keeps **4% of the width** (`GAP`) from every other box. Copies of one 
 | `frontRow` | Stands at the front edge of its band, within 10% of the room left in the row (`AT_FRONT`): fire hydrants at the kerb. |
 | `flush` band | Feet exactly on the band's bottom line: flags and dishes on the roofline, products on a shelf. |
 | `lineUp` | Copies stand side by side in one straight row on the band's line, `LINE_GAP` (0.3 × their width) apart, instead of the staggered arrangements: products on a supermarket shelf. `duplicatesOk(a, b, true)` checks the same baseline and that gap. |
+| `usual` | Picked first for its band whenever the band gets at least two kinds, so most pictures have it (pupils in a classroom). It still varies in count, colour and place, so its questions stay fresh. |
 | `framedColour` | The asked-about colour sits on the thing's own dark frame (a signal light in its housing), so the contrast rules check `tone` (the frame) against the backdrop, the outline is drawn from `tone`, and any of its colours can be used anywhere. Also used for a white snowman on snow (its grey outline is what shows it). |
 | `noFlip` | Never drawn mirrored: the clock (a mirrored face shows the wrong time). |
 | `avoidRug` | Never touches the rug. Everything else touching the rug must be fully on it (all four corners inside the oval). |

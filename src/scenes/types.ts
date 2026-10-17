@@ -109,6 +109,11 @@ export interface ItemDef {
    * picture width), so pictures, mirrors and windows share one eye-level line and a clock hangs above it.
    */
   hangAt?: number;
+  /**
+   * Picked first for its band when the band gets at least two kinds, so most pictures have it (pupils in a
+   * classroom). Still varies in count, colour and place.
+   */
+  usual?: boolean;
   /** `xl` things: may be wider than one column (a bus); the side is still the third its centre is in. */
   wide?: boolean;
   /**
