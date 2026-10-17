@@ -10,6 +10,16 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.40 (2026-10-17)
+
+- **New: Peeks.** A second look at the picture while answering.
+  - **Earn them with points:** one every 3,000 points from any round (about every 6 good rounds at Level 1, every 2 at Level 30). Hold up to 3. Players who have already played start with the Peeks their past points earned.
+  - **Use one:** tap **👀 Peek** on a question. The picture flips in over the question for 3 seconds with a countdown, then flips away (a fade with "reduce motion" on). One per round, never in the Daily Challenge.
+  - **Fair play:** a right answer after a peek earns half its points ("👀 Peek −95") and can't carry a round up a level. The result screen marks the question "👀 Peeked" and celebrates "You earned a Peek!".
+  - The game page shows how many you hold and how far off the next is.
+  - Never bought, and never takes away points you've scored. Worked out from saved rounds, so "Delete all progress" clears them too.
+  - New `npm run check:peeks`.
+
 ## 4.0.0-beta.39 (2026-10-17)
 
 - **Snowy mountain: a danger sign instead of the ski run sign.** Testers found the coloured dot next to a name ("Deer") confusing. The sign on the fence is now a yellow danger sign with a warning triangle, "DANGER" and an animal: deer, bear, wolf, moose or fox. New question: "Which animal was the danger sign about?" The run colour and run name questions are gone.

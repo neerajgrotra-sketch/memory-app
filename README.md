@@ -23,18 +23,20 @@ It opens with a short launch animation (an eye opens, **glance** and "Look close
 
 ## Look & Remember
 
-**The game page** shows your level ring and title, what's coming next, your high score, best level, rounds played and perfect rounds, then **Play level N**, **Start again from Level 1**, **My places** (pick which places you train on: places your level hasn't reached show a lock and the level they unlock at, and join automatically when you get there; at least one stays on), **Practice** (Easy, Medium, Hard) and how to play.
+**The game page** shows your level ring and title, what's coming next, your high score, best level, rounds played and perfect rounds, your **Peeks**, then **Play level N**, **Start again from Level 1**, **My places** (pick which places you train on: places your level hasn't reached show a lock and the level they unlock at, and join automatically when you get there; at least one stays on), **Practice** (Easy, Medium, Hard) and how to play.
 
 A round:
 
 1. **Memorise**: a brand-new picture with a countdown. Tap **I'm ready** to go to the questions early (it ignores taps in the first second).
-2. **Quiz**: 5 questions, 4 options each. The numbered dots turn green or red as you answer. A right answer flashes green and moves on. A wrong answer shakes red, then shows the right one and waits for **Next**. **Skip for now** moves on; skipped questions come back at the end.
+2. **Quiz**: 5 questions, 4 options each. The numbered dots turn green or red as you answer. A right answer flashes green and moves on. A wrong answer shakes red, then shows the right one and waits for **Next**. **Skip for now** moves on; skipped questions come back at the end. **👀 Peek** (top right, with how many you hold) flips the picture back in over the question for 3 seconds with a countdown, then flips it away: once a round, never in the Daily Challenge.
 3. **Level up** (when you go up a level): an animated ring (it fills, spins, sparks fly, and the new number pops in), your new level, its title at every 5th level, and exactly what's new, with **Play Level N** to carry straight on or **See my results** first.
 4. **Result**: your points with how they were earned, how the round moved your level, and every question with all its options (the right answer in green, your wrong pick in red). Tap the picture to see it full size. The main button plays a new picture at your level (**Try again**, **Keep going** or **Play Level N**). After a weaker round, and always in Practice, **Same picture again** replays the picture with different questions as practice: it never moves your level or sets a high score.
 
 **Levels** run from 1 to 30. 3 good rounds (4 or 5 right) take you up a level; 2 very poor rounds in a row (0 or 1 right) take you back one. Your best level never goes down. Each level adds a little: more kinds of thing, more of each, less time, new places (living room at 2, park at 4, city street at 6, kitchen at 8, farm at 10, under the sea at 12, supermarket at 14, train station at 16, zoo at 18, snowy mountain at 20), house numbers (8), mixed-colour hydrants (12) and closer counting choices (14). Players from before levels start at a level worked out from their earlier rounds.
 
 **Points**: each right answer scores 100 at Level 1, plus 10 per level. Right answers in a row add a bonus (+20, +40, +60…), and so does tapping **I'm ready** early (5 points per spare second per right answer). Slow answers never cost points.
+
+**Peeks**: every 3,000 points earns a Peek (about every 6 good rounds at Level 1, every 2 at Level 30); you hold up to 3. A right answer after a peek earns half its points and doesn't count towards a level up. Peeks are never bought and never cost points you've already scored. The game page shows how many you hold and how far off the next one is.
 
 **Practice** plays a fixed Easy, Medium or Hard round. It earns points but never changes your level.
 

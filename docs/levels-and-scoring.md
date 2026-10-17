@@ -74,6 +74,17 @@ The scene checker plays levels 1, 4, 6, 8, 10, 12, 14, 17 and 30 on three phones
 - **High score** is the best points in one round, over levelled and Practice rounds. "New high score!" shows only when you beat an earlier one.
 - **Practice** rounds use the level they play like: Easy 2, Medium 9, Hard 18.
 
+## Peeks
+
+A Peek is a second look at the picture while answering (`src/games/lookRemember/peeks.ts`, `PeekView`).
+
+- **Earning:** every 3,000 points (`PEEK_POINTS`), from any round, earns one. You hold at most 3 (`MAX_PEEKS`); points scored while full still count towards the next. Points scale with level, so Peeks come faster as levels get harder: a 4-of-5 round earns one every 5.8 rounds at Level 1, 3.4 at Level 10, 2.3 at Level 20 and 1.8 at Level 30.
+- **Using:** **👀 Peek** on the question screen. The picture flips in over the question for 3 seconds (`PEEK_SECONDS`) with the countdown, held still, then flips away (a fade with "reduce motion" on). One per round, for the question on screen, and never in the Daily Challenge.
+- **Why limits:** once you know the question, 3 seconds is plenty to check the answer, so an unlimited peek would turn a memory round into a search round. So a right answer after a peek earns half its points (`PEEKED_SHARE`), shown as a "👀 Peek −95" chip, and no ready-early bonus. It also can't tip a round into a good one: 4 right including the peeked one doesn't count towards a level up (5 right still does). The result screen marks the question "👀 Peeked".
+- **Nothing extra stored:** the wallet is rebuilt from saved rounds (each round's points and `peeked`), so "Delete all progress" empties it. A peek used in a round you quit isn't saved, so it comes back. "Start again from Level 1" keeps your Peeks.
+- **Never sold.** For a family brain-training game, peeks stay earned only.
+- `npm run check:peeks` checks the rules.
+
 ## Bands
 
 For charts and the Progress tab's "By band" table, levels are grouped into the old names: **Easy** is Levels 1–7, **Medium** 8–17 (house numbers start at 8) and **Hard** 18–30 (mostly harder questions from 18). Practice rounds count in the band picked. (`BAND_LEVELS` and `bandOf` in `ladder.ts`.)

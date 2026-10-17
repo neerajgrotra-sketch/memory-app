@@ -1,6 +1,6 @@
 {
   "name": "glance",
-  "version": "4.0.0-beta.39",
+  "version": "4.0.0-beta.40",
   "main": "expo-router/entry",
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
@@ -40,6 +40,7 @@
     "docs:recipes": "esbuild scripts/recipe-reference.ts --bundle --platform=node --outfile=node_modules/.cache/recipe-reference.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-stub.js --jsx=automatic --log-level=error && node node_modules/.cache/recipe-reference.js",
     "check:questions": "esbuild scripts/check-questions.ts --bundle --platform=node --outfile=node_modules/.cache/check-questions.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-stub.js --jsx=automatic --log-level=error && node node_modules/.cache/check-questions.js",
     "check:daily": "esbuild scripts/check-daily.ts --bundle --platform=node --outfile=node_modules/.cache/check-daily.js --log-level=error && TZ=Europe/London node node_modules/.cache/check-daily.js && TZ=America/Los_Angeles node node_modules/.cache/check-daily.js",
+    "check:peeks": "esbuild scripts/check-peeks.ts --bundle --platform=node --outfile=node_modules/.cache/check-peeks.js --log-level=error && node node_modules/.cache/check-peeks.js",
     "gallery": "esbuild scripts/gallery.tsx --bundle --platform=node --outfile=node_modules/.cache/gallery.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-dom.js --alias:react-native=./scripts/rn-stub.js --jsx=automatic --define:__DEV__=true --log-level=error && node node_modules/.cache/gallery.js",
     "lineup": "esbuild scripts/lineup.tsx --bundle --platform=node --outfile=node_modules/.cache/lineup.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-dom.js --alias:react-native=./scripts/rn-stub.js --jsx=automatic --define:__DEV__=true --log-level=error && node node_modules/.cache/lineup.js"
   },

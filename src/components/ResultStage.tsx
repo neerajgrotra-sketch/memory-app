@@ -38,6 +38,10 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
   // Picked once per result screen so it doesn't change on re-render.
   const [message] = useState(() => randomScoreMessage(score));
   const [enlarged, setEnlarged] = useState(false);
+  // A right answer after a peek doesn't count towards a level up (see useGameSession).
+  const peekedRight = outcome.peeked !== null && answers[outcome.peeked] === questions[outcome.peeked]?.answerIndex;
+  const peekHeldBack = peekedRight && isGoodRound(score, questions.length) && !isGoodRound(score - 1, questions.length);
+  const levelScore = peekHeldBack ? score - 1 : score;
   useEffect(() => {
     const moment = roundSound(outcome, score, questions.length);
     if (moment) feedback(moment);
@@ -63,14 +67,20 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
           </Text>
         </View>
         <View style={styles.breakdown}>
-          <Chip label={`${score} × ${outcome.points.perAnswer}`} value={outcome.points.answers} />
+          <Chip label={`${score} × ${outcome.points.perAnswer}`} value={outcome.points.answers + (outcome.points.peeked ?? 0)} />
           {outcome.points.streak > 0 && <Chip label="In a row" value={outcome.points.streak} />}
           {outcome.points.ready > 0 && <Chip label="Ready early" value={outcome.points.ready} />}
+          {!!outcome.points.peeked && <Chip label="👀 Peek" value={-outcome.points.peeked} />}
           {!!outcome.points.daily && <Chip label="Daily ×2" value={outcome.points.daily} />}
         </View>
+        {outcome.peeksEarned > 0 && (
+          <Text style={styles.peekEarned} accessibilityLiveRegion="polite">
+            👀 You earned {outcome.peeksEarned === 1 ? 'a Peek' : `${outcome.peeksEarned} Peeks`}!
+          </Text>
+        )}
 
         {outcome.ladder ? (
-          <LevelPanel before={outcome.ladder.before} after={outcome.ladder.after} score={score} total={questions.length} />
+          <LevelPanel before={outcome.ladder.before} after={outcome.ladder.after} score={levelScore} total={questions.length} peekHeldBack={peekHeldBack} />
         ) : (
           <Text style={styles.practice}>
             {mode === 'daily'
@@ -101,6 +111,7 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
             const chosen = answers[i];
             const correct = chosen === question.answerIndex;
             const answer = question.options[question.answerIndex];
+            const wasPeeked = outcome.peeked === i;
             return (
               <View
                 key={question.id}
@@ -108,7 +119,7 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
                 accessible
                 accessibilityLabel={
                   correct
-                    ? `${question.prompt} Right: ${answer}.`
+                    ? `${wasPeeked ? 'Peeked. ' : ''}${question.prompt} Right: ${answer}.`
                     : `${question.prompt} Wrong. You said ${chosen === null ? 'nothing' : question.options[chosen]}. The answer was ${answer}.`
                 }
                 accessibilityHint={`The options were ${question.options.join(', ')}.`}
@@ -118,7 +129,10 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
                   <Text style={styles.badgeText}>{correct ? '✓' : '✕'}</Text>
                 </View>
                 <View style={styles.reviewText}>
-                  <Text style={styles.reviewPrompt}>{question.prompt}</Text>
+                  <Text style={styles.reviewPrompt}>
+                    {wasPeeked && <Text style={styles.peekedTag}>👀 Peeked · </Text>}
+                    {question.prompt}
+                  </Text>
                   {/* Every option, so you can see what you chose between: the answer in green, your wrong pick in red. */}
                   <View style={styles.options}>
                     {question.options.map((option, o) => {
@@ -153,7 +167,7 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
       {/* Pinned to the bottom so the next step is always visible without scrolling. */}
       <View style={styles.actions}>
         {(() => {
-          const next = nextStep(mode, outcome, score, questions.length, nextLevel);
+          const next = nextStep(mode, outcome, levelScore, questions.length, nextLevel);
           return (
             <>
               <Button
@@ -234,15 +248,32 @@ function Chip({ label, value }: { label: string; value: number }) {
   return (
     <View style={styles.chip}>
       <Text style={styles.chipLabel}>{label}</Text>
-      <Text style={styles.chipValue}>+{formatPoints(value)}</Text>
+      <Text style={[styles.chipValue, value < 0 && styles.chipValueLost]}>
+        {value < 0 ? '−' : '+'}
+        {formatPoints(Math.abs(value))}
+      </Text>
     </View>
   );
 }
 
 /** How the round moved your level, in kind words. Best level is never shown going down. */
-function LevelPanel({ before, after, score, total }: { before: LadderState; after: LadderState; score: number; total: number }) {
+function LevelPanel({
+  before,
+  after,
+  score,
+  total,
+  peekHeldBack,
+}: {
+  before: LadderState;
+  after: LadderState;
+  score: number;
+  total: number;
+  /** Would have been a good round without the peeked answer counting. */
+  peekHeldBack?: boolean;
+}) {
   let line: string;
-  if (after.level > before.level) line = `Level ${after.level} reached!`;
+  if (peekHeldBack) line = 'Peeked answers don’t count towards a level up. Try the next one without a peek!';
+  else if (after.level > before.level) line = `Level ${after.level} reached!`;
   else if (after.level < before.level) line = `Back to Level ${after.level} for now. Take your time looking, you’ll climb back.`;
   else if (after.level >= MAX_LEVEL && isGoodRound(score, total)) line = 'Top level, and still on top.';
   else if (isGoodRound(score, total)) {
@@ -276,6 +307,9 @@ const styles = StyleSheet.create({
   chip: { flexDirection: 'row', gap: 6, alignItems: 'baseline', backgroundColor: colors.surface, borderRadius: radius.pill, paddingHorizontal: 12, paddingVertical: 6 },
   chipLabel: { color: colors.textMuted, fontSize: 13 },
   chipValue: { color: colors.accent, fontSize: 14, fontWeight: '800', fontVariant: ['tabular-nums'] },
+  chipValueLost: { color: colors.textMuted },
+  peekEarned: { alignSelf: 'center', color: colors.accentText, backgroundColor: colors.accent, fontSize: 15, fontWeight: '900', borderRadius: radius.pill, paddingHorizontal: 14, paddingVertical: 6, overflow: 'hidden' },
+  peekedTag: { color: colors.accent, fontWeight: '800' },
   levelPanel: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: colors.surface, borderRadius: radius.md, padding: 14 },
   levelLine: { flex: 1, color: colors.text, fontSize: 16, fontWeight: '700', lineHeight: 22 },
   practice: { color: colors.textMuted, fontSize: 14, textAlign: 'center' },

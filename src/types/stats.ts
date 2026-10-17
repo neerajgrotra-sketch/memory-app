@@ -26,6 +26,8 @@ export interface RoundResult {
   points?: number;
   /** The same picture played again: practice, never counted for level or high score. */
   replay?: boolean;
+  /** A Peek was used in this round (see games/lookRemember/peeks). */
+  peeked?: boolean;
   /** The setting, e.g. "beach". */
   recipeId: string;
   sceneId: string;

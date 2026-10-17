@@ -1,3 +1,5 @@
+import { PEEKED_SHARE } from '@/games/lookRemember/peeks';
+
 /**
  * Points for a round of Look & Remember. Right answers are worth more at higher levels; answering several
  * right in a row and being ready before the time is up add a bonus. Slow answers never cost points.
@@ -11,6 +13,8 @@ export interface PointsBreakdown {
   streak: number;
   /** Ready before the time ran out. */
   ready: number;
+  /** A right answer after a peek earns only part of its points: this is what it didn't earn. */
+  peeked?: number;
   /** The Daily Challenge doubles the round: this is the extra. */
   daily?: number;
   total: number;
@@ -27,15 +31,21 @@ export function pointsFor({
   level,
   viewSeconds,
   lookedSeconds,
+  peeked,
 }: {
   /** Per question, in order: answered right or not. */
   correct: boolean[];
   level: number;
   viewSeconds: number;
   lookedSeconds: number;
+  /** The question the player peeked at, if any. */
+  peeked?: number;
 }): PointsBreakdown {
   const right = correct.filter(Boolean).length;
   const perAnswer = pointsPerAnswer(level);
+  // A peeked answer earns part of its points and no "ready early" bonus (it had a second look).
+  const peekedRight = peeked !== undefined && correct[peeked] === true;
+  const lost = peekedRight ? Math.round(perAnswer * (1 - PEEKED_SHARE)) : 0;
   let run = 0;
   let streak = 0;
   for (const c of correct) {
@@ -43,9 +53,9 @@ export function pointsFor({
     if (run >= 2) streak += STREAK_STEP * (run - 1);
   }
   const spare = Math.max(0, Math.floor(viewSeconds - lookedSeconds));
-  const ready = spare * READY_STEP * right;
-  const answers = right * perAnswer;
-  return { answers, perAnswer, streak, ready, total: answers + streak + ready };
+  const ready = spare * READY_STEP * (peekedRight ? right - 1 : right);
+  const answers = right * perAnswer - lost;
+  return { answers, perAnswer, streak, ready, ...(lost ? { peeked: lost } : {}), total: answers + streak + ready };
 }
 
 export const formatPoints = (n: number) => n.toLocaleString('en-US');

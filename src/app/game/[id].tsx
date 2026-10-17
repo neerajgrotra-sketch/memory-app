@@ -8,6 +8,7 @@ import { GameArt } from '@/components/GameArt';
 import { LevelRing } from '@/components/LevelRing';
 import { PRACTICE_OPTIONS } from '@/game/difficulty';
 import { MAX_LEVEL, ROUNDS_TO_LEVEL_UP, nextBigUnlock, nextTitle, titleFor } from '@/games/lookRemember/ladder';
+import { MAX_PEEKS, PEEK_POINTS, type PeekWallet } from '@/games/lookRemember/peeks';
 import { formatPoints } from '@/games/lookRemember/points';
 import { feedback } from '@/feedback';
 import { getGame } from '@/games/registry';
@@ -83,6 +84,11 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
                 <Tile label="Best level" value={String(progress.ladder.best)} />
                 <Tile label="Rounds played" value={String(progress.plays)} />
                 <Tile label="Perfect rounds" value={String(progress.perfectRounds)} />
+              </View>
+
+              <View style={styles.peeks} accessible accessibilityLabel={peeksLine(progress.peeks)}>
+                <Text style={styles.peeksCount}>👀 {progress.peeks.peeks === 1 ? '1 Peek' : `${progress.peeks.peeks} Peeks`}</Text>
+                <Text style={styles.peeksDetail}>{peeksLine(progress.peeks)}</Text>
               </View>
 
               <Button label={`Play level ${progress.ladder.level}`} onPress={() => play('levels')} />
@@ -217,6 +223,12 @@ function toNext(level: number, progress: number) {
   return milestone && milestone.from === level + 1 ? `${next}: ${milestone.title}` : next;
 }
 
+/** How Peeks work, and how far off the next one is. */
+function peeksLine({ peeks, toward }: PeekWallet): string {
+  const next = peeks >= MAX_PEEKS ? `You hold the most (${MAX_PEEKS}). Use one to earn more.` : `${formatPoints(PEEK_POINTS - toward)} points to the next.`;
+  return `A second look at the picture while answering, once a round. ${next}`;
+}
+
 function Tile({ label, value }: { label: string; value: string }) {
   return (
     <View style={styles.tile}>
@@ -228,6 +240,9 @@ function Tile({ label, value }: { label: string; value: string }) {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
+  peeks: { backgroundColor: colors.surface, borderRadius: radius.md, padding: 14, gap: 4 },
+  peeksCount: { color: colors.text, fontSize: 16, fontWeight: '800' },
+  peeksDetail: { color: colors.textMuted, fontSize: 14, lineHeight: 20 },
   // Phone-width column, centred on tablets and wide windows so the art isn't blown up.
   content: { paddingBottom: 40, width: '100%', maxWidth: 520, alignSelf: 'center' },
   art: { width: '100%' },

@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { LevelUpScreen } from '@/components/LevelUpScreen';
 import { MemoriseStage } from '@/components/MemoriseStage';
+import { PeekView } from '@/components/PeekView';
 import { QuitButton } from '@/components/QuitButton';
 import { SoundToggle } from '@/components/SoundToggle';
 import { QuizStage } from '@/components/QuizStage';
@@ -33,7 +34,7 @@ export default function PlayScreen() {
       if (!live) return;
       // One Daily Challenge a day.
       if (mode === 'daily' && dailyResultOn(all)) return goBack();
-      setStart({ mode, ladder: progress.ladder, highScore: progress.highScore, streak: streakOf(all) });
+      setStart({ mode, ladder: progress.ladder, highScore: progress.highScore, peeks: progress.peeks, streak: streakOf(all) });
     });
     return () => {
       live = false;
@@ -51,8 +52,10 @@ export default function PlayScreen() {
 }
 
 function Game({ start }: { start: SessionStart & { streak: Streak } }) {
-  const { stage, round, phase, answers, score, outcome, ladder, finishMemorising, answer, playAgain, nextPicture } =
+  const { stage, round, phase, answers, score, outcome, ladder, wallet, peeked, peek, finishMemorising, answer, playAgain, nextPicture } =
     useGameSession(start);
+  // A Peek shows the picture again over the question for a few seconds.
+  const [peeking, setPeeking] = useState(false);
   // The level-up screen shows once per level gained, before the round's results.
   const [celebrated, setCelebrated] = useState<string | null>(null);
   const levelUpKey = outcome?.ladder && outcome.ladder.after.level > outcome.ladder.before.level ? `${round.index}` : null;
@@ -69,7 +72,24 @@ function Game({ start }: { start: SessionStart & { streak: Streak } }) {
 
       {phase === 'quiz' && (
         <SafeAreaView style={styles.container}>
-          <QuizStage key={round.index} questions={round.questions} answers={answers} onAnswer={answer} />
+          <QuizStage
+            key={round.index}
+            questions={round.questions}
+            answers={answers}
+            onAnswer={answer}
+            peek={
+              start.mode === 'daily'
+                ? undefined
+                : {
+                    left: wallet.peeks,
+                    used: peeked,
+                    onPeek: (i) => {
+                      peek(i);
+                      setPeeking(true);
+                    },
+                  }
+            }
+          />
         </SafeAreaView>
       )}
 
@@ -112,6 +132,8 @@ function Game({ start }: { start: SessionStart & { streak: Streak } }) {
           </View>
         </SafeAreaView>
       )}
+
+      {phase === 'quiz' && peeking && <PeekView scene={stage.scene} onDone={() => setPeeking(false)} />}
     </View>
   );
 }

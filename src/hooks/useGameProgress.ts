@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 
 import { gameIdOf, type GameId } from '@/games/registry';
 import { ladderStateOf, type LadderState } from '@/games/lookRemember/ladder';
+import { walletOf, type PeekWallet } from '@/games/lookRemember/peeks';
 import { statsStore } from '@/stats';
 import type { RoundResult } from '@/types/stats';
 
@@ -19,6 +20,8 @@ export interface GameProgress {
   lastPlayedAt: string | null;
   /** When you last started again from Level 1, if ever. */
   restartedAt: string | null;
+  /** Peeks held, and points towards the next. */
+  peeks: PeekWallet;
 }
 
 /** `restarts`: when each game was started again (from `statsStore.listRestarts`). */
@@ -36,6 +39,7 @@ export function progressOf(all: RoundResult[], gameId: GameId, restarts: Record<
     perfectRounds: results.filter((r) => !r.replay && r.score === r.total).length,
     lastPlayedAt: results.at(-1)?.playedAt ?? null,
     restartedAt,
+    peeks: walletOf(results),
   };
 }
 

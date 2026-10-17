@@ -9,11 +9,13 @@ import {
   PRACTICE_LEVEL,
   applyRound,
   bandOf,
+  isGoodRound,
   knobsForLevel,
   recipesForLevel,
   type LadderState,
 } from '@/games/lookRemember/ladder';
 import { DAILY_MULTIPLIER, dailySeed, localDay } from '@/games/lookRemember/daily';
+import { earnPeeks, spendPeek, type PeekWallet } from '@/games/lookRemember/peeks';
 import { placesOff } from '@/games/lookRemember/places';
 import { pointsFor, type PointsBreakdown } from '@/games/lookRemember/points';
 import { EXTRA_SECONDS, useProfile } from '@/profile';
@@ -47,6 +49,10 @@ export interface RoundOutcome {
   replay: boolean;
   /** Levels only, and never for a replay: before and after this round. */
   ladder?: { before: LadderState; after: LadderState };
+  /** Peeks this round's points earned. */
+  peeksEarned: number;
+  /** The question peeked at, if any. */
+  peeked: number | null;
 }
 
 interface Setup {
@@ -108,13 +114,15 @@ export interface SessionStart {
   ladder: LadderState;
   /** The best points so far, for "New high score". */
   highScore: number;
+  /** Peeks held when the session starts. */
+  peeks: PeekWallet;
 }
 
 /**
  * Runs one session of Look & Remember. The first picture is built on first render;
  * remount (e.g. with a `key`) to start over in another mode.
  */
-export function useGameSession({ mode, ladder: startLadder, highScore: startHighScore }: SessionStart) {
+export function useGameSession({ mode, ladder: startLadder, highScore: startHighScore, peeks: startPeeks }: SessionStart) {
   // Pictures are laid out for the space below the countdown bar, down to the bottom safe-area inset.
   // (The picture measures itself too and lays the same contents out again if the space differs.)
   const { width, height } = useWindowDimensions();
@@ -148,6 +156,9 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
   const [phase, setPhase] = useState<Phase>('memorise');
   const [answers, setAnswers] = useState<Answers>(() => emptyAnswers(first.round.questions.length));
   const [outcome, setOutcome] = useState<RoundOutcome | null>(null);
+  const [wallet, setWallet] = useState<PeekWallet>(startPeeks);
+  /** The question peeked at this round (one peek per round). */
+  const [peeked, setPeeked] = useState<number | null>(null);
 
   /** Question ids already asked about the current picture. */
   const seenIds = useRef(new Set<string>());
@@ -165,6 +176,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       setRound(nextRound);
       setAnswers(emptyAnswers(nextRound.questions.length));
       setOutcome(null);
+      setPeeked(null);
       setPhase('memorise');
     },
     [size, mode, extra, off, tester],
@@ -182,7 +194,8 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     (final: Answers) => {
       const correct = round.questions.map((q, i) => final[i] === q.answerIndex);
       const score = correct.filter(Boolean).length;
-      const base = pointsFor({ correct, level: round.level, viewSeconds: round.viewSeconds, lookedSeconds: looked.current });
+      const peekedIndex = peeked ?? undefined;
+      const base = pointsFor({ correct, level: round.level, viewSeconds: round.viewSeconds, lookedSeconds: looked.current, peeked: peekedIndex });
       // The Daily Challenge is worth double.
       const points = mode === 'daily' ? { ...base, daily: base.total * (DAILY_MULTIPLIER - 1), total: base.total * DAILY_MULTIPLIER } : base;
       // Seeing a picture twice makes it easier, so a replay never counts towards your level or high score;
@@ -190,7 +203,13 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       const counts = !round.replay && mode !== 'daily';
       const newHighScore = counts && highScore.current > 0 && points.total > highScore.current;
       if (counts) highScore.current = Math.max(highScore.current, points.total);
-      const after = mode === 'levels' && counts ? applyRound(ladder, score, round.questions.length) : undefined;
+      // A peeked answer never tips a round into a good one: peeks can't carry you up a level.
+      const total = round.questions.length;
+      const peekedRight = peekedIndex !== undefined && correct[peekedIndex];
+      const levelScore = peekedRight && isGoodRound(score, total) ? score - 1 : score;
+      const after = mode === 'levels' && counts ? applyRound(ladder, levelScore, total) : undefined;
+      const earned = earnPeeks(wallet, points.total);
+      setWallet(earned.wallet);
       if (after) setLadder(after);
       setOutcome({
         points,
@@ -198,6 +217,8 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
         highScore: highScore.current,
         replay: round.replay,
         ladder: after ? { before: ladder, after } : undefined,
+        peeksEarned: earned.earned,
+        peeked,
       });
       const result: RoundResult = {
         id: makeId(),
@@ -209,6 +230,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
         ladder: after ? { level: round.level, after } : undefined,
         points: points.total,
         replay: round.replay || undefined,
+        peeked: peeked !== null || undefined,
         recipeId: stage.scene.recipeId,
         sceneId: stage.scene.id,
         score,
@@ -219,7 +241,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       };
       statsStore.addResult(result).catch(() => {});
     },
-    [ladder, mode, round, stage],
+    [ladder, mode, round, stage, peeked, wallet],
   );
 
   /** Records the answer to question `questionIndex` (questions can be answered in any order after skipping). */
@@ -252,6 +274,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     setRound(nextRound);
     setAnswers(emptyAnswers(nextRound.questions.length));
     setOutcome(null);
+    setPeeked(null);
     setPhase('memorise');
   }, [extra, finishRound, ladder.level, mode, round.level, stage]);
 
@@ -260,7 +283,19 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     startStage(roundCount.current, ladder.level, stage.scene.recipeId);
   }, [finishRound, ladder.level, startStage, stage]);
 
+  /** One peek per round, while answering, never in the Daily Challenge. */
+  const canPeek = phase === 'quiz' && mode !== 'daily' && wallet.peeks > 0 && peeked === null;
+  /** Uses a Peek on question `questionIndex`. */
+  const peek = useCallback(
+    (questionIndex: number) => {
+      if (!canPeek) return;
+      setPeeked(questionIndex);
+      setWallet(spendPeek);
+    },
+    [canPeek],
+  );
+
   const score = answers.filter((choice, i) => choice === round.questions[i]?.answerIndex).length;
 
-  return { stage, round, phase, answers, score, outcome, ladder, finishMemorising, answer, playAgain, nextPicture };
+  return { stage, round, phase, answers, score, outcome, ladder, wallet, peeked, canPeek, peek, finishMemorising, answer, playAgain, nextPicture };
 }

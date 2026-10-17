@@ -31,13 +31,21 @@ interface QuizStageProps {
   /** One entry per question: the chosen option, or null while unanswered. */
   answers: Answers;
   onAnswer: (questionIndex: number, optionIndex: number) => void;
+  /** Peeks (left out in the Daily Challenge, which has none). */
+  peek?: {
+    /** Peeks held. */
+    left: number;
+    /** The question already peeked at this round (one per round), or null. */
+    used: number | null;
+    onPeek: (questionIndex: number) => void;
+  };
 }
 
 /**
  * Questions can be skipped and come back round once the end is reached; the dots show every
  * question (answered, skipped, current) and jump to any unanswered one.
  */
-export function QuizStage({ questions, answers, onAnswer }: QuizStageProps) {
+export function QuizStage({ questions, answers, onAnswer, peek }: QuizStageProps) {
   const [current, setCurrent] = useState(0);
   const [skipped, setSkipped] = useState<ReadonlySet<number>>(new Set());
   const [selected, setSelected] = useState<number | null>(null);
@@ -110,7 +118,10 @@ export function QuizStage({ questions, answers, onAnswer }: QuizStageProps) {
           <Text style={styles.progress}>
             Question {current + 1} of {questions.length}
           </Text>
-          <Text style={styles.chip}>{TYPE_LABELS[question.type]}</Text>
+          <View style={styles.headerRight}>
+            {peek && <PeekButton {...peek} current={current} choosing={feedback === 'choosing'} />}
+            <Text style={styles.chip}>{TYPE_LABELS[question.type]}</Text>
+          </View>
         </View>
 
         <View style={styles.dots}>
@@ -175,6 +186,28 @@ export function QuizStage({ questions, answers, onAnswer }: QuizStageProps) {
   );
 }
 
+/** A second look at the picture: one per round, while choosing. Shows how many you hold. */
+function PeekButton({ left, used, onPeek, current, choosing }: NonNullable<QuizStageProps['peek']> & { current: number; choosing: boolean }) {
+  const enabled = used === null && left > 0 && choosing;
+  const label = used !== null ? (used === current ? 'Peeked' : 'Peek used') : `Peek · ${left}`;
+  const hint =
+    used !== null ? 'One peek per round' : left > 0 ? `See the picture again for a few seconds. Half points for this question. ${left} left.` : 'No peeks left. Points earn more.';
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityHint={hint}
+      accessibilityState={{ disabled: !enabled }}
+      disabled={!enabled}
+      onPress={() => onPeek(current)}
+      hitSlop={8}
+      style={({ pressed }) => [styles.peek, !enabled && styles.peekOff, pressed && styles.peekPressed]}
+    >
+      <Text style={[styles.peekText, !enabled && styles.peekTextOff]}>👀 {label}</Text>
+    </Pressable>
+  );
+}
+
 const DOT = 30;
 
 const styles = StyleSheet.create({
@@ -182,6 +215,18 @@ const styles = StyleSheet.create({
   scroll: { flex: 1 },
   scrollContent: { flexGrow: 1, paddingHorizontal: 24, paddingTop: 64, paddingBottom: 16, gap: 20 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  peek: {
+    minHeight: 32,
+    justifyContent: 'center',
+    backgroundColor: colors.accent,
+    borderRadius: radius.pill,
+    paddingHorizontal: 12,
+  },
+  peekOff: { backgroundColor: colors.surface },
+  peekPressed: { opacity: 0.7 },
+  peekText: { color: colors.accentText, fontSize: 13, fontWeight: '800' },
+  peekTextOff: { color: colors.textMuted },
   progress: { color: colors.textMuted, fontSize: 15, fontWeight: '600' },
   chip: {
     color: colors.accent,
