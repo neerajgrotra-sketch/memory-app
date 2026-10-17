@@ -43,7 +43,7 @@ A recipe is one file in `src/scenes/recipes/` that exports a `Recipe` (`src/scen
 ## Checklist before shipping
 
 - [ ] `ONLY=<id> npm run check:scenes` passes for the new recipe while you work, then the full `npm run check:scenes`
-- [ ] `npm run check:scenes` passes (47,400 scenes on three iPhone sizes, Practice bands and levels)
+- [ ] `npm run check:scenes` passes (49,800 scenes on three iPhone sizes, Practice bands and levels)
 - [ ] Decided which level it unlocks at (`RECIPE_UNLOCKS` in `src/games/lookRemember/ladder.ts`), and checked it at that level
 - [ ] Played on a phone with only this setting switched on (Profile → Testing), on Easy, Medium and Hard, reading every question against the picture
 - [ ] `RECIPE=<id> npm run lineup` reviewed: every thing the right size next to the person and its neighbours, and its shape reads at a glance

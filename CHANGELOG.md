@@ -10,6 +10,17 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.36 (2026-10-17)
+
+- **A new place: At the zoo**, unlocked at **Level 18** (and in Practice).
+  - **Three enclosures, one kind of animal each**, like a real zoo, with walls between them and the visitors' path in front.
+  - **Habitats:** each enclosure is grass or sand, chosen per picture. Each animal goes where it stands out: giraffes, elephants, zebras and lions on grass; rhinos, ostriches, kangaroos and bears on sand.
+  - **18 things:** a giraffe, elephant, zebra, lion, rhino, ostriches, kangaroos and a bear; visitors, zookeepers, benches, pushchairs, a balloon seller and a signpost; the sun, birds, balloons and a plane.
+  - **New questions:** "What was in the enclosure on the left?", "What time was feeding time?" and "Which animals were being fed?" from the feeding-time sign, plus the balloon seller's balloons.
+  - **Scale:** penguins, monkeys and parrots are left out (too small to draw at 44 pt next to people). The elephant, rhino and giraffe are young ones, so they fit their enclosures on every phone.
+  - Two looks: sunny and evening.
+- Scene checker: 49,800 pictures.
+
 ## 4.0.0-beta.35 (2026-10-17)
 
 - **A new place: At the train station**, unlocked at **Level 16** (and in Practice).

@@ -42,19 +42,19 @@ See [Levels and scoring](../levels-and-scoring.md).
 | 15 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 240 |
 | 16 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
 | 17 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
-| 18 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
-| 19 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
-| 20 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
-| 21 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
-| 22 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
-| 23 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
-| 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
-| 25 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
-| 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
-| 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
-| 28 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
-| 29 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
-| 30 | Photographic Memory | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
+| 18 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
+| 19 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
+| 20 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
+| 21 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
+| 22 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
+| 23 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
+| 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
+| 25 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
+| 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
+| 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
+| 28 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
+| 29 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
+| 30 | Photographic Memory | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
 
 ## At the beach (`beach`)
 
@@ -447,3 +447,47 @@ Per-picture details: "What time was the next train?" on every level; "Which plat
 | luggage trolley | platform | medium 16% | 2 | Red, Blue, Yellow, Purple, Orange | – |
 | coffee cart | platform | large 21% | 1 | Red, Green, Blue, Black | one only, not counted |
 | newspaper stand | platform | medium 14% | 1 | fixed (`#1d70d6`) | one only, not counted |
+
+## At the zoo (`zoo`)
+
+### Bands
+
+| Band | Height | Surface | Slot rows | Rules |
+| --- | --- | --- | --- | --- |
+| In the sky (`sky`) | 0% – 22% | air | 1 | – |
+| In the enclosure (`enclosure`) | 24% – 56.5% | ground | 1 | things stay inside their own third |
+| On the path (`path`) | 67% – 100% | ground | 2 | – |
+
+Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
+
+Per-picture details: "What time was feeding time?" on every level; "Which animals were being fed at feeding time?".
+
+### Colour schemes
+
+| Scheme | Surface colours |
+| --- | --- |
+| sunny | sky `#8fd3f4`, trees `#5a9e3e`, treesDark `#3f7f2e`, enc0 `#3f6f4a`, enc1 `#ead9a8`, enc2 `#3f6f4a`, wall `#b8a07a`, fence `#6b4f36`, path `#e9dcc0`, edge `#c9b48c`, tuft `#6f9a3a` |
+| evening | sky `#f6c28b`, trees `#6a8f3e`, treesDark `#4f7230`, enc0 `#3f6f4a`, enc1 `#ead9a8`, enc2 `#3f6f4a`, wall `#a8906a`, fence `#5c4430`, path `#e3d3b0`, edge `#c2ad84`, tuft `#7a8f3a` |
+
+### Things (18)
+
+| Thing | Band | Size | Most | Colours | Habits |
+| --- | --- | --- | --- | --- | --- |
+| sun | sky | medium 16% | 1 | fixed (`#ffd93b`) | one only, not counted |
+| bird | sky | small 10% | 4 | fixed (`#222222`) | – |
+| hot-air balloon | sky | medium 14% | 2 | Red, Blue, Purple, Green, Orange, Pink | – |
+| plane | sky | medium 18% | 1 | fixed (`#ffffff`) | one only, not counted |
+| giraffe | enclosure | large 20% | 1 | fixed (`#e9b44c`) | – |
+| elephant | enclosure | large 26% | 1 | fixed (`#9aa5ae`) | – |
+| zebra | enclosure | large 25% | 1 | fixed (`#f8f9fa`) | – |
+| lion | enclosure | large 23% | 1 | fixed (`#d4a24c`) | – |
+| rhino | enclosure | large 26% | 1 | fixed (`#8d8d8d`) | – |
+| ostrich | enclosure | small 12% | 3 | fixed (`#343a40`) | – |
+| kangaroo | enclosure | small 13% | 3 | fixed (`#c68642`) | – |
+| bear | enclosure | large 23% | 1 | fixed (`#6b4423`) | – |
+| visitor | path | small 10% | 4 | Red, Blue, Yellow, Green, Orange, Purple, Pink, White | – |
+| zookeeper | path | small 10% | 2 | fixed (`#5f7a2a`) | – |
+| bench | path | large 21% | 2 | Green, Brown, Red, Blue | copies spread one per third, on one line |
+| pushchair | path | small 12% | 2 | Red, Blue, Green, Purple, Pink | – |
+| balloon seller | path | medium 16% | 1 | Red, Blue, Yellow, Green, Pink, Purple | one only, not counted |
+| signpost | path | medium 15% | 1 | fixed (`#8a5a2b`) | one only, not counted |

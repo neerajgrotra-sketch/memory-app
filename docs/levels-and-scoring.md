@@ -45,7 +45,7 @@ How a player's level moves, what each level changes, and how points are worked o
 | Kinds of thing | 5 | +1 every 4 levels | 9 from Level 17 |
 | Most of one kind | 3 | 4 at Level 4, 5 at 10, 6 at 16 | 6 |
 | View time | 10 s | −1 s about every 4 levels | 4 s from Level 24 |
-| Places | the beach | living room at Level 2, park at 4, city street at 6, kitchen at 8, farm at 10, under the sea at 12, supermarket at 14, train station at 16 | all nine |
+| Places | the beach | living room at Level 2, park at 4, city street at 6, kitchen at 8, farm at 10, under the sea at 12, supermarket at 14, train station at 16, zoo at 18 | all ten |
 | House numbers | no | from Level 8 | |
 | Hydrants in mixed colours | no | from Level 12 | |
 | Close counting choices | no | from Level 14 | |
