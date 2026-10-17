@@ -52,9 +52,9 @@ See [Levels and scoring](../levels-and-scoring.md).
 | 25 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
 | 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
 | 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
-| 28 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
-| 29 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
-| 30 | Photographic Memory | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
+| 28 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport, space | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
+| 29 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport, space | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
+| 30 | Photographic Memory | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport, space | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
 
 ## At the beach (`beach`)
 
@@ -661,3 +661,45 @@ Per-picture details: "Where was the flight on the screen going?"; "Which gate wa
 | coffee kiosk | lounge | large 23% | 1 | Red, Green, Blue, Orange, Purple | one only, not counted |
 | information desk | lounge | large 23% | 1 | fixed (`#2f6fb3`) | one only, not counted |
 | potted plant | lounge | medium 13% | 2 | Orange, Blue, White, Yellow, Pink, Purple | – |
+
+## On the Moon (`space`)
+
+### Bands
+
+| Band | Height | Surface | Slot rows | Rules |
+| --- | --- | --- | --- | --- |
+| Out in space (`space`) | 0% – 34% | air | 1 | at most 3 kinds |
+| On the hills (`hills`) | 34% – 42% | ground | 0 | – |
+| Near the hills (`back`) | 43% – 63.5% | ground | 1 | – |
+| Close by (`front`) | 72% – 100% | ground | 2 | – |
+
+Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
+
+Per-picture details: "What was the mission called on the sign?"; "What number was the moon base on the sign?".
+
+### Colour schemes
+
+| Scheme | Surface colours |
+| --- | --- |
+| grey | sky `#05070f`, stars `#ffffff`, hills `#6c6f76`, ground `#8d9097`, track `#787b82` |
+| dusty | sky `#0a0818`, stars `#fff3d6`, hills `#77706a`, ground `#9a928a`, track `#857d75` |
+
+### Things (15)
+
+| Thing | Band | Size | Most | Colours | Habits |
+| --- | --- | --- | --- | --- | --- |
+| Earth | space | medium 16% | 1 | fixed (`#2f80d1`) | one only, not counted |
+| satellite | space | medium 15% | 2 | fixed (`#ffd60a`) | – |
+| rocket | space | small 10% | 1 | Red, Blue, Orange, Green | one only, not counted |
+| space station | space | medium 18% | 1 | fixed (`#dee2e6`) | one only, not counted |
+| comet | space | medium 16% | 1 | fixed (`#e7f5ff`) | one only, not counted |
+| lunar lander | back | xl 40% | 1 | fixed (`#e0a526`) | may span columns; one only, not counted |
+| habitat pod | back | xl 44% | 1 | Red, Blue, Orange, Green | may span columns; one only, not counted |
+| solar panel | back | large 23% | 2 | fixed (`#1d70d6`) | copies spread one per third, on one line |
+| radio dish | back | medium 17% | 1 | fixed (`#dee2e6`) | one only, not counted |
+| flag | back | medium 14% | 1 | Red, Blue, Yellow, Green, Orange, Purple | one only, not counted |
+| astronaut | front | medium 13% | 3 | Red, Blue, Yellow, Green, Orange, Purple | – |
+| moon buggy | front | xl 35% | 1 | Red, Blue, Orange, Yellow | may span columns; one only, not counted |
+| boulder | front | small 12% | 4 | fixed (`#5c5f66`) | – |
+| robot | front | small 12% | 1 | fixed (`#f8f9fa`) | one only, not counted |
+| crater | front | large 25% | 2 | fixed (`#4b4e55`) | – |

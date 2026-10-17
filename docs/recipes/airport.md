@@ -6,8 +6,8 @@ Code: `src/scenes/recipes/airport.tsx`. Exact sizes, counts and colours: [refere
 
 | Band | Height | How things sit |
 | --- | --- | --- |
-| In the sky | 0–24% | `air`, 1 row, seen through the window |
-| Out on the airfield | 26–42% | `ground`, 1 row, at most 3 kinds, seen through the window (a runway in the backdrop) |
+| In the sky | 0–24% | `air`, 1 row, seen through the window, `faraway` |
+| Out on the airfield | 26–42% | `ground`, 1 row, at most 3 kinds, seen through the window (a runway in the backdrop), `faraway` |
 | (the wall) | 43–62% | backdrop only: the wall below the glass, with the flight screen on its stand (`keepClear`) |
 | In the departure lounge | 62–100% | `ground`, 2 rows |
 

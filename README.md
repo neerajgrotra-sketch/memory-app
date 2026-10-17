@@ -9,7 +9,7 @@ npm install
 npx expo start --tunnel   # scan the QR code with Expo Go
 ```
 
-Checks: `npm run typecheck`, `npm run lint` and `npm run check:scenes` (the level rules, points, and 59,400 generated pictures against every layout rule). Review pictures by eye with `npm run gallery` (writes `gallery.html`). After changing a recipe or the levels, run `npm run docs:recipes`. See [docs/testing.md](docs/testing.md).
+Checks: `npm run typecheck`, `npm run lint` and `npm run check:scenes` (the level rules, points, and 61,800 generated pictures against every layout rule). Review pictures by eye with `npm run gallery` (writes `gallery.html`). After changing a recipe or the levels, run `npm run docs:recipes`. See [docs/testing.md](docs/testing.md).
 
 Every change bumps the version (shown on the Games tab). See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
 
@@ -32,7 +32,7 @@ A round:
 3. **Level up** (when you go up a level): an animated ring (it fills, spins, sparks fly, and the new number pops in), your new level, its title at every 5th level, and exactly what's new, with **Play Level N** to carry straight on or **See my results** first.
 4. **Result**: your points with how they were earned, how the round moved your level, and every question with all its options (the right answer in green, your wrong pick in red). Tap the picture to see it full size. The main button plays a new picture at your level (**Try again**, **Keep going** or **Play Level N**). After a weaker round, and always in Practice, **Same picture again** replays the picture with different questions as practice: it never moves your level or sets a high score.
 
-**Levels** run from 1 to 30. 3 good rounds (4 or 5 right) take you up a level; 2 very poor rounds in a row (0 or 1 right) take you back one. Your best level never goes down. Each level adds a little: more kinds of thing, more of each, less time, new places (living room at 2, park at 4, city street at 6, kitchen at 8, farm at 10, under the sea at 12, supermarket at 14, train station at 16, zoo at 18, snowy mountain at 20, classroom at 22, night campsite at 24, airport at 26), house numbers (8), mixed-colour hydrants (12) and closer counting choices (14). Players from before levels start at a level worked out from their earlier rounds.
+**Levels** run from 1 to 30. 3 good rounds (4 or 5 right) take you up a level; 2 very poor rounds in a row (0 or 1 right) take you back one. Your best level never goes down. Each level adds a little: more kinds of thing, more of each, less time, new places (living room at 2, park at 4, city street at 6, kitchen at 8, farm at 10, under the sea at 12, supermarket at 14, train station at 16, zoo at 18, snowy mountain at 20, classroom at 22, night campsite at 24, airport at 26, the Moon at 28), house numbers (8), mixed-colour hydrants (12) and closer counting choices (14). Players from before levels start at a level worked out from their earlier rounds.
 
 **Points**: each right answer scores 100 at Level 1, plus 10 per level. Right answers in a row add a bonus (+20, +40, +60…), and so does tapping **I'm ready** early (5 points per spare second per right answer). Slow answers never cost points.
 
@@ -44,7 +44,7 @@ Full details: [docs/levels-and-scoring.md](docs/levels-and-scoring.md).
 
 ## How pictures are generated
 
-Every picture is generated on the device from a **recipe** in a few milliseconds. No network, stored images or AI service is involved. There are 14 recipes: **at the beach**, **living room**, **in the park**, **city street**, **in the kitchen**, **on the farm**, **under the sea**, **in the supermarket**, **at the train station**, **at the zoo**, **on the snowy mountain**, **in the classroom**, **at the campsite at night** and **at the airport**, unlocked at Levels 1, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24 and 26. Each picture picks a different mix of things, counts, colours and positions, and never the same setting twice in a row.
+Every picture is generated on the device from a **recipe** in a few milliseconds. No network, stored images or AI service is involved. There are 15 recipes: **at the beach**, **living room**, **in the park**, **city street**, **in the kitchen**, **on the farm**, **under the sea**, **in the supermarket**, **at the train station**, **at the zoo**, **on the snowy mountain**, **in the classroom**, **at the campsite at night**, **at the airport** and **on the Moon**, unlocked at Levels 1, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26 and 28. Each picture picks a different mix of things, counts, colours and positions, and never the same setting twice in a row.
 
 1. **Measure** the picture area (below the header, inside the safe area).
 2. **Pick a recipe** and the level's settings:
@@ -82,7 +82,7 @@ Every picture is generated on the device from a **recipe** in a few milliseconds
 docs/                  How pictures and questions are made (start at docs/README.md)
   recipes/             One page per setting + reference.md (generated)
 scripts/
-  check-scenes.ts      npm run check:scenes: level rules, points, 59,400 scenes against every rule
+  check-scenes.ts      npm run check:scenes: level rules, points, 61,800 scenes against every rule
   gallery.tsx          npm run gallery: pictures to gallery.html for reviewing by eye
   recipe-reference.ts  npm run docs:recipes: regenerates docs/recipes/reference.md
 src/

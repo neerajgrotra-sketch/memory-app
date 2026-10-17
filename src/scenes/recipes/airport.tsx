@@ -459,8 +459,9 @@ export const airport: Recipe = {
   id: 'airport',
   title: 'At the airport',
   zones: [
-    { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: SKY, rows: 1 },
-    { id: 'airfield', label: 'Out on the airfield', surface: 'ground', top: AIRFIELD_TOP, bottom: WINDOW - 0.01, rows: 1, maxGroups: 3 },
+    // Both seen far off through the window, so never "above" or "below" anything in the lounge.
+    { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: SKY, rows: 1, faraway: true },
+    { id: 'airfield', label: 'Out on the airfield', surface: 'ground', top: AIRFIELD_TOP, bottom: WINDOW - 0.01, rows: 1, maxGroups: 3, faraway: true },
     { id: 'lounge', label: 'In the departure lounge', surface: 'ground', top: LOUNGE_TOP, bottom: 1, rows: 2 },
   ],
   items,

@@ -32,6 +32,7 @@ A recipe's `zones` split the picture into horizontal bands (`top`, `bottom` as f
   - `flush`: things stand exactly on its bottom line (rooftops)
   - `panels`: things stay inside their own third (rooftops)
   - `oneWay`: everything faces the same way (road traffic).
+  - `faraway`: everything here is a long way off (space seen from the Moon, the airfield through the airport window), so it's never "above" or "below" anything.
 
 The top 2% (`TOP_CLEAR`) and bottom 4% (`BOTTOM_CLEAR`, the home indicator) of the picture are never used.
 

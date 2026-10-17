@@ -783,7 +783,7 @@ Detail `gate`: C15.
 
 Detail `flight`: GL 789.
 
-### Questions (34)
+### Questions (30)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
@@ -814,10 +814,58 @@ Detail `flight`: GL 789.
 | count | compare | Were there more luggage trolleys or more pilots? | **✓ Luggage trolleys** · Pilots · The same number | compare-trolley-pilot |
 | count | compare | Were there more luggage trolleys or more birds? | Luggage trolleys · Birds · **✓ The same number** | compare-trolley-bird |
 | count | most | Which was there just one of? | **✓ A pilot** · A bird · A luggage trolley · A flight attendant | only-pilot |
-| position | relation | What was above the coffee kiosk? | **✓ A baggage train** · A luggage trolley · A helicopter · A pilot | coffee-kiosk |
-| position | relation | What was above the control tower? | **✓ Birds** · Luggage trolleys · Pilots · Planes | control-tower |
-| position | relation | What was below the control tower? | **✓ Luggage trolleys** · Birds · Pilots · Flight attendants | control-tower |
-| position | relation | What was below the baggage train? | **✓ A coffee kiosk** · A luggage trolley · A bird · A pilot | baggage-train |
-| count | true-false | True or false? There were two luggage trolleys. | **✓ True** · False | trolley |
-| count | true-false | True or false? There was one bird. | True · **✓ False** | bird |
-| count | true-false | True or false? There was one pilot. | **✓ True** · False | pilot |
+| count | true-false | True or false? There were two pilots. | True · **✓ False** | pilot |
+| colour | true-false | True or false? The helicopter was yellow. | True · **✓ False** | helicopter |
+| count | true-false | True or false? There were three luggage trolleys. | True · **✓ False** | trolley |
+
+## On the Moon
+
+Scene `space-c29hz`, colour scheme `grey`.
+
+### Facts
+
+| Thing | Count | Colour | Band | Side |
+| --- | --- | --- | --- | --- |
+| habitat pod | 1 | Red | Near the hills | centre |
+| moon buggy | 1 | Blue | Close by | left |
+| astronauts | 2 | Green | Close by | right |
+| rocket | 1 | Orange | Out in space | left |
+| space station | 1 | fixed | Out in space | centre |
+| satellites | 2 | fixed | Out in space | right |
+| robot | 1 | fixed | Close by | centre |
+
+Detail `mission`: Eagle.
+
+Detail `base`: 27.
+
+### Questions (27)
+
+| Type | Kind | Question | Options (✓ = answer) | Subject |
+| --- | --- | --- | --- | --- |
+| colour | colour | What colour was the stripe on the habitat pod? | **✓ Red** · Green · Blue · Orange | habitat |
+| position | where | Where was the habitat pod? | **✓ Near the hills, in the middle** · Near the hills, on the left · Near the hills, on the right | habitat |
+| object | what-here | What was near the hills, in the middle? | **✓ A habitat pod** · A solar panel · A lunar lander · A radio dish | habitat |
+| colour | colour | What colour was the moon buggy’s seat? | **✓ Blue** · Yellow · Red · Orange | rover |
+| position | where | Where was the moon buggy? | **✓ Close by, on the left** · Close by, in the middle · Close by, on the right | rover |
+| object | what-here | What was close by, on the left? | **✓ A moon buggy** · A crater · A robot · An astronaut | rover |
+| count | count | How many astronauts were there? | **✓ 2** · 1 · 5 · 4 | astronaut |
+| colour | colour | What colour were the astronauts’ backpacks? | **✓ Green** · Blue · Yellow · Purple | astronaut |
+| position | where | Where were the astronauts? | **✓ Close by, on the right** · Close by, on the left · Close by, in the middle | astronaut |
+| object | what-here | What was close by, on the right? | **✓ Astronauts** · Boulders · Craters | astronaut |
+| colour | colour | What colour were the rocket’s fins? | **✓ Orange** · Blue · Green · Red | rocket |
+| position | where | Where was the rocket? | **✓ Out in space, on the left** · Out in space, on the right · Out in space, in the middle | rocket |
+| object | what-here | What was out in space, on the left? | **✓ A rocket** · A satellite · A comet · The Earth | rocket |
+| position | where | Where was the space station? | **✓ Out in space, in the middle** · Out in space, on the left · Out in space, on the right | space-station |
+| object | what-here | What was out in space, in the middle? | **✓ A space station** · A satellite · A rocket · The Earth | space-station |
+| count | count | How many satellites were there? | **✓ 2** · 1 · 3 · 5 | satellite |
+| position | where | Where were the satellites? | **✓ Out in space, on the right** · Out in space, in the middle · Out in space, on the left | satellite |
+| position | where | Where was the robot? | **✓ Close by, in the middle** · Close by, on the left · Close by, on the right | robot |
+| object | what-here | What was close by, in the middle? | **✓ A robot** · A crater · A moon buggy · An astronaut | robot |
+| object | detail | What was the mission called on the sign? | **✓ Eagle** · Artemis · Orion · Apollo | mission |
+| number | detail | What number was the moon base on the sign? | **✓ 27** · 29 · 37 · 72 | base-number |
+| object | seen | Which of these was in the picture? | **✓ Satellite** · Comet · Earth · Boulder | satellite |
+| object | seen | Which of these was NOT in the picture? | **✓ Earth** · Satellite · Habitat pod · Space station | earth |
+| count | compare | Were there more astronauts or more satellites? | Astronauts · Satellites · **✓ The same number** | compare-astronaut-satellite |
+| count | true-false | True or false? There were two astronauts. | **✓ True** · False | astronaut |
+| colour | true-false | True or false? The rocket’s fins were blue. | True · **✓ False** | rocket |
+| object | true-false | True or false? There was a crater in the picture. | True · **✓ False** | crater |

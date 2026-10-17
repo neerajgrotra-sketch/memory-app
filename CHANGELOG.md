@@ -10,6 +10,19 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.46 (2026-10-17)
+
+- **A new place: On the Moon** (space), unlocked at **Level 28** (and in Practice). The last of the planned places: every level from 2 to 28 now brings something new.
+  - **Bands:** "Out in space" (the black starry sky), low grey hills, then "Near the hills" and "Close by" on the dusty ground.
+  - **15 things:** the Earth, satellites, a rocket, a space station and a comet out in space; a lunar lander, a habitat pod, solar panels, a radio dish and a flag near the hills; astronauts, a moon buggy, boulders, a little explorer robot and craters close by.
+  - **New questions from the base sign:** "What was the mission called on the sign?" and "What number was the moon base on the sign?", plus the astronauts' backpacks, the rocket's fins, the flag, the moon buggy's seat and the stripe on the habitat pod.
+  - **Why the Moon:** floating in space has no ground, so no true sizes and no "where" questions. On the Moon's surface astronauts (1.85 m), a moon buggy (3 m) and a lander (3.5 m) are true to size, and the far-off Earth, rocket and satellites are small in the sky, as they really look.
+  - **Contrast:** white spacesuits on grey dust are checked by their dark outline, like the snowman; the flag is held out by a bar because there's no wind on the Moon.
+  - **Usually there:** astronauts, in nearly every picture.
+  - Two looks: grey dust and warmer, browner dust.
+- Scene checker: 61,800 pictures.
+- **Fix: "What was above the crater? A satellite."** A new band option, `faraway`, marks things a long way off (space from the Moon; the sky and airfield through the airport window), so they're never "above" or "below" anything. Before, only one-off sky things like the sun were left out.
+
 ## 4.0.0-beta.45 (2026-10-17)
 
 - **A new place: At the airport**, unlocked at **Level 26** (and in Practice).

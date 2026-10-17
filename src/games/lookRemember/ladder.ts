@@ -98,6 +98,7 @@ export const RECIPE_UNLOCKS: { recipeId: string; level: number; name: string }[]
   { recipeId: 'classroom', level: 22, name: 'the classroom' },
   { recipeId: 'night-campsite', level: 24, name: 'the campsite at night' },
   { recipeId: 'airport', level: 26, name: 'the airport' },
+  { recipeId: 'space', level: 28, name: 'the Moon, out in space' },
 ];
 
 export const recipesForLevel = (level: number) => RECIPE_UNLOCKS.filter((r) => r.level <= level).map((r) => r.recipeId);

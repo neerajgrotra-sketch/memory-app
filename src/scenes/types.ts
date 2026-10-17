@@ -37,6 +37,11 @@ export interface ZoneDef {
   minGroups?: number;
   /** At most this many kinds go here (one lane of road holds a vehicle and a scooter). */
   maxGroups?: number;
+  /**
+   * Everything here is a long way off (space seen from the Moon, the airfield through the airport window),
+   * so it's never "above" or "below" anything in the picture.
+   */
+  faraway?: boolean;
   /** Everything here faces the same way (traffic on a road), chosen once per picture. */
   oneWay?: boolean;
   /** At least this many of the band's kinds are anchors (tall, against the wall or extra wide): a room always has furniture. */

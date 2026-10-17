@@ -342,8 +342,9 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   const NEXT: Record<Region, Region[]> = { left: ['centre'], centre: ['left', 'right'], right: ['centre'] };
   const isWide = (g: PlacedGroup) => itemOf(g.kind).wide === true;
   const reaches = (g: PlacedGroup, region: Region) => sidesOf(g).has(region) || (isWide(g) && NEXT[g.region].includes(region));
-  // One-off things in the sky (the sun, a plane) are far away, not above anything: "below the sun" reads oddly.
-  const faraway = (g: PlacedGroup) => itemOf(g.kind).countable === false && zoneOf(g.zoneId).surface === 'air';
+  // One-off things in the sky (the sun, a plane), and everything in a far-off band (space seen from the Moon), are
+  // far away, not above anything: "below the sun" or "above the crater: a satellite" reads oddly.
+  const faraway = (g: PlacedGroup) => zoneOf(g.zoneId).faraway === true || (itemOf(g.kind).countable === false && zoneOf(g.zoneId).surface === 'air');
   const single = spec.groups.filter((g) => !(itemOf(g.kind).spread && g.count > 1) && !isWide(g) && !faraway(g));
   for (const group of single) {
     const item = itemOf(group.kind);
