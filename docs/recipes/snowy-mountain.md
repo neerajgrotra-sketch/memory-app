@@ -27,7 +27,7 @@ White and yellow can't be seen on snow, so coats, jackets and scarves come in re
 
 ## Detail facts
 
-- **The ski run sign** on the fence (`keepClear`): a difficulty colour and a name, chosen per picture. **"What colour was the ski run sign?"** Green, blue, red or black, the real colour code for how hard a run is. **"What was the ski run called?"** Eagle, Fox, Wolf, Owl, Deer or Bear.
+- **The danger sign** on the fence (`keepClear`): a yellow sign with a red warning triangle, "DANGER" and the wild animal it warns about, chosen per picture. **"Which animal was the danger sign about?"** Deer, Bear, Wolf, Moose or Fox. (It replaced a ski run sign with a difficulty-colour dot: testers found the dot confusing, since few people know the run colour code.)
 - **"What number was on the ski racer's bib?"** (1–49) whenever the racer is there; wrong answers one or two along, the digits swapped, or ten more.
 
 All from Level 8 like other details, so always asked here.

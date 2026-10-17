@@ -505,7 +505,7 @@ Per-picture details: "What time was feeding time?" on every level; "Which animal
 
 Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
 
-Per-picture details: "What colour was the ski run sign?"; "What was the ski run called?"; "What number was on the ski racer’s bib?" (when there's a racer).
+Per-picture details: "Which animal was the danger sign about?"; "What number was on the ski racer’s bib?" (when there's a racer).
 
 ### Colour schemes
 

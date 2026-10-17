@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.39 (2026-10-17)
+
+- **Snowy mountain: a danger sign instead of the ski run sign.** Testers found the coloured dot next to a name ("Deer") confusing. The sign on the fence is now a yellow danger sign with a warning triangle, "DANGER" and an animal: deer, bear, wolf, moose or fox. New question: "Which animal was the danger sign about?" The run colour and run name questions are gone.
+- **Fix: the ski racer's bib number showed mirrored** when the racer faced left. Racers now always face the same way, so the number reads correctly. They were the only flippable thing with writing on them.
+
 ## 4.0.0-beta.38 (2026-10-17)
 
 - **A new place: On the snowy mountain**, unlocked at **Level 20** (and in Practice).

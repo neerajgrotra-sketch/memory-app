@@ -23,7 +23,7 @@ const FENCE = 0.645;
 const BASE = 0.68;
 
 /** The ski run sign, on the fence in the middle; nothing may stand in front of it. */
-const SIGN = { x0: 0.38, y0: 0.6, x1: 0.62, y1: 0.672 };
+const SIGN = { x0: 0.33, y0: 0.6, x1: 0.67, y1: 0.672 };
 
 const IN_SKY = ['sky'];
 const ON_SLOPE = ['slope'];
@@ -130,6 +130,8 @@ const items: ItemDef[] = [
     zones: ON_SLOPE,
     maxCount: 1,
     countable: false,
+    // Never mirrored, so the number on the bib always reads the right way round.
+    noFlip: true,
     colours: COATS,
     colourPrompt: () => 'What colour was the ski racer’s suit?',
     // A racer with a big number on their bib: "What number was the ski racer?".
@@ -334,14 +336,8 @@ const items: ItemDef[] = [
   },
 ];
 
-/** Ski runs are marked by difficulty colour, as at real resorts; each has a name. */
-const RUN_COLOURS = [
-  { name: 'Green', hex: C.green.hex },
-  { name: 'Blue', hex: C.blue.hex },
-  { name: 'Red', hex: C.red.hex },
-  { name: 'Black', hex: '#212529' },
-];
-const RUN_NAMES = ['Eagle', 'Fox', 'Wolf', 'Owl', 'Deer', 'Bear'];
+/** Wild animals a mountain danger sign warns about. */
+const DANGER_ANIMALS = ['Deer', 'Bear', 'Wolf', 'Moose', 'Fox'];
 
 /** Bib numbers easy to mix up with `n`: one or two along, the digits swapped, or ten more. */
 function bibLookalikes(n: number): string[] {
@@ -351,16 +347,14 @@ function bibLookalikes(n: number): string[] {
   return [...new Set([...swapped, ...near].filter((x) => x !== n).map(String))];
 }
 
-/** The ski run sign (its colour and name) and the racer's bib number, chosen per picture. */
+/** The animal on the danger sign and the racer's bib number, chosen per picture. */
 function details(random: Rng): SceneDetails {
-  const run = random.pick(RUN_COLOURS);
-  const name = random.pick(RUN_NAMES);
+  const animal = random.pick(DANGER_ANIMALS);
   const bib = random.int(1, 49);
   return {
-    values: { run: run.name, runHex: run.hex, runName: name, bib: String(bib) },
+    values: { animal, bib: String(bib) },
     facts: [
-      { id: 'run-colour', type: 'colour', prompt: 'What colour was the ski run sign?', answer: run.name, wrong: RUN_COLOURS.filter((r) => r !== run).map((r) => r.name) },
-      { id: 'run-name', type: 'object', prompt: 'What was the ski run called?', answer: name, wrong: RUN_NAMES.filter((n) => n !== name) },
+      { id: 'danger', type: 'object', prompt: 'Which animal was the danger sign about?', answer: animal, wrong: DANGER_ANIMALS.filter((n) => n !== animal) },
       { id: 'bib', type: 'number', prompt: 'What number was on the ski racer’s bib?', answer: String(bib), wrong: bibLookalikes(bib), needs: 'racer' },
     ],
   };
@@ -394,12 +388,24 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
           <Rect key={i} x={-600 + i * 75} y={fence - 12} width={8} height={32} rx={2} />
         ))}
       </G>
-      {/* The ski run sign: a difficulty colour and the run's name. */}
+      {/* The danger sign: a warning triangle, "DANGER" and the animal it warns about. */}
       <G>
-        <Rect x={s.x} y={s.y} width={s.w} height={s.h} rx={8} fill="#f8f9fa" stroke="#495057" strokeWidth={4} />
-        <Circle cx={s.x + s.h * 0.55} cy={s.y + s.h / 2} r={s.h * 0.34} fill={d?.values?.runHex ?? C.blue.hex} />
-        <SvgText x={s.x + s.h * 1.05} y={s.y + s.h / 2} fontSize={Math.min(30, s.h * 0.5)} fontWeight="bold" fontFamily="Arial" fill="#212529" alignmentBaseline="central">
-          {d?.values?.runName ?? 'Eagle'}
+        <Rect x={s.x} y={s.y} width={s.w} height={s.h} rx={8} fill="#ffd60a" stroke="#212529" strokeWidth={4} />
+        <Path
+          d={`M${s.x + s.h * 0.5},${s.y + s.h * 0.2} L${s.x + s.h * 0.84},${s.y + s.h * 0.8} H${s.x + s.h * 0.16} Z`}
+          fill="#ffffff"
+          stroke="#d62828"
+          strokeWidth={6}
+          strokeLinejoin="round"
+        />
+        <SvgText x={s.x + s.h * 0.5} y={s.y + s.h * 0.6} fontSize={s.h * 0.34} fontWeight="bold" fontFamily="Arial" fill="#212529" textAnchor="middle" alignmentBaseline="central">
+          !
+        </SvgText>
+        <SvgText x={s.x + s.h * 1.0} y={s.y + s.h * 0.3} fontSize={s.h * 0.3} fontWeight="bold" fontFamily="Arial" fill="#d62828" alignmentBaseline="central">
+          DANGER
+        </SvgText>
+        <SvgText x={s.x + s.h * 1.0} y={s.y + s.h * 0.68} fontSize={s.h * 0.42} fontWeight="bold" fontFamily="Arial" fill="#212529" alignmentBaseline="central">
+          {d?.values?.animal ?? 'Deer'}
         </SvgText>
       </G>
     </G>

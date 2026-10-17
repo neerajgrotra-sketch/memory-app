@@ -592,57 +592,57 @@ Scene `snowy-mountain-c29hz`, colour scheme `sunny`.
 
 | Thing | Count | Colour | Band | Side |
 | --- | --- | --- | --- | --- |
-| pine tree | 1 | fixed | On the ski slope | left |
-| ski rack | 1 | fixed | By the lodge | right |
-| snowboarder | 1 | Purple | On the ski slope | right |
-| dogs | 2 | Brown | By the lodge | centre |
-| plane | 1 | fixed | In the sky | left |
-| sledge | 1 | Red | By the lodge | left |
-| birds | 2 | fixed | In the sky | right |
+| hot chocolate stand | 1 | Brown | By the lodge | left |
+| snowmen | 2 | Blue | By the lodge | centre |
+| slalom flag | 1 | Blue | On the ski slope | right |
+| snowboarders | 2 | Orange | On the ski slope | centre |
+| plane | 1 | fixed | In the sky | centre |
+| sledge | 1 | Blue | By the lodge | right |
+| birds | 3 | fixed | In the sky | left |
 
-Detail `run`: Red.
+Detail `animal`: Wolf.
 
-Detail `runHex`: #e63946.
+Detail `bib`: 27.
 
-Detail `runName`: Owl.
-
-Detail `bib`: 25.
-
-### Questions (34)
+### Questions (38)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| count | count | How many pine trees were there? | **✓ 1** · 2 · 4 · 3 | pine |
-| position | where | Where was the pine tree? | **✓ On the ski slope, on the left** · On the ski slope, on the right · On the ski slope, in the middle | pine |
-| object | what-here | What was on the ski slope, on the left? | **✓ A pine tree** · A snowboarder · A slalom flag · A ski racer | pine |
-| position | where | Where was the ski rack? | **✓ By the lodge, on the right** · By the lodge, in the middle · By the lodge, on the left | ski-rack |
-| object | what-here | What was by the lodge, on the right? | **✓ A ski rack** · A snowman · A dog · A snowmobile | ski-rack |
-| count | count | How many snowboarders were there? | **✓ 1** · 2 · 3 · 4 | snowboarder |
-| colour | colour | What colour was the snowboarder’s jacket? | **✓ Purple** · Orange · Red · Blue | snowboarder |
-| position | where | Where was the snowboarder? | **✓ On the ski slope, on the right** · On the ski slope, in the middle · On the ski slope, on the left | snowboarder |
-| object | what-here | What was on the ski slope, on the right? | **✓ A snowboarder** · A pine tree · A slalom flag · A skier | snowboarder |
-| count | count | How many dogs were there? | **✓ 2** · 1 · 5 · 4 | dog |
-| colour | colour | What colour were the dogs? | **✓ Brown** · Black · White · Yellow | dog |
-| position | where | Where were the dogs? | **✓ By the lodge, in the middle** · By the lodge, on the right · By the lodge, on the left | dog |
-| object | what-here | What was by the lodge, in the middle? | **✓ Dogs** · Snowmen · People · Sledges | dog |
-| position | where | Where was the plane? | **✓ In the sky, on the left** · In the sky, on the right · In the sky, in the middle | plane |
-| object | what-here | What was in the sky, on the left? | **✓ A plane** · A bird · A cable car · The sun | plane |
+| colour | colour | What colour was the roof of the hot chocolate stand? | **✓ Brown** · Red · Green · Blue | cocoa-stand |
+| position | where | Where was the hot chocolate stand? | **✓ By the lodge, on the left** · By the lodge, in the middle · By the lodge, on the right | cocoa-stand |
+| object | what-here | What was by the lodge, on the left? | **✓ A hot chocolate stand** · A person · A snowman · A sledge | cocoa-stand |
+| count | count | How many snowmen were there? | **✓ 2** · 3 · 5 · 4 | snowman |
+| colour | colour | What colour were the snowmen’s scarves? | **✓ Blue** · Orange · Red · Green | snowman |
+| position | where | Where were the snowmen? | **✓ By the lodge, in the middle** · By the lodge, on the left · By the lodge, on the right | snowman |
+| object | what-here | What was by the lodge, in the middle? | **✓ Snowmen** · Dogs · Sledges · People | snowman |
+| count | count | How many slalom flags were there? | **✓ 1** · 3 · 4 · 2 | flag |
+| colour | colour | What colour was the slalom flag? | **✓ Blue** · Red · Purple · Orange | flag |
+| position | where | Where was the slalom flag? | **✓ On the ski slope, on the right** · On the ski slope, on the left · On the ski slope, in the middle | flag |
+| object | what-here | What was on the ski slope, on the right? | **✓ A slalom flag** · A snowboarder · A ski racer · A pine tree | flag |
+| count | count | How many snowboarders were there? | **✓ 2** · 1 · 4 · 3 | snowboarder |
+| colour | colour | What colour were the snowboarders’ jackets? | **✓ Orange** · Green · Blue · Purple | snowboarder |
+| position | where | Where were the snowboarders? | **✓ On the ski slope, in the middle** · On the ski slope, on the right · On the ski slope, on the left | snowboarder |
+| object | what-here | What was on the ski slope, in the middle? | **✓ Snowboarders** · Skiers · Pine trees · Slalom flags | snowboarder |
+| position | where | Where was the plane? | **✓ In the sky, in the middle** · In the sky, on the left · In the sky, on the right | plane |
+| object | what-here | What was in the sky, in the middle? | **✓ A plane** · The sun · A cable car · A bird | plane |
 | count | count | How many sledges were there? | **✓ 1** · 4 · 3 · 2 | sledge |
-| colour | colour | What colour was the sledge? | **✓ Red** · Blue · Orange · Green | sledge |
-| position | where | Where was the sledge? | **✓ By the lodge, on the left** · By the lodge, on the right · By the lodge, in the middle | sledge |
-| object | what-here | What was by the lodge, on the left? | **✓ A sledge** · A person · A snowmobile · A ski rack | sledge |
-| count | count | How many birds were there? | **✓ 2** · 3 · 1 · 4 | bird |
-| position | where | Where were the birds? | **✓ In the sky, on the right** · In the sky, on the left · In the sky, in the middle | bird |
-| colour | detail | What colour was the ski run sign? | **✓ Red** · Black · Blue · Green | run-colour |
-| object | detail | What was the ski run called? | **✓ Owl** · Bear · Fox · Deer | run-name |
-| object | seen | Which of these was in the picture? | **✓ Dog** · Slalom flag · Hot chocolate stand · Person | dog |
-| object | seen | Which of these was NOT in the picture? | **✓ Person** · Sledge · Pine tree · Ski rack | person |
-| count | compare | Were there more dogs or more sledges? | **✓ Dogs** · Sledges · The same number | compare-dog-sledge |
-| count | compare | Were there more dogs or more birds? | Dogs · Birds · **✓ The same number** | compare-dog-bird |
-| position | relation | What was below the pine tree? | **✓ A sledge** · A ski rack · A plane · A snowboarder | pine |
-| position | relation | What was above the snowboarder? | **✓ Birds** · Dogs · Pine trees · Sledges | snowboarder |
-| position | relation | What was below the snowboarder? | **✓ A ski rack** · A pine tree · A bird · A dog | snowboarder |
-| position | relation | What was above the sledge? | **✓ A pine tree** · A dog · A plane · A bird | sledge |
-| count | true-false | True or false? There were two snowboarders. | True · **✓ False** | snowboarder |
-| colour | true-false | True or false? The snowboarder’s jacket was green. | True · **✓ False** | snowboarder |
-| count | true-false | True or false? There was one pine tree. | **✓ True** · False | pine |
+| colour | colour | What colour was the sledge? | **✓ Blue** · Orange · Green · Red | sledge |
+| position | where | Where was the sledge? | **✓ By the lodge, on the right** · By the lodge, on the left · By the lodge, in the middle | sledge |
+| object | what-here | What was by the lodge, on the right? | **✓ A sledge** · A snowmobile · A person · A dog | sledge |
+| count | count | How many birds were there? | **✓ 3** · 6 · 5 · 1 | bird |
+| position | where | Where were the birds? | **✓ In the sky, on the left** · In the sky, on the right · In the sky, in the middle | bird |
+| object | detail | Which animal was the danger sign about? | **✓ Wolf** · Moose · Deer · Fox | danger |
+| object | seen | Which of these was in the picture? | **✓ Sledge** · Dog · Sun · Skier | sledge |
+| object | seen | Which of these was NOT in the picture? | **✓ Dog** · Hot chocolate stand · Snowman · Bird | dog |
+| count | compare | Were there more slalom flags or more birds? | Slalom flags · **✓ Birds** · The same number | compare-flag-bird |
+| count | compare | Were there more slalom flags or more snowboarders? | Slalom flags · **✓ Snowboarders** · The same number | compare-flag-snowboarder |
+| count | most | Which was there the most of? | **✓ Birds** · Snowmen · Slalom flags · Snowboarders | most-bird |
+| position | relation | What was above the hot chocolate stand? | **✓ Birds** · Slalom flags · Snowmen · Snowboarders | cocoa-stand |
+| position | relation | What was above the snowmen? | **✓ Snowboarders** · Sledges · Slalom flags · Birds | snowman |
+| position | relation | What was below the slalom flag? | **✓ A sledge** · A snowman · A snowboarder · A plane | flag |
+| position | relation | What was below the snowboarders? | **✓ Snowmen** · Birds · Slalom flags · Sledges | snowboarder |
+| position | relation | What was above the sledge? | **✓ A slalom flag** · A hot chocolate stand · A bird · A plane | sledge |
+| position | relation | What was below the birds? | **✓ A hot chocolate stand** · A slalom flag · A plane · A sledge | bird |
+| colour | true-false | True or false? The snowmen’s scarves were green. | True · **✓ False** | snowman |
+| colour | true-false | True or false? The roof of the hot chocolate stand was blue. | True · **✓ False** | cocoa-stand |
+| colour | true-false | True or false? The slalom flag was blue. | **✓ True** · False | flag |
