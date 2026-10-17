@@ -169,7 +169,7 @@ export function validateScene(spec: SceneSpec, width: number, height: number): S
       if (!rugOk(item, r, recipe, ratio)) add('rug', `${item.singular} half on the rug`, item.kind);
 
       const own = group.colours?.[rects.indexOf(r)] ?? group.colour;
-      const colour = own?.hex ?? item.tone;
+      const colour = item.framedColour ? item.tone : (own?.hex ?? item.tone);
       if (frontRowOf && item.frontRow) {
         const slack = (frontRowOf.bottom - frontRowOf.top - (r.y1 - r.y0)) * AT_FRONT;
         if (r.y1 < frontRowOf.bottom - slack - EPS || r.y1 > frontRowOf.bottom + EPS) add('placement', `${item.singular} not at the front edge of ${zone.id}`, item.kind);

@@ -459,3 +459,67 @@ Detail `aisleSide`: right.
 | count | true-false | True or false? There were three loaves of bread. | True · **✓ False** | bread |
 | count | true-false | True or false? There were two cartons of milk. | True · **✓ False** | milk |
 | colour | true-false | True or false? The shopping basket was green. | True · **✓ False** | basket |
+
+## At the train station
+
+Scene `train-station-c29hz`, colour scheme `day`.
+
+### Facts
+
+| Thing | Count | Colour | Band | Side |
+| --- | --- | --- | --- | --- |
+| freight wagon | 1 | Blue | On the track | centre |
+| railway signal | 1 | Green | On the track | right |
+| vending machine | 1 | Red | On the platform | right |
+| luggage trolleys | 2 | Red | On the platform | centre |
+| passengers | 2 | Green | On the platform | left |
+| hanging baskets | 2 | Red | Hanging from the roof | spread (not asked) |
+| bench | 1 | Brown | On the platform | left |
+
+Detail `departs`: 7:30.
+
+Detail `platform`: 5.
+
+Detail `destination`: Lakeside.
+
+Detail `clock`: 4:00.
+
+### Questions (35)
+
+| Type | Kind | Question | Options (✓ = answer) | Subject |
+| --- | --- | --- | --- | --- |
+| colour | colour | What colour was the freight wagon? | **✓ Blue** · Orange · Brown · Grey | wagon |
+| position | where | Where was the freight wagon? | **✓ On the track, in the middle** · On the track, on the left · On the track, on the right · On the platform, on the left | wagon |
+| object | what-here | What was on the track, in the middle? | **✓ A freight wagon** · A train · A railway signal · A hanging lamp | wagon |
+| colour | colour | What colour was the signal light? | **✓ Green** · Red · Yellow · Orange | signal |
+| position | where | Where was the railway signal? | **✓ On the track, on the right** · On the track, in the middle · On the track, on the left · On the platform, in the middle | signal |
+| object | what-here | What was on the track, on the right? | **✓ A railway signal** · A freight wagon · A train · A passenger | signal |
+| colour | colour | What colour was the vending machine? | **✓ Red** · Blue · Orange · Green | vending |
+| position | where | Where was the vending machine? | **✓ On the platform, on the right** · On the platform, in the middle · On the platform, on the left · Hanging from the roof, on the right | vending |
+| object | what-here | What was on the platform, on the right? | **✓ A vending machine** · A luggage trolley · A dog · A coffee cart | vending |
+| count | count | How many luggage trolleys were there? | **✓ 2** · 4 · 3 · 5 | luggage |
+| colour | colour | What colour were the big suitcases on the luggage trolleys? | **✓ Red** · Orange · Yellow · Blue | luggage |
+| position | where | Where were the luggage trolleys? | **✓ On the platform, in the middle** · On the platform, on the left · On the platform, on the right · On the track, in the middle | luggage |
+| object | what-here | What was on the platform, in the middle? | **✓ Luggage trolleys** · Passengers · Benches · Dogs | luggage |
+| count | count | How many passengers were there? | **✓ 2** · 1 · 4 · 3 | person |
+| colour | colour | What colour were the passengers’ shirts? | **✓ Green** · Pink · White · Blue | person |
+| position | where | Where were the passengers? | **✓ On the platform, on the left** · On the platform, in the middle · On the platform, on the right · On the track, on the left | person |
+| count | count | How many hanging baskets were there? | **✓ 2** · 1 · 5 · 3 | flower-basket |
+| colour | colour | What colour were the flowers in the hanging baskets? | **✓ Red** · Purple · Pink · White | flower-basket |
+| count | count | How many benches were there? | **✓ 1** · 3 · 4 · 2 | bench |
+| colour | colour | What colour was the bench? | **✓ Brown** · Blue · Red · Green | bench |
+| position | where | Where was the bench? | **✓ On the platform, on the left** · On the platform, in the middle · On the platform, on the right · On the track, on the right | bench |
+| number | detail | What time was the next train? | **✓ 7:30** · 8:30 · 7:03 · 7:40 | departs |
+| number | detail | Which platform was the next train leaving from? | **✓ Platform 5** · Platform 3 · Platform 4 · Platform 15 | platform |
+| object | detail | Where was the next train going? | **✓ Lakeside** · Hilltop · Riverside · Airport | destination |
+| object | seen | Which of these was in the picture? | **✓ Railway signal** · Train · Newspaper stand · Station clock | signal |
+| object | seen | Which of these was NOT in the picture? | **✓ Dog** · Passenger · Vending machine · Hanging basket | dog |
+| count | compare | Were there more passengers or more benches? | **✓ Passengers** · Benches · The same number | compare-person-bench |
+| count | compare | Were there more luggage trolleys or more passengers? | Luggage trolleys · Passengers · **✓ The same number** | compare-luggage-person |
+| count | most | Which was there just one of? | **✓ A bench** · A hanging basket · A passenger · A luggage trolley | only-bench |
+| position | relation | What was below the railway signal? | **✓ A vending machine** · A bench · A hanging basket · A freight wagon | signal |
+| colour | twins | What else was the same colour as the signal light? | **✓ The passengers’ shirts** · The freight wagon · The bench · The vending machine | signal |
+| colour | twins | What else was the same colour as the passengers’ shirts? | **✓ The signal light** · The flowers in the hanging baskets · The vending machine · The big suitcases on the luggage trolleys | person |
+| count | true-false | True or false? There were two passengers. | **✓ True** · False | person |
+| colour | true-false | True or false? The flowers in the hanging baskets were purple. | True · **✓ False** | flower-basket |
+| count | true-false | True or false? There were three hanging baskets. | True · **✓ False** | flower-basket |

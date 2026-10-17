@@ -40,21 +40,21 @@ See [Levels and scoring](../levels-and-scoring.md).
 | 13 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea | 8 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 220 |
 | 14 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 230 |
 | 15 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 240 |
-| 16 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
-| 17 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
-| 18 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
-| 19 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
-| 20 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
-| 21 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
-| 22 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
-| 23 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
-| 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
-| 25 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
-| 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
-| 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
-| 28 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
-| 29 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
-| 30 | Photographic Memory | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
+| 16 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
+| 17 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
+| 18 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
+| 19 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
+| 20 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
+| 21 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
+| 22 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
+| 23 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
+| 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
+| 25 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
+| 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
+| 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
+| 28 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 370 |
+| 29 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 380 |
+| 30 | Photographic Memory | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 390 |
 
 ## At the beach (`beach`)
 
@@ -407,3 +407,43 @@ Per-picture details: "What was the aisle number?"; "What was on special offer?".
 | cardboard box | floor | large 21% | 2 | fixed (`#b07d45`) | – |
 | shopping bag | floor | medium 16% | 2 | fixed (`#c8955a`) | – |
 | sack of potatoes | floor | large 20% | 2 | fixed (`#a68a64`) | – |
+
+## At the train station (`train-station`)
+
+### Bands
+
+| Band | Height | Surface | Slot rows | Rules |
+| --- | --- | --- | --- | --- |
+| Hanging from the roof (`roof`) | 3% – 23% | air | 1 | – |
+| On the track (`track`) | 27% – 53% | ground | 1 | at most 2 kinds |
+| On the platform (`platform`) | 58.5% – 100% | ground | 2 | – |
+
+Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
+
+Per-picture details: "What time was the next train?" on every level; "Which platform was the next train leaving from?"; "Where was the next train going?"; "What time was on the station clock?" (when there's a station-clock) on every level.
+
+### Colour schemes
+
+| Scheme | Surface colours |
+| --- | --- |
+| day | sky `#9fb3c2`, glass `#cfe3ef`, truss `#2f4858`, wall `#b56a4f`, brick `#a35b42`, gravel `#8d8579`, rail `#ced4da`, edge `#e9ecef`, platform `#c9ced3`, tile `#868e96` |
+| evening | sky `#c98a6a`, glass `#f2c49b`, truss `#3d2f2a`, wall `#9c5a45`, brick `#8a4d3a`, gravel `#7a7268`, rail `#c0b8ae`, edge `#e3ddd5`, platform `#bfb8b0`, tile `#7d756d` |
+
+### Things (14)
+
+| Thing | Band | Size | Most | Colours | Habits |
+| --- | --- | --- | --- | --- | --- |
+| station clock | roof | medium 15% | 1 | fixed (`#2d3436`) | one only, not counted |
+| hanging lamp | roof | small 10% | 3 | Green, Red, Blue, Black | copies spread one per third, on one line |
+| hanging basket | roof | small 12% | 2 | Red, Pink, Purple, Yellow, White | copies spread one per third, on one line |
+| train | track | xl 56% | 1 | Red, Blue, Green, Yellow, Orange | may span columns; one only, not counted |
+| freight wagon | track | xl 50% | 1 | Brown, Blue, Green, Orange, Grey | may span columns; one only, not counted |
+| railway signal | track | small 10% | 1 | Red, Yellow, Green | one only, not counted |
+| passenger | platform | small 10% | 4 | Red, Blue, Yellow, Green, Orange, Purple, Pink, White | – |
+| dog | platform | medium 14% | 2 | Brown, Black, White | – |
+| bench | platform | large 21% | 2 | Green, Red, Blue, Brown | copies spread one per third, on one line |
+| vending machine | platform | small 12% | 1 | Red, Blue, Green, Orange | one only, not counted |
+| ticket machine | platform | small 12% | 1 | fixed (`#495057`) | one only, not counted |
+| luggage trolley | platform | medium 16% | 2 | Red, Blue, Yellow, Purple, Orange | – |
+| coffee cart | platform | large 21% | 1 | Red, Green, Blue, Black | one only, not counted |
+| newspaper stand | platform | medium 14% | 1 | fixed (`#1d70d6`) | one only, not counted |

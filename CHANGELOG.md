@@ -10,6 +10,17 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.35 (2026-10-17)
+
+- **A new place: At the train station**, unlocked at **Level 16** (and in Practice).
+  - **Bands:** hanging from the glass roof, the track (with a brick wall behind), and the platform.
+  - **14 things:** a station clock, hanging lamps and flower baskets; a train, a freight wagon and a railway signal; passengers, dogs, benches, vending and ticket machines, luggage trolleys, a coffee cart and a newspaper stand.
+  - **The departure board: three details on one sign.** "What time was the next train?" (digital, any minute on Hard), "Which platform was the next train leaving from?" and "Where was the next train going?". Plus the station clock's own time when it's there: two different times to keep apart.
+  - **Real-world colours:** the signal light is only ever red, yellow or green.
+  - Two looks: day and evening.
+- **New habit, `framedColour`:** a colour shown on the thing's own dark frame (the signal light in its housing) is checked by its frame against the backdrop. Without it, red and green signals blended into the brick and every signal was yellow.
+- Scene checker: 47,400 pictures.
+
 ## 4.0.0-beta.34 (2026-10-17)
 
 - **Second visual pass: light and depth.**

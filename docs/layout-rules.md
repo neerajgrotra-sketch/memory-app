@@ -76,6 +76,7 @@ Every box keeps **4% of the width** (`GAP`) from every other box. Copies of one 
 | `frontRow` | Stands at the front edge of its band, within 10% of the room left in the row (`AT_FRONT`): fire hydrants at the kerb. |
 | `flush` band | Feet exactly on the band's bottom line: flags and dishes on the roofline, products on a shelf. |
 | `lineUp` | Copies stand side by side in one straight row on the band's line, `LINE_GAP` (0.3 × their width) apart, instead of the staggered arrangements: products on a supermarket shelf. `duplicatesOk(a, b, true)` checks the same baseline and that gap. |
+| `framedColour` | The asked-about colour sits on the thing's own dark frame (a signal light in its housing), so the contrast rules check `tone` (the frame) against the backdrop, and any of its colours can be used anywhere. |
 | `noFlip` | Never drawn mirrored: the clock (a mirrored face shows the wrong time). |
 | `avoidRug` | Never touches the rug. Everything else touching the rug must be fully on it (all four corners inside the oval). |
 | `keepClear` (recipe) | Nothing may come within 1% of these areas: building doors and the house numbers above them. |

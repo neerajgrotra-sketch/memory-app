@@ -108,7 +108,7 @@ function clearToPlace(ctx: Context, want: Want, rects: Rect[]): boolean {
   if (rects.some((r) => !rugOk(item, r, ctx.recipe, ctx.ratio))) return false;
   if (rects.some((r) => coversKeepClear(r, ctx.recipe, ctx.ratio))) return false;
   if (item.tone && !colourFits(ctx, item.tone, rects)) return false;
-  if (typeof want.colour === 'string' && !colourFits(ctx, want.colour, rects)) return false;
+  if (typeof want.colour === 'string' && !item.framedColour && !colourFits(ctx, want.colour, rects)) return false;
   if (Array.isArray(want.colour) && !rects.every((r, i) => colourFits(ctx, (want.colour as string[])[i], [r]))) return false;
   if (want.third !== undefined) {
     const cy = centreOf(boundsOf(rects)).y / ctx.ratio;
@@ -306,13 +306,13 @@ function build(recipe: Recipe, knobs: SceneKnobs, seed: number, rng: Rng, size: 
       for (let count = wanted; count >= 1; count--) {
         const placed = place(ctx, { item, count, zone, third });
         if (!placed) continue;
-        // Only colours that stand out from everything behind them.
-        const colours: ColourDef[] | undefined = item.colours?.filter((c) => colourFits(ctx, c.hex, placed.rects));
+        // Only colours that stand out from everything behind them (or any, for a colour on its own frame).
+        const colours: ColourDef[] | undefined = item.colours?.filter((c) => item.framedColour || colourFits(ctx, c.hex, placed.rects));
         if (colours && !colours.length) continue;
         // On levels that allow it, half the time copies of some things each get their own colour (at least two different).
         let perCopy: ColourDef[] | undefined;
         if (knobs.mixedColours && item.mixedColours && item.colours && count > 1 && rng.next() < 0.5) {
-          const options = placed.rects.map((r) => item.colours!.filter((c) => colourFits(ctx, c.hex, [r])));
+          const options = placed.rects.map((r) => item.colours!.filter((c) => item.framedColour || colourFits(ctx, c.hex, [r])));
           const picked = options.map((o) => rng.pick(o.length ? o : item.colours!));
           if (new Set(picked.map((c) => c.name)).size < 2) {
             const other = options[1].find((c) => c.name !== picked[0].name);

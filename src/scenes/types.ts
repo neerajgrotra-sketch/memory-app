@@ -125,6 +125,11 @@ export interface ItemDef {
   floats?: boolean;
   /** Never drawn mirrored: a clock face read backwards shows the wrong time. */
   noFlip?: boolean;
+  /**
+   * The asked-about colour sits on the thing's own dark frame (a signal light in its black housing), so
+   * it never touches the backdrop: the contrast rules check `tone` (the frame) instead of the colour.
+   */
+  framedColour?: boolean;
   /** For things with a fixed colour: their main colour, used for the contrast rules and the outline. */
   tone?: string;
   /**
