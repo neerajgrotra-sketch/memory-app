@@ -81,6 +81,9 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
                 <Text style={styles.note}>You start at Level {progress.ladder.level}, based on how you did in earlier rounds.</Text>
               )}
 
+              {/* The main action, right under your level, so it's in view without scrolling. */}
+              <Button label={`Play level ${progress.ladder.level}`} onPress={() => play('levels')} />
+
               <View style={styles.tiles}>
                 <Tile label="High score" value={progress.highScore ? formatPoints(progress.highScore) : '–'} />
                 <Tile label="Best level" value={String(progress.ladder.best)} />
@@ -94,8 +97,6 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
                 </Text>
                 <Text style={styles.peeksDetail}>{peeksLine(progress.peeks)}</Text>
               </View>
-
-              <Button label={`Play level ${progress.ladder.level}`} onPress={() => play('levels')} />
 
               {startAgain === 'done' ? (
                 <Text style={styles.startedAgain}>You’re back at Level 1. Your high score, best level and history are kept.</Text>

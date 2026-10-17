@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.48 (2026-10-17)
+
+- **Game page: Play level N moved up**, right under your level card, so it's in view without scrolling (testers found it too far down, below the stats and Peeks).
+
 ## 4.0.0-beta.47 (2026-10-17)
 
 - **Richer drawings, part 1.**
