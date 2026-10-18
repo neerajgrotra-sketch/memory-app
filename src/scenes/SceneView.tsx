@@ -143,7 +143,8 @@ export function SceneContent({ spec, pointsPerUnit, overlay, layer = 'all' }: Sc
             <G transform={t} stroke={outline} strokeWidth={OUTLINE_POINTS / (scale * pointsPerUnit)} strokeLinejoin="round">
               {item.draw(colour, spec.details, copy)}
             </G>
-            <Rect x={x} y={y} width={item.w * scale} height={item.h * scale} fill={`url(#${uid}light)`} mask={`url(#${uid}mask-${key})`} />
+            {/* The light starts below the rod a hanging thing hangs from, so the rod reads as one piece up to the roof. */}
+            <Rect x={x} y={y + (item.hanger ?? 0) * scale} width={item.w * scale} height={(item.h - (item.hanger ?? 0)) * scale} fill={`url(#${uid}light)`} mask={`url(#${uid}mask-${key})`} />
           </G>
         );
       })}

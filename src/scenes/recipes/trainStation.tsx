@@ -45,11 +45,14 @@ const items: ItemDef[] = [
     countable: false,
     noFlip: true,
     still: true,
+    hanger: 32,
     tone: '#2d3436',
-    // Hangs on a rod from the roof; its time is chosen per picture (see `details`).
+    // Hangs on a rod from the roof (running up off the top of the picture, like the departure board's
+    // wires); its time is chosen per picture (see `details`).
     draw: (_colour, details) => (
       <G>
-        <Rect x={46} y={0} width={8} height={32} fill="#2d3436" />
+        <Rect x={47} y={-600} width={6} height={632} fill="#2d3436" stroke="none" />
+        <Rect x={41} y={22} width={18} height={10} rx={3} fill="#2d3436" />
         <G transform="translate(0 30)">
           <ClockFace time={details?.values?.clock ?? '10:10'} rim="#2d3436" />
         </G>
@@ -69,11 +72,13 @@ const items: ItemDef[] = [
     maxCount: 3,
     spread: true,
     still: true,
+    hanger: 50,
     colours: [C.green, C.red, C.blue, C.black],
     colourPrompt: (plural) => (plural ? 'What colour were the hanging lamps?' : 'What colour was the hanging lamp?'),
     draw: (colour) => (
       <G>
-        <Rect x={33} y={0} width={4} height={50} fill="#495057" stroke="none" />
+        {/* Its rod runs up to the roof, off the top of the picture. */}
+        <Rect x={33} y={-600} width={4} height={650} fill="#495057" stroke="none" />
         <Path d="M10,90 Q10,52 35,50 Q60,52 60,90 Z" fill={colour} />
         <Path d="M16,90 H54 Q50,108 35,108 Q20,108 16,90 Z" fill="#fff3b0" />
         <G stroke="none">
@@ -99,11 +104,14 @@ const items: ItemDef[] = [
     maxCount: 2,
     spread: true,
     still: true,
+    hanger: 40,
     colours: [C.red, C.pink, C.purple, C.yellow, C.white],
     colourPrompt: (plural) => (plural ? 'What colour were the flowers in the hanging baskets?' : 'What colour were the flowers in the hanging basket?'),
     draw: (colour) => (
       <G>
-        <Path d="M45,0 L15,60 M45,0 L75,60" fill="none" stroke="#495057" strokeWidth={3} />
+        {/* Chains from a hook, on a chain up to the roof, off the top of the picture. */}
+        <Path d="M45,-600 V0 M45,0 L15,60 M45,0 L75,60" fill="none" stroke="#495057" strokeWidth={3} />
+        <Circle cx={45} cy={2} r={4} fill="none" stroke="#495057" strokeWidth={3} />
         <G fill="#2b9348" stroke="#1b5e2f" strokeWidth={3}>
           <Path d="M14,66 Q6,92 20,104 M76,66 Q84,92 70,104" fill="none" strokeWidth={6} />
         </G>

@@ -138,6 +138,11 @@ export interface ItemDef {
    * never bobs while you look, unlike birds and balloons.
    */
   still?: boolean;
+  /**
+   * Hangs on a rod or chain this tall (in drawing units) at the top of its box, drawn on up off the top
+   * of the picture so it's plainly attached to the roof. The rod catches no light, so it reads as one piece.
+   */
+  hanger?: number;
   /** Never drawn mirrored: a clock face read backwards shows the wrong time. */
   noFlip?: boolean;
   /**

@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.56 (2026-10-18)
+
+- **Fix: the station clock, lamps and hanging baskets look attached to the roof.** Their rods and chains stopped a little above them, so they seemed to float under the roof. Now the rod (or chain) runs on up off the top of the picture, like the departure board's wires, and catches none of the item light, so it reads as one piece. A new `hanger` habit sets how tall it is.
+
 ## 4.0.0-beta.55 (2026-10-18)
 
 - **Fix: hanging things no longer bob.** The station clock, lamps and hanging baskets moved up and down while you looked, as if they were floating, because everything in an air band bobbed. A new `still` habit keeps fixed things in place: the things hanging from the station roof, the sun, the moon and the Earth. Birds, balloons, planes, kites and sea creatures still move gently.
