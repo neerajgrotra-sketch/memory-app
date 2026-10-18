@@ -33,7 +33,7 @@ Sized against the shared person (1.7 m, 1 m ≈ 0.115 of the width). An enclosur
 On the fence in the middle (`keepClear`). Chosen per picture:
 
 - **"What time was feeding time?"** On every level. A printed time on the clock-face steps (whole hours, half past, quarters); wrong answers are digit slips.
-- **"Which animals were being fed at feeding time?"** Penguins, lions, seals, elephants, monkeys or bears: what the sign says, which needn't be an animal in the picture.
+- **"Which animals were being fed at feeding time?"** Always an animal that's really in one of the enclosures, and the sign has an arrow pointing at its enclosure (up-left, up or up-right). Wrong answers are other animals that live in this zoo. Chosen after everything is placed (`fitDetails`), so it can match. (It used to pick penguins, seals or monkeys too, none of which live here, and could name elephants with no elephant in sight: testers found that confusing.)
 
 ## Colour schemes
 

@@ -5,7 +5,7 @@ import { C } from '../colours';
 import { balloon, bird, cloudShape, person, plane, sun } from '../items/common';
 import { lineMarks, scatterMarks } from '../marks';
 import type { Rng } from '../random';
-import type { DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import type { DetailKnobs, ItemDef, Mark, PlacedGroup, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
 import { speckles } from '../texture';
 
 /**
@@ -24,7 +24,7 @@ const FENCE = 0.585;
 const PATH = 0.64;
 
 /** The feeding-time sign, on the fence in the middle; nothing may stand in front of it. */
-const SIGN = { x0: 0.36, y0: 0.592, x1: 0.64, y1: 0.66 };
+const SIGN = { x0: 0.3, y0: 0.592, x1: 0.7, y1: 0.66 };
 
 const IN_SKY = ['sky'];
 const IN_ENCLOSURE = ['enclosure'];
@@ -407,8 +407,10 @@ const items: ItemDef[] = [
   },
 ];
 
-/** Who's fed at feeding time, on the sign (not always an animal in the picture: it's what the sign says). */
-const FED = ['Penguins', 'Lions', 'Seals', 'Elephants', 'Monkeys', 'Bears'];
+/** The animals that live in the enclosures: the feeding-time sign always names one of them that's in the picture. */
+const ANIMALS = ['giraffe', 'elephant', 'zebra', 'lion', 'rhino', 'ostrich', 'kangaroo', 'bear'];
+const pluralOf = (kind: string) => items.find((i) => i.kind === kind)!.plural;
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 /**
  * Each enclosure has its own habitat, chosen per picture: grass or sand, at least one of each. No one
@@ -424,13 +426,30 @@ function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
   // A printed time on a sign: on the clock-face steps (whole hours, half past, quarters).
   const time = randomTime(random, clockStep);
   const { close, other } = digitalLookalikes(time);
-  const fed = random.pick(FED);
   return {
     palette: Object.fromEntries(habitats.map((h, i) => [`enc${i}`, HABITATS[h]])),
-    values: { feeding: time, fed },
+    values: { feeding: time },
+    // Which animals are fed is chosen once they're placed (see `fitDetails`).
+    facts: [{ id: 'feeding-time', type: 'number', prompt: 'What time was feeding time?', answer: time, wrong: close, fallback: other, everyLevel: true }],
+  };
+}
+
+/**
+ * The sign names an animal that's really in one of the enclosures, and points at it (up-left, up or
+ * up-right). Wrong answers are other animals that live in this zoo. With no animal in the picture there's
+ * nothing to feed, so the sign shows only the time.
+ */
+function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  const here = groups.filter((g) => ANIMALS.includes(g.kind));
+  if (!here.length) return d;
+  const group = random.pick(here);
+  const fed = cap(pluralOf(group.kind));
+  return {
+    ...d,
+    values: { ...d.values, fed, fedSide: group.region },
     facts: [
-      { id: 'feeding-time', type: 'number', prompt: 'What time was feeding time?', answer: time, wrong: close, fallback: other, everyLevel: true },
-      { id: 'fed', type: 'object', prompt: 'Which animals were being fed at feeding time?', answer: fed, wrong: FED.filter((f) => f !== fed) },
+      ...(d.facts ?? []),
+      { id: 'fed', type: 'object', prompt: 'Which animals were being fed at feeding time?', answer: fed, wrong: ANIMALS.filter((a) => a !== group.kind).map((a) => cap(pluralOf(a))) },
     ],
   };
 }
@@ -479,12 +498,19 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
       {/* The feeding-time sign. */}
       <G>
         <Rect x={s.x} y={s.y} width={s.w} height={s.h} rx={8} fill="#2b9348" stroke="#f8f9fa" strokeWidth={4} />
-        <SvgText x={s.x + s.w / 2} y={s.y + s.h * 0.3} fontSize={Math.min(22, s.h * 0.28)} fontWeight="bold" fontFamily="Arial" fill="#ffd60a" textAnchor="middle" alignmentBaseline="central">
+        <SvgText x={s.x + s.w * (d?.values?.fed ? 0.45 : 0.5)} y={s.y + s.h * 0.3} fontSize={Math.min(22, s.h * 0.28)} fontWeight="bold" fontFamily="Arial" fill="#ffd60a" textAnchor="middle" alignmentBaseline="central">
           FEEDING TIME
         </SvgText>
-        <SvgText x={s.x + s.w / 2} y={s.y + s.h * 0.7} fontSize={Math.min(30, s.h * 0.38)} fontWeight="bold" fontFamily="Arial" fill="#f8f9fa" textAnchor="middle" alignmentBaseline="central">
-          {`${d?.values?.fed ?? 'Penguins'} ${d?.values?.feeding ?? '2:30'}`}
+        <SvgText x={s.x + s.w * (d?.values?.fed ? 0.45 : 0.5)} y={s.y + s.h * 0.7} fontSize={Math.min(30, s.h * 0.38)} fontWeight="bold" fontFamily="Arial" fill="#f8f9fa" textAnchor="middle" alignmentBaseline="central">
+          {d?.values?.fed ? `${d.values.fed} ${d.values.feeding}` : (d?.values?.feeding ?? '2:30')}
         </SvgText>
+        {/* An arrow towards the enclosure of the animals being fed. */}
+        {d?.values?.fed && (
+          <G transform={`translate(${s.x + s.w * 0.9} ${s.y + s.h / 2}) rotate(${d.values.fedSide === 'left' ? -45 : d.values.fedSide === 'right' ? 45 : 0})`}>
+            <Circle cx={0} cy={0} r={s.h * 0.34} fill="#ffd60a" />
+            <Path d={`M0,${-s.h * 0.22} L${s.h * 0.17},${-s.h * 0.02} H${s.h * 0.07} V${s.h * 0.2} H${-s.h * 0.07} V${-s.h * 0.02} H${-s.h * 0.17} Z`} fill="#2b9348" />
+          </G>
+        )}
       </G>
     </G>
   );
@@ -549,6 +575,7 @@ export const zoo: Recipe = {
   ],
   items,
   keepClear: [SIGN],
+  fitDetails,
   details,
   // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
   light: [

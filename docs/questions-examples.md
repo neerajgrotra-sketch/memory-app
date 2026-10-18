@@ -530,59 +530,64 @@ Scene `zoo-c29hz`, colour scheme `sunny`.
 
 | Thing | Count | Colour | Band | Side |
 | --- | --- | --- | --- | --- |
+| balloon seller | 1 | Pink | On the path | left |
 | elephant | 1 | fixed | In the enclosure | left |
-| bear | 1 | fixed | In the enclosure | right |
-| hot-air balloon | 1 | Blue | In the sky | centre |
-| zookeeper | 1 | fixed | On the path | right |
-| visitor | 1 | Pink | On the path | left |
-| pushchair | 1 | Red | On the path | centre |
-| birds | 2 | fixed | In the sky | left |
+| hot-air balloon | 1 | Red | In the sky | centre |
+| kangaroo | 1 | fixed | In the enclosure | right |
+| bench | 1 | Red | On the path | right |
+| visitor | 1 | Green | On the path | centre |
+| bird | 1 | fixed | In the sky | right |
 
 Detail `feeding`: 11:00.
 
-Detail `fed`: Penguins.
+Detail `fed`: Elephants.
 
-### Questions (37)
+Detail `fedSide`: left.
+
+### Questions (40)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| position | where | Where was the elephant? | **✓ In the enclosure, on the left** · In the enclosure, on the right · In the enclosure, in the middle | elephant |
-| object | what-here | What was in the enclosure, on the left? | **✓ An elephant** · A zebra · A lion · A bear | elephant |
-| position | where | Where was the bear? | **✓ In the enclosure, on the right** · In the enclosure, on the left · In the enclosure, in the middle | bear |
-| object | what-here | What was in the enclosure, on the right? | **✓ A bear** · A kangaroo · An elephant · A lion | bear |
+| colour | colour | What colour were the balloon seller’s balloons? | **✓ Pink** · Blue · Red · Yellow | balloon-seller |
+| position | where | Where was the balloon seller? | **✓ On the path, on the left** · On the path, in the middle · On the path, on the right | balloon-seller |
+| object | what-here | What was on the path, on the left? | **✓ A balloon seller** · A pushchair · A visitor · A signpost | balloon-seller |
+| position | where | Where was the elephant? | **✓ In the enclosure, on the left** · In the enclosure, in the middle · In the enclosure, on the right | elephant |
+| object | what-here | What was in the enclosure, on the left? | **✓ An elephant** · A rhino · A zebra · An ostrich | elephant |
 | count | count | How many hot-air balloons were there? | **✓ 1** · 3 · 2 · 4 | balloon |
-| colour | colour | What colour was the hot-air balloon? | **✓ Blue** · Orange · Pink · Red | balloon |
-| position | where | Where was the hot-air balloon? | **✓ In the sky, in the middle** · In the sky, on the right · In the sky, on the left | balloon |
-| object | what-here | What was in the sky, in the middle? | **✓ A hot-air balloon** · A bird · A plane · The sun | balloon |
-| count | count | How many zookeepers were there? | **✓ 1** · 2 · 3 · 4 | zookeeper |
-| position | where | Where was the zookeeper? | **✓ On the path, on the right** · On the path, in the middle · On the path, on the left | zookeeper |
-| object | what-here | What was on the path, on the right? | **✓ A zookeeper** · A balloon seller · A pushchair · A bench | zookeeper |
-| count | count | How many visitors were there? | **✓ 1** · 2 · 4 · 3 | person |
-| colour | colour | What colour was the visitor’s shirt? | **✓ Pink** · White · Orange · Blue | person |
-| position | where | Where was the visitor? | **✓ On the path, on the left** · On the path, in the middle · On the path, on the right | person |
-| object | what-here | What was on the path, on the left? | **✓ A visitor** · A zookeeper · A balloon seller · A bench | person |
-| count | count | How many pushchairs were there? | **✓ 1** · 4 · 3 · 2 | pushchair |
-| colour | colour | What colour was the pushchair? | **✓ Red** · Purple · Pink · Blue | pushchair |
-| position | where | Where was the pushchair? | **✓ On the path, in the middle** · On the path, on the right · On the path, on the left | pushchair |
-| object | what-here | What was on the path, in the middle? | **✓ A pushchair** · A signpost · A zookeeper · A balloon seller | pushchair |
-| count | count | How many birds were there? | **✓ 2** · 5 · 4 · 1 | bird |
-| position | where | Where were the birds? | **✓ In the sky, on the left** · In the sky, on the right · In the sky, in the middle | bird |
-| number | detail | What time was feeding time? | **✓ 11:00** · 11:10 · 10:00 · 12:00 | feeding-time |
-| object | detail | Which animals were being fed at feeding time? | **✓ Penguins** · Lions · Elephants · Bears | fed |
-| object | seen | Which of these was in the picture? | **✓ Zookeeper** · Kangaroo · Bench · Ostrich | zookeeper |
-| object | seen | Which of these was NOT in the picture? | **✓ Balloon seller** · Bird · Elephant · Hot-air balloon | balloon-seller |
-| count | compare | Were there more hot-air balloons or more zookeepers? | Hot-air balloons · Zookeepers · **✓ The same number** | compare-balloon-zookeeper |
-| count | compare | Were there more hot-air balloons or more visitors? | Hot-air balloons · Visitors · **✓ The same number** | compare-balloon-person |
-| count | most | Which was there the most of? | **✓ Birds** · Zookeepers · Visitors · Pushchairs | most-bird |
-| position | relation | What was above the elephant? | **✓ Birds** · Zookeepers · Visitors · Hot-air balloons | elephant |
-| position | relation | What was below the elephant? | **✓ A visitor** · A bear · A pushchair · A bird | elephant |
-| position | relation | What was below the bear? | **✓ A zookeeper** · An elephant · A visitor · A hot-air balloon | bear |
-| position | relation | What was below the hot-air balloon? | **✓ A pushchair** · A bear · A zookeeper · A visitor | balloon |
-| position | relation | What was above the zookeeper? | **✓ A bear** · A hot-air balloon · A bird · An elephant | zookeeper |
-| position | relation | What was above the pushchair? | **✓ A hot-air balloon** · A zookeeper · A bird · A bear | pushchair |
-| count | true-false | True or false? There were two pushchairs. | True · **✓ False** | pushchair |
-| object | true-false | True or false? There was a signpost in the picture. | True · **✓ False** | signpost |
-| count | true-false | True or false? There was one visitor. | **✓ True** · False | person |
+| colour | colour | What colour was the hot-air balloon? | **✓ Red** · Green · Purple · Pink | balloon |
+| position | where | Where was the hot-air balloon? | **✓ In the sky, in the middle** · In the sky, on the left · In the sky, on the right | balloon |
+| object | what-here | What was in the sky, in the middle? | **✓ A hot-air balloon** · A bird · The sun · A plane | balloon |
+| count | count | How many kangaroos were there? | **✓ 1** · 4 · 2 · 3 | kangaroo |
+| position | where | Where was the kangaroo? | **✓ In the enclosure, on the right** · In the enclosure, in the middle · In the enclosure, on the left | kangaroo |
+| object | what-here | What was in the enclosure, on the right? | **✓ A kangaroo** · An elephant · An ostrich · A rhino | kangaroo |
+| count | count | How many benches were there? | **✓ 1** · 2 · 3 · 4 | bench |
+| colour | colour | What colour was the bench? | **✓ Red** · Brown · Green · Blue | bench |
+| position | where | Where was the bench? | **✓ On the path, on the right** · On the path, in the middle · On the path, on the left | bench |
+| object | what-here | What was on the path, on the right? | **✓ A bench** · A visitor · A pushchair · A balloon seller | bench |
+| count | count | How many visitors were there? | **✓ 1** · 2 · 3 · 4 | person |
+| colour | colour | What colour was the visitor’s shirt? | **✓ Green** · Pink · Blue · Orange | person |
+| position | where | Where was the visitor? | **✓ On the path, in the middle** · On the path, on the left · On the path, on the right | person |
+| object | what-here | What was on the path, in the middle? | **✓ A visitor** · A zookeeper · A pushchair · A signpost | person |
+| count | count | How many birds were there? | **✓ 1** · 4 · 2 · 3 | bird |
+| position | where | Where was the bird? | **✓ In the sky, on the right** · In the sky, on the left · In the sky, in the middle | bird |
+| object | what-here | What was in the sky, on the right? | **✓ A bird** · A plane · A hot-air balloon · The sun | bird |
+| number | detail | What time was feeding time? | **✓ 11:00** · 11:10 · 12:00 · 10:00 | feeding-time |
+| object | detail | Which animals were being fed at feeding time? | **✓ Elephants** · Bears · Zebras · Giraffes | fed |
+| object | seen | Which of these was in the picture? | **✓ Hot-air balloon** · Plane · Sun · Bear | balloon |
+| object | seen | Which of these was NOT in the picture? | **✓ Zebra** · Hot-air balloon · Kangaroo · Visitor | zebra |
+| count | compare | Were there more hot-air balloons or more birds? | Hot-air balloons · Birds · **✓ The same number** | compare-balloon-bird |
+| count | compare | Were there more hot-air balloons or more kangaroos? | Hot-air balloons · Kangaroos · **✓ The same number** | compare-balloon-kangaroo |
+| position | relation | What was above the balloon seller? | **✓ An elephant** · A kangaroo · A bench · A bird | balloon-seller |
+| position | relation | What was below the elephant? | **✓ A balloon seller** · A bench · A visitor · A bird | elephant |
+| position | relation | What was below the hot-air balloon? | **✓ A visitor** · A kangaroo · An elephant · A balloon seller | balloon |
+| position | relation | What was above the kangaroo? | **✓ A bird** · A bench · A hot-air balloon · A visitor | kangaroo |
+| position | relation | What was below the kangaroo? | **✓ A bench** · A balloon seller · A bird · An elephant | kangaroo |
+| position | relation | What was above the visitor? | **✓ A hot-air balloon** · An elephant · A balloon seller · A kangaroo | person |
+| colour | twins | What else was the same colour as the hot-air balloon? | **✓ The bench** · The balloon seller’s balloons · The visitor’s shirt · The pushchair | balloon |
+| colour | twins | What else was the same colour as the bench? | **✓ The hot-air balloon** · The visitor’s shirt · The balloon seller’s balloons · The pushchair | bench |
+| colour | true-false | True or false? The hot-air balloon was red. | **✓ True** · False | balloon |
+| colour | true-false | True or false? The balloon seller’s balloons were pink. | **✓ True** · False | balloon-seller |
+| object | true-false | True or false? There was a pushchair in the picture. | True · **✓ False** | pushchair |
 
 ## On the snowy mountain
 

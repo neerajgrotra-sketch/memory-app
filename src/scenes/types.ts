@@ -261,6 +261,11 @@ export interface Recipe {
   light?: LightBand[];
   /** Chooses this picture's backdrop details (house colours and numbers, the time on the clock). */
   details?: (random: Rng, knobs: DetailKnobs) => SceneDetails;
+  /**
+   * Finishes the details once everything is placed, for a sign that must match what's really in the picture
+   * (the zoo's feeding-time sign names, and points at, an animal that's there).
+   */
+  fitDetails?: (details: SceneDetails, groups: PlacedGroup[], random: Rng) => SceneDetails;
   /** Which surface (a key of each variant's palette) is behind the point (x, y), as fractions of width and height. */
   surfaceAt: (x: number, y: number) => string;
   /**

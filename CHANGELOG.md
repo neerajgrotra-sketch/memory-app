@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.49 (2026-10-18)
+
+- **Zoo: the feeding-time sign now matches the picture.** It always names an animal that's really in one of the enclosures, with an arrow pointing at its enclosure (up-left, up or up-right). Before, it could say "Elephants" with no elephant in sight, and half its options (penguins, seals, monkeys) don't live in this zoo. Wrong answers to "Which animals were being fed?" are now other animals from this zoo. Checked on 600 pictures: the animal is there and the arrow points the right way in every one.
+- New engine hook `fitDetails`: a place can finish its signs once everything is placed.
+
 ## 4.0.0-beta.48 (2026-10-17)
 
 - **Game page: Play level N moved up**, right under your level card, so it's in view without scrolling (testers found it too far down, below the stats and Peeks).

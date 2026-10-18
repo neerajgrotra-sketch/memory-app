@@ -70,8 +70,8 @@ See [Levels and scoring](../levels-and-scoring.md).
 
 | Scheme | Surface colours |
 | --- | --- |
-| day | sky `#8fd3f4`, sea `#2a9fd6`, sand `#f2d49b`, foam `#ffffff` |
-| sunset | sky `#ffb38a`, sea `#3d6fa8`, sand `#e9c46a`, foam `#ffd6a5` |
+| day | sky `#8fd3f4`, sea `#2a9fd6`, sand `#f2d49b`, foam `#ffffff`, headland `#7fb0c9`, wetSand `#dcb97c`, grain `#c99e5c` |
+| sunset | sky `#ffb38a`, sea `#3d6fa8`, sand `#e9c46a`, foam `#ffd6a5`, headland `#c98a7a`, wetSand `#d2aa55`, grain `#b88a3a` |
 
 ### Things (17)
 
@@ -460,7 +460,7 @@ Per-picture details: "What time was the next train?" on every level; "Which plat
 
 Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
 
-Per-picture details: "What time was feeding time?" on every level; "Which animals were being fed at feeding time?".
+Per-picture details: "What time was feeding time?" on every level.
 
 ### Colour schemes
 

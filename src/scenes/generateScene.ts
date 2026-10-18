@@ -398,7 +398,9 @@ function build(recipe: Recipe, knobs: SceneKnobs, seed: number, rng: Rng, size: 
     tryItem(queue.length ? queue.shift()! : pool.shift()!);
   }
 
-  return { id: `${recipe.id}-${seed.toString(36)}`, seed, recipeId: recipe.id, variantId: variant.id, details, size, groups };
+  // A sign that names something in the picture is finished now that everything is placed.
+  const fitted = details && recipe.fitDetails ? recipe.fitDetails(details, groups, rng) : details;
+  return { id: `${recipe.id}-${seed.toString(36)}`, seed, recipeId: recipe.id, variantId: variant.id, details: fitted, size, groups };
 }
 
 /**
