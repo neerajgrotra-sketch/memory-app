@@ -87,6 +87,13 @@ const items: ItemDef[] = [
           <Circle cx={72} cy={28} r={3} fill="#ffffff" />
           <Circle cx={66} cy={100} r={4} fill="#ffffff" />
           <Circle cx={20} cy={98} r={3} fill="#ffffff" />
+          {/* Bands on the planet, a little rocket, a title strip, corner pins and a curl at the bottom corner. */}
+          <Path d="M27,56 Q45,52 63,56 M25,66 Q45,70 65,66" fill="none" stroke={colour} strokeOpacity={0.5} strokeWidth={3} />
+          <Path d="M70,48 l8,-10 l2,6 Z" fill="#ffffff" />
+          <Rect x={14} y={6} width={62} height={8} rx={4} fill="#ffffff" fillOpacity={0.7} />
+          <Circle cx={6} cy={6} r={3} fill="#e63946" />
+          <Circle cx={84} cy={6} r={3} fill="#e63946" />
+          <Path d="M90,108 L78,120 H90 Z" fill="#000000" fillOpacity={0.2} />
         </G>
       </G>
     ),
@@ -117,6 +124,14 @@ const items: ItemDef[] = [
           <Path d="M72,18 Q84,12 94,18 Q90,28 84,30 Q92,40 90,56 Q86,72 80,76 Q72,62 74,50 Q66,40 72,30 Z" />
           <Path d="M96,16 Q120,8 142,20 Q140,34 126,40 Q116,48 104,40 Q96,30 96,16 Z" />
           <Path d="M122,64 Q136,60 142,68 Q138,80 126,78 Q118,72 122,64 Z" />
+        </G>
+        <G stroke="none">
+          {/* Lines of latitude and longitude, ice at the poles, a wooden rail top and bottom. */}
+          <Path d="M0,34 H160 M0,66 H160 M40,0 V100 M80,0 V100 M120,0 V100" stroke="#ffffff" strokeOpacity={0.25} strokeWidth={1.5} />
+          <Rect x={0} y={0} width={160} height={6} fill="#f8f9fa" fillOpacity={0.8} />
+          <Rect x={0} y={92} width={160} height={8} fill="#f8f9fa" fillOpacity={0.8} />
+          <Rect x={-4} y={-4} width={168} height={5} rx={2} fill="#8a5a2b" />
+          <Rect x={-4} y={99} width={168} height={5} rx={2} fill="#8a5a2b" />
         </G>
       </G>
     ),
@@ -154,6 +169,17 @@ const items: ItemDef[] = [
           ].map(([x, y]) => (
             <Circle key={`${x}`} cx={x} cy={y} r={3} fill="#e63946" />
           ))}
+          {/* Children's work: writing, a sun, a house, a rainbow; the cork's texture and a frame. */}
+          <Path d="M18,26 h26 M18,32 h22 M18,38 h26 M18,44 h18" stroke="#adb5bd" strokeWidth={2} strokeLinecap="round" />
+          <Circle cx={73} cy={37} r={7} fill="#f77f00" />
+          <Path d="M100,40 L111,30 L122,40 V50 H100 Z" fill="#e63946" />
+          <Path d="M36,86 Q50,68 64,86" fill="none" stroke="#e63946" strokeWidth={3} />
+          <Path d="M40,86 Q50,74 60,86" fill="none" stroke="#1d70d6" strokeWidth={3} />
+          <Path d="M90,84 l8,-14 l8,14 Z M102,84 l6,-10 l6,10 Z" fill="#2b9348" />
+          <Rect x={0} y={0} width={140} height={100} rx={3} fill="none" stroke="#8a5a2b" strokeWidth={6} />
+          <Circle cx={8} cy={60} r={1.5} fill="#8a5a2b" />
+          <Circle cx={128} cy={92} r={1.5} fill="#8a5a2b" />
+          <Circle cx={76} cy={8} r={1.5} fill="#8a5a2b" />
         </G>
       </G>
     ),
@@ -181,6 +207,15 @@ const items: ItemDef[] = [
         <Rect x={0} y={0} width={140} height={8} rx={3} fill="#868e96" />
         <Path d="M0,6 H34 Q30,60 38,114 H0 Z" fill={colour} />
         <Path d="M140,6 H106 Q110,60 102,114 H140 Z" fill={colour} />
+        <G stroke="none">
+          {/* A tree and clouds outside, glare on the glass, folds in the curtains and a sill. */}
+          <Circle cx={56} cy={84} r={14} fill="#69b34c" />
+          <Rect x={54} y={94} width={4} height={18} fill="#8a5a2b" />
+          <Ellipse cx={92} cy={28} rx={14} ry={6} fill="#ffffff" fillOpacity={0.9} />
+          <Path d="M40,12 L52,12 L40,30 Z" fill="#ffffff" fillOpacity={0.5} />
+          <Path d="M12,10 Q10,60 16,112 M24,10 Q22,60 28,112 M128,10 Q130,60 124,112 M116,10 Q118,60 112,112" fill="none" stroke="#000000" strokeOpacity={0.15} strokeWidth={3} />
+          <Rect x={10} y={112} width={120} height={7} rx={2} fill="#f8f9fa" />
+        </G>
       </G>
     ),
   },
@@ -228,6 +263,14 @@ const items: ItemDef[] = [
           <Rect x={114} y={8} width={38} height={7} fill="#1d70d6" />
           <Rect x={108} y={15} width={46} height={5} fill="#ffd60a" />
           <Rect x={70} y={2} width={16} height={18} rx={3} fill="#f8f9fa" />
+          {/* Steam and a handle on the mug, knobs on the drawers, an apple and grain along the top. */}
+          <Path d="M86,6 Q93,6 92,12 Q91,16 86,16" fill="none" stroke="#f8f9fa" strokeWidth={3} />
+          <Path d="M75,0 q-3,-4 0,-8 M81,0 q-3,-4 0,-8" fill="none" stroke="#adb5bd" strokeWidth={2} strokeLinecap="round" />
+          <Circle cx={36} cy={56} r={3} fill="#e9c46a" />
+          <Circle cx={36} cy={82} r={3} fill="#e9c46a" />
+          <Circle cx={96} cy={12} r={8} fill="#e63946" />
+          <Path d="M96,4 V0" stroke="#5c3a1e" strokeWidth={2} strokeLinecap="round" />
+          <Path d="M4,24 H176" stroke="#ffffff" strokeOpacity={0.25} strokeWidth={2.5} />
         </G>
       </G>
     ),
@@ -254,6 +297,13 @@ const items: ItemDef[] = [
         <G fill="#69b34c" stroke="none">
           <Path d="M24,24 Q36,18 42,28 Q36,38 28,40 Q20,34 24,24 Z" />
           <Path d="M46,46 Q58,42 62,52 Q56,66 48,64 Q42,56 46,46 Z" />
+        </G>
+        <G stroke="none">
+          {/* The equator, a shine and the pivot where the globe meets its arm. */}
+          <Path d="M9,46 Q40,56 71,46" fill="none" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={2} />
+          <Ellipse cx={28} cy={28} rx={8} ry={5} fill="#ffffff" fillOpacity={0.35} transform="rotate(-30 28 28)" />
+          <Circle cx={63} cy={73} r={3.5} fill="#495057" />
+          <Circle cx={12} cy={21} r={3.5} fill="#495057" />
         </G>
       </G>
     ),
@@ -290,8 +340,11 @@ const items: ItemDef[] = [
                   fill={[C.red.hex, C.blue.hex, C.yellow.hex, C.green.hex, C.orange.hex, C.purple.hex][(i + row * 2) % 6]}
                 />
               ))}
+              {/* A band near the top of each spine. */}
+              <Path d={`M12,${y + 14} h76`} stroke="#ffffff" strokeOpacity={0.4} strokeWidth={2} strokeDasharray="11 2" />
             </G>
           ))}
+          <Path d="M4,4 V166" stroke="#ffffff" strokeOpacity={0.2} strokeWidth={3} strokeLinecap="round" />
         </G>
       </G>
     ),
@@ -322,6 +375,12 @@ const items: ItemDef[] = [
             <Circle key={a} cx={45 + 12 * Math.cos((a * Math.PI) / 180)} cy={48 + 12 * Math.sin((a * Math.PI) / 180)} r={9} fill={colour} />
           ))}
           <Circle cx={45} cy={48} r={6} fill="#ffd60a" />
+          {/* Leaves on the stem, grass along the bottom of the painting and paint pots on the ledge. */}
+          <Ellipse cx={52} cy={70} rx={7} ry={3.5} fill="#2b9348" transform="rotate(-30 52 70)" />
+          <Path d="M10,82 h70" stroke="#69b34c" strokeWidth={4} />
+          <Rect x={14} y={80} width={8} height={6} rx={1} fill="#e63946" />
+          <Rect x={26} y={80} width={8} height={6} rx={1} fill="#1d70d6" />
+          <Rect x={66} y={80} width={8} height={6} rx={1} fill="#ffd60a" />
         </G>
       </G>
     ),
@@ -353,6 +412,17 @@ const items: ItemDef[] = [
         <Rect x={0} y={86} width={170} height={16} fill={colour} />
         <Rect x={8} y={102} width={12} height={28} fill={colour} />
         <Rect x={150} y={102} width={12} height={28} fill={colour} />
+        <G stroke="none">
+          {/* Lines between the white keys, a music stand with a sheet of music, panels and a shine on the wood. */}
+          <Path d="M10,72 V86 M24,72 V86 M38,72 V86 M48,72 V86 M62,72 V86 M76,72 V86 M90,72 V86 M100,72 V86 M114,72 V86 M128,72 V86 M138,72 V86 M152,72 V86" stroke="#adb5bd" strokeWidth={1.2} />
+          <Rect x={60} y={22} width={50} height={34} rx={2} fill="#f8f9fa" />
+          <Path d="M66,30 h38 M66,36 h38 M66,42 h38 M66,48 h38" stroke="#868e96" strokeWidth={1} />
+          <Circle cx={76} cy={36} r={2.5} fill="#212529" />
+          <Circle cx={90} cy={42} r={2.5} fill="#212529" />
+          <Rect x={10} y={10} width={40} height={50} rx={3} fill="#ffffff" fillOpacity={0.08} />
+          <Rect x={120} y={10} width={40} height={50} rx={3} fill="#ffffff" fillOpacity={0.08} />
+          <Path d="M6,6 H164" stroke="#ffffff" strokeOpacity={0.25} strokeWidth={3} strokeLinecap="round" />
+        </G>
       </G>
     ),
   },
@@ -392,6 +462,14 @@ const items: ItemDef[] = [
             <Path d="M34,68 L50,63 L66,68 Z" fill="#f8f9fa" />
             <Circle cx={28} cy={68} r={6} fill={skin} />
             <Circle cx={72} cy={68} r={6} fill={skin} />
+            {/* A face like the teacher's, a collar, lines of writing in the book and a pencil. */}
+            <Circle cx={43} cy={24} r={2.2} fill="#212529" />
+            <Circle cx={57} cy={24} r={2.2} fill="#212529" />
+            <Path d="M44,31 Q50,35 56,31" fill="none" stroke="#212529" strokeWidth={1.8} strokeLinecap="round" />
+            <Path d="M42,44 L50,50 L58,44" fill="none" stroke="#ffffff" strokeOpacity={0.8} strokeWidth={3} strokeLinejoin="round" />
+            <Path d="M38,66 h9 M53,66 h9" stroke="#adb5bd" strokeWidth={1.2} />
+            <Path d="M76,66 L90,62" stroke="#ffd60a" strokeWidth={3} strokeLinecap="round" />
+            <Path d="M4,70 H96" stroke="#ffffff" strokeOpacity={0.3} strokeWidth={2} />
           </G>
         </G>
       );
@@ -414,6 +492,12 @@ const items: ItemDef[] = [
       <G>
         <Path d="M10,76 Q0,40 30,24 Q60,4 92,22 Q122,40 110,76 Z" fill={colour} />
         <Path d="M30,46 Q60,34 90,46" fill="none" stroke="#00000026" strokeWidth={4} />
+        <G stroke="none">
+          {/* Seams, a shine where it bulges and a dent where someone sat. */}
+          <Path d="M60,10 Q56,40 60,76 M30,26 Q24,50 26,76 M92,24 Q98,50 96,76" fill="none" stroke="#000000" strokeOpacity={0.12} strokeWidth={2.5} />
+          <Ellipse cx={42} cy={32} rx={12} ry={6} fill="#ffffff" fillOpacity={0.3} transform="rotate(-20 42 32)" />
+          <Ellipse cx={64} cy={52} rx={22} ry={8} fill="#000000" fillOpacity={0.1} />
+        </G>
       </G>
     ),
   },
@@ -440,6 +524,20 @@ const items: ItemDef[] = [
           <Path d="M26,66 Q22,46 30,30 M36,66 Q42,50 36,36" fill="none" stroke="#2b9348" strokeWidth={4} />
           <Path d="M64,34 Q76,24 88,34 Q76,44 64,34 Z M88,34 L98,26 V42 Z" fill="#f77f00" />
           <Path d="M84,54 Q94,46 104,54 Q94,62 84,54 Z M84,54 L76,48 V60 Z" fill="#ffd60a" />
+          {/* Eyes on the fish, bubbles rising, pebbles, a lid with a light, glare and cupboard doors. */}
+          <Circle cx={70} cy={33} r={1.8} fill="#212529" />
+          <Circle cx={98} cy={53} r={1.8} fill="#212529" />
+          <Circle cx={110} cy={40} r={3} fill="#ffffff" fillOpacity={0.8} />
+          <Circle cx={114} cy={28} r={2.5} fill="#ffffff" fillOpacity={0.8} />
+          <Circle cx={110} cy={18} r={2} fill="#ffffff" fillOpacity={0.8} />
+          {[14, 30, 50, 70, 90, 110].map((x) => (
+            <Ellipse key={x} cx={x} cy={72} rx={5} ry={3} fill="#c9a227" />
+          ))}
+          <Rect x={0} y={0} width={130} height={8} rx={3} fill="#343a40" />
+          <Path d="M8,12 L20,12 L8,30 Z" fill="#ffffff" fillOpacity={0.5} />
+          <Path d="M65,84 V136" stroke="#3d2412" strokeWidth={2} />
+          <Circle cx={58} cy={110} r={2.5} fill="#e9c46a" />
+          <Circle cx={72} cy={110} r={2.5} fill="#e9c46a" />
         </G>
       </G>
     ),
@@ -466,6 +564,16 @@ const items: ItemDef[] = [
         <Rect x={34} y={64} width={62} height={6} rx={2} fill="#343a40" />
         <Rect x={0} y={70} width={130} height={10} rx={3} fill="#c8935a" stroke="#8a5a2b" strokeWidth={2} />
         <Path d="M10,80 V120 M120,80 V120" stroke="#6c757d" strokeWidth={6} />
+        <G stroke="none">
+          {/* A drawing program on the screen, glare, keys on the keyboard and a mouse. */}
+          <Rect x={36} y={10} width={58} height={7} fill="#1d70d6" />
+          <Circle cx={52} cy={32} r={7} fill="#ffd60a" />
+          <Path d="M62,46 L72,30 L84,46 Z" fill="#2b9348" />
+          <Path d="M40,20 L50,20 L40,34 Z" fill="#ffffff" fillOpacity={0.4} />
+          <Path d="M38,66 h54" stroke="#868e96" strokeWidth={2} strokeDasharray="3 2" />
+          <Ellipse cx={108} cy={67} rx={6} ry={4} fill="#343a40" />
+          <Path d="M4,73 H126" stroke="#ffffff" strokeOpacity={0.3} strokeWidth={2} />
+        </G>
       </G>
     ),
   },
@@ -521,15 +629,24 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
         ))}
       </G>
       <Rect x={-600} y={ceiling} width={2100} height={floor - ceiling} fill={p.wall} />
+      {/* A soft shadow under the ceiling. */}
+      <Rect x={-600} y={ceiling} width={2100} height={6} fill="#000000" fillOpacity={0.05} />
       <Rect x={-600} y={floor} width={2100} height={height - floor + 600} fill={p.floor} />
       {/* The texture of the ground. */}
       {speckles({ x0: -40, y0: floor, x1: 940, y1: height }, 160, '#000000', 0.06, 3)}
       <Rect x={-600} y={floor - 10} width={2100} height={12} fill={p.skirting} />
+      <Rect x={-600} y={floor - 10} width={2100} height={2} fill="#ffffff" fillOpacity={0.3} />
+      {/* A soft shadow along the foot of the wall. */}
+      <Rect x={-600} y={floor + 2} width={2100} height={8} fill="#000000" fillOpacity={0.06} />
       {/* The whiteboard: the day at the top, today's sum below, and a pen tray. */}
       <G>
         <Rect x={b.x - 8} y={b.y - 8} width={b.w + 16} height={b.h + 16} rx={6} fill="#adb5bd" />
         <Rect x={b.x} y={b.y} width={b.w} height={b.h} rx={3} fill="#ffffff" />
         <Rect x={b.x + b.w * 0.1} y={b.y + b.h + 8} width={b.w * 0.8} height={8} rx={3} fill="#868e96" />
+        {/* Pens and a board eraser in the tray. */}
+        <Rect x={b.x + b.w * 0.16} y={b.y + b.h + 4} width={26} height={6} rx={3} fill="#e63946" />
+        <Rect x={b.x + b.w * 0.16 + 32} y={b.y + b.h + 4} width={26} height={6} rx={3} fill="#1d70d6" />
+        <Rect x={b.x + b.w * 0.74} y={b.y + b.h + 1} width={36} height={10} rx={3} fill="#495057" />
         <SvgText x={b.x + b.w / 2} y={b.y + b.h * 0.26} fontSize={Math.min(36, b.h * 0.24)} fontWeight="bold" fontFamily="Arial" fill="#1d70d6" textAnchor="middle" alignmentBaseline="central">
           {d?.values?.day ?? 'Monday'}
         </SvgText>

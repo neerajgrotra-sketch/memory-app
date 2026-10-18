@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.59 (2026-10-18)
+
+- **Richer drawings, part 7: the classroom and the night campsite.**
+  - **Classroom:** pens and a board eraser in the whiteboard tray; light along the skirting and a soft shadow at the foot of the wall. Pupils now have faces like the teacher, a collar, writing in their book and a pencil; a space poster with a rocket and corner pins; a world map with grid lines, polar ice and wooden rails; a noticeboard with children's drawings (a sun, a house, a rainbow); a window with a tree and a cloud outside, glare and curtain folds; the teacher's desk with a steaming mug, an apple and drawer knobs; a globe with an equator and a shine; a bookcase with bands on the spines; an easel with paint pots; a piano with a sheet of music; beanbags with seams and a dent; a fish tank with bubbles, pebbles and a lid; a computer with a drawing on the screen and a mouse.
+  - **Night campsite:** a faint Milky Way, many tiny stars and a twinkle on the brightest; moonlight on the grass. A moon with craters (on the full and half moon); a barn owl with wing feathers and a speckled chest; a shooting star with sparkles along its trail; tents with guy ropes, pegs, a shaded side and torchlight spilling out; a campervan with curtains, a roof rack and a headlight; a canoe with a paddle; lanterns with a flame; a picnic table with a mug and a torch; a campfire with stones, sparks and glowing embers; a fox with a white chest; log seats with growth rings and moss; sleeping bags with a zip; firewood with rings.
+  - Same sizes and shapes as before, so layout and every check are unchanged.
+
 ## 4.0.0-beta.58 (2026-10-18)
 
 - **Richer drawings, part 6: the zoo and the snowy mountain.**
