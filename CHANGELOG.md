@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.57 (2026-10-18)
+
+- **The hanging baskets at the train station look like flowers, not fruit.** The old drawing packed round blobs on a deep bowl, which read as apples or tomatoes. Now three five-petal flowers sit on a mound of dark leaves, with trailing ivy spilling over a shallow wicker basket. The basket is small on screen, so the leaves have no outline and the petals only a thin one, or they'd blur together. Same box size and the same question ("What colour were the flowers in the hanging basket?").
+
 ## 4.0.0-beta.56 (2026-10-18)
 
 - **Fix: the station clock, lamps and hanging baskets look attached to the roof.** Their rods and chains stopped a little above them, so they seemed to float under the roof. Now the rod (or chain) runs on up off the top of the picture, like the departure board's wires, and catches none of the item light, so it reads as one piece. A new `hanger` habit sets how tall it is.

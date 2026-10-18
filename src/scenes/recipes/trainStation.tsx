@@ -104,32 +104,57 @@ const items: ItemDef[] = [
     maxCount: 2,
     spread: true,
     still: true,
-    hanger: 40,
+    hanger: 8,
     colours: [C.red, C.pink, C.purple, C.yellow, C.white],
     colourPrompt: (plural) => (plural ? 'What colour were the flowers in the hanging baskets?' : 'What colour were the flowers in the hanging basket?'),
     draw: (colour) => (
       <G>
         {/* Chains from a hook, on a chain up to the roof, off the top of the picture. */}
-        <Path d="M45,-600 V0 M45,0 L15,60 M45,0 L75,60" fill="none" stroke="#495057" strokeWidth={3} />
+        <Path d="M45,-600 V0 M45,0 L16,60 M45,0 L74,60" fill="none" stroke="#495057" strokeWidth={3} />
         <Circle cx={45} cy={2} r={4} fill="none" stroke="#495057" strokeWidth={3} />
-        <G fill="#2b9348" stroke="#1b5e2f" strokeWidth={3}>
-          <Path d="M14,66 Q6,92 20,104 M76,66 Q84,92 70,104" fill="none" strokeWidth={6} />
+        {/* Trailing ivy spilling over the rim, behind the basket. */}
+        <G fill="none" stroke="#2b9348" strokeWidth={3} strokeLinecap="round">
+          <Path d="M16,64 Q6,84 12,108 M30,74 Q26,92 32,106 M60,74 Q64,94 58,108 M74,64 Q86,82 80,104" />
         </G>
-        <G fill={colour}>
-          {[22, 38, 54, 70, 30, 46, 62].map((x, i) => (
-            <Circle key={i} cx={x} cy={i < 4 ? 56 : 46} r={9} />
+        <G fill="#2b9348" stroke="none">
+          {[
+            [10, 78], [9, 92], [13, 104], [27, 88], [31, 100], [63, 88], [59, 102], [83, 76], [83, 90], [80, 100],
+          ].map(([x, y], i) => (
+            <Ellipse key={i} cx={x} cy={y} rx={5} ry={3} transform={`rotate(${i % 2 ? 35 : -35} ${x} ${y})`} />
           ))}
         </G>
-        <Path d="M8,60 H82 Q78,96 45,96 Q12,96 8,60 Z" fill="#8a5a2b" />
+        {/* A mound of leaves, then the flowers on top: five petals round a centre. The basket is small on
+            screen, so the leaves have no outline and the petals only a thin one, or they'd blur together. */}
+        <G fill="#2d6a4f" stroke="none">
+          <Ellipse cx={45} cy={60} rx={36} ry={8} />
+          {[[14, 56], [26, 52], [38, 50], [52, 50], [64, 52], [76, 56]].map(([x, y]) => (
+            <Circle key={x} cx={x} cy={y} r={7} />
+          ))}
+          <Path d="M32,58 Q26,44 33,34 Q38,46 32,58 Z" fill="#40916c" />
+          <Path d="M58,58 Q64,44 57,34 Q52,46 58,58 Z" fill="#40916c" />
+          <Path d="M45,62 Q36,56 38,50 Q46,54 45,62 Z" />
+          <Path d="M45,62 Q54,56 52,50 Q44,54 45,62 Z" />
+        </G>
+        <G stroke="none" fill="#ffffff" fillOpacity={0.25}>
+          <Path d="M32,56 Q29,46 33,37" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={1.5} fill="none" />
+          <Path d="M58,56 Q61,46 57,37" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={1.5} fill="none" />
+        </G>
+        {FLOWERS.map(([cx, cy], i) => (
+          <G key={i}>
+            <G fill={colour} strokeWidth={1.5}>
+              {[0, 72, 144, 216, 288].map((a) => (
+                <Circle key={a} cx={cx + 6.5 * Math.sin((a * Math.PI) / 180)} cy={cy - 6.5 * Math.cos((a * Math.PI) / 180)} r={5.5} />
+              ))}
+            </G>
+            <Circle cx={cx} cy={cy} r={3.8} fill={colour === C.yellow.hex ? '#e67700' : '#ffd60a'} stroke="none" />
+          </G>
+        ))}
+        {/* A shallow wicker basket. */}
+        <Path d="M12,60 H78 Q76,86 45,86 Q14,86 12,60 Z" fill="#8a5a2b" />
         <G stroke="none">
-          {/* Flower centres, leaves peeping out, and the wicker weave. */}
-          {[22, 38, 54, 70, 30, 46, 62].map((x, i) => (
-            <Circle key={i} cx={x} cy={i < 4 ? 56 : 46} r={2.5} fill="#ffd60a" />
-          ))}
-          <Ellipse cx={14} cy={60} rx={7} ry={3.5} fill="#2b9348" transform="rotate(-30 14 60)" />
-          <Ellipse cx={76} cy={60} rx={7} ry={3.5} fill="#2b9348" transform="rotate(30 76 60)" />
-          <Path d="M12,70 H78 M16,80 H74 M24,89 H66" stroke="#000000" strokeOpacity={0.2} strokeWidth={2.5} />
-          <Path d="M28,62 V94 M45,62 V96 M62,62 V94" stroke="#ffffff" strokeOpacity={0.15} strokeWidth={2.5} />
+          <Rect x={11} y={59} width={68} height={5} rx={2.5} fill="#a0703c" />
+          <Path d="M15,70 H75 M20,78 H70" stroke="#000000" strokeOpacity={0.22} strokeWidth={2.5} />
+          <Path d="M28,64 V84 M45,64 V86 M62,64 V84" stroke="#ffffff" strokeOpacity={0.15} strokeWidth={2.5} />
         </G>
       </G>
     ),
@@ -504,6 +529,13 @@ const items: ItemDef[] = [
       </G>
     ),
   },
+];
+
+/** Where the flowers sit in a hanging basket (centres, in drawing units). */
+const FLOWERS: [number, number][] = [
+  [20, 50],
+  [45, 40],
+  [70, 50],
 ];
 
 /** Where the next train goes: short, different words, so the board reads at a glance. */
