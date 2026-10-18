@@ -1,4 +1,4 @@
-import { Circle, G, Path, Rect, Text as SvgText } from 'react-native-svg';
+import { Circle, Ellipse, G, Path, Rect, Text as SvgText } from 'react-native-svg';
 
 import { ClockFace, digitalLookalikes, randomDigitalTime, randomTime, timeLookalikes } from '../clock';
 import { C } from '../colours';
@@ -74,6 +74,13 @@ const items: ItemDef[] = [
         <Rect x={33} y={0} width={4} height={50} fill="#495057" stroke="none" />
         <Path d="M10,90 Q10,52 35,50 Q60,52 60,90 Z" fill={colour} />
         <Path d="M16,90 H54 Q50,108 35,108 Q20,108 16,90 Z" fill="#fff3b0" />
+        <G stroke="none">
+          {/* A cap where the rod meets the shade, a shine on the enamel and a bright bulb. */}
+          <Rect x={27} y={46} width={16} height={8} rx={3} fill="#495057" />
+          <Path d="M18,84 Q18,62 30,57" fill="none" stroke="#ffffff" strokeOpacity={0.4} strokeWidth={4} strokeLinecap="round" />
+          <Path d="M10,88 H60" stroke="#000000" strokeOpacity={0.25} strokeWidth={3} />
+          <Ellipse cx={35} cy={96} rx={9} ry={5} fill="#ffffff" fillOpacity={0.8} />
+        </G>
       </G>
     ),
   },
@@ -103,6 +110,16 @@ const items: ItemDef[] = [
           ))}
         </G>
         <Path d="M8,60 H82 Q78,96 45,96 Q12,96 8,60 Z" fill="#8a5a2b" />
+        <G stroke="none">
+          {/* Flower centres, leaves peeping out, and the wicker weave. */}
+          {[22, 38, 54, 70, 30, 46, 62].map((x, i) => (
+            <Circle key={i} cx={x} cy={i < 4 ? 56 : 46} r={2.5} fill="#ffd60a" />
+          ))}
+          <Ellipse cx={14} cy={60} rx={7} ry={3.5} fill="#2b9348" transform="rotate(-30 14 60)" />
+          <Ellipse cx={76} cy={60} rx={7} ry={3.5} fill="#2b9348" transform="rotate(30 76 60)" />
+          <Path d="M12,70 H78 M16,80 H74 M24,89 H66" stroke="#000000" strokeOpacity={0.2} strokeWidth={2.5} />
+          <Path d="M28,62 V94 M45,62 V96 M62,62 V94" stroke="#ffffff" strokeOpacity={0.15} strokeWidth={2.5} />
+        </G>
       </G>
     ),
   },
@@ -135,11 +152,26 @@ const items: ItemDef[] = [
           <Path d="M240,34 H262 Q300,36 306,86 H240 Z" fill="#2f3e46" />
           <Rect x={0} y={112} width={320} height={12} fill="#ffffff" fillOpacity={0.6} />
           <Circle cx={300} cy={140} r={8} fill="#fff3b0" />
+          {/* Reflections in the windows, a wiper, a door with its window, a roof line and a shine along the side. */}
+          {[18, 82, 146].map((x) => (
+            <Path key={x} d={`M${x + 6},${80} L${x + 30},${44} H${x + 40} L${x + 16},${80} Z`} fill="#ffffff" fillOpacity={0.45} />
+          ))}
+          <Path d="M252,82 L272,56" stroke="#adb5bd" strokeWidth={3} strokeLinecap="round" />
+          <Path d="M250,40 H262 Q284,42 292,62" fill="none" stroke="#ffffff" strokeOpacity={0.3} strokeWidth={4} strokeLinecap="round" />
+          <Rect x={0} y={16} width={300} height={10} fill="#000000" fillOpacity={0.12} />
+          <Path d="M6,30 H222" stroke="#ffffff" strokeOpacity={0.3} strokeWidth={3} />
+          <Rect x={0} y={150} width={320} height={16} fill="#000000" fillOpacity={0.15} />
+          <Circle cx={300} cy={140} r={3.5} fill="#ffffff" />
+          <Rect x={276} y={134} width={12} height={12} rx={2} fill="#000000" fillOpacity={0.2} />
         </G>
         <Rect x={196} y={96} width={22} height={66} rx={3} fill="#ffffff" fillOpacity={0.35} />
+        <Rect x={200} y={102} width={14} height={18} rx={2} fill="#cfe9f7" stroke="none" />
         <Rect x={0} y={166} width={320} height={10} fill="#343a40" />
         {[40, 110, 200, 270].map((x) => (
-          <Circle key={x} cx={x} cy={180} r={10} fill="#212529" stroke="none" />
+          <G key={x} stroke="none">
+            <Circle cx={x} cy={180} r={10} fill="#212529" />
+            <Circle cx={x} cy={180} r={3.5} fill="#868e96" />
+          </G>
         ))}
       </G>
     ),
@@ -166,9 +198,25 @@ const items: ItemDef[] = [
             <Path key={x} d={`M${x},6 V118`} />
           ))}
         </G>
+        <G stroke="none">
+          {/* A sliding door with its handle, rivets along the top and bottom, and a shine along the roof. */}
+          <Rect x={104} y={14} width={92} height={98} fill="#000000" fillOpacity={0.12} />
+          <Rect x={182} y={56} width={6} height={20} rx={2} fill="#343a40" />
+          <Path d="M98,10 H202" stroke="#343a40" strokeWidth={4} />
+          {Array.from({ length: 15 }, (_, i) => (
+            <G key={i}>
+              <Circle cx={10 + i * 20} cy={6} r={2} fill="#000000" fillOpacity={0.3} />
+              <Circle cx={10 + i * 20} cy={118} r={2} fill="#000000" fillOpacity={0.3} />
+            </G>
+          ))}
+          <Path d="M6,2 H294" stroke="#ffffff" strokeOpacity={0.3} strokeWidth={3} />
+        </G>
         <Rect x={0} y={124} width={300} height={10} fill="#343a40" />
         {[40, 90, 210, 260].map((x) => (
-          <Circle key={x} cx={x} cy={140} r={10} fill="#212529" stroke="none" />
+          <G key={x} stroke="none">
+            <Circle cx={x} cy={140} r={10} fill="#212529" />
+            <Circle cx={x} cy={140} r={3.5} fill="#868e96" />
+          </G>
         ))}
       </G>
     ),
@@ -195,7 +243,13 @@ const items: ItemDef[] = [
         <Rect x={26} y={60} width={8} height={140} fill="#495057" />
         <Rect x={6} y={0} width={48} height={74} rx={10} fill="#212529" />
         <Circle cx={30} cy={22} r={13} fill={colour} />
-        <Circle cx={30} cy={52} r={11} fill="#495057" stroke="none" />
+        <G stroke="none">
+          <Circle cx={30} cy={52} r={11} fill="#495057" />
+          {/* A glint on the lit lamp, a ladder up the post and its foot. */}
+          <Circle cx={25} cy={17} r={3.5} fill="#ffffff" fillOpacity={0.7} />
+          <Path d="M38,90 V196 M46,90 V196 M38,104 H46 M38,120 H46 M38,136 H46 M38,152 H46 M38,168 H46 M38,184 H46" stroke="#6c757d" strokeWidth={2} />
+          <Rect x={18} y={194} width={24} height={6} rx={2} fill="#343a40" />
+        </G>
       </G>
     ),
   },
@@ -222,6 +276,17 @@ const items: ItemDef[] = [
         <Rect x={8} y={6} width={124} height={11} rx={3} fill={colour} />
         <Rect x={8} y={22} width={124} height={11} rx={3} fill={colour} />
         <Rect x={2} y={42} width={136} height={12} rx={3} fill={colour} />
+        <G stroke="none">
+          {/* Light along the top of each slat, bolts, and armrests. */}
+          <Path d="M12,8 H128 M12,24 H128 M6,44 H134" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={2.5} strokeLinecap="round" />
+          {[11, 27, 48].map((y) => (
+            <G key={y}>
+              <Circle cx={16} cy={y} r={2} fill="#343a40" />
+              <Circle cx={124} cy={y} r={2} fill="#343a40" />
+            </G>
+          ))}
+          <Path d="M10,40 Q10,30 22,32 M130,40 Q130,30 118,32" fill="none" stroke="#343a40" strokeWidth={4} strokeLinecap="round" />
+        </G>
       </G>
     ),
   },
@@ -254,6 +319,20 @@ const items: ItemDef[] = [
           <Rect x={60} y={20} width={14} height={30} rx={2} fill="#212529" />
         </G>
         <Rect x={10} y={130} width={42} height={18} rx={3} fill="#212529" />
+        <G stroke="none">
+          {/* Shelf edges, a shine on the glass, coin slot and buttons, and a flap on the drawer. */}
+          {[38, 62, 86, 110].map((y) => (
+            <Rect key={y} x={8} y={y} width={46} height={2} fill="#adb5bd" />
+          ))}
+          <Path d="M14,14 L26,14 L14,40 Z" fill="#ffffff" fillOpacity={0.55} />
+          <Rect x={62} y={58} width={10} height={4} rx={1} fill="#212529" />
+          {[70, 80, 90].map((y) => (
+            <Circle key={y} cx={67} cy={y} r={3} fill="#ffffff" fillOpacity={0.6} />
+          ))}
+          <Rect x={63} y={23} width={8} height={10} rx={1} fill="#69db7c" fillOpacity={0.8} />
+          <Rect x={14} y={133} width={34} height={4} rx={1} fill="#495057" />
+          <Rect x={72} y={6} width={6} height={148} fill="#000000" fillOpacity={0.12} />
+        </G>
       </G>
     ),
   },
@@ -279,6 +358,17 @@ const items: ItemDef[] = [
         </G>
         <Rect x={22} y={100} width={36} height={8} rx={2} fill="#212529" stroke="none" />
         <Rect x={0} y={142} width={80} height={8} rx={3} fill="#343a40" />
+        <G stroke="none">
+          {/* A train on the screen, a card reader with its light, a ticket peeking out and a sign on top. */}
+          <Rect x={24} y={24} width={26} height={12} rx={3} fill="#ffffff" />
+          <Rect x={46} y={26} width={8} height={10} rx={2} fill="#ffffff" />
+          <Rect x={27} y={27} width={6} height={4} fill="#4dabf7" />
+          <Rect x={36} y={27} width={6} height={4} fill="#4dabf7" />
+          <Rect x={30} y={100} width={14} height={14} rx={1} fill="#ffd60a" />
+          <Rect x={22} y={118} width={36} height={14} rx={3} fill="#343a40" />
+          <Circle cx={52} cy={125} r={2.5} fill="#69db7c" />
+          <Path d="M16,6 V136" stroke="#ffffff" strokeOpacity={0.2} strokeWidth={3} strokeLinecap="round" />
+        </G>
       </G>
     ),
   },
@@ -301,8 +391,20 @@ const items: ItemDef[] = [
         <Rect x={18} y={34} width={86} height={58} rx={8} fill={colour} />
         <Rect x={30} y={8} width={60} height={28} rx={6} fill="#495057" />
         <Path d="M50,34 V24 H70 V34" fill="none" stroke="#212529" strokeWidth={4} />
+        <G stroke="none">
+          {/* Ribs down the big case, a luggage tag, corner guards, a zip on the bag and a shine. */}
+          <Path d="M40,40 V86 M61,40 V86 M82,40 V86" stroke="#000000" strokeOpacity={0.15} strokeWidth={3} />
+          <Path d="M24,42 V80" stroke="#ffffff" strokeOpacity={0.4} strokeWidth={3} strokeLinecap="round" />
+          <Path d="M70,34 L76,46" stroke="#868e96" strokeWidth={2} />
+          <Rect x={72} y={44} width={10} height={14} rx={2} fill="#f8f9fa" transform="rotate(-20 77 51)" />
+          <Path d="M34,16 H86" stroke="#212529" strokeWidth={2} strokeDasharray="3 2" />
+          <Rect x={18} y={84} width={10} height={8} rx={2} fill="#000000" fillOpacity={0.3} />
+          <Rect x={94} y={84} width={10} height={8} rx={2} fill="#000000" fillOpacity={0.3} />
+        </G>
         <Circle cx={22} cy={102} r={8} fill="#212529" stroke="none" />
         <Circle cx={98} cy={102} r={8} fill="#212529" stroke="none" />
+        <Circle cx={22} cy={102} r={3} fill="#868e96" stroke="none" />
+        <Circle cx={98} cy={102} r={3} fill="#868e96" stroke="none" />
       </G>
     ),
   },
@@ -329,9 +431,19 @@ const items: ItemDef[] = [
         <G stroke="none">
           <Path d="M54,76 H82 V98 Q82,106 74,106 H62 Q54,106 54,98 Z" fill="#f8f9fa" />
           <Path d="M82,82 Q92,82 90,92 Q88,98 82,96" fill="none" stroke="#f8f9fa" strokeWidth={4} />
+          {/* Steam from the cup, stripes on the awning, cups on the counter and a shine on the side. */}
+          <Path d="M62,70 q-4,-5 0,-10 M72,70 q-4,-5 0,-10" fill="none" stroke="#f8f9fa" strokeOpacity={0.8} strokeWidth={2.5} strokeLinecap="round" />
+          {[28, 52, 76, 100].map((x) => (
+            <Path key={x} d={`M${x},8 L${x - 4},30 H${x + 8} L${x + 10},8 Z`} fill={colour} fillOpacity={0.85} />
+          ))}
+          <Path d="M24,58 L26,48 H34 L36,58 Z M104,58 L106,48 H114 L116,58 Z" fill="#f8f9fa" />
+          <Path d="M10,64 H130" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={3} strokeLinecap="round" />
+          <Rect x={4} y={110} width={132} height={12} rx={4} fill="#000000" fillOpacity={0.15} />
         </G>
         <Circle cx={30} cy={128} r={11} fill="#212529" stroke="none" />
         <Circle cx={110} cy={128} r={11} fill="#212529" stroke="none" />
+        <Circle cx={30} cy={128} r={4} fill="#868e96" stroke="none" />
+        <Circle cx={110} cy={128} r={4} fill="#868e96" stroke="none" />
       </G>
     ),
   },
@@ -347,6 +459,8 @@ const items: ItemDef[] = [
     zones: ON_PLATFORM,
     maxCount: 1,
     countable: false,
+    // NEWS is written on it.
+    noFlip: true,
     tone: '#1d70d6',
     draw: () => (
       <G>
@@ -360,8 +474,21 @@ const items: ItemDef[] = [
               <Rect x={14 + i * 30} y={50} width={14} height={2} fill="#adb5bd" />
               <Rect x={10 + i * 30} y={74} width={22} height={30} fill="#f8f9fa" />
               <Rect x={14 + i * 30} y={80} width={14} height={4} fill="#495057" />
+              {/* A photo and a few lines of print on each front page. */}
+              <Rect x={14 + i * 30} y={56} width={8} height={7} fill={['#74c0fc', '#ffa8a8', '#8ce99a'][i]} />
+              <Rect x={24 + i * 30} y={56} width={4} height={2} fill="#adb5bd" />
+              <Rect x={24 + i * 30} y={60} width={4} height={2} fill="#adb5bd" />
+              <Rect x={14 + i * 30} y={88} width={14} height={2} fill="#adb5bd" />
+              <Rect x={14 + i * 30} y={92} width={10} height={2} fill="#adb5bd" />
+              <Rect x={14 + i * 30} y={96} width={14} height={2} fill="#adb5bd" />
             </G>
           ))}
+          {/* The word NEWS on the yellow header, wire racks and shade along the base. */}
+          <SvgText x={50} y={13} fontSize={15} fontWeight="bold" fontFamily="Arial" fill="#212529" textAnchor="middle" alignmentBaseline="central">
+            NEWS
+          </SvgText>
+          <Path d="M6,67 H94 M6,105 H94" stroke="#ffffff" strokeOpacity={0.5} strokeWidth={2} />
+          <Rect x={0} y={110} width={100} height={10} fill="#000000" fillOpacity={0.15} />
         </G>
       </G>
     ),
@@ -414,10 +541,16 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
       {Array.from({ length: 11 }, (_, i) => (
         <Rect key={i} x={-600 + i * 210 + 12} y={-600} width={186} height={roof + 600} fill={p.glass} />
       ))}
+      {/* Light glancing off the panes. */}
+      {Array.from({ length: 11 }, (_, i) => (
+        <Path key={i} d={`M${-600 + i * 210 + 40},${roof * 0.5} l60,${-roof * 0.4} h24 l-60,${roof * 0.4} Z`} fill="#ffffff" fillOpacity={0.25} />
+      ))}
       <G fill="none" stroke={p.truss} strokeWidth={10}>
         <Path d={`M-600,${roof} Q450,${-roof * 0.9} 1500,${roof}`} />
         <Path d={`M-600,${roof * 0.55} H1500`} strokeWidth={6} />
       </G>
+      {/* Rivets along the cross beam. */}
+      <Path d={`M-600,${roof * 0.55}H1500`} stroke="#ffffff" strokeOpacity={0.35} strokeWidth={3} strokeDasharray="0.1 30" strokeLinecap="round" />
       {/* The far wall: bricks behind the track. */}
       <Rect x={-600} y={roof} width={2100} height={wall - roof} fill={p.wall} />
       <G fill={p.brick}>
@@ -427,8 +560,12 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
           )),
         )}
       </G>
+      {/* Soot along the top of the wall, from years of trains. */}
+      <Rect x={-600} y={roof} width={2100} height={(wall - roof) * 0.12} fill="#000000" fillOpacity={0.12} />
       {/* The track: gravel, sleepers, two rails. */}
       <Rect x={-600} y={wall} width={2100} height={edge - wall} fill={p.gravel} />
+      {speckles({ x0: -40, y0: wall, x1: 940, y1: edge }, 180, '#000000', 0.18, 4, 23)}
+      {speckles({ x0: -40, y0: wall, x1: 940, y1: edge }, 120, '#ffffff', 0.18, 3, 29)}
       <G fill={p.rail}>
         {Array.from({ length: 40 }, (_, i) => (
           <Rect key={i} x={-600 + i * 55} y={wall + (edge - wall) * 0.35} width={30} height={(edge - wall) * 0.5} fill="#6b4f36" />
@@ -436,16 +573,23 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
         <Rect x={-600} y={wall + (edge - wall) * 0.38} width={2100} height={8} />
         <Rect x={-600} y={wall + (edge - wall) * 0.72} width={2100} height={8} />
       </G>
+      {/* Worn bright tops of the rails. */}
+      <Rect x={-600} y={wall + (edge - wall) * 0.38} width={2100} height={2.5} fill="#ffffff" fillOpacity={0.6} />
+      <Rect x={-600} y={wall + (edge - wall) * 0.72} width={2100} height={2.5} fill="#ffffff" fillOpacity={0.6} />
       {/* The platform edge with its yellow safety line, then the platform. */}
       <Rect x={-600} y={edge} width={2100} height={platform - edge} fill={p.edge} />
       <Rect x={-600} y={platform} width={2100} height={height - platform + 600} fill={p.platform} />
       {/* The texture of the ground. */}
       {speckles({ x0: -40, y0: platform, x1: 940, y1: height }, 220, '#000000', 0.09, 3)}
       <Rect x={-600} y={platform + 10} width={2100} height={10} fill="#ffd60a" />
+      {/* Shade under the platform's lip, and the bumpy tactile strip behind the yellow line. */}
+      <Rect x={-600} y={edge} width={2100} height={4} fill="#000000" fillOpacity={0.2} />
+      <Path d={`M-600,${platform + 30}H1500`} stroke="#000000" strokeOpacity={0.12} strokeWidth={4} strokeDasharray="0.1 12" strokeLinecap="round" />
       {/* The departure board: time, destination and platform. */}
       <G>
         <Path d={`M${b.x + 40},-600 V${b.y} M${b.x + b.w - 40},-600 V${b.y}`} stroke="#495057" strokeWidth={4} />
         <Rect x={b.x} y={b.y} width={b.w} height={b.h} rx={8} fill="#212529" stroke="#495057" strokeWidth={5} />
+        <Path d={`M${b.x + 10},${b.y + row}H${b.x + b.w - 10}`} stroke="#495057" strokeWidth={2} />
         <SvgText x={b.x + 22} y={b.y + row * 0.55} fontSize={Math.min(44, row * 0.7)} fontWeight="bold" fontFamily="Arial" fill="#ffd60a" alignmentBaseline="central">
           {d?.values?.departs ?? '10:45'}
         </SvgText>

@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.54 (2026-10-18)
+
+- **Richer drawings, part 5: the supermarket and the train station.**
+  - **Supermarket:** ceiling tiles and a soft glow round the strip lights; rows of bracket holes in the back panel; light along each shelf lip with shade beneath; price labels with a price and a barcode. Cereal boxes with a spoon in the bowl and small print; toilet rolls in shiny wrap; water bottles with a mountain label and ripples; tins with food on the label and ridged rims; honey jars with a bee and a ridged lid; juice with a leaf and a cap; milk cartons with a cap and a fold; egg boxes with light on the bumps; seeded loaves; baskets with a grip; fruit crates with shiny fruit, nails and a hand hole; watermelons with a field patch and a stalk; a wet floor sign with a hinge and drips; cardboard boxes with tape and "this way up" arrows; a paper bag with a leaf print; potato sacks with woven sacking and a string tie.
+  - **Train station:** light glancing off the glass roof; rivets on the cross beam; soot along the top of the wall; gravel between the sleepers and worn bright rail tops; a tactile strip behind the yellow line. A train with window reflections, a wiper, a door window and hubs; freight wagons with a sliding door and rivets; a signal with a glint and a ladder; lamps with a shine and a bright bulb; hanging baskets with leaves and wicker; benches with bolts and armrests; vending machines with shelf edges, glare and coin buttons; a ticket machine with a train on the screen and a card reader; luggage trolleys with a tag on the case; a coffee cart with a striped awning, steam and cups; a NEWS stand with front pages.
+  - Same sizes and shapes as before, so layout and every check are unchanged. The newspaper stand no longer flips, so NEWS always reads the right way round.
+
 ## 4.0.0-beta.53 (2026-10-18)
 
 - **Richer drawings, part 4: the farm and under the sea.**
