@@ -14,6 +14,8 @@
 
 Run all of them before shipping a change to recipes, layout or questions.
 
+**Not automated yet:** these run by hand before each release; nothing runs them on every push, and the browser play-tests used during the betas (Playwright scripts that play rounds in the web build) aren't in the repo. Both are next steps, along with testing on real phones.
+
 ## The scene checker (`scripts/check-scenes.ts`)
 
 First it checks the [level rules](levels-and-scoring.md): 3 good rounds go up, 2 very poor rounds in a row go down, never below 1 or above 30, best never drops, no level easier than the one before, and a worked points example.

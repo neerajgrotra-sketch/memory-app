@@ -10,6 +10,24 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0 (2026-10-18)
+
+**The games-hub release.** Everything from the 61 betas (`4.0.0-beta.1` to `beta.61`, listed below) merged into the main line. Since 3.6.1:
+
+- **A games app.** Games, Progress and Profile tabs; games grouped by skill (today **Memory** with Look & Remember); a page for each game with its records, **Play**, **Practice** and **My places**; a short launch animation and a first-launch welcome.
+- **Levels 1 to 30** that adjust themselves (3 good rounds up, 2 very poor rounds in a row down, best never drops), with titles, a level-up screen that lists exactly what's new, and new places unlocking along the way.
+- **Points and high scores:** right answers worth more at higher levels, bonuses for runs and for being ready early, never a penalty for being slow.
+- **A daily habit:** the **Daily Challenge** (one picture a day, double points, one try) and a **streak** with this week's days.
+- **Peeks:** every 3,000 points earns a Peek (up to 3), which flips the picture back in for 3 seconds during the questions; a peeked answer earns half points.
+- **Fifteen places** (was five): the beach, living room, park, city street, kitchen, farm, under the sea, supermarket, train station, zoo, snowy mountain, classroom, night campsite, airport and the Moon, each with its own signs, clocks and details to remember.
+- **Pictures that make sense:** zoo animals only in their own habitats; signs that name and point at what's really there; faraway things drawn small; hanging lamps and clocks fixed to the roof; the classroom drawn with depth, the teacher at their desk and pupils facing the board; sums with plus, minus, times and divide.
+- **Richer drawings in every place:** texture on the ground, light and shade, and small details on every thing, at the same sizes so every check holds.
+- **Sounds and vibration** for the game's moments (placeholder sounds, to be replaced with a professional set), gentle movement of things in the air and water while you look, a mute button.
+- **Tester tools**, hidden behind 7 taps on the version number: every place unlocked, and unlimited Peeks.
+- **Checks:** 61,800 generated pictures against every rule, plus checks for question options, the daily rules and Peeks, all run before every release.
+
+Not yet done: builds and testing on real phones, accounts and cloud sync, family profiles, a second game. See the README's "Status" section.
+
 ## 4.0.0-beta.61 (2026-10-18)
 
 - **The classroom, rethought.**

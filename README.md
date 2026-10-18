@@ -13,13 +13,19 @@ Checks: `npm run typecheck`, `npm run lint` and `npm run check:scenes` (the leve
 
 Every change bumps the version (shown on the Games tab). See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
 
+## Status (4.0.0)
+
+- **Works:** the Look & Remember game with 30 levels, 15 places, points, the Daily Challenge and streak, Peeks, sounds and vibration. Played and tested in the browser (Expo web), with every automated check passing.
+- **Not yet done:** builds for and testing on real phones (EAS), crash reporting and analytics, accounts with cloud sync, family profiles, a second game, a professional sound set (the current sounds are placeholders; background music is parked), a colour-blind mode, and a privacy policy and store listing.
+- **Branches:** `claude/glance-memory-game-sxcej5` is the main line of work (4.0.0 merged the `claude/glance-games-hub` beta branch into it); `main` is the release line, updated by pull request. New work goes on a short-lived branch per change, not a long-running beta.
+
 ## The app
 
 It opens with a short launch animation (an eye opens, **glance** and "Look closer. Remember more." rise in, the eye blinks, about 2.5 s on the first launch and 1.7 s after; a tap skips it). On the very first launch a welcome follows (postcards of the places, "How much can you remember at a glance?" and **Let's go**). Then three tabs:
 
 - **Games**: once you've played, a **daily card** (your 🔥 streak, this week's days, and **today's challenge**: one picture a day, double points, one try), a slim **Continue** strip (your level ring and **Play**), then games grouped by skill. A skill only appears once it has a game, so today there's **Memory** with Look & Remember. Tapping a game opens its page.
 - **Progress**: each game's level, best level, high score and a chart of your level over time, then your scores, accuracy per question type, practice habits, and **Your levels** (one row per level played, with rounds, best points and average).
-- **Profile**: name and age band (optional, asked once after the first round), "More time to look" (+3 s per picture, on by default for 55+), **Sounds** and **Vibration** switches (sound can also be muted in one tap with the speaker button on the Games tab and during a round), and "Clear my details". glance is a game, not a medical test: nothing compares you with other people or claims to measure brain health.
+- **Profile**: name and age band (optional, asked once after the first round), "More time to look" (+3 s per picture, on by default for 55+), **Sounds** and **Vibration** switches (sound can also be muted in one tap with the speaker button on the Games tab and during a round), and "Clear my details". glance is a game, not a medical test: nothing compares you with other people or claims to measure brain health. Tapping the version number 7 times turns on a hidden tester mode (see [docs/testing.md](docs/testing.md)).
 
 ## Look & Remember
 
@@ -83,23 +89,31 @@ docs/                  How pictures and questions are made (start at docs/README
   recipes/             One page per setting + reference.md (generated)
 scripts/
   check-scenes.ts      npm run check:scenes: level rules, points, 61,800 scenes against every rule
+  check-questions.ts   npm run check:questions: every question's wrong options are believable
+  check-daily.ts       npm run check:daily: streak and Daily Challenge rules, in two time zones
+  check-peeks.ts       npm run check:peeks: earning, holding and spending Peeks
   gallery.tsx          npm run gallery: pictures to gallery.html for reviewing by eye
-  recipe-reference.ts  npm run docs:recipes: regenerates docs/recipes/reference.md
+  lineup.tsx           npm run lineup: a recipe's things side by side at their real sizes
+  recipe-reference.ts  npm run docs:recipes: regenerates docs/recipes/reference.md and question examples
+  sounds/              The script that made the placeholder applause and "aww"
 src/
   app/                 Expo Router screens
     (tabs)/            The tab bar: index (Games), progress, profile
     game/[id].tsx      A game's page: level, records, Play, Practice, how to play
     play.tsx           A session of Look & Remember (levels or practice)
-  components/          Countdown (Reanimated), Memorise/Quiz/Result stages, level ring, level-up screen, charts, game art
+  components/          Countdown (Reanimated), Memorise/Quiz/Result stages, Peek, daily card, level ring, level-up screen, charts, game art
   games/
     registry.ts        Every game and skill; the Games tab is built from it
-    lookRemember/      ladder.ts (levels 1–30, moving up and down, unlocks, titles) and points.ts
+    lookRemember/      ladder.ts (levels 1–30, moving up and down, unlocks, titles), points.ts, daily.ts (Daily Challenge, streak), peeks.ts
   game/                Pure game logic: practice bands, question selection, option shuffling, quiz navigation, score messages
-  feedback/            Sounds (files in assets/sounds/, swap them freely) and vibration for the game's moments
+  feedback/            Sounds (placeholder files in assets/sounds/, swap them freely) and vibration for the game's moments
   hooks/               useGameSession (memorise → quiz → result → next picture, scoring and levels), useGameProgress
   scenes/
-    recipes/           One file per setting (beach, city, livingRoom, farm, underSea) + the registry
+    recipes/           One file per setting (15: beach, livingRoom, park, city, kitchen, farm, underSea, supermarket,
+                       trainStation, zoo, snowyMountain, classroom, nightCampsite, airport, space) + the registry
     items/common.tsx   Things shared across settings (people, dogs, birds, trees…)
+    clock.tsx          The clock face and time questions shared by clocks in several places
+    texture.tsx        Ground texture (sand grains, grass blades, glints) drawn as one path each
     layout.ts          Layout rules and geometry: tiers, margins, slot grid, arrangements of copies
     generateScene.ts   Fills a recipe with contents and lays them out (and again for another size)
     validateScene.ts   Checks a laid-out scene against every rule
@@ -119,4 +133,4 @@ src/
 
 The profile is stored behind a `ProfileStore` interface (`src/profile/profileStore.ts`), shaped like `Profile` in `src/types/profile.ts`. It has a random `id` from first launch, so a future account can claim it.
 
-Progress is stored behind a `StatsStore` interface. To sync across devices,: implement `StatsStore` against a `round_results` table shaped like `RoundResult` in `src/types/stats.ts`, and point `statsStore` at it in `src/stats/index.ts`.
+Progress is stored behind a `StatsStore` interface. To sync across devices, implement `StatsStore` against a `round_results` table shaped like `RoundResult` in `src/types/stats.ts`, and point `statsStore` at it in `src/stats/index.ts`.
