@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.58 (2026-10-18)
+
+- **Richer drawings, part 6: the zoo and the snowy mountain.**
+  - **Zoo:** each enclosure's ground has its own texture (grass blades, sand grains, gravel among the rocks, sparkles on the ice); light on the boulders and ripples on the penguin pool; sun on the trees; stone courses in the walls and light along the fence rails. A giraffe with knobbly horns, a mane, hooves and a tail tuft; an elephant with toenails, a wrinkled trunk and a pink inner ear; a zebra with a bristly mane, striped legs and a dark muzzle; a lion with a shaggy mane, whiskers and paws; a rhino with folds of thick skin and toes; an ostrich with fluffy feathers and white wing tips; a kangaroo with pink ears and a pouch; a bear with claws, inner ears and fur. Benches with bolts and armrests; pushchairs with a ribbed hood and a blanket; balloons with a shine and a knot; a signpost with animal pictures on its arrows.
+  - **Snowy mountain:** shade on the mountain faces; drifts in the snow; snow along the fence rail and on each post. A cable car with skiers looking out, a roof, a stripe and a pulley; skiers with goggles, a bobble hat, gloves and snow spray; snowboarders with goggles, bindings and a striped board; the ski racer with a helmet shine and gloves; slalom flags with a fold and snow at the foot; pine trees with snow along every tier and a shaded side; snowmen with stick arms, rosy cheeks, a smile and a hat band to match the scarf; sledges with slats and a tow rope; a ski rack with bindings and snow on the bar; a hot chocolate stand with a cap of snow, icicles, a menu board and mugs; a snowmobile with a headlight, a racing stripe and treads.
+  - Same sizes and shapes as before, so layout and every check are unchanged. The snow on the hot chocolate stand is only a small cap, so the roof's colour (which the question asks about) still shows.
+
 ## 4.0.0-beta.57 (2026-10-18)
 
 - **The hanging baskets at the train station look like flowers, not fruit.** The old drawing packed round blobs on a deep bowl, which read as apples or tomatoes. Now three five-petal flowers sit on a mound of dark leaves, with trailing ivy spilling over a shallow wicker basket. The basket is small on screen, so the leaves have no outline and the petals only a thin one, or they'd blur together. Same box size and the same question ("What colour were the flowers in the hanging basket?").

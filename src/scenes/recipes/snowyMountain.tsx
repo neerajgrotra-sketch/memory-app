@@ -1,11 +1,11 @@
-import { Circle, G, Path, Polygon, Rect, Text as SvgText } from 'react-native-svg';
+import { Circle, Ellipse, G, Path, Polygon, Rect, Text as SvgText } from 'react-native-svg';
 
 import { C } from '../colours';
 import { bird, cloudShape, dog, person, plane, sun } from '../items/common';
 import { lineMarks, scatterMarks } from '../marks';
 import type { Rng } from '../random';
 import type { ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
-import { speckles } from '../texture';
+import { glints, speckles } from '../texture';
 
 /**
  * A ski resort: the sky with cable cars, the snowy peaks, the ski slope, and the area by the lodge at
@@ -63,6 +63,19 @@ const items: ItemDef[] = [
           <Rect x={30} y={54} width={36} height={34} rx={5} />
           <Rect x={74} y={54} width={36} height={34} rx={5} />
         </G>
+        <G stroke="none">
+          {/* Skiers looking out, glare on the glass, a roof, a door seam, a stripe and a pulley on the cable. */}
+          <Circle cx={44} cy={78} r={6} fill="#495057" />
+          <Rect x={37} y={83} width={14} height={6} rx={3} fill="#495057" />
+          <Circle cx={94} cy={78} r={6} fill="#495057" />
+          <Rect x={87} y={83} width={14} height={6} rx={3} fill="#495057" />
+          <Path d="M34,58 L46,58 L34,72 Z M78,58 L90,58 L78,72 Z" fill="#ffffff" fillOpacity={0.6} />
+          <Rect x={26} y={40} width={88} height={6} rx={3} fill="#495057" />
+          <Path d="M70,90 V122" stroke="#000000" strokeOpacity={0.2} strokeWidth={2} />
+          <Rect x={20} y={100} width={100} height={6} fill="#ffffff" fillOpacity={0.5} />
+          <Circle cx={70} cy={8} r={4} fill="#868e96" />
+          <Path d="M26,52 V118" stroke="#ffffff" strokeOpacity={0.3} strokeWidth={3} strokeLinecap="round" />
+        </G>
       </G>
     ),
   },
@@ -92,6 +105,17 @@ const items: ItemDef[] = [
         <Circle cx={64} cy={22} r={13} fill="#e0ac69" stroke="none" />
         <Path d="M51,20 Q52,6 64,6 Q76,6 77,20 Z" fill={colour} />
         <Rect x={58} y={18} width={20} height={7} rx={3} fill="#212529" stroke="none" />
+        <G stroke="none">
+          {/* A glint on the goggles, a bobble on the hat, gloves, snow spraying from the skis and light on the jacket. */}
+          <Rect x={68} y={19} width={6} height={3} rx={1.5} fill="#74c0fc" />
+          <Circle cx={64} cy={4} r={4} fill="#f8f9fa" />
+          <Circle cx={84} cy={60} r={4} fill="#212529" />
+          <Circle cx={30} cy={62} r={4} fill="#212529" />
+          <Circle cx={10} cy={96} r={4} fill="#ffffff" fillOpacity={0.9} />
+          <Circle cx={4} cy={88} r={3} fill="#ffffff" fillOpacity={0.8} />
+          <Circle cx={12} cy={84} r={2.5} fill="#ffffff" fillOpacity={0.7} />
+          <Path d="M48,64 Q46,52 54,42" fill="none" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={3} strokeLinecap="round" />
+        </G>
       </G>
     ),
   },
@@ -116,6 +140,19 @@ const items: ItemDef[] = [
         <Path d="M48,42 L20,48 M50,42 L80,46" fill="none" stroke={colour} strokeWidth={7} strokeLinecap="round" />
         <Circle cx={52} cy={18} r={13} fill="#e0ac69" stroke="none" />
         <Path d="M39,16 Q40,2 52,2 Q64,2 65,16 Z" fill="#343a40" />
+        <G stroke="none">
+          {/* Goggles, gloves, stripes on the board, bindings, snow spraying up and light on the jacket. */}
+          <Rect x={44} y={14} width={20} height={7} rx={3} fill="#212529" />
+          <Rect x={54} y={15} width={6} height={3} rx={1.5} fill="#ffd166" />
+          <Circle cx={20} cy={48} r={4} fill="#212529" />
+          <Circle cx={80} cy={46} r={4} fill="#212529" />
+          <Path d="M14,103 H86" stroke="#ffffff" strokeOpacity={0.6} strokeWidth={2.5} strokeLinecap="round" />
+          <Rect x={26} y={94} width={10} height={6} rx={2} fill="#212529" />
+          <Rect x={60} y={94} width={10} height={6} rx={2} fill="#212529" />
+          <Circle cx={2} cy={98} r={4} fill="#ffffff" fillOpacity={0.9} />
+          <Circle cx={-2} cy={90} r={3} fill="#ffffff" fillOpacity={0.8} />
+          <Path d="M44,62 Q42,50 46,40" fill="none" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={3} strokeLinecap="round" />
+        </G>
       </G>
     ),
   },
@@ -148,6 +185,14 @@ const items: ItemDef[] = [
         </SvgText>
         <Circle cx={64} cy={14} r={12} fill="#f8f9fa" />
         <Rect x={56} y={12} width={18} height={6} rx={3} fill="#212529" stroke="none" />
+        <G stroke="none">
+          {/* A shine on the helmet, a glint on the goggles, gloves and a stripe down the suit. */}
+          <Path d="M56,8 Q60,3 66,3" fill="none" stroke="#adb5bd" strokeWidth={2.5} strokeLinecap="round" />
+          <Rect x={66} y={13} width={5} height={3} rx={1.5} fill="#74c0fc" />
+          <Circle cx={86} cy={56} r={4} fill="#212529" />
+          <Circle cx={26} cy={58} r={4} fill="#212529" />
+          <Path d="M42,96 L50,78" stroke="#ffffff" strokeOpacity={0.5} strokeWidth={3} strokeLinecap="round" />
+        </G>
       </G>
     ),
   },
@@ -169,6 +214,13 @@ const items: ItemDef[] = [
       <G>
         <Rect x={12} y={0} width={6} height={140} fill="#495057" stroke="none" />
         <Path d="M18,8 H58 V48 H18 Z" fill={colour} />
+        <G stroke="none">
+          {/* A fold in the flag, a cap on the pole and snow heaped at its foot. */}
+          <Path d="M38,8 L44,8 L42,48 L36,48 Z" fill="#000000" fillOpacity={0.15} />
+          <Path d="M20,10 H56" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={2.5} />
+          <Circle cx={15} cy={2} r={4} fill="#343a40" />
+          <Ellipse cx={15} cy={138} rx={14} ry={4} fill="#ffffff" />
+        </G>
       </G>
     ),
   },
@@ -198,6 +250,14 @@ const items: ItemDef[] = [
         <G fill="#ffffff" stroke="none">
           <Path d="M55,0 L70,26 Q55,20 40,26 Z" />
           <Path d="M30,104 Q55,96 80,104 L90,106 H20 Z" opacity={0.85} />
+          {/* More snow along each tier of branches. */}
+          <Path d="M28,60 Q40,54 52,60 L46,62 H24 Z M62,60 Q74,54 86,60 L88,62 H66 Z" opacity={0.85} />
+          <Path d="M10,152 Q30,144 50,152 L48,154 H6 Z M64,152 Q86,144 104,152 L106,154 H62 Z" opacity={0.85} />
+        </G>
+        <G stroke="none">
+          {/* Shade on one side of the tree and down the trunk. */}
+          <Path d="M55,0 L92,62 H70 L55,36 L102,106 H78 L55,76 L110,154 H80 L55,110 Z" fill="#000000" fillOpacity={0.12} />
+          <Rect x={55} y={150} width={7} height={30} fill="#000000" fillOpacity={0.2} />
         </G>
       </G>
     ),
@@ -235,6 +295,14 @@ const items: ItemDef[] = [
           <Path d="M45,50 L64,55 L45,56 Z" fill="#f77f00" />
           <Circle cx={45} cy={94} r={3.5} fill="#212529" />
           <Circle cx={45} cy={110} r={3.5} fill="#212529" />
+          {/* A band on the hat, stick arms, rosy cheeks, a stitched smile and shade on the snowballs. */}
+          <Rect x={33} y={4} width={24} height={5} fill={colour} />
+          <Path d="M20,52 L2,40 M8,44 L4,36 M70,52 L88,40 M82,44 L86,36" stroke="#6b4423" strokeWidth={3.5} strokeLinecap="round" />
+          <Circle cx={33} cy={52} r={3} fill="#ff8fab" fillOpacity={0.5} />
+          <Circle cx={57} cy={52} r={3} fill="#ff8fab" fillOpacity={0.5} />
+          <Path d="M38,60 h1 M42,62 h1 M46,62 h1 M50,60 h1" stroke="#212529" strokeWidth={2.5} strokeLinecap="round" />
+          <Path d="M64,92 Q78,104 70,124" fill="none" stroke="#adb5bd" strokeOpacity={0.6} strokeWidth={5} strokeLinecap="round" />
+          <Path d="M60,40 Q68,48 64,62" fill="none" stroke="#adb5bd" strokeOpacity={0.6} strokeWidth={4} strokeLinecap="round" />
         </G>
       </G>
     ),
@@ -257,6 +325,13 @@ const items: ItemDef[] = [
         <Path d="M24,50 V36 M84,50 V36" stroke="#495057" strokeWidth={5} />
         <Rect x={10} y={20} width={100} height={18} rx={4} fill={colour} />
         <Path d="M10,22 Q6,8 18,6" fill="none" stroke="#495057" strokeWidth={4} strokeLinecap="round" />
+        <G stroke="none">
+          {/* Slats in the seat, a tow rope and light along the runner. */}
+          <Path d="M36,22 V36 M60,22 V36 M84,22 V36" stroke="#000000" strokeOpacity={0.2} strokeWidth={2.5} />
+          <Path d="M14,24 H106" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={2.5} strokeLinecap="round" />
+          <Path d="M18,6 Q10,0 2,8" fill="none" stroke="#e9c46a" strokeWidth={3} strokeLinecap="round" />
+          <Path d="M8,49 H100" stroke="#ffffff" strokeOpacity={0.5} strokeWidth={1.5} />
+        </G>
       </G>
     ),
   },
@@ -280,6 +355,17 @@ const items: ItemDef[] = [
         {[22, 42, 62, 82, 98].map((x, i) => (
           <Rect key={x} x={x} y={i % 2 ? 8 : 0} width={8} height={122} rx={4} fill={[C.red.hex, C.blue.hex, C.green.hex, C.orange.hex, C.purple.hex][i]} />
         ))}
+        <G stroke="none">
+          {/* Bindings on each ski, a shine down them, snow along the top bar and grain in the wood. */}
+          {[22, 42, 62, 82, 98].map((x, i) => (
+            <G key={x}>
+              <Rect x={x - 1} y={(i % 2 ? 8 : 0) + 76} width={10} height={8} rx={2} fill="#343a40" />
+              <Path d={`M${x + 2.5},${(i % 2 ? 8 : 0) + 6} V${(i % 2 ? 8 : 0) + 56}`} stroke="#ffffff" strokeOpacity={0.4} strokeWidth={2} strokeLinecap="round" />
+            </G>
+          ))}
+          <Path d="M2,60 Q30,54 60,58 Q90,54 118,60 V62 H2 Z" fill="#ffffff" />
+          <Path d="M14,90 V120 M106,90 V120" stroke="#3d2412" strokeOpacity={0.5} strokeWidth={2} />
+        </G>
       </G>
     ),
   },
@@ -307,6 +393,14 @@ const items: ItemDef[] = [
         <G stroke="none">
           <Path d="M62,70 H84 V86 Q84,92 78,92 H68 Q62,92 62,86 Z" fill="#f8f9fa" />
           <Path d="M66,66 Q70,60 66,56 M74,66 Q78,60 74,56" fill="none" stroke="#f8f9fa" strokeWidth={3} />
+          {/* A cap of snow on the roof (small, so the roof's colour shows), icicles, planks in the walls, a menu board, a marshmallow and mugs on the counter. */}
+          <Path d="M50,14 L75,1 L100,14 Q90,11 84,16 Q76,10 68,16 Q60,11 50,14 Z" fill="#ffffff" />
+          <Path d="M24,40 l3,8 l3,-8 Z M60,40 l3,10 l3,-10 Z M104,40 l3,7 l3,-7 Z M126,40 l3,9 l3,-9 Z" fill="#e7f5ff" />
+          <Path d="M14,112 H136 M14,128 H136" stroke="#000000" strokeOpacity={0.15} strokeWidth={2.5} />
+          <Rect x={36} y={62} width={20} height={26} rx={2} fill="#212529" />
+          <Path d="M40,68 h12 M40,74 h10 M40,80 h12" stroke="#f8f9fa" strokeOpacity={0.7} strokeWidth={2} strokeLinecap="round" />
+          <Rect x={66} y={70} width={8} height={5} rx={2} fill="#ffe8cc" />
+          <Path d="M98,86 h12 v8 h-12 Z M114,86 h12 v8 h-12 Z" fill="#f8f9fa" />
         </G>
       </G>
     ),
@@ -332,6 +426,15 @@ const items: ItemDef[] = [
         <Path d="M30,62 Q40,30 80,30 L120,30 Q150,30 168,62 Z" fill={colour} />
         <Path d="M120,30 L130,12 L142,30" fill="#cfe9f7" />
         <Rect x={46} y={22} width={50} height={12} rx={5} fill="#212529" />
+        <G stroke="none">
+          {/* A glint on the windscreen, a headlight, a racing stripe, seat stitching and treads on the track. */}
+          <Path d="M126,28 L130,18 L132,28 Z" fill="#ffffff" fillOpacity={0.7} />
+          <Ellipse cx={162} cy={52} rx={6} ry={4} fill="#fff3b0" />
+          <Path d="M40,52 Q80,42 150,50" fill="none" stroke="#ffffff" strokeOpacity={0.6} strokeWidth={4} strokeLinecap="round" />
+          <Path d="M50,28 H92" stroke="#868e96" strokeWidth={1.5} strokeDasharray="3 3" />
+          <Path d="M26,66 H158" stroke="#212529" strokeWidth={4} strokeDasharray="6 5" />
+          <Path d="M20,82 H150" stroke="#adb5bd" strokeWidth={1.5} />
+        </G>
       </G>
     ),
   },
@@ -374,6 +477,12 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
       {/* Far peaks, then near ones, with snowy tops. */}
       <Path d={`M-600,${peaks} L-300,${sky - 30} L-60,${peaks - 30} L200,${sky - 60} L470,${peaks - 20} L760,${sky - 40} L1040,${peaks - 30} L1500,${sky} V${peaks + 10} H-600 Z`} fill={p.peaksFar} />
       <Path d={`M-600,${peaks + 10} L-200,${sky + 20} L80,${peaks} L360,${sky + 10} L640,${peaks + 4} L900,${sky + 24} L1200,${peaks} L1500,${sky + 30} V${peaks + 20} H-600 Z`} fill={p.peaks} />
+      {/* Shade on the right-hand face of each near peak. */}
+      <G fill="#000000" fillOpacity={0.1}>
+        <Path d={`M-200,${sky + 20} L80,${peaks} H-60 Z`} />
+        <Path d={`M360,${sky + 10} L640,${peaks + 4} H500 Z`} />
+        <Path d={`M900,${sky + 24} L1200,${peaks} H1040 Z`} />
+      </G>
       <G fill={p.snow}>
         <Path d={`M-260,${sky + 30} L-200,${sky + 20} L-140,${sky + 34} L-200,${sky + 44} Z`} />
         <Path d={`M300,${sky + 22} L360,${sky + 10} L420,${sky + 24} L360,${sky + 36} Z`} />
@@ -385,6 +494,8 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
       {/* The texture of the ground. */}
       {speckles({ x0: -40, y0: peaks + 10, x1: 940, y1: height }, 220, '#ffffff', 0.7, 4)}
       {speckles({ x0: -40, y0: peaks + 10, x1: 940, y1: height }, 140, '#8aa4bd', 0.18, 3, 17)}
+      {/* Little drifts and hollows in the snow. */}
+      {glints({ x0: -40, y0: peaks + 20, x1: 940, y1: height }, 40, '#8aa4bd', 0.16, 26, 3, 37)}
       <G fill={p.fence}>
         <Rect x={-600} y={fence - 4} width={2100} height={6} />
         <Rect x={-600} y={fence + 10} width={2100} height={6} />
@@ -392,6 +503,11 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
           <Rect key={i} x={-600 + i * 75} y={fence - 12} width={8} height={32} rx={2} />
         ))}
       </G>
+      {/* Snow along the top rail and on each post. */}
+      <Rect x={-600} y={fence - 7} width={2100} height={3} rx={1.5} fill="#ffffff" />
+      {Array.from({ length: 30 }, (_, i) => (
+        <Ellipse key={i} cx={-596 + i * 75} cy={fence - 13} rx={6} ry={3} fill="#ffffff" />
+      ))}
       {/* The danger sign: a warning triangle, "DANGER" and the animal it warns about. */}
       <G>
         <Rect x={s.x} y={s.y} width={s.w} height={s.h} rx={8} fill="#ffd60a" stroke="#212529" strokeWidth={4} />
