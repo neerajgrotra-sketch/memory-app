@@ -13,6 +13,7 @@ How glance's first game, Look & Remember, builds its pictures and questions, how
 | [Recipe questionnaire](recipe-questionnaire.md) | The questions that define a new setting, with a worked example (a park) |
 | [Adding a recipe](adding-a-recipe.md) | Step by step, with a checklist |
 | [Testing and reviewing](testing.md) | The scene checker, the gallery, the overlay in Expo Go |
+| [Building for real phones](building.md) | EAS builds: TestFlight for iPhone, an APK for Android, the stores; the build profiles and app ID |
 | [Levels and scoring](levels-and-scoring.md) | Look & Remember's 30 levels, how your level moves, what each level changes, points |
 | [Adding a game](adding-a-game.md) | The game registry, skills, and what a new game needs |
 | [Design decisions](design-decisions.md) | Why the rules are what they are (most came from play-testing feedback) |

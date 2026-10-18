@@ -16,6 +16,12 @@ export const AGE_BANDS: { value: AgeBand; label: string }[] = [
   { value: 'unsaid', label: 'Prefer not to say' },
 ];
 
+/**
+ * Whether the hidden tester tools (7 taps on the version: every place unlocked, unlimited Peeks) exist
+ * in this build. On everywhere except store builds, which set EXPO_PUBLIC_TESTER_TOOLS=off (eas.json).
+ */
+export const TESTER_TOOLS = process.env.EXPO_PUBLIC_TESTER_TOOLS !== 'off';
+
 /** Extra viewing time with "More time to look" on. */
 export const EXTRA_SECONDS = 3;
 
@@ -57,7 +63,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<ProfileContextValue>(
     () => ({
-      profile,
+      // Without the tester tools, a saved tester flag counts for nothing.
+      profile: TESTER_TOOLS || !profile?.tester ? profile : { ...profile, tester: false, testPeeks: false },
       update,
       setAgeBand: (band) => update({ ageBand: band, moreTime: band ? MORE_TIME_BANDS.includes(band) : false }),
       clearDetails: () => update({ name: null, ageBand: null, moreTime: false }),
