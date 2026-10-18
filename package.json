@@ -1,0 +1,48 @@
+{
+  "name": "glance",
+  "version": "4.0.0",
+  "main": "expo-router/entry",
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "expo": "~57.0.29",
+    "expo-asset": "~57.0.20",
+    "expo-audio": "~57.0.5",
+    "expo-constants": "~57.0.22",
+    "expo-haptics": "~57.0.3",
+    "expo-linking": "~57.0.13",
+    "expo-router": "~57.0.27",
+    "expo-splash-screen": "~57.0.10",
+    "expo-status-bar": "~57.0.1",
+    "react": "19.2.3",
+    "react-dom": "^19.2.3",
+    "react-native": "0.86.3",
+    "react-native-reanimated": "4.5.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-svg": "15.15.4",
+    "react-native-worklets": "0.10.1"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "esbuild": "^0.24.2",
+    "eslint": "^9.39.5",
+    "eslint-config-expo": "~57.0.2",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit",
+    "lint": "expo lint",
+    "check:scenes": "esbuild scripts/check-scenes.ts --bundle --platform=node --outfile=node_modules/.cache/check-scenes.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-stub.js --jsx=automatic --log-level=error && node node_modules/.cache/check-scenes.js",
+    "docs:recipes": "esbuild scripts/recipe-reference.ts --bundle --platform=node --outfile=node_modules/.cache/recipe-reference.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-stub.js --jsx=automatic --log-level=error && node node_modules/.cache/recipe-reference.js",
+    "check:questions": "esbuild scripts/check-questions.ts --bundle --platform=node --outfile=node_modules/.cache/check-questions.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-stub.js --jsx=automatic --log-level=error && node node_modules/.cache/check-questions.js",
+    "check:daily": "esbuild scripts/check-daily.ts --bundle --platform=node --outfile=node_modules/.cache/check-daily.js --log-level=error && TZ=Europe/London node node_modules/.cache/check-daily.js && TZ=America/Los_Angeles node node_modules/.cache/check-daily.js",
+    "check:peeks": "esbuild scripts/check-peeks.ts --bundle --platform=node --outfile=node_modules/.cache/check-peeks.js --log-level=error && node node_modules/.cache/check-peeks.js",
+    "gallery": "esbuild scripts/gallery.tsx --bundle --platform=node --outfile=node_modules/.cache/gallery.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-dom.js --alias:react-native=./scripts/rn-stub.js --jsx=automatic --define:__DEV__=true --log-level=error && node node_modules/.cache/gallery.js",
+    "lineup": "esbuild scripts/lineup.tsx --bundle --platform=node --outfile=node_modules/.cache/lineup.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-dom.js --alias:react-native=./scripts/rn-stub.js --jsx=automatic --define:__DEV__=true --log-level=error && node node_modules/.cache/lineup.js"
+  },
+  "private": true
+}
