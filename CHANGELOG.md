@@ -10,6 +10,14 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.51 (2026-10-18)
+
+- **Richer drawings, part 2: the living room and the park.**
+  - **Living room:** faint striped wallpaper and a cornice; a rug with an inner ring and tassels; a framed picture with a mount and glass; a mirror reflecting the room; a window with a cloud, hills, glints and a sill; sofas and armchairs with cushions, buttons, light and shade; a lamp with a warm glow; a TV showing a cartoon, on a cupboard with knobs; a fuller bookshelf with a leaning book; a tabby cat with green eyes and whiskers; cushions with seams and a button; teddies with muzzles, paws and a red bow; toy cars with windows and hubcaps; books with page edges.
+  - **Park:** sunlit clumps on the bushes, glints on the pond, gravel on the path; a rower in a sun hat; a swan with a folded wing; a fountain with stone blocks and sparkling water; bicycles with spokes and a rider in a helmet; an ice-cream cart with a scalloped umbrella and three cones; benches with wood grain and iron armrests; a gingham picnic blanket with a basket and an apple; flowers with petals and leaves; swings with chains; a shiny slide.
+  - **Clocks** everywhere get a faint inner shadow and a soft glint, kept light so the time always reads clearly.
+  - Same sizes and shapes as before, so layout and every check are unchanged.
+
 ## 4.0.0-beta.50 (2026-10-18)
 
 - **Zoo: every animal in its own habitat.** Four habitats now: grassland (giraffes, elephants, zebras, lions), a sandy paddock (rhinos, ostriches, kangaroos), rocks with boulders (bears) and snow and ice with a pool (penguins). An animal may only stand in an enclosure with its own habitat: a hard rule, not left to contrast (before, bears ended up on sand). Grass tufts only grow on grass.

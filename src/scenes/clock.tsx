@@ -1,4 +1,4 @@
-import { Circle, G, Line } from 'react-native-svg';
+import { Circle, G, Line, Path } from 'react-native-svg';
 
 import type { Rng } from './random';
 
@@ -56,6 +56,9 @@ export function ClockFace({ time, rim = '#343a40' }: { time: string; rim?: strin
   return (
     <G>
       <Circle cx={50} cy={50} r={46} fill="#ffffff" stroke={rim} strokeWidth={7} />
+      {/* A faint shadow inside the rim and a soft glint on the glass: kept light, so the time always reads clearly. */}
+      <Circle cx={50} cy={50} r={41} fill="none" stroke="#000000" strokeOpacity={0.07} strokeWidth={4} />
+      <Path d="M18,38 A34,34 0 0 1 44,14" fill="none" stroke="#dbe9f4" strokeWidth={5} strokeLinecap="round" />
       <G stroke={rim} strokeLinecap="round">
         {Array.from({ length: 12 }, (_, i) => {
           const a = (i / 12) * 2 * Math.PI;

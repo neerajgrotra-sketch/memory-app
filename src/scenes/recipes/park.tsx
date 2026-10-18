@@ -6,7 +6,7 @@ import { balloon, bird, cloudShape, dog, kite, person, plane, sun, tree } from '
 import { lineMarks, scatterMarks } from '../marks';
 import type { Rng } from '../random';
 import type { DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
-import { strokes } from '../texture';
+import { glints, speckles, strokes } from '../texture';
 
 /**
  * A city park on a sunny day: sky, a pond with trees behind it, a gravel path, and the grass in front.
@@ -54,12 +54,23 @@ const items: ItemDef[] = [
     colours: [C.red, C.yellow, C.green, C.orange, C.white],
     draw: (colour, details) => (
       <G>
-        {/* The rower, sitting in the middle, and the oars dipping into the water. */}
+        {/* The rower, sitting in the middle in a sun hat, and the oars dipping into the water. */}
         <Path d="M96,44 L56,74 M124,44 L164,74" fill="none" stroke="#8a5a2b" strokeWidth={6} strokeLinecap="round" />
+        <Path d="M50,72 L62,70 L58,78 Z M170,72 L158,70 L162,78 Z" fill="#8a5a2b" stroke="none" />
         <Rect x={98} y={18} width={24} height={26} rx={8} fill={C.blue.hex} />
         <Circle cx={110} cy={10} r={10} fill="#e0ac69" />
+        <Path d="M96,6 Q110,-6 124,6 Z" fill="#ffd166" stroke="none" />
+        <G stroke="none">
+          <Circle cx={106.5} cy={11} r={1.4} fill="#2b2b2b" />
+          <Circle cx={113.5} cy={11} r={1.4} fill="#2b2b2b" />
+        </G>
         <Path d="M0,40 H220 L194,78 H26 Z" fill={colour} />
-        <Rect x={0} y={40} width={220} height={7} fill="#ffffff" fillOpacity={0.5} stroke="none" />
+        <G stroke="none">
+          <Rect x={0} y={40} width={220} height={7} fill="#ffffff" fillOpacity={0.5} />
+          {/* Planks along the hull, a shadow at the waterline. */}
+          <Path d="M10,56 H210 M18,66 H202" stroke="#000000" strokeOpacity={0.12} strokeWidth={2} />
+          <Path d="M26,78 H194 L198,72 H22 Z" fill="#000000" fillOpacity={0.12} />
+        </G>
         {/* The boat's number, big enough to read at a glance: it's asked about. */}
         <Rect x={84} y={46} width={52} height={30} rx={4} fill="#ffffff" />
         <SvgText x={110} y={62} fontSize={26} fontWeight="bold" fontFamily="Arial" fill="#212529" stroke="none" textAnchor="middle" alignmentBaseline="central">
@@ -84,10 +95,17 @@ const items: ItemDef[] = [
     draw: () => (
       <G>
         <Path d="M10,62 Q14,40 46,46 Q70,48 92,58 Q80,78 40,78 Q14,78 10,62 Z" fill="#f8f9fa" />
+        <G stroke="none">
+          {/* A folded wing with feather lines, and its reflection-shadow on the water. */}
+          <Path d="M22,58 Q40,44 70,54 Q50,66 26,66 Z" fill="#e9ecef" />
+          <Path d="M30,58 Q44,52 62,56 M28,62 Q44,58 58,60" fill="none" stroke="#ced4da" strokeWidth={2} />
+          <Path d="M14,76 Q46,82 86,72" fill="none" stroke="#ffffff" strokeOpacity={0.6} strokeWidth={3} />
+        </G>
         <Path d="M74,52 Q84,32 70,20 Q62,12 68,6" fill="none" stroke="#adb5bd" strokeWidth={12} strokeLinecap="round" />
         <Path d="M74,52 Q84,32 70,20 Q62,12 68,6" fill="none" stroke="#f8f9fa" strokeWidth={7} strokeLinecap="round" />
         <Circle cx={70} cy={8} r={7} fill="#f8f9fa" />
         <Path d="M76,6 L90,11 L76,13 Z" fill="#f77f00" stroke="none" />
+        <Path d="M74,4 Q78,6 76,10 L72,9 Z" fill="#212529" stroke="none" />
         <Circle cx={71} cy={6} r={1.8} fill="#111" stroke="none" />
       </G>
     ),
@@ -106,6 +124,7 @@ const items: ItemDef[] = [
     countable: false,
     tone: '#495057',
     // A stone fountain in the pond: a wide basin, a pedestal, a bowl, and water arcing down from the top.
+    // A stone fountain in the pond: a wide basin, a pedestal, a bowl, and water arcing down from the top.
     draw: () => (
       <G>
         <G fill="none" stroke="#cfe9f7" strokeWidth={6} strokeLinecap="round">
@@ -115,11 +134,22 @@ const items: ItemDef[] = [
           <Path d="M110,62 Q130,66 136,92" />
         </G>
         <Path d="M80,0 V18" stroke="#cfe9f7" strokeWidth={6} strokeLinecap="round" />
+        <G fill="#ffffff" stroke="none">
+          <Circle cx={66} cy={8} r={2.5} />
+          <Circle cx={96} cy={6} r={2} />
+          <Circle cx={36} cy={60} r={2} />
+          <Circle cx={126} cy={58} r={2.5} />
+        </G>
         <Path d="M44,50 H116 Q112,66 80,66 Q48,66 44,50 Z" fill="#495057" />
         <Path d="M72,18 H88 L84,50 H76 Z" fill="#495057" />
         <Path d="M72,66 H88 L92,96 H68 Z" fill="#495057" />
         <Path d="M4,92 H156 L146,120 H14 Z" fill="#495057" />
-        <Rect x={10} y={92} width={140} height={6} fill="#cfe9f7" stroke="none" />
+        <G stroke="none">
+          <Rect x={10} y={92} width={140} height={6} fill="#cfe9f7" />
+          {/* Stone blocks and light on the left of each piece. */}
+          <Path d="M40,98 V120 M80,98 V120 M120,98 V120 M14,108 H146" stroke="#343a40" strokeOpacity={0.5} strokeWidth={2} />
+          <Path d="M48,52 H62 Q60,60 54,62 Z M74,20 H78 L77,48 H75 Z M8,98 H24 L22,116 H16 Z" fill="#ffffff" fillOpacity={0.2} />
+        </G>
       </G>
     ),
   },
@@ -143,13 +173,21 @@ const items: ItemDef[] = [
           <Circle cx={25} cy={94} r={22} />
           <Circle cx={95} cy={94} r={22} />
         </G>
+        {/* Spokes, hubs and a chainring. */}
+        <G stroke="#adb5bd" strokeWidth={1.5} strokeOpacity={0.9}>
+          <Path d="M25,74 V114 M5,94 H45 M11,80 L39,108 M39,80 L11,108" />
+          <Path d="M95,74 V114 M75,94 H115 M81,80 L109,108 M109,80 L81,108" />
+        </G>
+        <Circle cx={58} cy={94} r={7} fill="none" stroke="#495057" strokeWidth={3} />
         <Path d="M25,94 L48,62 H86 L95,94 M48,62 L58,94 L25,94 M58,94 L86,62" fill="none" stroke={colour} strokeWidth={7} strokeLinejoin="round" />
         <Path d="M86,62 L84,46 H94" fill="none" stroke="#343a40" strokeWidth={5} strokeLinecap="round" />
-        {/* The rider: body leaning forward, hands on the handlebar, a foot on the pedal. */}
+        {/* The rider: body leaning forward, hands on the handlebar, a foot on the pedal, in a helmet. */}
         <Path d="M52,56 L62,94" fill="none" stroke="#343a40" strokeWidth={8} strokeLinecap="round" />
         <Path d="M52,56 L62,20" fill="none" stroke="#457b9d" strokeWidth={16} strokeLinecap="round" />
         <Path d="M62,26 L86,46" fill="none" stroke="#457b9d" strokeWidth={7} strokeLinecap="round" />
         <Circle cx={66} cy={10} r={10} fill="#e0ac69" />
+        <Path d="M55,8 Q60,-4 72,-1 Q78,2 77,9 Z" fill="#ffd60a" stroke="none" />
+        <Circle cx={71} cy={11} r={1.4} fill="#2b2b2b" stroke="none" />
         <Rect x={40} y={54} width={18} height={6} rx={3} fill="#343a40" />
       </G>
     ),
@@ -171,15 +209,27 @@ const items: ItemDef[] = [
     draw: (colour) => (
       <G>
         <Path d="M66,30 V64" stroke="#495057" strokeWidth={5} />
-        <Path d="M10,32 Q66,-8 122,32 Z" fill={colour} />
+        <Path d="M10,32 Q66,-8 122,32 Q115,38 108,32 Q101,38 94,32 Q87,38 80,32 Q73,38 66,32 Q59,38 52,32 Q45,38 38,32 Q31,38 24,32 Q17,38 10,32 Z" fill={colour} />
+        <G stroke="none">
+          <Path d="M66,4 Q52,14 46,34 L52,33 Q58,38 66,32 Z M66,4 Q92,10 104,32 L94,32 Q86,16 66,4 Z" fill="#ffffff" fillOpacity={0.5} />
+        </G>
         <Rect x={14} y={62} width={104} height={46} rx={6} fill="#fff3e0" />
         <G stroke="none">
-          <Path d="M54,74 L62,98 L70,74 Z" fill="#d4a373" />
+          {/* Pink stripes on the cart, three cones, and a lid on the freezer. */}
+          <Rect x={14} y={96} width={104} height={6} fill="#ff8fab" />
+          <Rect x={18} y={56} width={96} height={8} rx={3} fill="#adb5bd" />
+          <Path d="M30,74 L36,92 L42,74 Z M54,74 L62,98 L70,74 Z M86,74 L92,92 L98,74 Z" fill="#d4a373" />
+          <Path d="M54,78 L70,78 M57,86 L67,86" stroke="#b08155" strokeWidth={1.5} />
+          <Circle cx={36} cy={72} r={7} fill="#fff1a8" />
           <Circle cx={62} cy={72} r={9} fill="#ff8fab" />
+          <Circle cx={92} cy={72} r={7} fill="#8d5b3a" />
+          <Circle cx={58} cy={68} r={2.5} fill="#ffffff" fillOpacity={0.7} />
         </G>
         <Path d="M118,70 L134,66" stroke="#495057" strokeWidth={5} strokeLinecap="round" />
         <Circle cx={36} cy={116} r={12} fill="#343a40" stroke="none" />
         <Circle cx={96} cy={116} r={12} fill="#343a40" stroke="none" />
+        <Circle cx={36} cy={116} r={4} fill="#adb5bd" stroke="none" />
+        <Circle cx={96} cy={116} r={4} fill="#adb5bd" stroke="none" />
       </G>
     ),
   },
@@ -201,9 +251,16 @@ const items: ItemDef[] = [
     draw: (colour) => (
       <G>
         <Path d="M16,6 V70 M124,6 V70" fill="none" stroke="#343a40" strokeWidth={6} />
+        {/* Curled iron armrests. */}
+        <Path d="M4,42 Q2,30 14,30 M136,42 Q138,30 126,30" fill="none" stroke="#343a40" strokeWidth={4} strokeLinecap="round" />
         <Rect x={8} y={6} width={124} height={11} rx={3} fill={colour} />
         <Rect x={8} y={22} width={124} height={11} rx={3} fill={colour} />
         <Rect x={2} y={42} width={136} height={12} rx={3} fill={colour} />
+        <G stroke="none">
+          {/* Wood grain and light along the top of each slat. */}
+          <Path d="M20,11 H60 M76,12 H120 M24,27 H70 M84,28 H116 M14,48 H58 M72,48 H126" stroke="#000000" strokeOpacity={0.14} strokeWidth={1.5} />
+          <Path d="M10,7 H130 V9 H10 Z M10,23 H130 V25 H10 Z M4,43 H136 V45 H4 Z" fill="#ffffff" fillOpacity={0.35} />
+        </G>
       </G>
     ),
   },
@@ -222,10 +279,19 @@ const items: ItemDef[] = [
     draw: (colour) => (
       <G>
         <Path d="M14,36 H146 L160,62 H0 Z" fill={colour} />
-        <Path d="M50,36 L42,62 M84,36 L84,62 M118,36 L126,62 M7,49 H153" fill="none" stroke="#ffffff" strokeWidth={5} />
-        {/* A wicker basket on the blanket. */}
+        {/* A gingham check: white stripes both ways, brighter where they cross. */}
+        <G stroke="none">
+          <Path d="M36,36 L30,62 H40 L45,36 Z M68,36 L66,62 H76 L77,36 Z M100,36 L102,62 H112 L109,36 Z M132,36 L138,62 H148 L141,36 Z" fill="#ffffff" fillOpacity={0.5} />
+          <Path d="M10,42 H150 L152,46 H8 Z M4,53 H156 L158,57 H2 Z" fill="#ffffff" fillOpacity={0.5} />
+        </G>
+        {/* A wicker basket on the blanket, with a red apple. */}
         <Path d="M96,20 Q110,0 124,20" fill="none" stroke="#8a5a2b" strokeWidth={4} />
         <Rect x={92} y={18} width={36} height={24} rx={4} fill="#c8955a" />
+        <G stroke="none">
+          <Path d="M94,26 H126 M94,34 H126 M102,20 V40 M110,20 V40 M118,20 V40" stroke="#8a5a2b" strokeOpacity={0.6} strokeWidth={1.5} />
+          <Circle cx={74} cy={44} r={6} fill="#e63946" />
+          <Path d="M74,38 L76,34" stroke="#5c3d1e" strokeWidth={2} />
+        </G>
       </G>
     ),
   },
@@ -250,12 +316,23 @@ const items: ItemDef[] = [
             <Path key={i} d={`M${x},${i < 6 ? 46 : 50} V${i < 6 ? 24 : 12}`} />
           ))}
         </G>
-        {[22, 46, 70, 94, 118, 140].map((x) => (
-          <Circle key={x} cx={x} cy={22} r={10} fill={colour} />
+        {/* Leaves on the stems. */}
+        <G fill="#40a85a" stroke="none">
+          {[22, 70, 118, 46, 94, 140].map((x, i) => (
+            <Path key={x} d={i < 3 ? `M${x},38 q-10,-2 -12,-10 q10,0 12,10 Z` : `M${x},36 q10,-2 12,-10 q-10,0 -12,10 Z`} />
+          ))}
+        </G>
+        {/* Each flower: five petals round a yellow middle. */}
+        {[...[22, 46, 70, 94, 118, 140].map((x) => [x, 22]), ...[34, 82, 130].map((x) => [x, 12])].map(([x, y]) => (
+          <G key={`${x}-${y}`}>
+            <Circle cx={x} cy={y} r={10} fill={colour} />
+            <G stroke="none">
+              <Path d={`M${x},${y - 10} V${y + 10} M${x - 10},${y - 3} L${x + 10},${y + 3} M${x - 10},${y + 3} L${x + 10},${y - 3}`} stroke="#000000" strokeOpacity={0.12} strokeWidth={1.5} />
+              <Circle cx={x} cy={y} r={3.5} fill="#ffd60a" />
+            </G>
+          </G>
         ))}
-        {[34, 82, 130].map((x) => (
-          <Circle key={x} cx={x} cy={12} r={10} fill={colour} />
-        ))}
+        <Path d="M10,62 Q80,48 150,62" fill="none" stroke="#5c3a1b" strokeOpacity={0.5} strokeWidth={2} />
       </G>
     ),
   },
@@ -276,8 +353,10 @@ const items: ItemDef[] = [
     draw: () => (
       <G>
         <Path d="M14,140 L34,8 M54,140 L34,8 M106,140 L126,8 M146,140 L126,8" fill="none" stroke="#d62828" strokeWidth={9} strokeLinecap="round" />
+        <Path d="M18,136 L36,12 M110,136 L128,12" fill="none" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={2.5} strokeLinecap="round" />
         <Rect x={28} y={2} width={104} height={11} rx={4} fill="#d62828" />
-        <G stroke="#6c757d" strokeWidth={3}>
+        {/* Chains, drawn as links. */}
+        <G stroke="#6c757d" strokeWidth={3} strokeDasharray="5 3">
           <Path d="M60,12 V96 M80,12 V96 M88,12 V88 M104,12 V88" fill="none" />
         </G>
         <Rect x={54} y={94} width={32} height={8} rx={3} fill="#343a40" />
@@ -303,6 +382,11 @@ const items: ItemDef[] = [
         <Path d="M14,112 V14 M44,112 V14 M14,40 H44 M14,64 H44 M14,88 H44" fill="none" stroke="#6c757d" strokeWidth={6} />
         <Rect x={8} y={8} width={44} height={10} rx={3} fill="#6c757d" />
         <Path d="M44,10 Q60,10 80,40 L120,98 Q128,108 152,108 L156,96 Q134,96 128,88 L90,32 Q72,0 44,0 Z" fill={colour} />
+        <G stroke="none">
+          {/* A shiny streak down the slide and the raised edge along it. */}
+          <Path d="M48,4 Q66,6 82,30 L118,86 Q126,96 144,98" fill="none" stroke="#ffffff" strokeOpacity={0.45} strokeWidth={3} strokeLinecap="round" />
+          <Path d="M44,10 Q60,10 80,40 L120,98 Q128,108 152,108 L153,104 Q130,104 123,94 L84,38 Q64,10 44,14 Z" fill="#000000" fillOpacity={0.15} />
+        </G>
       </G>
     ),
   },
@@ -382,9 +466,18 @@ function backdrop(height: number, p: Palette) {
           <Circle key={i} cx={-560 + i * 100} cy={pond - 4 + (i % 2) * 6} r={40} />
         ))}
       </G>
+      {/* Sunlit clumps on the near bushes. */}
+      <G fill="#ffffff" fillOpacity={0.14}>
+        {Array.from({ length: 22 }, (_, i) => (
+          <Circle key={i} cx={-572 + i * 100} cy={pond - 18 + (i % 2) * 6} r={16} />
+        ))}
+      </G>
       <Rect x={-600} y={pond} width={2100} height={bank - pond} fill={p.pond} />
+      {/* Glints of sky on the pond. */}
+      {glints({ x0: -40, y0: pond + 10, x1: 940, y1: bank - 8 }, 36, '#ffffff', 0.4, 18, 3)}
       <Rect x={-600} y={bank} width={2100} height={path - bank} fill={p.grass} />
       <Rect x={-600} y={path} width={2100} height={grass - path} fill={p.path} />
+      {speckles({ x0: -40, y0: path + 6, x1: 940, y1: grass - 6 }, 160, '#8a7350', 0.3, 3)}
       <Rect x={-600} y={path} width={2100} height={5} fill={p.edge} />
       <Rect x={-600} y={grass - 5} width={2100} height={5} fill={p.edge} />
       <Rect x={-600} y={grass} width={2100} height={height - grass + 600} fill={p.grass} />
