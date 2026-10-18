@@ -59,6 +59,12 @@ const items: ItemDef[] = [
           <Path d="M20,80 Q40,74 60,82 Q40,88 20,80 Z" />
           <Path d="M70,24 Q90,18 108,28 Q90,32 70,24 Z" />
         </G>
+        <G stroke="none">
+          {/* An ice cap, a thin glow of air round the edge and night falling on one side. */}
+          <Path d="M50,12 Q70,6 90,12 Q70,18 50,12 Z" fill="#ffffff" />
+          <Circle cx={70} cy={70} r={62} fill="none" stroke="#a5d8ff" strokeOpacity={0.6} strokeWidth={3} />
+          <Path d="M70,8 A62,62 0 0 1 70,132 A40,62 0 0 0 70,8 Z" fill="#000000" fillOpacity={0.3} />
+        </G>
       </G>
     ),
   },
@@ -82,6 +88,13 @@ const items: ItemDef[] = [
         <Path d="M50,35 H100" stroke="#adb5bd" strokeWidth={4} />
         <Rect x={60} y={16} width={30} height={38} rx={4} fill="#ffd60a" />
         <Path d="M75,16 V4 M68,4 H82" stroke="#adb5bd" strokeWidth={3} />
+        <G stroke="none">
+          {/* Cells in the solar panels, crinkled gold foil, and a little dish. */}
+          <Path d="M4,35 H50 M100,35 H146 M15,22 V48 M38,22 V48 M112,22 V48 M134,22 V48" stroke="#a5d8ff" strokeOpacity={0.6} strokeWidth={1.2} />
+          <Path d="M62,26 l8,4 l-6,6 l10,4 M78,44 l8,-4 l-4,8" fill="none" stroke="#b8861b" strokeWidth={1.5} />
+          <Ellipse cx={75} cy={54} rx={8} ry={3} fill="#dee2e6" />
+          <Path d="M64,18 V52" stroke="#ffffff" strokeOpacity={0.4} strokeWidth={2} />
+        </G>
       </G>
     ),
   },
@@ -108,6 +121,14 @@ const items: ItemDef[] = [
         <Path d="M35,4 Q46,16 50,28 H20 Q24,16 35,4 Z" fill={colour} />
         <Path d="M22,98 Q35,150 48,98 Z" fill="#ffd60a" stroke="none" />
         <Path d="M28,98 Q35,130 42,98 Z" fill="#f77f00" stroke="none" />
+        <G stroke="none">
+          {/* A rim and a shine on the porthole, panel lines and a shine down the body. */}
+          <Circle cx={35} cy={50} r={10} fill="none" stroke="#adb5bd" strokeWidth={2.5} />
+          <Circle cx={32} cy={47} r={3} fill="#ffffff" fillOpacity={0.7} />
+          <Path d="M17,72 H53 M15,88 H55" stroke="#adb5bd" strokeWidth={1.5} />
+          <Path d="M22,34 Q20,60 20,90" fill="none" stroke="#ffffff" strokeWidth={3} strokeLinecap="round" />
+          <Rect x={22} y={94} width={26} height={6} rx={2} fill="#868e96" />
+        </G>
       </G>
     ),
   },
@@ -135,6 +156,17 @@ const items: ItemDef[] = [
         <Path d="M24,34 V46 M146,34 V46 M24,40 H146" stroke="#adb5bd" strokeWidth={4} />
         <Rect x={60} y={28} width={50} height={24} rx={10} fill="#dee2e6" />
         <Rect x={76} y={20} width={18} height={40} rx={6} fill="#dee2e6" />
+        <G stroke="none">
+          {/* Cells in the panels, portholes, joints between the modules and a blinking light. */}
+          {[4, 126].map((x) => (
+            <Path key={x} d={`M${x + 13},4 V34 M${x + 27},4 V34 M${x + 13},46 V76 M${x + 27},46 V76`} stroke="#a5d8ff" strokeOpacity={0.6} strokeWidth={1.2} />
+          ))}
+          <Circle cx={70} cy={40} r={3} fill="#4dabf7" />
+          <Circle cx={100} cy={40} r={3} fill="#4dabf7" />
+          <Circle cx={85} cy={28} r={3} fill="#4dabf7" />
+          <Path d="M76,30 H94 M76,50 H94" stroke="#adb5bd" strokeWidth={2} />
+          <Circle cx={85} cy={20} r={2.5} fill="#e63946" />
+        </G>
       </G>
     ),
   },
@@ -156,6 +188,14 @@ const items: ItemDef[] = [
         <Path d="M4,60 Q80,30 140,22 L146,40 Q90,44 4,60 Z" fill="#a5d8ff" stroke="none" opacity={0.6} />
         <Path d="M30,58 Q90,38 142,30" fill="none" stroke="#e7f5ff" strokeWidth={3} opacity={0.8} />
         <Circle cx={150} cy={30} r={14} fill="#e7f5ff" />
+        <G stroke="none">
+          {/* A glow round the head, a bright heart and bits of dust left in the tail. */}
+          <Circle cx={150} cy={30} r={20} fill="#e7f5ff" fillOpacity={0.25} />
+          <Circle cx={153} cy={28} r={6} fill="#ffffff" />
+          <Circle cx={110} cy={40} r={2} fill="#ffffff" fillOpacity={0.8} />
+          <Circle cx={80} cy={46} r={1.5} fill="#ffffff" fillOpacity={0.7} />
+          <Circle cx={50} cy={52} r={1.5} fill="#ffffff" fillOpacity={0.6} />
+        </G>
       </G>
     ),
   },
@@ -186,6 +226,16 @@ const items: ItemDef[] = [
         <Path d="M76,26 H96 V46 H72 Z" fill="#1b2a4a" stroke="none" />
         <Path d="M100,18 V4 M92,4 H108" stroke="#adb5bd" strokeWidth={4} />
         <Path d="M86,104 L80,120 H120 L114,104 Z" fill="#868e96" />
+        <G stroke="none">
+          {/* Crinkles in the gold foil, a glint on the window, a hatch, a ladder down a leg and a shine on the cabin. */}
+          <Path d="M36,70 l10,6 l-6,8 l12,4 M110,66 l10,8 l-8,6 l12,6 M70,90 l8,-6 l6,8" fill="none" stroke="#fff3bf" strokeOpacity={0.6} strokeWidth={2} />
+          <Path d="M78,28 L86,28 L78,38 Z" fill="#ffffff" fillOpacity={0.5} />
+          <Rect x={108} y={30} width={22} height={24} rx={3} fill="none" stroke="#adb5bd" strokeWidth={2} />
+          <Path d="M44,100 L22,126 M50,104 L28,130 M40,108 L46,110 M33,116 L39,118 M27,124 L33,126" stroke="#868e96" strokeWidth={2} />
+          <Path d="M66,22 L60,54" stroke="#ffffff" strokeOpacity={0.5} strokeWidth={3} strokeLinecap="round" />
+          <Ellipse cx={11} cy={132} rx={12} ry={3} fill="#868e96" />
+          <Ellipse cx={189} cy={132} rx={12} ry={3} fill="#868e96" />
+        </G>
       </G>
     ),
   },
@@ -216,6 +266,17 @@ const items: ItemDef[] = [
           <Circle cx={98} cy={44} r={9} />
         </G>
         <Path d="M30,104 V110 M190,104 V110" stroke="#868e96" strokeWidth={6} />
+        <G stroke="none">
+          {/* Panel seams, rivets round the door, warm light in the windows, a vent and a shine along the top. */}
+          <Path d="M60,16 V104 M120,16 V104" stroke="#adb5bd" strokeWidth={1.5} />
+          {[0, 60, 120, 180, 240, 300].map((a) => (
+            <Circle key={a} cx={160 + 18 * Math.cos((a * Math.PI) / 180)} cy={58 + 18 * Math.sin((a * Math.PI) / 180)} r={1.6} fill="#495057" />
+          ))}
+          <Circle cx={61} cy={41} r={3} fill="#ffffff" fillOpacity={0.6} />
+          <Circle cx={95} cy={41} r={3} fill="#ffffff" fillOpacity={0.6} />
+          <Path d="M30,92 h20 M30,96 h20" stroke="#868e96" strokeWidth={2} />
+          <Path d="M50,22 Q100,14 170,22" fill="none" stroke="#ffffff" strokeWidth={3} strokeLinecap="round" />
+        </G>
       </G>
     ),
   },
@@ -238,6 +299,13 @@ const items: ItemDef[] = [
         <Path d="M85,70 V110 M60,110 H110" stroke="#adb5bd" strokeWidth={6} />
         <Polygon points="10,60 160,60 140,6 30,6" fill="#1d70d6" />
         <Path d="M48,6 L38,60 M85,6 V60 M122,6 L132,60 M20,33 H150" stroke="#a5d8ff" strokeWidth={2} />
+        <G stroke="none">
+          {/* The sun glinting off the cells, a frame along the bottom and a cable to the base. */}
+          <Path d="M40,10 L60,10 L46,30 L28,30 Z" fill="#ffffff" fillOpacity={0.3} />
+          <Path d="M100,36 L116,36 L120,56 L104,56 Z" fill="#ffffff" fillOpacity={0.15} />
+          <Rect x={10} y={58} width={150} height={4} fill="#adb5bd" />
+          <Path d="M88,92 Q110,104 140,108" fill="none" stroke="#343a40" strokeWidth={2.5} />
+        </G>
       </G>
     ),
   },
@@ -261,6 +329,13 @@ const items: ItemDef[] = [
         <Path d="M6,30 Q30,90 104,62 Q70,40 6,30 Z" fill="#dee2e6" />
         <Path d="M50,56 L78,22" stroke="#868e96" strokeWidth={3} />
         <Circle cx={80} cy={20} r={5} fill="#e63946" stroke="none" />
+        <G stroke="none">
+          {/* Rings in the dish, struts to the receiver and a box at the foot. */}
+          <Path d="M20,38 Q40,70 88,60 M34,42 Q48,62 76,58" fill="none" stroke="#adb5bd" strokeWidth={1.5} />
+          <Path d="M30,50 L78,22 M80,60 L80,24" stroke="#868e96" strokeWidth={2} />
+          <Rect x={62} y={108} width={20} height={16} rx={2} fill="#adb5bd" />
+          <Circle cx={72} cy={114} r={2} fill="#69db7c" />
+        </G>
       </G>
     ),
   },
@@ -283,6 +358,13 @@ const items: ItemDef[] = [
         <Rect x={8} y={0} width={6} height={150} fill="#adb5bd" stroke="none" />
         <Rect x={14} y={6} width={74} height={50} fill={colour} />
         <Circle cx={51} cy={31} r={12} fill="#ffffff" stroke="none" opacity={0.9} />
+        <G stroke="none">
+          {/* A star in the circle, the bar along the top, ripples where the cloth hangs and a foot in the dust. */}
+          <Path d="M51,23 L53.5,29 L60,29.5 L55,33.5 L56.5,40 L51,36.5 L45.5,40 L47,33.5 L42,29.5 L48.5,29 Z" fill={colour} />
+          <Rect x={8} y={4} width={82} height={3} fill="#868e96" />
+          <Path d="M36,8 V54 M66,8 V54" stroke="#000000" strokeOpacity={0.12} strokeWidth={4} />
+          <Ellipse cx={11} cy={148} rx={12} ry={3} fill="#5c5f66" fillOpacity={0.6} />
+        </G>
       </G>
     ),
   },
@@ -317,6 +399,18 @@ const items: ItemDef[] = [
         <Circle cx={44} cy={20} r={20} fill="#f8f9fa" />
         <Path d="M30,16 Q44,6 58,16 Q58,32 44,32 Q30,32 30,16 Z" fill="#e0a526" stroke="none" />
         <Rect x={34} y={52} width={20} height={10} rx={2} fill={colour} stroke="none" />
+        <G stroke="none">
+          {/* A reflection in the visor, buttons on the chest panel, a hose, gloves, boots and suit seams. */}
+          <Path d="M36,14 Q42,10 48,12" fill="none" stroke="#ffffff" strokeOpacity={0.8} strokeWidth={2.5} strokeLinecap="round" />
+          <Circle cx={40} cy={57} r={1.8} fill="#ffffff" />
+          <Circle cx={47} cy={57} r={1.8} fill="#ffffff" />
+          <Path d="M28,50 Q20,62 30,74" fill="none" stroke="#adb5bd" strokeWidth={3} />
+          <Circle cx={67} cy={82} r={6} fill="#adb5bd" />
+          <Rect x={24} y={120} width={18} height={9} rx={3} fill="#868e96" />
+          <Rect x={42} y={120} width={18} height={9} rx={3} fill="#868e96" />
+          <Path d="M26,98 H40 M44,98 H58 M24,70 H64" stroke="#ced4da" strokeWidth={2} />
+          <Circle cx={44} cy={38} r={5} fill="none" stroke="#ced4da" strokeWidth={2} />
+        </G>
       </G>
     ),
   },
@@ -350,6 +444,15 @@ const items: ItemDef[] = [
           <Circle cx={50} cy={74} r={10} />
           <Circle cx={170} cy={74} r={10} />
         </G>
+        <G stroke="none">
+          {/* Wire-mesh tyres, mudguards, a backrest on the seat, a camera and an antenna dish. */}
+          <Circle cx={50} cy={74} r={19} fill="none" stroke="#868e96" strokeWidth={2} strokeDasharray="3 3" />
+          <Circle cx={170} cy={74} r={19} fill="none" stroke="#868e96" strokeWidth={2} strokeDasharray="3 3" />
+          <Path d="M22,62 Q50,40 78,62 M142,62 Q170,40 198,62" fill="none" stroke="#868e96" strokeWidth={4} />
+          <Rect x={80} y={18} width={10} height={14} rx={2} fill={colour} />
+          <Rect x={60} y={38} width={14} height={10} rx={2} fill="#343a40" />
+          <Path d="M84,28 H124" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={3} strokeLinecap="round" />
+        </G>
       </G>
     ),
   },
@@ -372,6 +475,13 @@ const items: ItemDef[] = [
         <G fill="#43464c" stroke="none">
           <Circle cx={40} cy={34} r={5} />
           <Circle cx={72} cy={44} r={4} />
+        </G>
+        <G stroke="none">
+          {/* Light on the sunny top, more pits, and a crack. */}
+          <Path d="M24,26 Q46,10 72,16" fill="none" stroke="#ffffff" strokeOpacity={0.25} strokeWidth={5} strokeLinecap="round" />
+          <Circle cx={56} cy={54} r={3} fill="#43464c" />
+          <Circle cx={88} cy={30} r={2.5} fill="#43464c" />
+          <Path d="M80,62 L86,48 L82,40" fill="none" stroke="#43464c" strokeWidth={2} strokeLinecap="round" />
         </G>
       </G>
     ),
@@ -403,6 +513,18 @@ const items: ItemDef[] = [
           <Circle cx={22} cy={84} r={10} />
           <Circle cx={50} cy={84} r={10} />
           <Circle cx={78} cy={84} r={10} />
+        </G>
+        <G stroke="none">
+          {/* Hubs, glints in the camera eyes, an arm with a scoop, a small solar panel and a status light. */}
+          {[22, 50, 78].map((x) => (
+            <Circle key={x} cx={x} cy={84} r={3.5} fill="#868e96" />
+          ))}
+          <Circle cx={43} cy={15} r={1.5} fill="#ffffff" />
+          <Circle cx={55} cy={15} r={1.5} fill="#ffffff" />
+          <Path d="M86,60 L96,48 L98,58" fill="none" stroke="#868e96" strokeWidth={3} strokeLinejoin="round" />
+          <Rect x={18} y={44} width={28} height={6} fill="#1d70d6" />
+          <Circle cx={74} cy={63} r={2.5} fill="#69db7c" />
+          <Path d="M18,56 H82" stroke="#ced4da" strokeWidth={2} />
         </G>
       </G>
     ),
@@ -471,17 +593,32 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
   return (
     <G>
       <Rect x={-600} y={-600} width={2100} height={hills + 600} fill={p.sky} />
+      {/* Many tiny stars, the bright ones, and a twinkle on the brightest. */}
+      {speckles({ x0: -40, y0: 4, x1: 940, y1: sky - 10 }, 110, p.stars, 0.5, 1.6, 93)}
       <G fill={p.stars}>
         {STARS.map(([x, y, r]) => (
           <Circle key={`${x}-${y}`} cx={x * 900} cy={y * sky * 0.95} r={r} />
         ))}
       </G>
+      <G stroke={p.stars} strokeWidth={1.5} strokeOpacity={0.7}>
+        {STARS.filter(([, , r]) => r >= 3).map(([x, y]) => (
+          <Path key={`${x}-${y}`} d={`M${x * 900 - 8},${y * sky * 0.95}h16M${x * 900},${y * sky * 0.95 - 8}v16`} />
+        ))}
+      </G>
       {/* Low grey hills on the horizon, then the dusty ground. */}
       <Path d={`M-600,${hills} L-600,${sky + 30} Q-300,${sky - 10} 0,${sky + 26} Q240,${sky + 50} 450,${sky + 14} Q660,${sky - 16} 900,${sky + 30} Q1200,${sky + 50} 1500,${sky + 10} V${hills} Z`} fill={p.hills} />
+      {/* Little craters on the far hills. */}
+      <G fill="#000000" fillOpacity={0.12}>
+        <Ellipse cx={120} cy={sky + 46} rx={26} ry={6} />
+        <Ellipse cx={520} cy={sky + 40} rx={20} ry={5} />
+        <Ellipse cx={780} cy={sky + 52} rx={30} ry={6} />
+      </G>
       <Rect x={-600} y={hills} width={2100} height={height - hills + 600} fill={p.ground} />
       {/* The texture of the ground. */}
       {speckles({ x0: -40, y0: hills + 10, x1: 940, y1: height }, 260, '#000000', 0.14, 4)}
       {speckles({ x0: -40, y0: hills + 10, x1: 940, y1: height }, 120, '#ffffff', 0.12, 3, 29)}
+      {/* Pebbles and small pits scattered in the dust. */}
+      {speckles({ x0: -40, y0: hills + 20, x1: 940, y1: height }, 40, '#43464c', 0.35, 7, 47)}
       {/* The base sign on two posts: the mission name, then the base number. */}
       <G>
         <Rect x={s.x + s.w * 0.15} y={s.y + s.h * 0.8} width={8} height={s.h * 0.5} fill="#868e96" />

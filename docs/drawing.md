@@ -46,7 +46,7 @@ Things are drawn in layers inside their own box: the main shape in the asked-abo
 
 **Ground texture** (`src/scenes/texture.tsx`): `speckles` (sand grain, gravel, dust, snow sparkle), `strokes` (grass blades) and `glints` (sun on water), each hundreds of tiny marks drawn as a single path, placed with a fixed seed so a place looks the same every time. Each backdrop adds its texture right after its ground colour, under signs and boards. It's faint on purpose: the contrast rules use the band's plain colour, and texture never makes a thing harder to see.
 
-Redrawn so far: **the beach**, **the living room**, **the park**, **the city street**, **the kitchen**, **the farm**, **under the sea**, **the supermarket**, **the train station**, **the zoo**, **the snowy mountain**, **the classroom** and **the night campsite**. The beach was the first (with a far headland, wet sand at the water's edge and glints on the sea), with the shared things it uses: sun, birds, clouds, balloons, kites, trees, plant pots, balls, dolphins, crabs, starfish, people and dogs.
+Redrawn: **the beach**, **the living room**, **the park**, **the city street**, **the kitchen**, **the farm**, **under the sea**, **the supermarket**, **the train station**, **the zoo**, **the snowy mountain**, **the classroom**, **the night campsite**, **the airport** and **on the Moon**: all fifteen. The beach was the first (with a far headland, wet sand at the water's edge and glints on the sea), with the shared things it uses: sun, birds, clouds, balloons, kites, trees, plant pots, balls, dolphins, crabs, starfish, people and dogs.
 
 ## Outlines
 

@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.60 (2026-10-18)
+
+- **Richer drawings, part 8 (the last): the airport and On the Moon.** Every place is now drawn in the richer style.
+  - **Airport:** glare across the big window; grass texture and yellow lights along the runway edge; panels on the lounge wall. A helicopter with a rotor blur, a tail rotor and a belly light; the parked plane with an engine, a door and cockpit glare; a fuel truck with a hose reel and a beacon; a baggage train with a driver and case handles; the control tower with window frames and a red light on the mast; pilots with gold wings and buttons; luggage trolleys with tags and handles; seats with armrests and stitching; a coffee kiosk with a menu, a coffee machine and steam; the information desk with a screen, a bell and leaflets.
+  - **On the Moon:** many tiny stars with a twinkle on the brightest; little craters on the far hills; pebbles in the dust. The Earth with an ice cap, a glow of air and night on one side; satellites with panel cells and gold foil; a rocket with a porthole rim and panel lines; the space station with portholes and a blinking light; a comet with a glow and dust in its tail; the lander with crinkled foil, a hatch and a ladder; the habitat pod with rivets round the door and light in the windows; solar panels glinting in the sun; a radio dish with struts; the flag with a star; astronauts with a visor reflection, gloves, boots and a hose; the moon buggy with wire-mesh tyres and mudguards; boulders with pits and a crack; the robot with an arm, a solar panel and a status light.
+  - Same sizes and shapes as before, so layout and every check are unchanged.
+
 ## 4.0.0-beta.59 (2026-10-18)
 
 - **Richer drawings, part 7: the classroom and the night campsite.**
