@@ -10,6 +10,12 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.50 (2026-10-18)
+
+- **Zoo: every animal in its own habitat.** Four habitats now: grassland (giraffes, elephants, zebras, lions), a sandy paddock (rhinos, ostriches, kangaroos), rocks with boulders (bears) and snow and ice with a pool (penguins). An animal may only stand in an enclosure with its own habitat: a hard rule, not left to contrast (before, bears ended up on sand). Grass tufts only grow on grass.
+- **New animal: penguins**, in the snow-and-ice enclosure, and on the feeding-time sign when they're there.
+- New engine rule `fits` (where things may stand in this picture), checked by `check:scenes` for every picture and every re-layout. Independently checked on 1,800 zoo pictures: 3,250 animals, none in the wrong habitat.
+
 ## 4.0.0-beta.49 (2026-10-18)
 
 - **Zoo: the feeding-time sign now matches the picture.** It always names an animal that's really in one of the enclosures, with an arrow pointing at its enclosure (up-left, up or up-right). Before, it could say "Elephants" with no elephant in sight, and half its options (penguins, seals, monkeys) don't live in this zoo. Wrong answers to "Which animals were being fed?" are now other animals from this zoo. Checked on 600 pictures: the animal is there and the arrow points the right way in every one.

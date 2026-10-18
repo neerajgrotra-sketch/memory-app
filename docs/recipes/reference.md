@@ -469,7 +469,7 @@ Per-picture details: "What time was feeding time?" on every level.
 | sunny | sky `#8fd3f4`, trees `#5a9e3e`, treesDark `#3f7f2e`, enc0 `#3f6f4a`, enc1 `#ead9a8`, enc2 `#3f6f4a`, wall `#b8a07a`, fence `#6b4f36`, path `#e9dcc0`, edge `#c9b48c`, tuft `#6f9a3a` |
 | evening | sky `#f6c28b`, trees `#6a8f3e`, treesDark `#4f7230`, enc0 `#3f6f4a`, enc1 `#ead9a8`, enc2 `#3f6f4a`, wall `#a8906a`, fence `#5c4430`, path `#e3d3b0`, edge `#c2ad84`, tuft `#7a8f3a` |
 
-### Things (18)
+### Things (19)
 
 | Thing | Band | Size | Most | Colours | Habits |
 | --- | --- | --- | --- | --- | --- |
@@ -485,6 +485,7 @@ Per-picture details: "What time was feeding time?" on every level.
 | ostrich | enclosure | small 12% | 3 | fixed (`#343a40`) | – |
 | kangaroo | enclosure | small 13% | 3 | fixed (`#c68642`) | – |
 | bear | enclosure | large 23% | 1 | fixed (`#6b4423`) | – |
+| penguin | enclosure | small 10% | 4 | fixed (`#212529`) | – |
 | visitor | path | small 10% | 4 | Red, Blue, Yellow, Green, Orange, Purple, Pink, White | – |
 | zookeeper | path | small 10% | 2 | fixed (`#5f7a2a`) | – |
 | bench | path | large 21% | 2 | Green, Brown, Red, Blue | copies spread one per third, on one line |

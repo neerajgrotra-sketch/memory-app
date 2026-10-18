@@ -14,7 +14,16 @@ Code: `src/scenes/recipes/zoo.tsx`. Exact sizes, counts and colours: [reference]
 
 ## Habitats
 
-Each enclosure has its own ground, chosen per picture: **grass** or **sand**, at least one of each (`details.palette.enc0`–`enc2`). No one ground suits every animal (they run from a pale zebra to a dark bear), so the contrast rules put each animal where it stands out: giraffes, elephants, zebras and lions on the grass; rhinos, ostriches, kangaroos and bears on the sand. A real zoo gives animals different habitats too.
+Each enclosure has its own habitat, chosen per picture (`details.values.habitat0`–`2`, drawn in `details.palette.enc0`–`enc2`), and **every animal lives only in its own**. This is a hard rule (the recipe's `fits`), not left to contrast, and the scene checker fails any picture that breaks it:
+
+| Habitat | Drawn as | Animals |
+| --- | --- | --- |
+| Grassland | green, with grass tufts | giraffes, elephants, zebras, lions |
+| Sandy paddock | pale sand | rhinos, ostriches, kangaroos |
+| Rocks | grey, with boulders at the back | bears |
+| Snow and ice | white, with a pool and drifts | penguins |
+
+Every picture has grassland and a sandy paddock (most animals live there); the third enclosure is often rocks or ice. Checked independently on 1,800 pictures (and their layouts for another phone): 3,250 animals, none in the wrong habitat. Before, the habitats were only grass or sand and contrast decided where animals went, so bears ended up on sand.
 
 ## Scale
 
@@ -22,10 +31,10 @@ Sized against the shared person (1.7 m, 1 m ≈ 0.115 of the width). An enclosur
 
 **Left out:** penguins, monkeys, parrots and other animals under about 1 m: at the 44 pt minimum they'd be drawn as big as a person.
 
-## Things (18)
+## Things (19)
 
 - **Sky:** the sun, birds, hot-air balloons, a plane.
-- **Enclosures:** giraffe, elephant, zebra, lion, rhino (one of each at most); ostriches and kangaroos (up to 3); bear.
+- **Enclosures:** giraffe, elephant, zebra, lion, rhino (one of each at most); ostriches and kangaroos (up to 3); bear; penguins (up to 4, about 1.2 m tall, like emperor penguins).
 - **Path:** visitors, zookeepers (green uniform and hat), benches, pushchairs, a balloon seller (the balloons' colour is asked), a signpost.
 
 ## The feeding-time sign

@@ -290,6 +290,39 @@ const items: ItemDef[] = [
     ),
   },
 
+  {
+    kind: 'penguin',
+    singular: 'penguin',
+    plural: 'penguins',
+    article: 'a',
+    w: 60,
+    h: 90,
+    tier: 'small',
+    // About 1.2 m tall, like an emperor penguin; they live in the snow-and-ice enclosure.
+    size: 0.1,
+    ...animal,
+    maxCount: 4,
+    tone: '#212529',
+    draw: () => (
+      <G>
+        <Ellipse cx={30} cy={52} rx={24} ry={34} fill="#212529" />
+        <Circle cx={30} cy={18} r={15} fill="#212529" />
+        <G stroke="none">
+          <Ellipse cx={30} cy={58} rx={16} ry={26} fill="#f8f9fa" />
+          <Path d="M20,22 Q30,30 40,22 Q36,34 30,36 Q24,34 20,22 Z" fill="#ffd166" fillOpacity={0.85} />
+          <Circle cx={25} cy={15} r={2.5} fill="#ffffff" />
+          <Circle cx={35} cy={15} r={2.5} fill="#ffffff" />
+          <Circle cx={25} cy={15} r={1.3} fill="#111" />
+          <Circle cx={35} cy={15} r={1.3} fill="#111" />
+          <Path d="M27,20 L30,26 L33,20 Z" fill="#f77f00" />
+          <Path d="M6,46 Q0,62 8,74 L12,58 Z M54,46 Q60,62 52,74 L48,58 Z" fill="#343a40" />
+          <Ellipse cx={22} cy={87} rx={7} ry={3} fill="#f77f00" />
+          <Ellipse cx={38} cy={87} rx={7} ry={3} fill="#f77f00" />
+        </G>
+      </G>
+    ),
+  },
+
   // ---- On the path ----
   { ...person, singular: 'visitor', plural: 'visitors', zones: ON_PATH, maxCount: 4, colourPrompt: (plural) => (plural ? 'What colour were the visitors’ shirts?' : 'What colour was the visitor’s shirt?') },
   {
@@ -408,27 +441,45 @@ const items: ItemDef[] = [
 ];
 
 /** The animals that live in the enclosures: the feeding-time sign always names one of them that's in the picture. */
-const ANIMALS = ['giraffe', 'elephant', 'zebra', 'lion', 'rhino', 'ostrich', 'kangaroo', 'bear'];
+const ANIMALS = ['giraffe', 'elephant', 'zebra', 'lion', 'rhino', 'ostrich', 'kangaroo', 'bear', 'penguin'];
 const pluralOf = (kind: string) => items.find((i) => i.kind === kind)!.plural;
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 /**
- * Each enclosure has its own habitat, chosen per picture: grass or sand, at least one of each. No one
- * ground suits every animal (they run from a pale zebra to a dark bear), so the contrast rules put each
- * animal where it shows up: giraffes, elephants, zebras and lions on the grass; rhinos, ostriches,
- * kangaroos and bears on the sand.
+ * Each enclosure has its own habitat, chosen per picture, and every animal lives only in its own (a hard
+ * rule, `fits`, not left to contrast): grassland for giraffes, elephants, zebras and lions; a dry, sandy
+ * paddock for rhinos, ostriches and kangaroos; rocks for bears; snow and ice with a pool for penguins.
  */
-const HABITATS = { grass: '#3f6f4a', sand: '#ead9a8' };
+type Habitat = 'grass' | 'sand' | 'rocks' | 'ice';
+const HABITATS: Record<Habitat, string> = { grass: '#3f6f4a', sand: '#ead9a8', rocks: '#b9b2a6', ice: '#e8f1f7' };
+const HOME: Record<string, Habitat> = {
+  giraffe: 'grass',
+  elephant: 'grass',
+  zebra: 'grass',
+  lion: 'grass',
+  rhino: 'sand',
+  ostrich: 'sand',
+  kangaroo: 'sand',
+  bear: 'rocks',
+  penguin: 'ice',
+};
+
+/** Animals only in an enclosure with their own habitat; everything else anywhere its band allows. */
+function fits(item: ItemDef, zoneId: string, col: number, d?: SceneDetails): boolean {
+  const home = HOME[item.kind];
+  return zoneId !== 'enclosure' || !home || d?.values?.[`habitat${col}`] === home;
+}
 
 /** The feeding-time sign (a time and which animals) and the enclosures' habitats, chosen per picture. */
 function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
-  const habitats = random.shuffle(['grass', 'sand', random.next() < 0.5 ? 'grass' : 'sand'] as const);
+  // Grassland and a sandy paddock every time (most animals live there), and a third that's often rocks or ice.
+  const habitats = random.shuffle<Habitat>(['grass', 'sand', random.pick<Habitat>(['rocks', 'ice', 'rocks', 'ice', 'grass', 'sand'])]);
   // A printed time on a sign: on the clock-face steps (whole hours, half past, quarters).
   const time = randomTime(random, clockStep);
   const { close, other } = digitalLookalikes(time);
   return {
     palette: Object.fromEntries(habitats.map((h, i) => [`enc${i}`, HABITATS[h]])),
-    values: { feeding: time },
+    values: { feeding: time, ...Object.fromEntries(habitats.map((h, i) => [`habitat${i}`, h])) },
     // Which animals are fed is chosen once they're placed (see `fitDetails`).
     facts: [{ id: 'feeding-time', type: 'number', prompt: 'What time was feeding time?', answer: time, wrong: close, fallback: other, everyLevel: true }],
   };
@@ -479,6 +530,28 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
       {[0, 1, 2].map((i) => (
         <Rect key={i} x={i === 0 ? -600 : i * 300} y={sky + 20} width={i === 1 ? 300 : 900} height={fence - sky - 20} fill={d?.palette?.[`enc${i}`] ?? p[`enc${i}` as 'enc0']} />
       ))}
+      {/* Boulders at the back of a rocky enclosure; a pool and drifts in a snowy one. */}
+      {[0, 1, 2].map((i) => {
+        const x = i * 300;
+        const top = sky + 20;
+        const h = fence - sky - 20;
+        if (d?.values?.[`habitat${i}`] === 'rocks')
+          return (
+            <G key={`r${i}`} fill="#9a9184">
+              <Path d={`M${x + 20},${top + h * 0.42} Q${x + 40},${top + h * 0.1} ${x + 95},${top + h * 0.16} Q${x + 130},${top + h * 0.3} ${x + 120},${top + h * 0.42} Z`} />
+              <Path d={`M${x + 170},${top + h * 0.38} Q${x + 190},${top + h * 0.14} ${x + 240},${top + h * 0.2} Q${x + 275},${top + h * 0.3} ${x + 270},${top + h * 0.38} Z`} fill="#8a8275" />
+            </G>
+          );
+        if (d?.values?.[`habitat${i}`] === 'ice')
+          return (
+            <G key={`i${i}`}>
+              <Ellipse cx={x + 150} cy={top + h * 0.26} rx={110} ry={h * 0.12} fill="#7cc3e8" />
+              <Ellipse cx={x + 150} cy={top + h * 0.24} rx={86} ry={h * 0.07} fill="#a9dcf3" />
+              <Path d={`M${x + 10},${top + h * 0.45} Q${x + 80},${top + h * 0.38} ${x + 150},${top + h * 0.45} T${x + 290},${top + h * 0.45}`} fill="none" stroke="#ffffff" strokeWidth={6} strokeLinecap="round" />
+            </G>
+          );
+        return null;
+      })}
       {/* The walls between the three enclosures, and the front fence. */}
       {[300, 600].map((x) => (
         <Rect key={x} x={x - 6} y={sky + 20} width={12} height={fence - sky - 20} fill={p.wall} />
@@ -522,7 +595,10 @@ function marks(height: number, boxes: Box[], random: () => number, variant: Vari
   );
   return [
     ...scatterMarks({ x0: -100, y0: height * 0.02, x1: 1000, y1: height * SKY - 50 }, 150, 66, 3, boxes, random, 0.95, (x, y) => cloudShape(x, y, 150 / 170), true),
-    ...scatterMarks({ x0: 20, y0: height * ENCLOSURE + 40, x1: 880, y1: height * FENCE - 30 }, 24, 16, 8, boxes, random, 0.3, tuft),
+    // Grass tufts only in grassland enclosures.
+    ...[0, 1, 2]
+      .filter((i) => variant.palette[`enc${i}`] === HABITATS.grass)
+      .flatMap((i) => scatterMarks({ x0: i * 300 + 20, y0: height * ENCLOSURE + 40, x1: i * 300 + 280, y1: height * FENCE - 30 }, 24, 16, 3, boxes, random, 0.3, tuft)),
     ...[0.76, 0.88].flatMap((f) => lineMarks(f * height, -600, 1500, boxes, variant.palette.edge, 3, 0.3)),
   ];
 }
@@ -575,6 +651,7 @@ export const zoo: Recipe = {
   ],
   items,
   keepClear: [SIGN],
+  fits,
   fitDetails,
   details,
   // Light across the backdrop: see `LightBand`. The contrast rules take it into account.

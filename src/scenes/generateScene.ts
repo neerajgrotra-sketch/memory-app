@@ -26,7 +26,7 @@ import {
 } from './layout';
 import { createRng, type Rng } from './random';
 import { getRecipe } from './recipes';
-import { ratioOf, type Box, type ColourDef, type ItemDef, type PlacedGroup, type Recipe, type Rect, type SceneSize, type SceneSpec, type Slot, type VariantDef, type ZoneDef } from './types';
+import { ratioOf, type Box, type ColourDef, type ItemDef, type PlacedGroup, type Recipe, type Rect, type SceneDetails, type SceneSize, type SceneSpec, type Slot, type VariantDef, type ZoneDef } from './types';
 import { validateScene } from './validateScene';
 import { variantOf } from './variant';
 
@@ -63,7 +63,12 @@ interface Context {
   cells: Set<string>;
   /** Whether things in one-way bands are drawn mirrored. */
   oneWayFlip: boolean;
+  /** This picture's details (the zoo's habitats), for the recipe's `fits` rule. */
+  details?: SceneDetails;
 }
+
+/** Whether `item` may stand in column `col` of `zone` in this picture (the recipe's `fits` rule; anywhere if it has none). */
+const fitsHere = (ctx: Context, item: ItemDef, zone: ZoneDef, col: number) => !ctx.recipe.fits || ctx.recipe.fits(item, zone.id, col, ctx.details);
 
 const cellKey = (zone: string, col: number, row: number) => `${zone}:${col}:${row}`;
 
@@ -161,7 +166,7 @@ function placeSpread(ctx: Context, want: Want): Placement | null {
   const usedRows = fullBand ? rows.map((_, i) => i) : [rowIndex];
   const row = { top: rows[usedRows[0]].top, bottom: rows[usedRows[usedRows.length - 1]].bottom };
   const cellsOf = (c: number) => usedRows.map((r) => cellKey(zone.id, c, r));
-  const free = [0, 1, 2].filter((c) => cellsOf(c).every((k) => !ctx.cells.has(k)));
+  const free = [0, 1, 2].filter((c) => cellsOf(c).every((k) => !ctx.cells.has(k)) && fitsHere(ctx, item, zone, c));
   if (free.length < count) return null;
 
   for (let attempt = 0; attempt < JITTERS * 4; attempt++) {
@@ -197,7 +202,7 @@ function place(ctx: Context, want: Want): Placement | null {
   const h = heightFor(item, w);
   const rows = rowsOf(zone, ratio);
   if (!rows.length) return null;
-  const cols = want.col === undefined ? [0, 1, 2] : [want.col];
+  const cols = (want.col === undefined ? [0, 1, 2] : [want.col]).filter((c) => fitsHere(ctx, item, zone, c));
   const firstRowOnly = item.tall || item.backRow;
   const hung = item.hangAt !== undefined;
 
@@ -292,7 +297,7 @@ function build(recipe: Recipe, knobs: SceneKnobs, seed: number, rng: Rng, size: 
   const base = rng.pick(recipe.variants);
   const details = recipe.details?.(rng, { clockStep: knobs.clockStep ?? 60 });
   const variant = variantOf(recipe, { variantId: base.id, details });
-  const ctx: Context = { recipe, variant, ratio, size, rng, taken: [], cells: new Set(), oneWayFlip: (seed & 1) === 1 };
+  const ctx: Context = { recipe, variant, ratio, size, rng, taken: [], cells: new Set(), oneWayFlip: (seed & 1) === 1, details };
   const pool = rng.shuffle(recipe.items);
   const groups: PlacedGroup[] = [];
 
@@ -437,7 +442,7 @@ export function relayoutScene(spec: SceneSpec, size: SceneSize): SceneSpec | nul
   );
 
   for (let attempt = 0; attempt < LAYOUT_ATTEMPTS; attempt++) {
-    const ctx: Context = { recipe, variant, ratio, size, rng: createRng(spec.seed + 7 + attempt * 0x85ebca6b), taken: [], cells: new Set(), oneWayFlip: (spec.seed & 1) === 1 };
+    const ctx: Context = { recipe, variant, ratio, size, rng: createRng(spec.seed + 7 + attempt * 0x85ebca6b), taken: [], cells: new Set(), oneWayFlip: (spec.seed & 1) === 1, details: spec.details };
     const moved = new Map<PlacedGroup, PlacedGroup>();
     for (const group of order) {
       const item = recipe.items.find((i) => i.kind === group.kind)!;

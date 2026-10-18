@@ -118,6 +118,10 @@ for (const phone of PHONES) {
         scenes++;
         for (const issue of validateScene(scene, phone.size.width, phone.size.height)) note(`${issue.rule}: ${issue.message}`);
         scene.groups.forEach((g) => placed.add(g.kind));
+        // The recipe's hard rule (each zoo animal in its own habitat) holds for every group.
+        const breaksFits = (s: typeof scene) =>
+          recipe.fits && s.groups.some((g) => !recipe.fits!(recipe.items.find((i) => i.kind === g.kind)!, g.zoneId, g.slot.col, s.details));
+        if (breaksFits(scene)) note('a thing is somewhere its recipe says it may not be (fits)');
         if (scene.groups.length < knobs.groups - 2) note(`only ${scene.groups.length} of ${knobs.groups} kinds placed`);
         if (scene.groups.length < knobs.groups) short++;
         if (scene.groups.length < knobs.groups - 1) veryShort++;
@@ -135,6 +139,7 @@ for (const phone of PHONES) {
             const facts = (s: typeof scene) => JSON.stringify(s.groups.map((g) => [g.kind, g.count, g.colour?.name, g.colours?.map((c) => c.name).join('+'), g.zoneId, spreadOut(g) ? '' : g.region]));
             if (facts(again) !== facts(scene)) note('laying out again changed the facts');
             if (validateScene(again, other.size.width, other.size.height).length) note('laid out again but not valid');
+            if (breaksFits(again)) note('laid out again with a thing where its recipe says it may not be (fits)');
           }
         }
       }
