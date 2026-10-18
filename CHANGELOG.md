@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.53 (2026-10-18)
+
+- **Richer drawings, part 4: the farm and under the sea.**
+  - **Farm:** a barn with planks, white trim under the roof, shingles and hay in the loft; little trees on the far hills; young crops sprouting along the field rows; light on the fence rails. A tractor with treads, a grille, a headlight and a puff of smoke; scarecrows with patches, buttons, straw cuffs and a stitched smile; pumpkins with a leaf; hay bales with loose straw; cows with nostrils, ears, a bell and hooves; horses with hooves and a white blaze; pigs with a bit of mud; sheep with woolly curls; chickens with wing feathers; a wheelbarrow full of soil; a milk churn with handles.
+  - **Under the sea:** dappled sunlight and pebbles on the sand; mossy rocks catching the light. A whale with throat grooves; a turtle with shell plates and spotted flippers; jellyfish with frilly arms; fish with scales and fin stripes; clownfish with black-edged fins; a shark with a shine; a diver with a weight belt, an air hose and rising bubbles; a submarine with rivets, a propeller and porthole glints; an octopus with suckers and a smile; seaweed with air bladders; coral with tiny polyps.
+  - Same sizes and shapes as before, so layout and every check are unchanged.
+
 ## 4.0.0-beta.52 (2026-10-18)
 
 - **Richer drawings, part 3: the city street and the kitchen.**
