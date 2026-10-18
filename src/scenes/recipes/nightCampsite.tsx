@@ -50,6 +50,7 @@ const items: ItemDef[] = [
     tier: 'medium',
     size: 0.16,
     zones: IN_SKY,
+    still: true,
     maxCount: 1,
     countable: false,
     tone: '#f1f3c8',

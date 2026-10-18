@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.55 (2026-10-18)
+
+- **Fix: hanging things no longer bob.** The station clock, lamps and hanging baskets moved up and down while you looked, as if they were floating, because everything in an air band bobbed. A new `still` habit keeps fixed things in place: the things hanging from the station roof, the sun, the moon and the Earth. Birds, balloons, planes, kites and sea creatures still move gently.
+
 ## 4.0.0-beta.54 (2026-10-18)
 
 - **Richer drawings, part 5: the supermarket and the train station.**

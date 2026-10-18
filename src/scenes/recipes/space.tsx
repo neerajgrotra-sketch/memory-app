@@ -44,6 +44,7 @@ const items: ItemDef[] = [
     tier: 'medium',
     size: 0.16,
     zones: IN_SPACE,
+    still: true,
     maxCount: 1,
     countable: false,
     tone: '#2f80d1',

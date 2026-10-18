@@ -44,6 +44,7 @@ const items: ItemDef[] = [
     maxCount: 1,
     countable: false,
     noFlip: true,
+    still: true,
     tone: '#2d3436',
     // Hangs on a rod from the roof; its time is chosen per picture (see `details`).
     draw: (_colour, details) => (
@@ -67,6 +68,7 @@ const items: ItemDef[] = [
     zones: ON_ROOF,
     maxCount: 3,
     spread: true,
+    still: true,
     colours: [C.green, C.red, C.blue, C.black],
     colourPrompt: (plural) => (plural ? 'What colour were the hanging lamps?' : 'What colour was the hanging lamp?'),
     draw: (colour) => (
@@ -96,6 +98,7 @@ const items: ItemDef[] = [
     zones: ON_ROOF,
     maxCount: 2,
     spread: true,
+    still: true,
     colours: [C.red, C.pink, C.purple, C.yellow, C.white],
     colourPrompt: (plural) => (plural ? 'What colour were the flowers in the hanging baskets?' : 'What colour were the flowers in the hanging basket?'),
     draw: (colour) => (

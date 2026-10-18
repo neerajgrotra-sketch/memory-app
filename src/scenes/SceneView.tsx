@@ -32,8 +32,11 @@ interface SceneContentProps {
 
 const zoneOf = (recipe: Recipe, id: string) => recipe.zones.find((z) => z.id === id)!;
 
-/** Things that move while you look: anything in the air or underwater bobs; boats and swans rock on the water. */
-export const movesIn = (recipe: Recipe, item: ItemDef, zoneId: string) => item.floats === true || zoneOf(recipe, zoneId).surface === 'air';
+/**
+ * Things that move while you look: anything in the air or underwater bobs, unless it's fixed in place
+ * (`still`: a lamp hanging from the roof, the sun); boats and swans rock on the water.
+ */
+export const movesIn = (recipe: Recipe, item: ItemDef, zoneId: string) => item.floats === true || (zoneOf(recipe, zoneId).surface === 'air' && !item.still);
 
 /** Kinds that move in this picture. */
 export function movingKinds(spec: SceneSpec): string[] {

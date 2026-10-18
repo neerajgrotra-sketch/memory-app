@@ -133,6 +133,11 @@ export interface ItemDef {
   lineUp?: boolean;
   /** Floats on water in a ground band (a rowing boat, a swan): rocks gently while you look, and casts no shadow. */
   floats?: boolean;
+  /**
+   * Fixed in place though it's in the air (a clock or lamp hanging from the roof, the sun, the moon):
+   * never bobs while you look, unlike birds and balloons.
+   */
+  still?: boolean;
   /** Never drawn mirrored: a clock face read backwards shows the wrong time. */
   noFlip?: boolean;
   /**

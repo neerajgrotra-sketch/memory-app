@@ -20,6 +20,7 @@ export const sun: CommonItem = {
   size: 0.16,
   tone: '#ffd93b',
   countable: false,
+  still: true,
   draw: () => (
     <G>
       <Circle cx={70} cy={70} r={69} fill="#ffe066" fillOpacity={0.35} stroke="none" />
