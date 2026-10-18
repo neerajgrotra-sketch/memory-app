@@ -558,7 +558,7 @@ Per-picture details: "What time was on the clock?" (when there's a wall-clock) o
 | wood | ceiling `#fbf7ee`, wall `#f3e9d2`, skirting `#a07a4c`, floor `#d9b787`, floorLine `#c29e6c` |
 | carpet | ceiling `#f6f9f7`, wall `#d8ecdf`, skirting `#7c8a96`, floor `#9fb0c2`, floorLine `#8c9db0` |
 
-### Things (16)
+### Things (15)
 
 | Thing | Band | Size | Most | Colours | Habits |
 | --- | --- | --- | --- | --- | --- |
@@ -567,17 +567,16 @@ Per-picture details: "What time was on the clock?" (when there's a wall-clock) o
 | world map | wall | large 22% | 1 | fixed (`#4dabf7`) | hangs with its centre 0.4 × width above the band's bottom; one only, not counted |
 | noticeboard | wall | large 22% | 1 | fixed (`#c69c6d`) | hangs with its centre 0.4 × width above the band's bottom; one only, not counted |
 | window | wall | large 22% | 1 | Red, Blue, Green, Yellow, Purple, Orange | hangs with its centre 0.4 × width above the band's bottom; one only, not counted |
-| teacher | front | medium 18% | 1 | Red, Blue, Green, Purple, Orange, Pink | tall anchor (stands at the back, rises above its band); one only, not counted |
-| teacher’s desk | front | large 27% | 1 | fixed (`#7a4e2a`) | one only, not counted |
+| teacher | front | large 23% | 1 | Red, Blue, Green, Purple, Orange, Pink | tall anchor (stands at the back, rises above its band); one only, not counted |
 | globe | front | small 12% | 1 | fixed (`#1d70d6`) | one only, not counted |
 | bookcase | front | large 20% | 1 | fixed (`#6b4423`) | tall anchor (stands at the back, rises above its band); one only, not counted |
-| easel | back | medium 15% | 1 | Red, Blue, Yellow, Purple, Orange | one only, not counted |
-| potted plant | back | medium 13% | 2 | Orange, Blue, White, Yellow, Pink, Purple | – |
+| easel | back | medium 17% | 1 | Red, Blue, Yellow, Purple, Orange | one only, not counted |
+| potted plant | back | medium 15% | 2 | Orange, Blue, White, Yellow, Pink, Purple | – |
 | piano | front | large 28% | 1 | Black, Brown | one only, not counted |
-| pupil | back | medium 15% | 2 | Red, Blue, Green, Purple, Grey, Yellow | – |
-| beanbag | back | medium 17% | 2 | Red, Blue, Green, Yellow, Purple, Orange | – |
-| fish tank | back | large 20% | 1 | fixed (`#6b4423`) | one only, not counted |
-| computer | back | large 20% | 1 | fixed (`#495057`) | one only, not counted |
+| pupil | back | large 20% | 3 | Red, Blue, Green, Purple, Grey, Yellow | copies spread one per third, on one line |
+| beanbag | back | large 21% | 2 | Red, Blue, Green, Yellow, Purple, Orange | – |
+| fish tank | back | large 24% | 1 | fixed (`#6b4423`) | one only, not counted |
+| computer | back | large 23% | 1 | fixed (`#495057`) | one only, not counted |
 
 ## At the campsite at night (`night-campsite`)
 

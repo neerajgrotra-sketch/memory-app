@@ -10,6 +10,14 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.61 (2026-10-18)
+
+- **The classroom, rethought.**
+  - **The teacher stands behind their desk**, as one thing: no more empty desk, or a teacher with nowhere to stand. The desk has books, a mug of tea and an apple on it. The teacher is picked first for the front of the class, so nearly every classroom has one. The teacher's desk is no longer a separate thing in the questions.
+  - **The pupils face the board**, like a real class seen from the back: the back of the head (some with a ponytail), the jumper and the back of their chair, with the desk beyond them.
+  - **Nearer things look bigger.** The back of the class is the row nearest us, so everything there is drawn about 1.25 times bigger than the front of the room: a pupil at a desk is now 0.2 of the width (was 0.15), and beanbags, the fish tank, the computer, plants and the easel grow to match. The desks stand in a row across the room, one to each third, up to three.
+  - **Times and divide on the board.** The teacher's sum is now plus, minus, times or divide ("6 × 7 = ?", "24 ÷ 6 = ?"), with small numbers and never a negative or a remainder. Wrong answers are the same numbers with another sign ("6 + 7" for "6 × 7") or one number changed by one; for divide, only sums that still divide exactly.
+
 ## 4.0.0-beta.60 (2026-10-18)
 
 - **Richer drawings, part 8 (the last): the airport and On the Moon.** Every place is now drawn in the richer style.

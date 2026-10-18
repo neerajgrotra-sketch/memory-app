@@ -12,9 +12,11 @@ import { speckles } from '../texture';
  * A classroom seen from the back: the wall with the whiteboard, the front of the class (the teacher and
  * their desk), then the pupils at their desks nearest to us. Band edges as fractions of the picture height.
  *
- * Scale: a closer view than the outdoor places, about 4.5 m across (1 m ≈ 0.22 of the width), so a school
- * clock, a globe and a pupil at a desk are big enough to see without being blown up: the teacher 1.6 m
- * tall, a pupil's desk 0.68 m wide, the teacher's desk 1.2 m, the whiteboard 1.8 m, a globe 0.55 m.
+ * Scale: a closer view than the outdoor places, about 4.5 m across at the front of the class (1 m ≈ 0.22
+ * of the width), so a school clock, a globe and the teacher are big enough to see without being blown up:
+ * the teacher 1.6 m tall behind a 1.05 m desk, the whiteboard 1.8 m, a globe 0.55 m. The back of the class
+ * is the row nearest us, so it's drawn about 1.25 times bigger (1 m ≈ 0.28), as nearer things look: a
+ * pupil's desk (0.68 m) is 0.2 of the width. The pupils face the board, so we see the backs of their heads.
  * Nothing smaller than about half a metre (school bags, pencil pots) is in the picture.
  */
 const CEILING = 0.05;
@@ -222,55 +224,46 @@ const items: ItemDef[] = [
 
   // ---- At the front of the class ----
   {
-    ...person,
     kind: 'teacher',
     singular: 'teacher',
     plural: 'teachers',
     article: 'the',
-    // 1.6 m tall: stands in front of the wall.
-    size: 0.18,
-    tier: 'medium',
+    w: 180,
+    h: 230,
+    // The teacher (1.6 m) standing behind their desk (about 1.05 m wide, 0.75 m high): one thing, so the
+    // desk is never empty and the teacher always has somewhere to stand.
+    size: 0.23,
+    tier: 'large',
     tall: true,
     zones: AT_FRONT,
     maxCount: 1,
     countable: false,
+    // Picked first for the front: a classroom nearly always has its teacher.
+    usual: true,
     colours: [C.red, C.blue, C.green, C.purple, C.orange, C.pink],
     colourPrompt: () => 'What colour was the teacher’s jumper?',
-  },
-  {
-    kind: 'teacher-desk',
-    singular: 'teacher’s desk',
-    plural: 'teacher’s desks',
-    article: 'the',
-    w: 180,
-    h: 100,
-    tier: 'large',
-    // About 1.2 m wide, with a mug and a pile of books on top.
-    size: 0.27,
-    zones: AT_FRONT,
-    maxCount: 1,
-    countable: false,
-    tone: '#7a4e2a',
-    draw: () => (
+    draw: (colour, details, copy) => (
       <G>
-        <Rect x={0} y={20} width={180} height={14} rx={3} fill="#7a4e2a" />
-        <Rect x={8} y={34} width={56} height={66} fill="#7a4e2a" />
-        <Rect x={150} y={34} width={12} height={66} fill="#7a4e2a" />
+        {/* The shared person, scaled to 1.6 m, standing behind the desk. */}
+        <G transform="translate(31 0) scale(1.84)">{person.draw(colour, details, copy)}</G>
+        <Rect x={0} y={122} width={180} height={14} rx={3} fill="#7a4e2a" />
+        <Rect x={8} y={136} width={56} height={94} fill="#7a4e2a" />
+        <Rect x={150} y={136} width={12} height={94} fill="#7a4e2a" />
         <G stroke="none">
-          <Rect x={16} y={46} width={40} height={20} rx={2} fill="#5c3a1e" />
-          <Rect x={16} y={72} width={40} height={20} rx={2} fill="#5c3a1e" />
-          <Rect x={110} y={0} width={44} height={8} fill="#e63946" />
-          <Rect x={114} y={8} width={38} height={7} fill="#1d70d6" />
-          <Rect x={108} y={15} width={46} height={5} fill="#ffd60a" />
-          <Rect x={70} y={2} width={16} height={18} rx={3} fill="#f8f9fa" />
-          {/* Steam and a handle on the mug, knobs on the drawers, an apple and grain along the top. */}
-          <Path d="M86,6 Q93,6 92,12 Q91,16 86,16" fill="none" stroke="#f8f9fa" strokeWidth={3} />
-          <Path d="M75,0 q-3,-4 0,-8 M81,0 q-3,-4 0,-8" fill="none" stroke="#adb5bd" strokeWidth={2} strokeLinecap="round" />
-          <Circle cx={36} cy={56} r={3} fill="#e9c46a" />
-          <Circle cx={36} cy={82} r={3} fill="#e9c46a" />
-          <Circle cx={96} cy={12} r={8} fill="#e63946" />
-          <Path d="M96,4 V0" stroke="#5c3a1e" strokeWidth={2} strokeLinecap="round" />
-          <Path d="M4,24 H176" stroke="#ffffff" strokeOpacity={0.25} strokeWidth={2.5} />
+          <Rect x={16} y={150} width={40} height={30} rx={2} fill="#5c3a1e" />
+          <Rect x={16} y={188} width={40} height={30} rx={2} fill="#5c3a1e" />
+          <Circle cx={36} cy={165} r={3} fill="#e9c46a" />
+          <Circle cx={36} cy={203} r={3} fill="#e9c46a" />
+          {/* A pile of books, a mug of tea and an apple on the desk, and grain along the top. */}
+          <Rect x={116} y={102} width={44} height={8} fill="#e63946" />
+          <Rect x={120} y={110} width={38} height={7} fill="#1d70d6" />
+          <Rect x={114} y={117} width={46} height={5} fill="#ffd60a" />
+          <Rect x={12} y={104} width={16} height={18} rx={3} fill="#f8f9fa" />
+          <Path d="M28,108 Q35,108 34,114 Q33,118 28,118" fill="none" stroke="#f8f9fa" strokeWidth={3} />
+          <Path d="M17,102 q-3,-4 0,-8 M23,102 q-3,-4 0,-8" fill="none" stroke="#adb5bd" strokeWidth={2} strokeLinecap="round" />
+          <Circle cx={96} cy={114} r={8} fill="#e63946" />
+          <Path d="M96,106 V102" stroke="#5c3a1e" strokeWidth={2} strokeLinecap="round" />
+          <Path d="M4,126 H176" stroke="#ffffff" strokeOpacity={0.25} strokeWidth={2.5} />
         </G>
       </G>
     ),
@@ -358,7 +351,7 @@ const items: ItemDef[] = [
     h: 150,
     tier: 'medium',
     // About 0.7 m wide, with a painting of a big flower: the art corner at the back.
-    size: 0.15,
+    size: 0.17,
     zones: AT_BACK,
     maxCount: 1,
     countable: false,
@@ -385,7 +378,8 @@ const items: ItemDef[] = [
       </G>
     ),
   },
-  { ...plantPot, zones: AT_BACK, maxCount: 2 },
+  // Nearer us, so drawn bigger than a plant at the front would be.
+  { ...plantPot, size: 0.15, zones: AT_BACK, maxCount: 2 },
   {
     kind: 'piano',
     singular: 'piano',
@@ -434,43 +428,49 @@ const items: ItemDef[] = [
     plural: 'pupils',
     article: 'a',
     w: 100,
-    h: 110,
-    tier: 'medium',
-    // A child at a single junior-school desk, about 0.68 m wide.
-    size: 0.15,
+    h: 104,
+    tier: 'large',
+    // A child at a single junior-school desk (0.68 m wide), in the row nearest us: drawn about 1.25 times the
+    // scale of the front of the class, as nearer things look bigger.
+    size: 0.2,
     zones: AT_BACK,
-    // Two desks side by side is all one third of this close view holds.
-    maxCount: 2,
+    // A row of desks across the room, one to each third.
+    spread: true,
+    maxCount: 3,
     // Picked first for the back of the class: a classroom nearly always has pupils.
     usual: true,
     colours: JUMPERS,
     colourPrompt: (plural) => (plural ? 'What colour were the pupils’ jumpers?' : 'What colour was the pupil’s jumper?'),
-    // Skin and hair vary per pupil (fixed for each copy); only the jumper is asked about.
-    // Drawn in the same style as the shared person (the teacher), so a child's head is about 70% of an adult's.
+    // Seen from behind, facing the board like a real class: the back of the head, the jumper and the
+    // chair. Skin and hair vary per pupil (fixed for each copy); only the jumper is asked about.
     draw: (colour, _details, copy = 0) => {
       const skin = SKINS[copy % SKINS.length];
       const hair = HAIR[Math.floor(copy / 4) % HAIR.length];
       return (
         <G>
-          <Rect x={20} y={42} width={60} height={34} rx={16} fill={colour} />
-          <Circle cx={50} cy={24} r={21} fill={skin} stroke="none" />
-          <Path d="M28,22 Q29,2 50,2 Q71,2 72,22 Q63,12 50,12 Q37,12 28,22 Z" fill={hair} stroke="none" />
-          {/* The desk, with an open book. */}
-          <Rect x={0} y={68} width={100} height={10} rx={3} fill="#c8935a" stroke="#8a5a2b" strokeWidth={2} />
-          <Path d="M8,78 V110 M92,78 V110" stroke="#6c757d" strokeWidth={6} />
+          {/* The desk beyond the child: its far legs stand a little higher up the floor. */}
+          <Path d="M8,64 V90 M92,64 V90" stroke="#6c757d" strokeWidth={6} />
+          <Rect x={0} y={56} width={100} height={10} rx={3} fill="#c8935a" stroke="#8a5a2b" strokeWidth={2} />
           <G stroke="none">
-            <Path d="M34,68 L50,63 L66,68 Z" fill="#f8f9fa" />
-            <Circle cx={28} cy={68} r={6} fill={skin} />
-            <Circle cx={72} cy={68} r={6} fill={skin} />
-            {/* A face like the teacher's, a collar, lines of writing in the book and a pencil. */}
-            <Circle cx={43} cy={24} r={2.2} fill="#212529" />
-            <Circle cx={57} cy={24} r={2.2} fill="#212529" />
-            <Path d="M44,31 Q50,35 56,31" fill="none" stroke="#212529" strokeWidth={1.8} strokeLinecap="round" />
-            <Path d="M42,44 L50,50 L58,44" fill="none" stroke="#ffffff" strokeOpacity={0.8} strokeWidth={3} strokeLinejoin="round" />
-            <Path d="M38,66 h9 M53,66 h9" stroke="#adb5bd" strokeWidth={1.2} />
-            <Path d="M76,66 L90,62" stroke="#ffd60a" strokeWidth={3} strokeLinecap="round" />
-            <Path d="M4,70 H96" stroke="#ffffff" strokeOpacity={0.3} strokeWidth={2} />
+            <Rect x={4} y={50} width={16} height={6} rx={1} fill="#1d70d6" />
+            <Path d="M82,54 L96,50" stroke="#ffd60a" strokeWidth={3} strokeLinecap="round" />
+            <Circle cx={30} cy={24} r={5} fill={skin} />
+            <Circle cx={70} cy={24} r={5} fill={skin} />
+            <Rect x={44} y={30} width={12} height={14} fill={skin} />
           </G>
+          {/* The back of the jumper, then the back of the head. */}
+          <Rect x={22} y={40} width={56} height={52} rx={18} fill={colour} />
+          <Circle cx={50} cy={22} r={20} fill={hair} />
+          <G stroke="none">
+            {copy % 2 === 1 && <Ellipse cx={50} cy={44} rx={6} ry={9} fill={hair} />}
+            <Path d="M40,8 Q50,4 60,8" fill="none" stroke="#ffffff" strokeOpacity={0.25} strokeWidth={3} strokeLinecap="round" />
+            <Path d="M30,52 Q36,44 46,44" fill="none" stroke="#ffffff" strokeOpacity={0.3} strokeWidth={3} strokeLinecap="round" />
+            <Path d="M50,46 V72" stroke="#000000" strokeOpacity={0.1} strokeWidth={2} />
+          </G>
+          {/* The back of the chair, nearest us. */}
+          <Path d="M32,88 V104 M68,88 V104" stroke="#6c757d" strokeWidth={5} />
+          <Rect x={26} y={72} width={48} height={18} rx={5} fill="#a0703c" />
+          <Path d="M30,76 H70" stroke="#ffffff" strokeOpacity={0.3} strokeWidth={2} strokeLinecap="round" />
         </G>
       );
     },
@@ -482,9 +482,9 @@ const items: ItemDef[] = [
     article: 'a',
     w: 120,
     h: 80,
-    tier: 'medium',
+    tier: 'large',
     // In the reading corner, about 0.8 m wide.
-    size: 0.17,
+    size: 0.21,
     zones: AT_BACK,
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.yellow, C.purple, C.orange],
@@ -510,7 +510,7 @@ const items: ItemDef[] = [
     h: 140,
     tier: 'large',
     // About 0.9 m wide, on its cupboard.
-    size: 0.2,
+    size: 0.24,
     zones: AT_BACK,
     maxCount: 1,
     countable: false,
@@ -551,7 +551,7 @@ const items: ItemDef[] = [
     h: 120,
     tier: 'large',
     // On a small table about 0.9 m wide; one fits in this view.
-    size: 0.2,
+    size: 0.23,
     zones: AT_BACK,
     maxCount: 1,
     countable: false,
@@ -581,18 +581,35 @@ const items: ItemDef[] = [
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-/** Sums easy to mix up with a + b: one number changed by one, or minus for plus. */
-function sumLookalikes(a: number, b: number): string[] {
-  const near = [
-    [a + 1, b],
-    [a, b + 1],
-    [a - 1, b],
-    [a, b - 1],
-  ]
-    .filter(([x, y]) => x >= 1 && y >= 1 && x <= 9 && y <= 9)
-    .map(([x, y]) => `${x} + ${y}`);
-  const minus = a > b ? [`${a} − ${b}`] : [];
-  return [...new Set([...minus, ...near])].filter((s) => s !== `${a} + ${b}`);
+type Op = '+' | '−' | '×' | '÷';
+const OPS: Op[] = ['+', '−', '×', '÷'];
+
+/** A sum the teacher might write: small numbers, never a negative or a remainder. */
+function randomSum(random: Rng): { a: number; op: Op; b: number } {
+  const op = random.pick(OPS);
+  if (op === '+') return { a: random.int(2, 9), op, b: random.int(1, 9) };
+  if (op === '−') {
+    const a = random.int(4, 12);
+    return { a, op, b: random.int(1, a - 1) };
+  }
+  if (op === '×') return { a: random.int(2, 9), op, b: random.int(2, 9) };
+  // Division: written as the answer times the divisor, divided by the divisor (24 ÷ 6).
+  const b = random.int(2, 9);
+  return { a: b * random.int(2, 9), op, b };
+}
+
+/** Sums easy to mix up with a op b: the same numbers with another sign, or one number changed by one. */
+function sumLookalikes(a: number, op: Op, b: number): string[] {
+  const same = `${a} ${op} ${b}`;
+  // Another sign only where it still makes a sum the board could show: no negatives, no remainders, no times or divide by one.
+  const otherSigns = OPS.filter((o) => o !== op && !(o === '−' && b >= a) && !(o === '÷' && a % b !== 0) && !((o === '×' || o === '÷') && (a < 2 || b < 2))).map((o) => `${a} ${o} ${b}`);
+  // For division, only sums that still divide exactly (the next multiple up or down, or a divisor one along).
+  const pairs =
+    op === '÷'
+      ? [[a + b, b], [a - b, b], [a, b + 1], [a, b - 1]].filter(([x, y]) => y >= 2 && x > y && x % y === 0)
+      : [[a + 1, b], [a, b + 1], [a - 1, b], [a, b - 1]].filter(([x, y]) => x >= (op === '×' ? 2 : 1) && y >= (op === '×' ? 2 : 1) && !(op === '−' && y >= x));
+  const near = pairs.map(([x, y]) => `${x} ${op} ${y}`);
+  return [...new Set([...otherSigns, ...near])].filter((t) => t !== same);
 }
 
 /** The time on the clock, and the day and sum the teacher wrote on the board, chosen per picture. */
@@ -600,15 +617,14 @@ function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
   const time = randomTime(random, clockStep);
   const { close, other } = timeLookalikes(time, clockStep);
   const day = random.pick(DAYS);
-  const a = random.int(2, 9);
-  const b = random.int(1, 9);
-  const sum = `${a} + ${b}`;
+  const { a, op, b } = randomSum(random);
+  const sum = `${a} ${op} ${b}`;
   return {
     values: { clock: time, day, sum },
     facts: [
       { id: 'clock-time', type: 'number', prompt: 'What time was on the clock?', answer: time, wrong: close, fallback: other, needs: 'wall-clock', everyLevel: true, spotlight: true },
       { id: 'board-day', type: 'object', prompt: 'What day was written on the board?', answer: day, wrong: DAYS.filter((d) => d !== day) },
-      { id: 'board-sum', type: 'number', prompt: 'What sum was on the board?', answer: sum, wrong: sumLookalikes(a, b) },
+      { id: 'board-sum', type: 'number', prompt: 'What sum was on the board?', answer: sum, wrong: sumLookalikes(a, op, b) },
     ],
   };
 }
