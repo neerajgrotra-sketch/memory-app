@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.0-beta.52 (2026-10-18)
+
+- **Richer drawings, part 3: the city street and the kitchen.**
+  - **City street:** brick courses and a cornice on every building; windows with glare, a frame bar and a sill; panelled doors; paving slabs, a light kerb edge and a dashed line along the road. Cars with door seams, handles and glare; a bus with passengers in the windows and a stripe; a van with a sliding door; wheels with hubcaps everywhere; a helicopter with a spinning rotor blur; a rippling flag with a gold top; a market stall with planks and shiny fruit; benches with armrests; bins with a lid handle and slot; bicycles with spokes; hydrants with a nut and bolts; lamp posts with a warm glow; a street clock with rings and a stepped base.
+  - **Kitchen:** brackets under the shelf, light along the worktop edge, panelled cupboard doors and floor tiles. Plates with a dotted rim; cookbooks with a chef's hat; labelled pasta jars; a teapot with a band of flowers; a cookie jar and herb pots with a shine; a frying pan with a glint; a quilted oven glove; a fringed tea towel; utensils with slots and holes; a garden through the window; a microwave with a plate inside and glare; a kettle with a water window; a toaster with slots and a dial; a woven fruit bowl; carrots and a knife on the board; a steaming saucepan; coffee pouring into the cup; cake mix in the mixer; bins, a stool and a pet bowl with kibble and a paw print.
+  - Same sizes and shapes as before, so layout and every check are unchanged.
+
 ## 4.0.0-beta.51 (2026-10-18)
 
 - **Richer drawings, part 2: the living room and the park.**
