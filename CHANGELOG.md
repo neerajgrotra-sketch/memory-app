@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.9 (2026-10-19)
+
+- **Birds show in front of the cable car's cable.** On the snowy mountain the cable runs right across the sky, and it could be drawn over a bird, so the bird was hard to make out. The cable car now has a new `behind` habit: it's drawn behind everything else, on the still picture and on the moving memorise screen, so birds and planes always sit in front of its cable.
+
 ## 4.0.8 (2026-10-19)
 
 - **"How to play" in a pop-up, by the game's title.** Testers said the rules were too far down the game page. A **ⓘ How to play** button next to "Look & Remember" now opens them: the three steps, how levels move, and how Peeks work, with a **Got it** button. The copy at the bottom of the page is gone, so the rules live in one place.

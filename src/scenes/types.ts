@@ -139,6 +139,11 @@ export interface ItemDef {
    */
   still?: boolean;
   /**
+   * Drawn behind everything else in the picture (a cable car, whose cable runs right across the sky), so
+   * it never covers a bird or a plane.
+   */
+  behind?: boolean;
+  /**
    * Hangs on a rod or chain this tall (in drawing units) at the top of its box, drawn on up off the top
    * of the picture so it's plainly attached to the roof. The rod catches no light, so it reads as one piece.
    */

@@ -52,8 +52,10 @@ const items: ItemDef[] = [
     zones: IN_SKY,
     maxCount: 2,
     spread: true,
-    // Its cable runs right across the sky, so cabins are never mirrored: every cable stays parallel.
+    // Its cable runs right across the sky, so cabins are never mirrored (every cable stays parallel), and
+    // it's drawn behind everything else, so the cable never crosses in front of a bird or a plane.
     noFlip: true,
+    behind: true,
     // The light starts below the pulley, so the cable reads as one line.
     hanger: 16,
     colours: [C.red, C.blue, C.green, C.orange],

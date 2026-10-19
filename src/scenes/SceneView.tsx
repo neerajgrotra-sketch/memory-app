@@ -41,7 +41,12 @@ export const movesIn = (recipe: Recipe, item: ItemDef, zoneId: string) => item.f
 /** Kinds that move in this picture. */
 export function movingKinds(spec: SceneSpec): string[] {
   const recipe = getRecipe(spec.recipeId);
-  return spec.groups.filter((g) => movesIn(recipe, recipe.items.find((i) => i.kind === g.kind)!, g.zoneId)).map((g) => g.kind);
+  const itemOf = (kind: string) => recipe.items.find((i) => i.kind === kind)!;
+  // Each moving kind is its own layer, drawn in this order: things marked `behind` (a cable car) go first.
+  return spec.groups
+    .filter((g) => movesIn(recipe, itemOf(g.kind), g.zoneId))
+    .sort((a, b) => Number(!!itemOf(b.kind).behind) - Number(!!itemOf(a.kind).behind))
+    .map((g) => g.kind);
 }
 
 /** A number per copy, the same every time the picture is drawn, for small variations (a person's hair). */
@@ -87,7 +92,8 @@ export function SceneContent({ spec, pointsPerUnit, overlay, layer = 'all' }: Sc
         return { key: `${group.kind}-${i}`, kind: group.kind, item, box, colour, outline, moves, shadow, copy, bottom: rectOf(item, box, ratio).y1 };
       });
     })
-    .sort((a, b) => a.bottom - b.bottom);
+    // Things marked `behind` first (a cable car's cable), then by where they stand.
+    .sort((a, b) => Number(!!b.item.behind) - Number(!!a.item.behind) || a.bottom - b.bottom);
   const drawn = placed.filter((p) =>
     layer === 'all' ? true : layer === 'front' ? !p.moves : typeof layer === 'object' ? p.kind === layer.kind : false,
   );
