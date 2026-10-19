@@ -17,6 +17,7 @@ How glance's first game, Look & Remember, builds its pictures and questions, how
 | [Levels and scoring](levels-and-scoring.md) | Look & Remember's 30 levels, how your level moves, what each level changes, points |
 | [Adding a game](adding-a-game.md) | The game registry, skills, and what a new game needs |
 | [Design decisions](design-decisions.md) | Why the rules are what they are (most came from play-testing feedback) |
+| [Backlog](backlog.md) | Ideas agreed but parked for now (game #2, celebrations, sound, pictures, the app), with enough detail to pick each up later |
 
 ## In one paragraph
 

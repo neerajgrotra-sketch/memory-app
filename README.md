@@ -83,6 +83,7 @@ Every picture is generated on the device from a **recipe** in a few milliseconds
 | [Levels and scoring](docs/levels-and-scoring.md) | Look & Remember's 30 levels, moving up and down, points |
 | [Adding a game](docs/adding-a-game.md) | The game registry and what a new game needs |
 | [Design decisions](docs/design-decisions.md) | Why the rules are what they are |
+| [Backlog](docs/backlog.md) | Ideas agreed but parked for now |
 
 ## Project layout
 
