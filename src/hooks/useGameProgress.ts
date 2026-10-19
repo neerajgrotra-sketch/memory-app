@@ -73,3 +73,21 @@ export function useReloadableGameProgress(gameId: GameId): { progress: GameProgr
   );
   return { progress, reload };
 }
+
+/** Every game's progress at once (the Games tab sorts its rows by when each was last played). Null while loading. */
+export function useAllGameProgress(gameIds: GameId[]): Record<string, GameProgress> | null {
+  const [all, setAll] = useState<Record<string, GameProgress> | null>(null);
+  const key = gameIds.join(',');
+  useFocusEffect(
+    useCallback(() => {
+      let live = true;
+      Promise.all([statsStore.listResults(), statsStore.listRestarts()]).then(([results, restarts]) => {
+        if (live) setAll(Object.fromEntries(key.split(',').map((id) => [id, progressOf(results, id as GameId, restarts)])));
+      });
+      return () => {
+        live = false;
+      };
+    }, [key]),
+  );
+  return all;
+}

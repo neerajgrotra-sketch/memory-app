@@ -10,6 +10,14 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.5 (2026-10-19)
+
+- **Each game carries its own progress on the Games tab.** With more games coming, a "Continue" strip for each game would have pushed the games further and further down. Instead:
+  - every game is one full-width row: its picture, your **level ring** and title, and **Play**, which goes straight into your level. Before your first round it says **Try it**. Tapping anywhere else on the row opens the game's page.
+  - the game you played last comes first in its skill, with a gold edge and **Continue** above its name, so carrying on is still one tap.
+  - the separate Continue strip is gone, and the sideways row of cards, which hid games off the edge of the screen, is now a list you scroll down.
+  - the planned games in tester mode use the same rows, marked **Soon**.
+
 ## 4.0.4 (2026-10-19)
 
 - **Preview tiles for planned games, in tester mode.** To see how the Games tab will look with more games, tester mode (7 taps on the version) now adds six "Coming soon" tiles: **Pairs** and **Where Was It?** under Memory, **Spot the Change** and **Odd One Out** under Attention, **What Comes Next?** under Problem solving, and **Quick Count** under Speed. Each has its own colour and little picture; a tap opens a "Coming soon" card. Real players, and store builds, never see them. They live in `src/games/ComingSoon.tsx`.

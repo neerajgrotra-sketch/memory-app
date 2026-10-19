@@ -7,7 +7,7 @@ import { colors, radius } from '@/theme';
 import type { SkillId } from './registry';
 
 /**
- * Games we're planning, shown as tiles on the Games tab in tester mode only, to see how the hub looks
+ * Games we're planning, shown as rows on the Games tab in tester mode only, to see how the hub looks
  * with more games. They aren't games yet: a tap just says "coming soon". Real players never see them
  * (empty "coming soon" rows make an app feel unfinished; see docs/design-decisions.md).
  */
@@ -16,7 +16,7 @@ export interface PlannedGame {
   title: string;
   skill: SkillId;
   tagline: string;
-  /** The tile's background colour and its little picture (drawn in a 220 × 124 box). */
+  /** The row's thumbnail colour and its little picture (drawn in a 220 × 124 box, shown cropped square). */
   tint: string;
   art: () => ReactElement;
 }
@@ -132,8 +132,8 @@ export const PLANNED_GAMES: PlannedGame[] = [
   },
 ];
 
-/** A planned game's tile, the same size as a real game card, marked "Coming soon". */
-export function PlannedGameCard({ game }: { game: PlannedGame }) {
+/** A planned game's row, the same shape as a real game's, marked "Coming soon"; a tap says so. */
+export function PlannedGameRow({ game }: { game: PlannedGame }) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -141,21 +141,23 @@ export function PlannedGameCard({ game }: { game: PlannedGame }) {
         accessibilityRole="button"
         accessibilityLabel={`${game.title}, coming soon`}
         onPress={() => setOpen(true)}
-        style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+        style={({ pressed }) => [styles.row, pressed && styles.pressed]}
       >
-        <View style={[styles.art, { backgroundColor: game.tint }]}>
-          <Svg width="100%" height="100%" viewBox="0 0 220 124">
+        <View style={[styles.thumb, { backgroundColor: game.tint }]}>
+          <Svg width="100%" height="100%" viewBox="0 0 220 124" preserveAspectRatio="xMidYMid meet">
             {game.art()}
           </Svg>
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>Coming soon</Text>
-          </View>
         </View>
         <View style={styles.body}>
-          <Text style={styles.title}>{game.title}</Text>
-          <Text style={styles.meta} numberOfLines={1}>
+          <Text style={styles.title} numberOfLines={1}>
+            {game.title}
+          </Text>
+          <Text style={styles.meta} numberOfLines={2}>
             {game.tagline}
           </Text>
+        </View>
+        <View style={styles.badge}>
+          <Text style={styles.badgeText}>Soon</Text>
         </View>
       </Pressable>
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
@@ -176,14 +178,24 @@ export function PlannedGameCard({ game }: { game: PlannedGame }) {
 }
 
 const styles = StyleSheet.create({
-  card: { width: 220, backgroundColor: colors.surface, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 10,
+    minHeight: 96,
+  },
   pressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
-  art: { width: '100%', aspectRatio: 220 / 124 },
-  badge: { position: 'absolute', top: 8, right: 8, backgroundColor: 'rgba(15,17,21,0.8)', borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 4 },
+  thumb: { width: 76, height: 76, borderRadius: 10, overflow: 'hidden' },
+  badge: { borderRadius: radius.pill, borderWidth: 1, borderColor: colors.border, paddingHorizontal: 12, minHeight: 32, justifyContent: 'center' },
   badgeText: { color: colors.accent, fontSize: 11, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.8 },
-  body: { padding: 12, gap: 2 },
-  title: { color: colors.text, fontSize: 16, fontWeight: '800' },
-  meta: { color: colors.textMuted, fontSize: 13 },
+  body: { flex: 1, gap: 4 },
+  title: { color: colors.text, fontSize: 17, fontWeight: '800' },
+  meta: { color: colors.textMuted, fontSize: 13, flexShrink: 1 },
   backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', alignItems: 'center', justifyContent: 'center', padding: 24 },
   sheet: { width: '100%', maxWidth: 360, backgroundColor: colors.surface, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, padding: 20, gap: 8 },
   sheetKicker: { color: colors.accent, fontSize: 12, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 1 },
