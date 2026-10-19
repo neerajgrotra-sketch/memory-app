@@ -30,7 +30,7 @@ Light: the sky lightens towards the horizon, and the fire's warm glow is stronge
 ## Things (16)
 
 - **Sky:** the moon (its shape asked), barn owls, a shooting star, a plane.
-- **On the pitches:** tents (spread apart, colour asked), a campervan (extra wide), a canoe (extra wide), lantern posts (tall, spread apart), a picnic table.
+- **On the pitches:** tents (spread apart, colour asked), a campervan (extra wide), a canoe (extra wide, pulled up from the moonlit lake drawn between the trees and the pitches), lantern posts (tall, spread apart), a picnic table.
 - **At the front:** the campfire, people (jumper colour asked), a dog, a fox, log seats, sleeping bags (colour asked), a pile of firewood.
 
 ## Detail facts

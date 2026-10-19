@@ -261,8 +261,11 @@ const items: ItemDef[] = [
     article: 'a',
     w: 180,
     h: 95,
-    tier: 'large',
-    size: 0.24,
+    tier: 'xl',
+    // A small research submarine, drawn about as long as the whale: at the old size (0.24) it was no
+    // bigger than a diver and looked like a toy.
+    size: 0.42,
+    wide: true,
     zones: OPEN_Z,
     maxCount: 1,
     countable: false,

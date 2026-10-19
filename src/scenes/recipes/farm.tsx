@@ -295,7 +295,8 @@ const items: ItemDef[] = [
     h: 80,
     tier: 'medium',
     size: 0.14,
-    zones: [...FIELD_Z, ...YARD_Z],
+    // In the farmyard with the other animals, never among the crops and scarecrows.
+    zones: YARD_Z,
     maxCount: 5,
     colours: [C.white, C.black],
     // A black sheep in a white flock on Hard: "What colours were the sheep?"

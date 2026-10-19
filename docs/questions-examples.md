@@ -13,52 +13,55 @@ Scene `beach-c29hz`, colour scheme `day`.
 | Thing | Count | Colour | Band | Side |
 | --- | --- | --- | --- | --- |
 | palm tree | 1 | fixed | On the sand | centre |
-| kite | 1 | Red | In the sky | right |
-| hot-air balloons | 2 | Orange | In the sky | centre |
-| sandcastles | 2 | fixed | On the sand | centre |
-| buoy | 1 | Red | In the sea | right |
-| crabs | 2 | fixed | On the sand | left |
-| bird | 1 | fixed | In the sky | left |
+| kite | 1 | Purple | In the sky | right |
+| hot-air balloons | 2 | Red | In the sky | centre |
+| sandcastle | 1 | fixed | On the sand | left |
+| buoys | 3 | Orange | In the sea | left |
+| crab | 1 | fixed | On the sand | right |
+| birds | 4 | fixed | In the sky | left |
 
-### Questions (35)
+### Questions (38)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
 | count | count | How many palm trees were there? | **✓ 1** · 2 · 4 · 3 | palm |
 | position | where | Where was the palm tree? | **✓ On the sand, in the middle** · On the sand, on the right · On the sand, on the left | palm |
-| count | count | How many kites were there? | **✓ 1** · 4 · 3 · 2 | kite |
-| colour | colour | What colour was the kite? | **✓ Red** · Green · Yellow · Purple | kite |
-| position | where | Where was the kite? | **✓ In the sky, on the right** · In the sky, in the middle · In the sky, on the left | kite |
-| object | what-here | What was in the sky, on the right? | **✓ A kite** · The sun · A bird · A hot-air balloon | kite |
-| count | count | How many hot-air balloons were there? | **✓ 2** · 5 · 3 · 4 | balloon |
-| colour | colour | What colour were the hot-air balloons? | **✓ Orange** · Pink · Green · Red | balloon |
-| position | where | Where were the hot-air balloons? | **✓ In the sky, in the middle** · In the sky, on the left · In the sky, on the right | balloon |
+| object | what-here | What was on the sand, in the middle? | **✓ A palm tree** · A person · A crab · A beach ball | palm |
+| count | count | How many kites were there? | **✓ 1** · 3 · 4 · 2 | kite |
+| colour | colour | What colour was the kite? | **✓ Purple** · Blue · Red · Yellow | kite |
+| position | where | Where was the kite? | **✓ In the sky, on the right** · In the sky, on the left · In the sky, in the middle | kite |
+| object | what-here | What was in the sky, on the right? | **✓ A kite** · A plane · The sun · A hot-air balloon | kite |
+| count | count | How many hot-air balloons were there? | **✓ 2** · 5 · 4 · 1 | balloon |
+| colour | colour | What colour were the hot-air balloons? | **✓ Red** · Blue · Green · Pink | balloon |
+| position | where | Where were the hot-air balloons? | **✓ In the sky, in the middle** · In the sky, on the right · In the sky, on the left | balloon |
 | object | what-here | What was in the sky, in the middle? | **✓ Hot-air balloons** · Birds · Kites | balloon |
-| count | count | How many sandcastles were there? | **✓ 2** · 5 · 1 · 4 | sandcastle |
-| position | where | Where were the sandcastles? | **✓ On the sand, in the middle** · On the sand, on the right · On the sand, on the left | sandcastle |
-| count | count | How many buoys were there? | **✓ 1** · 4 · 3 · 2 | buoy |
-| colour | colour | What colour was the buoy? | **✓ Red** · Orange · White · Yellow | buoy |
-| position | where | Where was the buoy? | **✓ In the sea, on the right** · In the sea, on the left · In the sea, in the middle | buoy |
-| object | what-here | What was in the sea, on the right? | **✓ A buoy** · A sailboat · A dolphin | buoy |
-| count | count | How many crabs were there? | **✓ 2** · 5 · 4 · 3 | crab |
-| position | where | Where were the crabs? | **✓ On the sand, on the left** · On the sand, in the middle · On the sand, on the right | crab |
-| object | what-here | What was on the sand, on the left? | **✓ Crabs** · Beach umbrellas · Beach balls · People | crab |
-| count | count | How many birds were there? | **✓ 1** · 3 · 2 · 4 | bird |
-| position | where | Where was the bird? | **✓ In the sky, on the left** · In the sky, on the right · In the sky, in the middle | bird |
-| object | what-here | What was in the sky, on the left? | **✓ A bird** · A hot-air balloon · A plane · A kite | bird |
-| object | seen | Which of these was in the picture? | **✓ Sandcastle** · Starfish · Bucket · Sun | sandcastle |
-| object | seen | Which of these was NOT in the picture? | **✓ Beach towel** · Palm tree · Hot-air balloon · Buoy | towel |
-| count | compare | Were there more kites or more hot-air balloons? | Kites · **✓ Hot-air balloons** · The same number | compare-kite-balloon |
-| count | compare | Were there more hot-air balloons or more crabs? | Hot-air balloons · Crabs · **✓ The same number** | compare-balloon-crab |
-| position | relation | What was above the palm tree? | **✓ Hot-air balloons** · Kites · Birds · Sandcastles | palm |
-| position | relation | What was below the kite? | **✓ A buoy** · A hot-air balloon · A palm tree · A bird | kite |
-| position | relation | What was above the sandcastles? | **✓ Hot-air balloons** · Kites · Buoys · Birds | sandcastle |
-| position | relation | What was above the buoy? | **✓ A kite** · A palm tree · A crab · A bird | buoy |
-| position | relation | What was above the crabs? | **✓ A bird** · A kite · A palm tree · A hot-air balloon | crab |
-| position | relation | What was below the bird? | **✓ Crabs** · Buoys · Sandcastles · Palm trees | bird |
-| object | true-false | True or false? There was a dolphin in the picture. | True · **✓ False** | dolphin |
-| count | true-false | True or false? There was one kite. | **✓ True** · False | kite |
-| count | true-false | True or false? There were two birds. | True · **✓ False** | bird |
+| count | count | How many sandcastles were there? | **✓ 1** · 4 · 2 · 3 | sandcastle |
+| position | where | Where was the sandcastle? | **✓ On the sand, on the left** · On the sand, in the middle · On the sand, on the right | sandcastle |
+| object | what-here | What was on the sand, on the left? | **✓ A sandcastle** · A bucket · A person · A starfish | sandcastle |
+| count | count | How many buoys were there? | **✓ 3** · 6 · 4 · 5 | buoy |
+| colour | colour | What colour were the buoys? | **✓ Orange** · White · Yellow · Red | buoy |
+| position | where | Where were the buoys? | **✓ In the sea, on the left** · In the sea, in the middle · In the sea, on the right | buoy |
+| object | what-here | What was in the sea, on the left? | **✓ Buoys** · Dolphins · Sailboats | buoy |
+| count | count | How many crabs were there? | **✓ 1** · 3 · 2 · 4 | crab |
+| position | where | Where was the crab? | **✓ On the sand, on the right** · On the sand, on the left · On the sand, in the middle | crab |
+| object | what-here | What was on the sand, on the right? | **✓ A crab** · A beach towel · A sandcastle · A beach umbrella | crab |
+| count | count | How many birds were there? | **✓ 4** · 6 · 2 · 7 | bird |
+| position | where | Where were the birds? | **✓ In the sky, on the left** · In the sky, on the right · In the sky, in the middle | bird |
+| object | what-here | What was in the sky, on the left? | **✓ Birds** · Kites · Hot-air balloons | bird |
+| object | seen | Which of these was in the picture? | **✓ Sandcastle** · Bucket · Beach towel · Person | sandcastle |
+| object | seen | Which of these was NOT in the picture? | **✓ Dolphin** · Crab · Sandcastle · Kite | dolphin |
+| count | compare | Were there more buoys or more crabs? | **✓ Buoys** · Crabs · The same number | compare-buoy-crab |
+| count | compare | Were there more palm trees or more buoys? | Palm trees · **✓ Buoys** · The same number | compare-palm-buoy |
+| count | most | Which was there the most of? | **✓ Birds** · Buoys · Hot-air balloons · Crabs | most-bird |
+| position | relation | What was above the palm tree? | **✓ Hot-air balloons** · Crabs · Kites · Buoys | palm |
+| position | relation | What was below the kite? | **✓ A crab** · A hot-air balloon · A sandcastle · A bird | kite |
+| position | relation | What was below the hot-air balloons? | **✓ A palm tree** · A buoy · A crab · A bird | balloon |
+| position | relation | What was above the buoys? | **✓ Birds** · Kites · Crabs · Sandcastles | buoy |
+| position | relation | What was below the buoys? | **✓ A sandcastle** · A bird · A crab · A hot-air balloon | buoy |
+| position | relation | What was above the crab? | **✓ A kite** · A palm tree · A hot-air balloon · A buoy | crab |
+| count | true-false | True or false? There were four birds. | **✓ True** · False | bird |
+| count | true-false | True or false? There was one crab. | **✓ True** · False | crab |
+| colour | true-false | True or false? The kite was purple. | **✓ True** · False | kite |
 
 ## City street
 
@@ -310,33 +313,33 @@ Detail `barnSide`: left.
 | --- | --- | --- | --- | --- |
 | colour | colour | What colour was the tractor? | **✓ Green** · Red · Yellow · Blue | tractor |
 | position | where | Where was the tractor? | **✓ In the field, on the right** · In the field, on the left · In the field, in the middle | tractor |
-| object | what-here | What was in the field, on the right? | **✓ A tractor** · A pumpkin · A scarecrow · A hay bale | tractor |
-| count | count | How many horses were there? | **✓ 1** · 2 · 4 · 3 | horse |
-| colour | colour | What colour was the horse? | **✓ Black** · White · Brown · Green | horse |
+| object | what-here | What was in the field, on the right? | **✓ A tractor** · A scarecrow · A pumpkin · A hay bale | tractor |
+| count | count | How many horses were there? | **✓ 1** · 4 · 2 · 3 | horse |
+| colour | colour | What colour was the horse? | **✓ Black** · Brown · White · Blue | horse |
 | position | where | Where was the horse? | **✓ In the farmyard, on the right** · In the farmyard, in the middle · In the farmyard, on the left | horse |
-| count | count | How many cows were there? | **✓ 2** · 3 · 4 · 5 | cow |
-| colour | colour | What colour were the cows? | **✓ Black and white** · Brown · Blue · Pink | cow |
-| count | count | How many hot-air balloons were there? | **✓ 1** · 3 · 2 · 4 | balloon |
-| colour | colour | What colour was the hot-air balloon? | **✓ Green** · Blue · Pink · Orange | balloon |
+| count | count | How many cows were there? | **✓ 2** · 5 · 4 · 1 | cow |
+| colour | colour | What colour were the cows? | **✓ Black and white** · Brown · Purple · Orange | cow |
+| count | count | How many hot-air balloons were there? | **✓ 1** · 4 · 3 · 2 | balloon |
+| colour | colour | What colour was the hot-air balloon? | **✓ Green** · Purple · Orange · Pink | balloon |
 | position | where | Where was the hot-air balloon? | **✓ In the sky, on the left** · In the sky, in the middle · In the sky, on the right | balloon |
-| object | what-here | What was in the sky, on the left? | **✓ A hot-air balloon** · The sun · A crow | balloon |
-| colour | colour | What colour was the farmer’s shirt? | **✓ White** · Blue · Pink · Purple | farmer |
-| position | where | Where was the farmer? | **✓ In the farmyard, on the right** · In the farmyard, in the middle · In the farmyard, on the left | farmer |
-| count | count | How many pigs were there? | **✓ 2** · 5 · 3 · 1 | pig |
+| object | what-here | What was in the sky, on the left? | **✓ A hot-air balloon** · A crow · The sun | balloon |
+| colour | colour | What colour was the farmer’s shirt? | **✓ White** · Pink · Blue · Yellow | farmer |
+| position | where | Where was the farmer? | **✓ In the farmyard, on the right** · In the farmyard, on the left · In the farmyard, in the middle | farmer |
+| count | count | How many pigs were there? | **✓ 2** · 4 · 5 · 3 | pig |
 | position | where | Where were the pigs? | **✓ In the farmyard, in the middle** · In the farmyard, on the left · In the farmyard, on the right | pig |
-| count | count | How many crows were there? | **✓ 1** · 4 · 2 · 3 | crow |
+| count | count | How many crows were there? | **✓ 1** · 3 · 2 · 4 | crow |
 | position | where | Where was the crow? | **✓ In the sky, on the right** · In the sky, in the middle · In the sky, on the left | crow |
-| object | what-here | What was in the sky, on the right? | **✓ A crow** · The sun · A hot-air balloon | crow |
-| colour | detail | What colour was the barn? | **✓ Red** · Yellow · Green · Blue | barn-colour |
-| object | seen | Which of these was in the picture? | **✓ Pig** · Dog · Chicken · Sun | pig |
-| object | seen | Which of these was NOT in the picture? | **✓ Sheep** · Cow · Crow · Pig | sheep |
+| object | what-here | What was in the sky, on the right? | **✓ A crow** · A hot-air balloon · The sun | crow |
+| colour | detail | What colour was the barn? | **✓ Red** · Yellow · Blue · Green | barn-colour |
+| object | seen | Which of these was in the picture? | **✓ Farmer** · Milk churn · Sun · Scarecrow | farmer |
+| object | seen | Which of these was NOT in the picture? | **✓ Goat** · Pig · Farmer · Tractor | goat |
+| count | compare | Were there more hot-air balloons or more pigs? | Hot-air balloons · **✓ Pigs** · The same number | compare-balloon-pig |
 | count | compare | Were there more horses or more cows? | Horses · **✓ Cows** · The same number | compare-horse-cow |
-| count | compare | Were there more horses or more pigs? | Horses · **✓ Pigs** · The same number | compare-horse-pig |
-| colour | twins | What else was the same colour as the tractor? | **✓ The hot-air balloon** · The horse · The farmer’s shirt · The cows | tractor |
-| colour | twins | What else was the same colour as the hot-air balloon? | **✓ The tractor** · The cows · The horse · The farmer’s shirt | balloon |
-| colour | true-false | True or false? The horse was brown. | True · **✓ False** | horse |
-| count | true-false | True or false? There were two crows. | True · **✓ False** | crow |
-| count | true-false | True or false? There were three pigs. | True · **✓ False** | pig |
+| colour | twins | What else was the same colour as the tractor? | **✓ The hot-air balloon** · The cows · The horse · The farmer’s shirt | tractor |
+| colour | twins | What else was the same colour as the hot-air balloon? | **✓ The tractor** · The horse · The cows · The farmer’s shirt | balloon |
+| colour | true-false | True or false? The cows were brown. | True · **✓ False** | cow |
+| object | true-false | True or false? There was a hay bale in the picture. | True · **✓ False** | haybale |
+| colour | true-false | True or false? The hot-air balloon was red. | True · **✓ False** | balloon |
 
 ## Under the sea
 
@@ -346,53 +349,55 @@ Scene `under-sea-c29hz`, colour scheme `tropical`.
 
 | Thing | Count | Colour | Band | Side |
 | --- | --- | --- | --- | --- |
-| seaweed plant | 1 | fixed | On the seabed | centre |
-| submarine | 1 | Yellow | In the open water | right |
-| shark | 1 | fixed | In the open water | left |
-| jellyfish | 1 | White | Near the surface | left |
-| sea turtles | 2 | fixed | Near the surface | centre |
-| starfish | 1 | Purple | On the seabed | right |
-| clownfish | 2 | fixed | In the open water | centre |
+| submarine | 1 | Yellow | In the open water | centre |
+| seaweed plant | 1 | fixed | On the seabed | left |
+| shark | 1 | fixed | In the open water | right |
+| jellyfish | 2 | Pink | Near the surface | left |
+| sea turtle | 1 | fixed | Near the surface | right |
+| starfish | 2 | Red | On the seabed | centre |
+| clownfish | 3 | fixed | In the open water | centre |
 
 Detail `chestSide`: right.
 
 Detail `chest`: Red jewels.
 
-### Questions (31)
+### Questions (33)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| position | where | Where was the seaweed plant? | **✓ On the seabed, in the middle** · On the seabed, on the left · On the seabed, on the right | seaweed |
-| object | what-here | What was on the seabed, in the middle? | **✓ A seaweed plant** · A coral · A crab · A seashell | seaweed |
-| colour | colour | What colour was the submarine? | **✓ Yellow** · Red · Orange · Pink | submarine |
-| position | where | Where was the submarine? | **✓ In the open water, on the right** · In the open water, on the left · In the open water, in the middle | submarine |
-| object | what-here | What was in the open water, on the right? | **✓ A submarine** · A clownfish · A jellyfish · A fish | submarine |
-| position | where | Where was the shark? | **✓ In the open water, on the left** · In the open water, on the right · In the open water, in the middle | shark |
-| object | what-here | What was in the open water, on the left? | **✓ A shark** · A clownfish · A jellyfish · A sea turtle | shark |
-| count | count | How many jellyfish were there? | **✓ 1** · 3 · 4 · 2 | jellyfish |
-| colour | colour | What colour was the jellyfish? | **✓ White** · Purple · Pink · Grey | jellyfish |
-| position | where | Where was the jellyfish? | **✓ Near the surface, on the left** · Near the surface, on the right · In the open water, on the right · In the open water, on the left | jellyfish |
-| object | what-here | What was near the surface, on the left? | **✓ A jellyfish** · A sea turtle · A whale · A dolphin | jellyfish |
-| count | count | How many sea turtles were there? | **✓ 2** · 5 · 1 · 3 | turtle |
-| position | where | Where were the sea turtles? | **✓ Near the surface, in the middle** · Near the surface, on the right · In the open water, on the left · In the open water, on the right | turtle |
-| object | what-here | What was near the surface, in the middle? | **✓ Sea turtles** · Dolphins · Jellyfish | turtle |
-| count | count | How many starfish were there? | **✓ 1** · 2 · 3 · 4 | starfish |
-| colour | colour | What colour was the starfish? | **✓ Purple** · Pink · Red · Orange | starfish |
-| position | where | Where was the starfish? | **✓ On the seabed, on the right** · On the seabed, in the middle · On the seabed, on the left | starfish |
-| object | what-here | What was on the seabed, on the right? | **✓ A starfish** · An octopus · A crab · A seaweed plant | starfish |
-| count | count | How many clownfish were there? | **✓ 2** · 5 · 4 · 3 | clownfish |
-| position | where | Where were the clownfish? | **✓ In the open water, in the middle** · In the open water, on the right · In the open water, on the left | clownfish |
-| object | what-here | What was in the open water, in the middle? | **✓ Clownfish** · Divers · Fish · Jellyfish | clownfish |
-| object | detail | What was in the treasure chest? | **✓ Red jewels** · Pearls · Gold coins · Nothing, it was closed | chest |
-| object | seen | Which of these was in the picture? | **✓ Shark** · Octopus · Coral · Crab | shark |
-| object | seen | Which of these was NOT in the picture? | **✓ Crab** · Starfish · Seaweed plant · Submarine | crab |
-| count | compare | Were there more jellyfish or more sea turtles? | Jellyfish · **✓ Sea turtles** · The same number | compare-jellyfish-turtle |
-| count | compare | Were there more starfish or more clownfish? | Starfish · **✓ Clownfish** · The same number | compare-starfish-clownfish |
-| position | relation | What was above the clownfish? | **✓ Sea turtles** · Starfish · Jellyfish · Dolphins | clownfish |
-| position | relation | What was below the clownfish? | **✓ A seaweed plant** · A sea turtle · A starfish · A submarine | clownfish |
-| object | true-false | True or false? There was a coral in the picture. | True · **✓ False** | coral |
-| count | true-false | True or false? There were two starfish. | True · **✓ False** | starfish |
-| colour | true-false | True or false? The submarine was orange. | True · **✓ False** | submarine |
+| colour | colour | What colour was the submarine? | **✓ Yellow** · Orange · Red · Grey | submarine |
+| position | where | Where was the submarine? | **✓ In the open water, in the middle** · In the open water, on the right · In the open water, on the left | submarine |
+| position | where | Where was the seaweed plant? | **✓ On the seabed, on the left** · On the seabed, in the middle · On the seabed, on the right | seaweed |
+| object | what-here | What was on the seabed, on the left? | **✓ A seaweed plant** · An octopus · A starfish · A seashell | seaweed |
+| position | where | Where was the shark? | **✓ In the open water, on the right** · In the open water, in the middle · In the open water, on the left | shark |
+| object | what-here | What was in the open water, on the right? | **✓ A shark** · A fish · A submarine · A jellyfish | shark |
+| count | count | How many jellyfish were there? | **✓ 2** · 1 · 3 · 5 | jellyfish |
+| colour | colour | What colour were the jellyfish? | **✓ Pink** · White · Purple · Brown | jellyfish |
+| position | where | Where were the jellyfish? | **✓ Near the surface, on the left** · In the open water, on the right · In the open water, in the middle · Near the surface, in the middle | jellyfish |
+| object | what-here | What was near the surface, on the left? | **✓ Jellyfish** · Sea turtles · Dolphins | jellyfish |
+| count | count | How many sea turtles were there? | **✓ 1** · 3 · 2 · 4 | turtle |
+| position | where | Where was the sea turtle? | **✓ Near the surface, on the right** · Near the surface, in the middle · In the open water, on the right · In the open water, in the middle | turtle |
+| object | what-here | What was near the surface, on the right? | **✓ A sea turtle** · A whale · A jellyfish · A dolphin | turtle |
+| count | count | How many starfish were there? | **✓ 2** · 3 · 4 · 5 | starfish |
+| colour | colour | What colour were the starfish? | **✓ Red** · Orange · Pink · Purple | starfish |
+| position | where | Where were the starfish? | **✓ On the seabed, in the middle** · On the seabed, on the right · On the seabed, on the left | starfish |
+| object | what-here | What was on the seabed, in the middle? | **✓ Starfish** · Seashells · Crabs · Corals | starfish |
+| count | count | How many clownfish were there? | **✓ 3** · 1 · 4 · 5 | clownfish |
+| position | where | Where were the clownfish? | **✓ In the open water, in the middle** · In the open water, on the left · In the open water, on the right | clownfish |
+| object | detail | What was in the treasure chest? | **✓ Red jewels** · Pearls · Nothing, it was closed · Gold coins | chest |
+| object | seen | Which of these was in the picture? | **✓ Starfish** · Crab · Whale · Seashell | starfish |
+| object | seen | Which of these was NOT in the picture? | **✓ Fish** · Sea turtle · Starfish · Clownfish | fish |
+| count | compare | Were there more jellyfish or more sea turtles? | **✓ Jellyfish** · Sea turtles · The same number | compare-jellyfish-turtle |
+| count | compare | Were there more sea turtles or more clownfish? | Sea turtles · **✓ Clownfish** · The same number | compare-turtle-clownfish |
+| count | most | Which was there the most of? | **✓ Clownfish** · Starfish · Jellyfish · Sea turtles | most-clownfish |
+| count | most | Which was there just one of? | **✓ A sea turtle** · A clownfish · A starfish · A jellyfish | only-turtle |
+| position | relation | What was above the seaweed plant? | **✓ Jellyfish** · Clownfish · Starfish · Sea turtles | seaweed |
+| position | relation | What was below the jellyfish? | **✓ A seaweed plant** · A clownfish · A sea turtle · A shark | jellyfish |
+| position | relation | What was above the starfish? | **✓ Clownfish** · Sea turtles · Jellyfish · Fish | starfish |
+| position | relation | What was below the clownfish? | **✓ Starfish** · Sea turtles · Jellyfish · Crabs | clownfish |
+| count | true-false | True or false? There were two jellyfish. | **✓ True** · False | jellyfish |
+| count | true-false | True or false? There were two sea turtles. | True · **✓ False** | turtle |
+| colour | true-false | True or false? The jellyfish were pink. | **✓ True** · False | jellyfish |
 
 ## In the supermarket
 

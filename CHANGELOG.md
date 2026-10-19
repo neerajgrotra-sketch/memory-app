@@ -10,6 +10,17 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.2 (2026-10-19)
+
+- **Fixes from a common-sense audit of every place** (three pictures of each, checked for anything that wouldn't happen in real life):
+  - **Beach:** palm trees stand on the sand. As tall things, their feet sat on the waterline, so they seemed to grow out of the sea.
+  - **Kitchen:** a built-in oven (with the hob's knobs) and a sink with a tap, so the steaming saucepans have somewhere to come from.
+  - **Farm:** sheep stay in the farmyard with the other animals, not among the crops and scarecrows.
+  - **Under the sea:** the submarine is extra large, about as long as the whale. It was no bigger than a diver and looked like a toy.
+  - **Night campsite:** a moonlit lake between the trees and the pitches, where the canoe was pulled up from.
+  - **Snowy mountain:** cable cars hang from one cable running right across the sky, instead of each from its own short stub. Cabins are never mirrored, so the cables stay parallel.
+- The city street, train station, zoo, classroom, airport, the Moon, living room and park passed the audit unchanged.
+
 ## 4.0.1 (2026-10-18)
 
 - **Ready to build for real phones with EAS.** See [docs/building.md](docs/building.md).

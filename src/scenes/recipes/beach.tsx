@@ -176,8 +176,9 @@ const items: ItemDef[] = [
     h: 270,
     tier: 'large',
     size: 0.24,
-    // Tall on purpose: it stands at the back of the sand and its leaves rise over the sea. Two are spread apart.
-    tall: true,
+    // Stands on the sand, its leaves reaching up towards the sea. Not `tall`: tall things stand with their
+    // feet at the very back of their band, which on the beach is the waterline, so it looked to grow in the sea.
+    // Two are spread apart.
     spread: true,
     zones: SAND,
     maxCount: 2,

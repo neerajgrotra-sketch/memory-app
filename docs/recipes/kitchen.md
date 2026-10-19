@@ -29,4 +29,6 @@ Like the supermarket, the kitchen is a close-up, so **no people or pets**, and e
 
 ## Colour schemes
 
+The backdrop has a built-in oven in the middle of the cupboards and a sink with a tap on the right, so the steaming saucepans have somewhere to come from.
+
 `modern` (warm white tiles, navy cupboards, dark worktop, light grey floor) and `farmhouse` (pale blue tiles, sage cupboards, wooden worktop and floor). The microwave is mid-silver so it stands out on both walls. Marks: faint tile lines on the wall.
