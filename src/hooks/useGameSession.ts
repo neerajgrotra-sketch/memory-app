@@ -14,7 +14,7 @@ import {
   type LadderState,
 } from '@/games/lookRemember/ladder';
 import { DAILY_MULTIPLIER, dailySeed, localDay } from '@/games/lookRemember/daily';
-import { MAX_PEEKS, earnPeeks, spendPeek, type PeekWallet } from '@/games/lookRemember/peeks';
+import { MAX_PEEKS, earnPeeks, peekSecondsFor, spendPeek, type PeekWallet } from '@/games/lookRemember/peeks';
 import { placesOff } from '@/games/lookRemember/places';
 import { pointsFor, type PointsBreakdown } from '@/games/lookRemember/points';
 import { EXTRA_SECONDS, useProfile } from '@/profile';
@@ -231,6 +231,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
         replay: round.replay || undefined,
         // A tester's unlimited peek isn't recorded, so it never comes off the real Peeks.
         peeked: (peeked.length > 0 && !unlimitedPeeks) || undefined,
+        peekSeconds: peeked.length > 0 ? peekSecondsFor(profile) : undefined,
         recipeId: stage.scene.recipeId,
         sceneId: stage.scene.id,
         score,
@@ -241,7 +242,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       };
       statsStore.addResult(result).catch(() => {});
     },
-    [ladder, mode, round, stage, peeked, wallet, unlimitedPeeks],
+    [ladder, mode, round, stage, peeked, wallet, unlimitedPeeks, profile],
   );
 
   /** Records the answer to question `questionIndex` (questions can be answered in any order after skipping). */

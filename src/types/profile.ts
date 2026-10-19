@@ -23,6 +23,8 @@ export interface Profile {
   tester?: boolean;
   /** Tester mode only: Peeks never run out (and aren't taken from your real ones), to try them without earning first. */
   testPeeks?: boolean;
+  /** Tester mode only: how long a Peek shows the picture (1 to 5 seconds), to find the best length. Missing means the standard. */
+  peekSeconds?: number;
   /** The old testing switch: only these recipes were played. Read once to fill `placesOff`, then cleared. */
   recipeFilter: string[] | null;
   /** Sounds for answers, the last seconds and level ups. Missing means on (profiles saved before sounds). */

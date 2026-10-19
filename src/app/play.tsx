@@ -12,7 +12,9 @@ import { QuizStage } from '@/components/QuizStage';
 import { ResultStage } from '@/components/ResultStage';
 import { isPlayMode } from '@/game/difficulty';
 import { dailyResultOn, streakOf, type Streak } from '@/games/lookRemember/daily';
+import { peekSecondsFor } from '@/games/lookRemember/peeks';
 import { loadProgress } from '@/hooks/useGameProgress';
+import { useProfile } from '@/profile';
 import { statsStore } from '@/stats';
 import { useGameSession, type SessionStart } from '@/hooks/useGameSession';
 import { colors } from '@/theme';
@@ -54,8 +56,9 @@ export default function PlayScreen() {
 function Game({ start }: { start: SessionStart & { streak: Streak } }) {
   const { stage, round, phase, answers, score, outcome, ladder, peeksLeft, peeked, unlimitedPeeks, peek, finishMemorising, answer, playAgain, nextPicture } =
     useGameSession(start);
-  // A Peek shows the picture again over the question for a few seconds.
+  // A Peek shows the picture again over the question for a few seconds (a tester can change how many).
   const [peeking, setPeeking] = useState(false);
+  const { profile } = useProfile();
   // The level-up screen shows once per level gained, before the round's results.
   const [celebrated, setCelebrated] = useState<string | null>(null);
   const levelUpKey = outcome?.ladder && outcome.ladder.after.level > outcome.ladder.before.level ? `${round.index}` : null;
@@ -134,7 +137,7 @@ function Game({ start }: { start: SessionStart & { streak: Streak } }) {
         </SafeAreaView>
       )}
 
-      {phase === 'quiz' && peeking && <PeekView scene={stage.scene} onDone={() => setPeeking(false)} />}
+      {phase === 'quiz' && peeking && <PeekView scene={stage.scene} seconds={peekSecondsFor(profile)} onDone={() => setPeeking(false)} />}
     </View>
   );
 }

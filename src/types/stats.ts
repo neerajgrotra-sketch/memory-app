@@ -28,6 +28,8 @@ export interface RoundResult {
   replay?: boolean;
   /** A Peek was used in this round (see games/lookRemember/peeks). */
   peeked?: boolean;
+  /** How long that Peek showed the picture, in seconds (recorded so peek lengths can be compared). */
+  peekSeconds?: number;
   /** The setting, e.g. "beach". */
   recipeId: string;
   sceneId: string;
