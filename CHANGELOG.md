@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.8 (2026-10-19)
+
+- **"How to play" in a pop-up, by the game's title.** Testers said the rules were too far down the game page. A **ⓘ How to play** button next to "Look & Remember" now opens them: the three steps, how levels move, and how Peeks work, with a **Got it** button. The copy at the bottom of the page is gone, so the rules live in one place.
+- **Tester mode: play any level.** Climbing the levels took too long for testing. The game page now has a **Tester: play any level** grid (1 to 30): tap a level and **Play** starts there. It works like "Start again", at the level you pick: history, high score and best level are kept, and rounds played from there carry on as normal. Not in store builds.
+
 ## 4.0.7 (2026-10-19)
 
 - **Tester mode: choose how long a Peek lasts.** Testers said 3 seconds is too long. Profile → Tester mode now has a **Peek time** setting from 1 to 5 seconds (3 is the standard), so we can try lengths and pick the best. Each round that used a peek records the length (`peekSeconds` on the saved round), so lengths can be compared afterwards. Leaving tester mode puts it back to 3 seconds; store builds always use 3.

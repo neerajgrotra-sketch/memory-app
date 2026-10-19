@@ -11,10 +11,24 @@ export interface StatsStore {
   addResult(result: RoundResult): Promise<void>;
   /** Deletes every round and every "start again". */
   clear(): Promise<void>;
-  /** When each game was last started again from Level 1 (ISO time), by game id. */
+  /** When each game was last started again (ISO time, plus the level if not 1: see `parseRestart`), by game id. */
   listRestarts(): Promise<Record<string, string>>;
-  /** Starts a game again from Level 1, keeping its rounds (history, high score, best level). */
-  restart(gameId: string): Promise<void>;
+  /**
+   * Starts a game again from Level 1 (or, for testers, from any level), keeping its rounds (history, high
+   * score, best level).
+   */
+  restart(gameId: string, level?: number): Promise<void>;
+}
+
+/**
+ * A saved "start again": an ISO time, with "@L<level>" after it when a tester jumped to a level other than 1
+ * (plain times, from before levels could be picked, mean Level 1).
+ */
+export function parseRestart(value: string | undefined): { at: string; level: number } | null {
+  if (!value) return null;
+  const [at, level] = value.split('@L');
+  const n = Number(level);
+  return { at, level: Number.isInteger(n) && n >= 1 ? n : 1 };
 }
 
 const STORAGE_KEY = 'glance.roundResults.v1';
@@ -83,8 +97,9 @@ export function createDeviceStatsStore(): StatsStore {
     async listRestarts() {
       return { ...(await loadRestarts()) };
     },
-    async restart(gameId) {
-      await saveRestarts({ ...(await loadRestarts()), [gameId]: new Date().toISOString() });
+    async restart(gameId, level = 1) {
+      const at = new Date().toISOString();
+      await saveRestarts({ ...(await loadRestarts()), [gameId]: level > 1 ? `${at}@L${level}` : at });
     },
   };
 }

@@ -5,6 +5,7 @@ import { gameIdOf, type GameId } from '@/games/registry';
 import { ladderStateOf, type LadderState } from '@/games/lookRemember/ladder';
 import { walletOf, type PeekWallet } from '@/games/lookRemember/peeks';
 import { statsStore } from '@/stats';
+import { parseRestart } from '@/stats/statsStore';
 import type { RoundResult } from '@/types/stats';
 
 export interface GameProgress {
@@ -27,8 +28,9 @@ export interface GameProgress {
 /** `restarts`: when each game was started again (from `statsStore.listRestarts`). */
 export function progressOf(all: RoundResult[], gameId: GameId, restarts: Record<string, string> = {}): GameProgress {
   const results = all.filter((r) => gameIdOf(r) === gameId).sort((a, b) => a.playedAt.localeCompare(b.playedAt));
-  const restartedAt = restarts[gameId] ?? null;
-  const { state, fromHistory } = ladderStateOf(results, restartedAt);
+  const restart = parseRestart(restarts[gameId]);
+  const restartedAt = restart?.at ?? null;
+  const { state, fromHistory } = ladderStateOf(results, restartedAt, restart?.level);
   return {
     results,
     ladder: state,

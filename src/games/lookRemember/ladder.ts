@@ -183,15 +183,16 @@ export function startingLevel(results: RoundResult[]): number {
 }
 
 /** Your level now: from the last levelled round, or worked out from earlier rounds if there are none. */
-export function ladderStateOf(results: RoundResult[], restartedAt?: string | null): { state: LadderState; fromHistory: boolean } {
+/** `startLevel`: the level a "start again" put you on (1, or any level a tester picked). */
+export function ladderStateOf(results: RoundResult[], restartedAt?: string | null, startLevel = 1): { state: LadderState; fromHistory: boolean } {
   const sorted = [...results].sort((a, b) => a.playedAt.localeCompare(b.playedAt));
   const lastLevelled = (rounds: RoundResult[]) => [...rounds].reverse().find((r) => r.mode === 'levels' && r.ladder);
   if (restartedAt) {
-    // Started again: Level 1, unless rounds have been played since. The best level ever is kept.
+    // Started again: Level 1 (or a tester's chosen level), unless rounds have been played since. The best level ever is kept.
     const since = lastLevelled(sorted.filter((r) => r.playedAt > restartedAt));
     if (since?.ladder) return { state: since.ladder.after, fromHistory: false };
     const before = ladderStateOf(sorted.filter((r) => r.playedAt <= restartedAt)).state;
-    return { state: { ...FIRST_STATE, best: Math.max(1, before.best) }, fromHistory: false };
+    return { state: { ...FIRST_STATE, level: startLevel, best: Math.max(1, before.best) }, fromHistory: false };
   }
   const last = lastLevelled(sorted);
   if (last?.ladder) return { state: last.ladder.after, fromHistory: false };

@@ -13,7 +13,7 @@ Checks: `npm run typecheck`, `npm run lint` and `npm run check:scenes` (the leve
 
 Every change bumps the version (shown on the Games tab). See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
 
-## Status (4.0.7)
+## Status (4.0.8)
 
 - **Works:** the Look & Remember game with 30 levels, 15 places, points, the Daily Challenge and streak, Peeks, sounds and vibration. Played and tested in the browser (Expo web), with every automated check passing.
 - **Ready, not yet run:** builds for real phones with EAS: TestFlight for iPhone, an APK for Android ([docs/building.md](docs/building.md)).
@@ -30,7 +30,7 @@ It opens with a short launch animation (an eye opens, **glance** and "Look close
 
 ## Look & Remember
 
-**The game page** shows your level ring and title, what's coming next, then **Play level N** right below it, then your high score, best level, rounds played and perfect rounds, your **Peeks**, **Start again from Level 1**, **My places** (pick which places you train on: places your level hasn't reached show a lock and the level they unlock at, and join automatically when you get there; at least one stays on), **Practice** (Easy, Medium, Hard) and how to play.
+**The game page** has a **ⓘ How to play** button by the title (the rules in a pop-up), then shows your level ring and title, what's coming next, then **Play level N** right below it, then your high score, best level, rounds played and perfect rounds, your **Peeks**, **Start again from Level 1**, **My places** (pick which places you train on: places your level hasn't reached show a lock and the level they unlock at, and join automatically when you get there; at least one stays on), and **Practice** (Easy, Medium, Hard). In tester mode it also has a grid to play from any level.
 
 A round:
 
