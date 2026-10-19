@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.6 (2026-10-19)
+
+- **A Peek no longer holds you back a level.** Testers didn't like that a peek cost twice: half the points for that answer *and* the round not counting towards a level up, so 4 out of 5 with a peek said "Try again". Now a peek's only cost is the half points (still shown as "👀 Peek −50"), and the round counts towards your level like any other. Peeks are already scarce: earned with points, at most 3 held, one a round, none in the Daily Challenge.
+
 ## 4.0.5 (2026-10-19)
 
 - **Each game carries its own progress on the Games tab.** With more games coming, a "Continue" strip for each game would have pushed the games further and further down. Instead:

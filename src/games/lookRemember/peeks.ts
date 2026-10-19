@@ -14,7 +14,7 @@ export const PEEK_POINTS = 3000;
 export const MAX_PEEKS = 3;
 /** How long a peek shows the picture. */
 export const PEEK_SECONDS = 3;
-/** A question answered right after a peek earns this share of its points (and doesn't count towards a level up). */
+/** A question answered right after a peek earns this share of its points (its only cost: the round still counts for your level). */
 export const PEEKED_SHARE = 0.5;
 
 export interface PeekWallet {

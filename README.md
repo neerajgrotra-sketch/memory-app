@@ -13,7 +13,7 @@ Checks: `npm run typecheck`, `npm run lint` and `npm run check:scenes` (the leve
 
 Every change bumps the version (shown on the Games tab). See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
 
-## Status (4.0.5)
+## Status (4.0.6)
 
 - **Works:** the Look & Remember game with 30 levels, 15 places, points, the Daily Challenge and streak, Peeks, sounds and vibration. Played and tested in the browser (Expo web), with every automated check passing.
 - **Ready, not yet run:** builds for real phones with EAS: TestFlight for iPhone, an APK for Android ([docs/building.md](docs/building.md)).
@@ -43,7 +43,7 @@ A round:
 
 **Points**: each right answer scores 100 at Level 1, plus 10 per level. Right answers in a row add a bonus (+20, +40, +60…), and so does tapping **I'm ready** early (5 points per spare second per right answer). Slow answers never cost points.
 
-**Peeks**: every 3,000 points earns a Peek (about every 6 good rounds at Level 1, every 2 at Level 30); you hold up to 3. A right answer after a peek earns half its points and doesn't count towards a level up. Peeks are never bought and never cost points you've already scored. The game page shows how many you hold and how far off the next one is.
+**Peeks**: every 3,000 points earns a Peek (about every 6 good rounds at Level 1, every 2 at Level 30); you hold up to 3. A right answer after a peek earns half its points; that's its only cost, and the round still counts towards your level. Peeks are never bought and never cost points you've already scored. The game page shows how many you hold and how far off the next one is.
 
 **Practice** plays a fixed Easy, Medium or Hard round. It earns points but never changes your level.
 

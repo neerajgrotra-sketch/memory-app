@@ -9,7 +9,6 @@ import {
   PRACTICE_LEVEL,
   applyRound,
   bandOf,
-  scoreForLevel,
   knobsForLevel,
   recipesForLevel,
   type LadderState,
@@ -204,11 +203,10 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       const counts = !round.replay && mode !== 'daily';
       const newHighScore = counts && highScore.current > 0 && points.total > highScore.current;
       if (counts) highScore.current = Math.max(highScore.current, points.total);
-      // A peeked answer never tips a round into a good one: peeks can't carry you up a level.
+      // A peek's only cost is half points for that answer: the round counts towards your level as usual.
+      // (Costing both points and progress felt like being punished twice for a Peek you'd earned.)
       const total = round.questions.length;
-      const peekedRight = [...new Set(peeked)].filter((i) => correct[i]).length;
-      const levelScore = scoreForLevel(score, total, peekedRight);
-      const after = mode === 'levels' && counts ? applyRound(ladder, levelScore, total) : undefined;
+      const after = mode === 'levels' && counts ? applyRound(ladder, score, total) : undefined;
       const earned = earnPeeks(wallet, points.total);
       setWallet(earned.wallet);
       if (after) setLadder(after);
