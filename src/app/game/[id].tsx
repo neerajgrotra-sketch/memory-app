@@ -52,11 +52,6 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.content}>
         <GameArt style={styles.art} />
-        <SafeAreaView edges={['top']} style={styles.backWrap} pointerEvents="box-none">
-          <Pressable accessibilityRole="button" accessibilityLabel="Back" onPress={goBack} hitSlop={8} style={styles.back}>
-            <Text style={styles.backText}>←</Text>
-          </Pressable>
-        </SafeAreaView>
 
         <View style={styles.body}>
           <Text style={styles.title}>{game.title}</Text>
@@ -153,6 +148,13 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
           </View>
         </View>
       </ScrollView>
+      {/* Back to the Games tab: outside the scroll, so it never scrolls away, and solid with a label and a
+          light edge, so it shows on any picture behind it. */}
+      <SafeAreaView edges={['top']} style={styles.backWrap} pointerEvents="box-none">
+        <Pressable accessibilityRole="button" accessibilityLabel="Back to Games" onPress={goBack} hitSlop={8} style={({ pressed }) => [styles.back, pressed && styles.backPressed]}>
+          <Text style={styles.backText}>←  Games</Text>
+        </Pressable>
+      </SafeAreaView>
     </View>
   );
 }
@@ -253,15 +255,23 @@ const styles = StyleSheet.create({
   art: { width: '100%' },
   backWrap: { position: 'absolute', top: 0, left: 0 },
   back: {
-    margin: 16,
-    width: 44,
+    margin: 12,
     height: 44,
+    paddingHorizontal: 16,
     borderRadius: 22,
-    backgroundColor: 'rgba(15,17,21,0.75)',
+    backgroundColor: colors.background,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.45)',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOpacity: 0.4,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 4,
   },
-  backText: { color: colors.text, fontSize: 20, fontWeight: '700' },
+  backPressed: { opacity: 0.7 },
+  backText: { color: colors.text, fontSize: 17, fontWeight: '800' },
   body: { padding: 20, gap: 20 },
   title: { color: colors.text, fontSize: 30, fontWeight: '900', marginBottom: -12 },
   tagline: { color: colors.textMuted, fontSize: 16, lineHeight: 22 },

@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.3 (2026-10-19)
+
+- **A back button you can find on the game page.** Testing on a real iPhone showed players couldn't see how to get back: the button was a see-through circle with a thin arrow that blended into the picture, and it scrolled away with the page. It's now a solid **"← Games"** button with a light edge and a shadow, so it shows on any picture, and it stays at the top while the page scrolls.
+
 ## 4.0.2 (2026-10-19)
 
 - **Fixes from a common-sense audit of every place** (three pictures of each, checked for anything that wouldn't happen in real life):
