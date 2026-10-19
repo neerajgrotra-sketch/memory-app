@@ -7,6 +7,7 @@ import { GameArt } from '@/components/GameArt';
 import { LevelRing } from '@/components/LevelRing';
 import { SoundToggle } from '@/components/SoundToggle';
 import { titleFor } from '@/games/lookRemember/ladder';
+import { PLANNED_GAMES, PlannedGameCard } from '@/games/ComingSoon';
 import { GAMES, SKILLS, SKILL_ORDER, type GameDef } from '@/games/registry';
 import { useGameProgress } from '@/hooks/useGameProgress';
 import { feedback } from '@/feedback';
@@ -69,10 +70,12 @@ export default function GamesScreen() {
         {progress && <MyPlacesNote level={progress.ladder.level} gameId={featured.id} />}
         {profile?.moreTime && <Text style={styles.moreTime}>More time to look is on: every picture stays {EXTRA_SECONDS} seconds longer.</Text>}
 
-        {/* Games grouped by skill. A skill only shows once it has a game. */}
+        {/* Games grouped by skill. A skill only shows once it has a game. In tester mode, planned games
+            appear too ("Coming soon"), to preview the hub with more games. */}
         {SKILL_ORDER.map((skill) => {
           const games = GAMES.filter((g) => g.skill === skill);
-          if (!games.length) return null;
+          const planned = profile?.tester ? PLANNED_GAMES.filter((g) => g.skill === skill) : [];
+          if (!games.length && !planned.length) return null;
           return (
             <View key={skill} style={styles.section}>
               <View style={styles.sectionHead}>
@@ -82,6 +85,9 @@ export default function GamesScreen() {
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.cards}>
                 {games.map((game) => (
                   <GameCard key={game.id} game={game} />
+                ))}
+                {planned.map((game) => (
+                  <PlannedGameCard key={game.id} game={game} />
                 ))}
               </ScrollView>
             </View>

@@ -68,7 +68,7 @@ Rules that pass every overlap and contrast check can still show something that n
 
 ## Games, levels and points
 
-- **A games app, not one game.** The Games tab groups games by skill, like the brain-training apps people know, but a skill shows only when it has a game. Empty "coming soon" rows make an app feel unfinished.
+- **A games app, not one game.** The Games tab groups games by skill, like the brain-training apps people know, but a skill shows only when it has a game. Empty "coming soon" rows make an app feel unfinished. Planned games appear as "Coming soon" tiles in tester mode only, to preview the layout.
 - **Levels that adjust themselves** replaced picking Easy / Medium / Hard. Picking your own difficulty is a guess; a level that follows how you play keeps every round at the edge of what you can do, and the level ring makes progress visible. Easy / Medium / Hard stay as Practice, which never moves your level.
 - **Up is earned, down is rare.** 3 good rounds go up; only 2 very poor rounds in a row go down, and best level never drops. One unlucky picture should never cost a level.
 - **"What's new" is worked out, never written.** The level-up screen lists exactly what changed between the two levels' settings, so it can't promise something that isn't there. An early version said "trickier questions" on a level where nothing changed.

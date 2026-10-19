@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.4 (2026-10-19)
+
+- **Preview tiles for planned games, in tester mode.** To see how the Games tab will look with more games, tester mode (7 taps on the version) now adds six "Coming soon" tiles: **Pairs** and **Where Was It?** under Memory, **Spot the Change** and **Odd One Out** under Attention, **What Comes Next?** under Problem solving, and **Quick Count** under Speed. Each has its own colour and little picture; a tap opens a "Coming soon" card. Real players, and store builds, never see them. They live in `src/games/ComingSoon.tsx`.
+
 ## 4.0.3 (2026-10-19)
 
 - **A back button you can find on the game page.** Testing on a real iPhone showed players couldn't see how to get back: the button was a see-through circle with a thin arrow that blended into the picture, and it scrolled away with the page. It's now a solid **"← Games"** button with a light edge and a shadow, so it shows on any picture, and it stays at the top while the page scrolls.
