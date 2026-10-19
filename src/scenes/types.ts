@@ -261,6 +261,8 @@ export interface LightBand {
 export interface DetailKnobs {
   /** How exact clock times are: whole hours, half past, or quarters. */
   clockStep: ClockStep;
+  /** Animals hiding in the picture: 0 none, 1 a clear peek (head and ears), 2 a small one (ears and eyes). */
+  hidden?: 0 | 1 | 2;
 }
 
 /** A setting: its bands, backdrop and the things that belong in it. */

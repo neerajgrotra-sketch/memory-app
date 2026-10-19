@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.10 (2026-10-19)
+
+- **Hiding animals on the snowy mountain.** From Level 20 (and in Hard practice), the animal on the danger sign really is there, peeking out from behind the **pine tree**, the **snowmobile** or the **hot chocolate stand**, and the round opens with **"Where was the bear hiding?"**. Levels 20 to 24 show a clear peek (head and ears); from Level 25 only the ears and eyes show. Each of the five animals has its own head: a bear, a wolf, a fox, a deer and a moose with antlers. Wrong answers are the other hiding spots in the picture first, so none can be ruled out at a glance. The level-up screen announces it ("Animals hiding in the picture: find where").
+
 ## 4.0.9 (2026-10-19)
 
 - **Birds show in front of the cable car's cable.** On the snowy mountain the cable runs right across the sky, and it could be drawn over a bird, so the bird was hard to make out. The cable car now has a new `behind` habit: it's drawn behind everything else, on the still picture and on the moving memorise screen, so birds and planes always sit in front of its cable.

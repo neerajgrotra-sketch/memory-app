@@ -20,10 +20,15 @@ export interface LevelConfig {
   houseNumbers: boolean;
   /** How exact the time on a clock is: whole hours (Easy), half past (Medium), quarters (Hard). */
   clockStep: ClockStep;
+  /**
+   * Animals hiding in the picture (the snowy mountain's danger animal peeks out from behind something):
+   * 0 none, 1 a clear peek (head and ears), 2 a small one (ears and eyes).
+   */
+  hidden: 0 | 1 | 2;
 }
 
 export const LEVELS: Record<Level, LevelConfig> = {
-  easy: { preferredTypes: ['object', 'colour'], viewSeconds: 10, groups: 5, maxCount: 3, closeCounts: false, mixedColours: false, houseNumbers: false, clockStep: 60 },
+  easy: { preferredTypes: ['object', 'colour'], viewSeconds: 10, groups: 5, maxCount: 3, closeCounts: false, mixedColours: false, houseNumbers: false, clockStep: 60, hidden: 0 },
   medium: {
     preferredTypes: ['object', 'count', 'colour', 'position'],
     viewSeconds: 8,
@@ -33,8 +38,9 @@ export const LEVELS: Record<Level, LevelConfig> = {
     mixedColours: false,
     houseNumbers: true,
     clockStep: 30,
+    hidden: 0,
   },
-  hard: { preferredTypes: ['count', 'position', 'number'], viewSeconds: 6, groups: 9, maxCount: 6, closeCounts: true, mixedColours: true, houseNumbers: true, clockStep: 15 },
+  hard: { preferredTypes: ['count', 'position', 'number'], viewSeconds: 6, groups: 9, maxCount: 6, closeCounts: true, mixedColours: true, houseNumbers: true, clockStep: 15, hidden: 1 },
 };
 
 export const LEVEL_LABELS: Record<Level, string> = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };

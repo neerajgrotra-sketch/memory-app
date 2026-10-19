@@ -74,6 +74,7 @@ export function knobsForLevel(rawLevel: number): LevelConfig {
     mixedColours: level >= 12,
     houseNumbers: level >= 8,
     clockStep: level < 8 ? 60 : level < 18 ? 30 : 15,
+    hidden: level < 20 ? 0 : level < 25 ? 1 : 2,
   };
 }
 
@@ -109,6 +110,7 @@ export function unlocksAt(level: number): string[] {
   if (now.mixedColours && !before.mixedColours) news.push('Fire hydrants can each be a different colour');
   if (now.clockStep < before.clockStep) news.push(now.clockStep === 30 ? 'Clocks can show half past' : 'Clocks can show quarter past and quarter to');
   if (now.closeCounts && !before.closeCounts) news.push('Closer choices when counting');
+  if (now.hidden > before.hidden) news.push(now.hidden === 1 ? 'Animals hiding in the picture: find where' : 'Hiding animals show less of themselves');
   if (now.groups > before.groups) news.push('One more kind of thing in each picture');
   if (now.maxCount > before.maxCount) news.push(`Up to ${now.maxCount} of the same thing`);
   if (now.viewSeconds < before.viewSeconds) news.push(`Pictures stay for ${now.viewSeconds} seconds`);
@@ -131,6 +133,7 @@ export function nextBigUnlock(level: number): { level: number; text: string } | 
     if (now.mixedColours && !before.mixedColours) return { level: l, text: 'Hydrants in different colours' };
     if (now.clockStep < before.clockStep) return { level: l, text: now.clockStep === 30 ? 'Clocks at half past' : 'Clocks at quarter past and quarter to' };
     if (now.closeCounts && !before.closeCounts) return { level: l, text: 'Closer choices when counting' };
+    if (now.hidden > before.hidden) return { level: l, text: now.hidden === 1 ? 'Hiding animals' : 'Better-hidden animals' };
   }
   return null;
 }

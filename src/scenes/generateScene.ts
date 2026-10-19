@@ -39,6 +39,8 @@ export interface SceneKnobs {
   mixedColours?: boolean;
   /** How exact clock times are (whole hours when missing). */
   clockStep?: ClockStep;
+  /** Animals hiding in the picture: 0 none, 1 a clear peek, 2 a small one (none when missing). */
+  hidden?: 0 | 1 | 2;
 }
 
 /** Fresh placements tried before showing the best one found. */
@@ -295,7 +297,7 @@ function shares(recipe: Recipe, total: number): { zone: ZoneDef; quota: number }
 function build(recipe: Recipe, knobs: SceneKnobs, seed: number, rng: Rng, size: SceneSize): SceneSpec {
   const ratio = ratioOf(size);
   const base = rng.pick(recipe.variants);
-  const details = recipe.details?.(rng, { clockStep: knobs.clockStep ?? 60 });
+  const details = recipe.details?.(rng, { clockStep: knobs.clockStep ?? 60, hidden: knobs.hidden ?? 0 });
   const variant = variantOf(recipe, { variantId: base.id, details });
   const ctx: Context = { recipe, variant, ratio, size, rng, taken: [], cells: new Set(), oneWayFlip: (seed & 1) === 1, details };
   const pool = rng.shuffle(recipe.items);
