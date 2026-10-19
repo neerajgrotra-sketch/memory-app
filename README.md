@@ -13,10 +13,11 @@ Checks: `npm run typecheck`, `npm run lint` and `npm run check:scenes` (the leve
 
 Every change bumps the version (shown on the Games tab). See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
 
-## Status (4.0.0)
+## Status (4.0.2)
 
 - **Works:** the Look & Remember game with 30 levels, 15 places, points, the Daily Challenge and streak, Peeks, sounds and vibration. Played and tested in the browser (Expo web), with every automated check passing.
-- **Not yet done:** builds for and testing on real phones (EAS), crash reporting and analytics, accounts with cloud sync, family profiles, a second game, a professional sound set (the current sounds are placeholders; background music is parked), a colour-blind mode, and a privacy policy and store listing.
+- **Ready, not yet run:** builds for real phones with EAS: TestFlight for iPhone, an APK for Android ([docs/building.md](docs/building.md)).
+- **Not yet done:** testing on real phones, crash reporting and analytics, accounts with cloud sync, family profiles, a second game, a professional sound set (the current sounds are placeholders; background music is parked), a colour-blind mode, and a privacy policy and store listing.
 - **Branches:** `claude/glance-memory-game-sxcej5` is the main line of work (4.0.0 merged the `claude/glance-games-hub` beta branch into it); `main` is the release line, updated by pull request. New work goes on a short-lived branch per change, not a long-running beta.
 
 ## The app
@@ -78,6 +79,7 @@ Every picture is generated on the device from a **recipe** in a few milliseconds
 | [Recipe questionnaire](docs/recipe-questionnaire.md) | The questions that define a new setting |
 | [Adding a recipe](docs/adding-a-recipe.md) | Step by step, with a checklist |
 | [Testing and reviewing](docs/testing.md) | Scene checker, gallery, overlay in Expo Go |
+| [Building for real phones](docs/building.md) | EAS builds: TestFlight for iPhone, an APK for Android, the stores |
 | [Levels and scoring](docs/levels-and-scoring.md) | Look & Remember's 30 levels, moving up and down, points |
 | [Adding a game](docs/adding-a-game.md) | The game registry and what a new game needs |
 | [Design decisions](docs/design-decisions.md) | Why the rules are what they are |

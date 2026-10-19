@@ -10,6 +10,25 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.2 (2026-10-19)
+
+- **Fixes from a common-sense audit of every place** (three pictures of each, checked for anything that wouldn't happen in real life):
+  - **Beach:** palm trees stand on the sand. As tall things, their feet sat on the waterline, so they seemed to grow out of the sea.
+  - **Kitchen:** a built-in oven (with the hob's knobs) and a sink with a tap, so the steaming saucepans have somewhere to come from.
+  - **Farm:** sheep stay in the farmyard with the other animals, not among the crops and scarecrows.
+  - **Under the sea:** the submarine is extra large, about as long as the whale. It was no bigger than a diver and looked like a toy.
+  - **Night campsite:** a moonlit lake between the trees and the pitches, where the canoe was pulled up from.
+  - **Snowy mountain:** cable cars hang from one cable running right across the sky, instead of each from its own short stub. Cabins are never mirrored, so the cables stay parallel.
+- The city street, train station, zoo, classroom, airport, the Moon, living room and park passed the audit unchanged.
+
+## 4.0.1 (2026-10-18)
+
+- **Ready to build for real phones with EAS.** See [docs/building.md](docs/building.md).
+  - **App ID** `com.neerajgrotra.glance` for iPhone and Android, and Apple's encryption answer set, so TestFlight doesn't ask each time. iPad is off for now (the App Store would need iPad screenshots and an iPad-tested layout).
+  - **`eas.json`** with three build profiles: `testflight` (iPhone testers, through TestFlight), `preview` (an Android APK to install from a link), and `production` (the stores). EAS keeps the build numbers.
+  - **Tester tools are off in store builds.** With `EXPO_PUBLIC_TESTER_TOOLS=off` (the `production` profile), the 7 taps on the version do nothing and a saved tester flag counts for nothing. They stay on everywhere else.
+- **A real app icon:** the amber eye from the launch animation, on the app's dark background with a soft glow, replacing Expo's placeholder. Android gets its adaptive icon and a themed (monochrome) one, and the web a matching favicon. Made by `scripts/icons/make-icons.js`.
+
 ## 4.0.0 (2026-10-18)
 
 **The games-hub release.** Everything from the 61 betas (`4.0.0-beta.1` to `beta.61`, listed below) merged into the main line. Since 3.6.1:

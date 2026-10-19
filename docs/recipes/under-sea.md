@@ -18,7 +18,7 @@ Code: `src/scenes/recipes/underSea.tsx`. Exact sizes, counts and colours: [refer
   - fish (orange, yellow, pink, purple or red; a school can be **different colours on Hard**: "What colours were the fish?")
   - clownfish (always orange with white stripes, so they're a different thing from "fish")
   - a shark (one at most; light grey, because a mid grey didn't stand out on blue water)
-  - divers (a grown-up person, bigger than the fish; wetsuit colour asked), a submarine (one at most)
+  - divers (a grown-up person, bigger than the fish; wetsuit colour asked), a submarine (one at most; extra large, about as long as the whale, so it never looks like a toy next to a diver)
   - turtles and jellyfish can also be here.
 - **Seabed:** an octopus, crabs and starfish (shared with the beach), seashells, coral, and **seaweed**: tall, so it grows from the sand and rises into the open water; a few are spread apart.
 

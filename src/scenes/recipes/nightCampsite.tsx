@@ -5,7 +5,7 @@ import { dog, person, plane } from '../items/common';
 import { lineMarks } from '../marks';
 import type { Rng } from '../random';
 import type { ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
-import { speckles, strokes } from '../texture';
+import { glints, speckles, strokes } from '../texture';
 
 /**
  * A campsite at night: the starry sky with the moon, a dark line of trees, the pitches with tents and a
@@ -224,7 +224,7 @@ const items: ItemDef[] = [
     w: 260,
     h: 60,
     tier: 'xl',
-    // About 4 m long, pulled up on the grass.
+    // About 4 m long, pulled up on the grass from the lake behind the pitches.
     size: 0.46,
     wide: true,
     zones: AT_PITCHES,
@@ -500,7 +500,7 @@ function details(random: Rng): SceneDetails {
   };
 }
 
-type Palette = Record<'sky' | 'stars' | 'trees' | 'grass' | 'track', string>;
+type Palette = Record<'sky' | 'stars' | 'trees' | 'grass' | 'track' | 'lake', string>;
 
 /** Stars at fixed places (fractions of the width and of the sky's height), so every picture has a few. */
 const STARS: [number, number, number][] = [
@@ -539,6 +539,11 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
         })}
       </G>
       <Rect x={-600} y={trees} width={2100} height={height - trees + 600} fill={p.grass} />
+      {/* A lake between the trees and the pitches, catching the moonlight: where the canoe was pulled up from. */}
+      <Rect x={-600} y={trees} width={2100} height={(PITCH_TOP - TREES) * height + 4} fill={p.lake} />
+      {glints({ x0: -40, y0: trees + 4, x1: 940, y1: PITCH_TOP * height - 2 }, 44, p.stars, 0.6, 20, 2.5, 61)}
+      <Rect x={-600} y={trees} width={2100} height={2} fill={p.stars} fillOpacity={0.25} />
+      <Rect x={-600} y={PITCH_TOP * height + 2} width={2100} height={4} fill="#000000" fillOpacity={0.2} />
       {/* The texture of the ground. */}
       {strokes({ x0: -40, y0: trees + 20, x1: 940, y1: height }, 220, '#000000', 0.18, 10, 3)}
       {/* Moonlight catching the tops of the grass. */}
@@ -561,8 +566,8 @@ function marks(height: number, boxes: Box[], _random: () => number, variant: Var
 }
 
 const PALETTES: Record<string, Palette> = {
-  clear: { sky: '#141d3b', stars: '#fff8d6', trees: '#0e1a16', grass: '#2e4a3c', track: '#4a6655' },
-  moonlit: { sky: '#211a42', stars: '#f3ecff', trees: '#130f26', grass: '#33465a', track: '#536a80' },
+  clear: { sky: '#141d3b', stars: '#fff8d6', trees: '#0e1a16', grass: '#2e4a3c', track: '#4a6655', lake: '#2c4d78' },
+  moonlit: { sky: '#211a42', stars: '#f3ecff', trees: '#130f26', grass: '#33465a', track: '#536a80', lake: '#3b3c7e' },
 };
 
 function surfaceAt(_x: number, y: number): string {

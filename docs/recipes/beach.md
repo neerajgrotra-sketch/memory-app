@@ -19,7 +19,7 @@ The sea band is drawn from 35% to 60%. Its placement band is inset at both ends,
 - **Sand:**
   - beach umbrellas and beach towels (large; a towel is about as long as a person)
   - buckets, beach balls, crabs, sandcastles, starfish and people
-  - **palm trees**: tall anchors that stand at the back of the sand and rise over the sea. Two are spread apart, one per third.
+  - **palm trees**: stand on the sand, leaves reaching up towards the sea. Two are spread apart, one per third. (They were `tall` anchors until 4.0.2, which put their feet at the waterline, so they seemed to grow out of the sea.)
 
 ## Backdrop
 

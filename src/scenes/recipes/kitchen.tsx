@@ -880,6 +880,28 @@ function backdrop(height: number, p: Palette) {
           <Rect x={-600 + i * 225 + 30} y={cupboardTop + 44} width={165} height={3} fill="#ffffff" fillOpacity={0.12} />
         </G>
       ))}
+      {/* A built-in oven in the middle of the cupboards (the hob's knobs along its top), and a sink with a tap on
+          the right, so the steaming pans have somewhere to come from. */}
+      <G>
+        <Rect x={330} y={cupboardTop + 6} width={240} height={floorLine - cupboardTop - 14} rx={6} fill="#868e96" />
+        <Rect x={330} y={cupboardTop + 6} width={240} height={30} rx={6} fill="#343a40" />
+        {[362, 410, 490, 538].map((x) => (
+          <G key={x}>
+            <Circle cx={x} cy={cupboardTop + 21} r={9} fill="#ced4da" />
+            <Rect x={x - 1.5} y={cupboardTop + 13} width={3} height={8} fill="#343a40" />
+          </G>
+        ))}
+        <Rect x={436} y={cupboardTop + 15} width={28} height={12} rx={2} fill="#1b1f24" />
+        <Rect x={346} y={cupboardTop + 50} width={208} height={12} rx={6} fill="#495057" />
+        <Rect x={350} y={cupboardTop + 72} width={200} height={Math.max(0, floorLine - cupboardTop - 96)} rx={8} fill="#1b1f24" />
+        <Path d={`M362,${cupboardTop + 82} l40,0 l-30,${Math.max(0, floorLine - cupboardTop - 120) * 0.5} Z`} fill="#ffffff" fillOpacity={0.12} />
+      </G>
+      <G>
+        <Rect x={700} y={counterLine - 2} width={150} height={6} rx={3} fill="#343a40" />
+        <Path d={`M775,${counterLine} V${counterLine - 38} Q775,${counterLine - 50} 790,${counterLine - 50} H802 V${counterLine - 40}`} fill="none" stroke="#adb5bd" strokeWidth={7} strokeLinecap="round" strokeLinejoin="round" />
+        <Rect x={762} y={counterLine - 12} width={8} height={10} rx={2} fill="#adb5bd" />
+        <Rect x={780} y={counterLine - 12} width={8} height={10} rx={2} fill="#adb5bd" />
+      </G>
       <Rect x={-600} y={floorLine} width={2100} height={height - floorLine + 600} fill={p.floor} />
       {/* The texture of the ground. */}
       {speckles({ x0: -40, y0: floorLine, x1: 940, y1: height }, 120, '#000000', 0.05, 3)}

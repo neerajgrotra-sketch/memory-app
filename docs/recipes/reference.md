@@ -90,7 +90,7 @@ See [Levels and scoring](../levels-and-scoring.md).
 | beach ball | sand | small 10% | 3 | Red, Blue, Yellow, Green, Orange, Purple, Pink | – |
 | crab | sand | small 12% | 4 | fixed (`#e63946`) | – |
 | beach towel | sand | large 26% | 2 | Red, Blue, Green, Orange, Purple, Pink | – |
-| palm tree | sand | large 24% | 2 | fixed (`#2b9348`) | tall anchor (stands at the back, rises above its band); copies spread one per third, on one line |
+| palm tree | sand | large 24% | 2 | fixed (`#2b9348`) | copies spread one per third, on one line |
 | sandcastle | sand | medium 17% | 2 | fixed (`#b07d3a`) | – |
 | starfish | sand | small 10% | 4 | Orange, Pink, Red, Purple | – |
 | person | sand | small 10% | 4 | Red, Blue, Yellow, Green, Orange, Purple, Pink, White | – |
@@ -316,7 +316,7 @@ Per-picture details: "What colour was the barn?".
 | cow | yard | large 22% | 3 | Black and white, Brown | copies spread one per third, on one line |
 | horse | yard | large 22% | 2 | Brown, Black, White | copies spread one per third, on one line |
 | pig | yard | medium 14% | 4 | fixed (`#f4a3b5`) | – |
-| sheep | field, yard | medium 14% | 5 | White, Black | copies may differ in colour on Hard |
+| sheep | yard | medium 14% | 5 | White, Black | copies may differ in colour on Hard |
 | goat | yard | medium 14% | 2 | White, Brown | – |
 | chicken | yard | small 10% | 6 | White, Brown | – |
 | dog | yard | medium 14% | 1 | Brown, Black, White | – |
@@ -357,7 +357,7 @@ Per-picture details: "What was in the treasure chest?".
 | clownfish | open | small 11% | 3 | fixed (`#f77f00`) | – |
 | shark | open | large 26% | 1 | fixed (`#bcc5ce`) | one only, not counted |
 | diver | open | large 24% | 2 | Red, Yellow, Orange, Pink, White | – |
-| submarine | open | large 24% | 1 | Yellow, Red, Orange | one only, not counted |
+| submarine | open | xl 42% | 1 | Yellow, Red, Orange | may span columns; one only, not counted |
 | octopus | bed | medium 15% | 1 | Red, Purple, Orange | – |
 | crab | bed | small 12% | 3 | fixed (`#e63946`) | – |
 | starfish | bed | small 10% | 4 | Orange, Pink, Red, Purple | – |
@@ -597,8 +597,8 @@ Per-picture details: "What shape was the moon?" (when there's a moon); "What num
 
 | Scheme | Surface colours |
 | --- | --- |
-| clear | sky `#141d3b`, stars `#fff8d6`, trees `#0e1a16`, grass `#2e4a3c`, track `#4a6655` |
-| moonlit | sky `#211a42`, stars `#f3ecff`, trees `#130f26`, grass `#33465a`, track `#536a80` |
+| clear | sky `#141d3b`, stars `#fff8d6`, trees `#0e1a16`, grass `#2e4a3c`, track `#4a6655`, lake `#2c4d78` |
+| moonlit | sky `#211a42`, stars `#f3ecff`, trees `#130f26`, grass `#33465a`, track `#536a80`, lake `#3b3c7e` |
 
 ### Things (16)
 

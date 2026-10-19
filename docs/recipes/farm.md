@@ -19,7 +19,7 @@ A fence runs between the field and the farmyard (55.5–58.5%).
 - **Field:**
   - **tractor** (extra large, one at most, red, green, blue or yellow; faces the way it drives)
   - **scarecrows** (shirt colour asked; two are spread apart)
-  - pumpkins (countable), sheep grazing, hay bales.
+  - pumpkins (countable), hay bales. Sheep stay in the farmyard with the other animals, never among the crops.
 - **Farmyard:**
   - **cows** (large; black and white or brown) and **horses** (large), spread out, never in a tight row
   - pigs, goats, sheep, chickens (white or brown; can bunch together)

@@ -3,7 +3,7 @@ import { Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, V
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AgeBandPicker } from '@/components/AgeBandPicker';
-import { EXTRA_SECONDS, initialOf, useProfile } from '@/profile';
+import { EXTRA_SECONDS, initialOf, TESTER_TOOLS, useProfile } from '@/profile';
 import { colors, radius } from '@/theme';
 import { APP_VERSION } from '@/version';
 
@@ -20,6 +20,7 @@ export default function ProfileScreen() {
   // Tester mode is hidden: tapping the version 7 times turns it on.
   const [versionTaps, setVersionTaps] = useState(0);
   const tapVersion = () => {
+    if (!TESTER_TOOLS) return;
     const taps = versionTaps + 1;
     setVersionTaps(taps);
     if (taps >= 7 && !profile?.tester) {

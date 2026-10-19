@@ -52,10 +52,15 @@ const items: ItemDef[] = [
     zones: IN_SKY,
     maxCount: 2,
     spread: true,
+    // Its cable runs right across the sky, so cabins are never mirrored: every cable stays parallel.
+    noFlip: true,
+    // The light starts below the pulley, so the cable reads as one line.
+    hanger: 16,
     colours: [C.red, C.blue, C.green, C.orange],
     draw: (colour) => (
       <G>
-        <Path d="M0,10 L140,2" stroke="#495057" strokeWidth={4} />
+        {/* The cable, running on off both sides of the picture (same slope as the stub it replaces). */}
+        <Path d="M-1500,95.7 L1640,-83.7" stroke="#495057" strokeWidth={4} />
         <Rect x={64} y={6} width={12} height={10} rx={3} fill="#495057" />
         <Rect x={68} y={14} width={4} height={30} fill="#495057" stroke="none" />
         <Rect x={20} y={42} width={100} height={84} rx={14} fill={colour} />
