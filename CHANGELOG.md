@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.18 (2026-10-20)
+
+- **"How many coconuts were on the sand?"** A second coconut question on the beach. Each pile now has 1 to 4 coconuts (it was always 3, which would have made counting pointless), set out so each one can be counted; with coconuts by both palm trees, the answer is the total. Wrong answers are the nearest counts, never fewer than one.
+- **One coconut question per picture.** A picture asks either "Which palm tree had coconuts on the sand by it?" or the count, half and half when there are coconuts, never both: "How many coconuts?" would give away that "Neither of them" is wrong. With no coconuts it's always the which-tree question. Both are asked from Level 8.
+
 ## 4.0.17 (2026-10-20)
 
 - **The crab behind the sandcastle is easier to spot, and never cut off.** Testers could barely see it: only a claw showed. It now peeks further out: from Level 20 most of the crab, from Level 25 both eyes and a claw. It always peeks out towards the middle of the picture (from the left side of a castle on the right, otherwise from the right side), so a castle at the edge never pushes it off the picture. The sandcastle is no longer drawn mirrored, so the side is always the one chosen.

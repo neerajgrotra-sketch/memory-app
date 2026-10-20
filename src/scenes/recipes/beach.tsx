@@ -345,17 +345,21 @@ const COCONUT_ANSWERS: Record<string, string> = {
   none: 'Neither of them',
 };
 
-/** The coconuts at a palm's foot, beside the trunk, if this palm (0 on the left, 1 on the right) has them. */
+/** Where 1 to 4 coconuts lie by a palm's foot: a little pile, each one clear of the others so they can be counted. */
+const COCONUT_PILES: [number, number, number][][] = [
+  [[124, 256, 13]],
+  [[110, 256, 13], [138, 258, 12]],
+  [[110, 256, 13], [138, 258, 12], [124, 234, 12]],
+  [[104, 257, 12], [130, 259, 12], [156, 256, 11], [117, 235, 11]],
+];
+
+/** The coconuts at a palm's foot, beside the trunk, if this palm (0 on the left, 1 on the right) has any. */
 function droppedCoconuts(details: SceneDetails | undefined, index: number) {
-  const where = details?.values?.coconuts;
-  if (!where || !(where === 'both' || where === (index === 0 ? 'left' : 'right'))) return null;
+  const count = Number(details?.values?.[index === 0 ? 'coconutsLeft' : 'coconutsRight'] ?? 0);
+  if (!count) return null;
   return (
     <G stroke="#3d2412" strokeWidth={2}>
-      {[
-        [112, 256, 13],
-        [140, 258, 12],
-        [126, 235, 12],
-      ].map(([cx, cy, r]) => (
+      {COCONUT_PILES[count - 1].map(([cx, cy, r]) => (
         <G key={cx}>
           <Circle cx={cx} cy={cy} r={r} fill="#6b3e1f" />
           <Circle cx={cx - r * 0.35} cy={cy - r * 0.35} r={r * 0.3} fill="#9c6b3f" stroke="none" />
@@ -404,29 +408,43 @@ function hideCrab(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDet
 }
 
 /**
- * With two palm trees, coconuts can lie on the sand by one of them, both or neither, and "Which palm tree had
- * coconuts by it?" asks which. All four answers happen, so none of them can be ruled out. One palm tree: none.
+ * With two palm trees, 1 to 4 coconuts can lie on the sand by one of them, both or neither. One question asks about
+ * them: "Which palm tree had coconuts by it?" (all four answers happen, so none can be ruled out), or, when there
+ * are some, "How many coconuts were on the sand?". Never both: the count would give away that there were some.
+ * One palm tree: no coconuts.
  */
 function dropCoconuts(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
   const palms = groups.find((g) => g.kind === 'palm');
   if (!palms || palms.count !== 2) return d;
   const r = random.next();
   const coconuts = r < 0.35 ? 'left' : r < 0.7 ? 'right' : r < 0.85 ? 'both' : 'none';
+  const left = coconuts === 'left' || coconuts === 'both' ? random.int(1, 4) : 0;
+  const right = coconuts === 'right' || coconuts === 'both' ? random.int(1, 4) : 0;
+  const total = left + right;
   const answer = COCONUT_ANSWERS[coconuts];
+  const which = {
+    id: 'coconuts',
+    type: 'position' as const,
+    prompt: 'Which palm tree had coconuts on the sand by it?',
+    answer,
+    wrong: Object.values(COCONUT_ANSWERS).filter((a) => a !== answer),
+    needs: 'palm',
+  };
+  // The nearest counts first, never fewer than one (there were some).
+  const near = [total - 1, total + 1, total - 2, total + 2, total + 3].filter((n) => n >= 1);
+  const howMany = {
+    id: 'coconut-count',
+    type: 'count' as const,
+    prompt: 'How many coconuts were on the sand?',
+    answer: String(total),
+    wrong: near.slice(0, 3).map(String),
+    fallback: near.slice(3).map(String),
+    needs: 'palm',
+  };
   return {
     ...d,
-    values: { ...d.values, coconuts },
-    facts: [
-      ...(d.facts ?? []),
-      {
-        id: 'coconuts',
-        type: 'position',
-        prompt: 'Which palm tree had coconuts on the sand by it?',
-        answer,
-        wrong: Object.values(COCONUT_ANSWERS).filter((a) => a !== answer),
-        needs: 'palm',
-      },
-    ],
+    values: { ...d.values, coconuts, coconutsLeft: String(left), coconutsRight: String(right) },
+    facts: [...(d.facts ?? []), total && random.next() < 0.5 ? howMany : which],
   };
 }
 
