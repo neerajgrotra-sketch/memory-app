@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.13 (2026-10-20)
+
+- **No more hair bun on top of the head.** A tester said the person on the beach looked like they wore a patka, and we'd rather people stay neutral. The third hairstyle for people (beach, city and airport) is now a ponytail tied at the back and swinging out to one side, like the classroom pupils'. The snowy mountain's skier keeps the bobble on their hat.
+- **Short hair covers the top of the head.** It used to stop just short of it, so a strip of skin showed above, and light hair on dark skin looked like a headband.
+
 ## 4.0.12 (2026-10-20)
 
 - **Above and below questions say where to look.** Testers read "What was above the pumpkins?" and thought of the barn on the hill, and found "What was above the teacher?" too vague. The question now names the band the answer is in: **"What was in the sky, above the pumpkins?"**, "What was on the wall, above the teacher?", "What was on the top shelf, above the cereal?". Three band names read oddly there ("Close by", "At the front", "Near the hills"), so those questions stay as they were.

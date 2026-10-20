@@ -33,7 +33,7 @@ Thumbnails, the full-size picture viewer and the screenshot tools draw the pictu
 
 ## Small variations
 
-`draw(colour, details, copy)` gets a `copy` number fixed for each copy in each picture (from the scene's seed). People use it for **skin tone, hair colour and hairstyle** (short, long, a bun), so a crowd isn't one person repeated. Variations are never asked about: the shirt colour, which is, comes from the scene's facts as before.
+`draw(colour, details, copy)` gets a `copy` number fixed for each copy in each picture (from the scene's seed). People use it for **skin tone, hair colour and hairstyle** (short, long, a ponytail), so a crowd isn't one person repeated. Variations are never asked about: the shirt colour, which is, comes from the scene's facts as before.
 
 ## Richer drawing (detail and texture)
 
