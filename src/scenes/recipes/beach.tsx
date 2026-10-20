@@ -19,14 +19,15 @@ const SAND = ['sand'];
 /**
  * Where a crab can hide on harder levels (one of each in the picture, so "under the beach towel" means one
  * place): where the crab's top-left corner goes and how big it's drawn, in the hiding spot's own drawing units,
- * so it's the size of the other crabs. A clear peek shows its claws and eyes; a small one little more than its eyes.
+ * so it's the size of the other crabs. A clear peek shows its claws, eyes and the top of its shell; a small one its claws
+ * and eyes. (Testers on phones found less than that too hard to see.)
  * It's drawn before the spot, so the spot covers the rest of it.
  */
 const CRAB_SPOTS: Record<string, { name: string; scale: number; clear: [number, number]; small: [number, number] }> = {
-  // Under the towel, its claws and eyes out past the far edge.
-  towel: { name: 'Under the beach towel', scale: 0.92, clear: [64, -20], small: [64, -9] },
+  // Under the towel, peeking out past the far edge.
+  towel: { name: 'Under the beach towel', scale: 0.92, clear: [64, -34], small: [64, -22] },
   // Behind the sandcastle, peeking out past the right-hand tower. (Not the bucket: a crab behind it looked to be in it.)
-  sandcastle: { name: 'Behind the sandcastle', scale: 1.15, clear: [80, 52], small: [62, 52] },
+  sandcastle: { name: 'Behind the sandcastle', scale: 1.15, clear: [94, 52], small: [80, 52] },
 };
 
 /** The hiding crab, behind the thing at `kind` when the picture's details put it there. */

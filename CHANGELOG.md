@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.16 (2026-10-20)
+
+- **The hiding crab is easier to spot.** Testers on phones could barely see it under the beach towel. It now shows more at both steps: from Level 20, its claws, eyes and the top of its shell over the towel (or half of it past the sandcastle's tower); from Level 25, its claws and eyes (or an eye and a claw by the castle), which is what Level 20 used to show.
+
 ## 4.0.15 (2026-10-20)
 
 - **A crab hiding on the beach.** From Level 20, a crab can hide **under the beach towel** (claws and eyes out past the far edge) or **behind the sandcastle** (peeking out past the right-hand tower), and the round opens with **"Where was the crab hiding?"**. From Level 25 it shows less: just its eyes at the towel's edge, or a claw by the castle. Wrong answers are the other hiding spot when it's in the picture, then "Behind the bucket", "Under the beach umbrella" or "Behind the palm tree". A crab behind the bucket was tried and dropped: it looked to be inside the bucket.
