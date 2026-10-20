@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.1.2 (2026-10-20)
+
+- **Above and below questions skip nothing in between.** "What was on the wall, above the box of crayons?" answered the mirror, but the armchair stood right above the crayons, at the back of the floor, so players rightly thought of the chair. The rule only looked at other bands. Now the question is only asked when the thing asked about and the answer are each the only thing in that third of their own band, so nothing can stand between them; the same goes for "below" (a picture frame between the clock and the TV). It's decided by thirds, not exact positions, so it still holds when the picture is laid out for another screen. About a quarter of above/below questions were like this and are gone; every picture still has plenty of questions (at least 13, 31 on average).
+
 ## 4.1.1 (2026-10-20)
 
 - **Table lamps on side tables.** A new thing against the living room wall: a little side table with a lamp on it (up to two, spread apart); when it's on, a warm halo glows round its shade. Its shade colour is asked about ("What colour was the table lamp's shade?"), and it's on or off like the floor lamps ("Was the table lamp on or off?", or "Which table lamp was on?" with two). The floor lamp's colour question now says "the floor lamp's shade", so the two lamps never get mixed up.

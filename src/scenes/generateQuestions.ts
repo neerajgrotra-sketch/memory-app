@@ -376,12 +376,17 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     const label = zoneOf(zoneId).label;
     return PLAIN_BANDS.has(label) ? '' : `${label[0].toLowerCase()}${label.slice(1)}, `;
   };
+  // Nothing else in its own band shares its third: in a deep band (the living room floor), a thing at the back stands
+  // above one at the front, so "What was on the wall, above the crayons?" skipped the armchair players saw right
+  // above them. The thing asked about and the answer must both be alone in their third of their band.
+  const alone = (g: PlacedGroup) => !spec.groups.some((o) => o !== g && o.zoneId === g.zoneId && (reaches(o, g.region) || reaches(g, o.region)));
   for (const group of single) {
     const item = itemOf(group.kind);
+    if (!alone(group)) continue;
     for (const dir of ['above', 'below'] as const) {
       const isDir = (g: PlacedGroup) => (dir === 'above' ? zoneIndex(g) < zoneIndex(group) : zoneIndex(g) > zoneIndex(group));
       const near = spec.groups.filter((g) => g !== group && isDir(g) && reaches(g, group.region) && !faraway(g));
-      if (near.length !== 1 || !single.includes(near[0])) continue;
+      if (near.length !== 1 || !single.includes(near[0]) || !alone(near[0])) continue;
       const target = near[0];
       const answerItem = itemOf(target.kind);
       const plural = target.count > 1;
