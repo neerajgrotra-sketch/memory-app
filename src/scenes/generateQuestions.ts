@@ -65,6 +65,27 @@ function withDistractors(answer: string, preferred: string[], fallback: string[]
   return [answer, ...[...new Set(pool)].slice(0, 3)];
 }
 
+/** Colours too alike to tell apart from memory on a phone: never both offered in one question (testers mixed them up). */
+const CLASHING_COLOURS: [string, string][] = [['Red', 'Orange']];
+const mentions = (text: string, colour: string) => new RegExp(`\\b${colour}\\b`, 'i').test(text);
+/** Whether two options, or an option and the answer, ask the player to tell clashing colours apart. */
+function clashes(a: string, b: string): boolean {
+  return CLASHING_COLOURS.some(([x, y]) =>
+    [
+      [x, y],
+      [y, x],
+    ].some(([p, q]) => mentions(a, p) && !mentions(a, q) && mentions(b, q) && !mentions(b, p)),
+  );
+}
+
+/** `withDistractors` for colour answers: no wrong option clashes with the answer or with another option. */
+function withColourDistractors(answer: string, preferred: string[], fallback: string[], rng: Rng): string[] {
+  const pool = [...new Set([...rng.shuffle(preferred), ...rng.shuffle(fallback)].filter((o) => o !== answer))];
+  const picked = [answer];
+  for (const o of pool) if (picked.length < 4 && !picked.some((p) => clashes(p, o))) picked.push(o);
+  return picked;
+}
+
 function countOptions(n: number, close: boolean, rng: Rng): string[] {
   const candidates = Array.from({ length: Math.max(6, n + 3) }, (_, i) => i + 1).filter((c) => c !== n);
   const picked = close
@@ -149,7 +170,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         type: 'colour',
         subject: item.kind,
         prompt: item.colourPrompt?.(plural) ?? (plural ? `What colour were the ${item.plural}?` : `What colour was the ${item.singular}?`),
-        options: withDistractors(
+        options: withColourDistractors(
           group.colour.name,
           item.colours.map((c) => c.name),
           ALL_COLOURS.map((c) => c.name),
@@ -172,7 +193,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         type: 'colour',
         subject: item.kind,
         prompt: `What colours were the ${item.plural}?`,
-        options: withDistractors(answer, sameSize, [...allOne, ...combinations(names, Math.min(names.length, n + 1)).map(colourList)], rng),
+        options: withColourDistractors(answer, sameSize, [...allOne, ...combinations(names, Math.min(names.length, n + 1)).map(colourList)], rng),
       });
     }
 
@@ -234,7 +255,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         family: 'detail',
         ...subject,
         prompt: `What colour was house number ${n}?`,
-        options: withDistractors(
+        options: withColourDistractors(
           house.colour.name,
           houses.map((h) => h.colour.name),
           ['Yellow', 'Blue', 'Green', 'Pink', 'Orange', 'Purple'],
@@ -259,7 +280,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         spotlight: fact.spotlight,
         subject: fact.id,
         prompt: fact.prompt,
-        options: withDistractors(fact.answer, fact.wrong, fact.fallback ?? [], rng),
+        options: (fact.type === 'colour' ? withColourDistractors : withDistractors)(fact.answer, fact.wrong, fact.fallback ?? [], rng),
       });
     }
   }
@@ -409,7 +430,8 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       prompt: `What else was the same colour as ${colourNoun(item, group.count > 1)}?`,
       options: withDistractors(
         label(twin),
-        coloured.filter((g) => g.colour!.name !== name).map(label),
+        // Never a thing in a colour that clashes with it ("the orange balloon" for red kites).
+        coloured.filter((g) => g.colour!.name !== name && !clashes(g.colour!.name, name)).map(label),
         absent.filter((i) => i.colours).map((i) => cap(colourNoun(i, false))),
         rng,
       ),
@@ -428,8 +450,9 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   }
   for (const group of coloured) {
     const item = itemOf(group.kind);
-    const truth = rng.next() < 0.5;
-    const others = item.colours!.filter((c) => c.name !== group.colour!.name);
+    // A false colour is never one that clashes with the real one: "The kites were orange" when they were red is unfair.
+    const others = item.colours!.filter((c) => c.name !== group.colour!.name && !clashes(c.name, group.colour!.name));
+    const truth = rng.next() < 0.5 || !others.length;
     const colour = truth ? group.colour!.name : rng.pick(others).name;
     const plural = group.count > 1;
     statements.push({ subject: item.kind, type: 'colour', text: `${cap(colourNoun(item, plural))} ${colourVerb(item, plural)} ${colour.toLowerCase()}.`, truth });

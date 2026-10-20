@@ -35,7 +35,7 @@ For every group in the scene (one per kind of thing), in this order:
 
 - **Asked:** when the group has one colour (things with a fixed colour, like a crab, have none).
 - **Wording:** the thing's `colourPrompt` if it has one, for things where only part is coloured: "What colour was the sail on the boat?", "…the lampshade?", "…the person's shirt?", "…the awning on the market stall?".
-- **Wrong options:** the thing's other colours first, then any colour from `src/scenes/colours.ts`.
+- **Wrong options:** the thing's other colours first, then any colour from `src/scenes/colours.ts`. Never red and orange in one question (`CLASHING_COLOURS`): testers mixed them up. That holds for every colour question, the combinations, house colours, true or false and "the same colour as".
 
 ### Mixed colours: "What colours were the fire hydrants?"
 

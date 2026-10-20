@@ -2,7 +2,8 @@
  * Checks that every question's wrong options are believable, across every place: "What was in the
  * sky…?" only offers things that can be in the sky, "Where was the dog?" only places a dog can be, no
  * option is empty, every picture still gives enough questions, and no band is named after a thing that can stand
- * in it ("Where was the campfire? Around the campfire"). Run with `npm run check:questions`.
+ * in it ("Where was the campfire? Around the campfire"), and no colour question offers both red and orange. Run with
+ * `npm run check:questions`.
  */
 import { LEVELS } from '@/game/difficulty';
 import { generateScene } from '@/scenes/generateScene';
@@ -43,6 +44,11 @@ for (const recipe of RECIPES) {
           if (q.options.some((o) => !phrase.get(o)?.includes(zone.id))) outOfBand++;
         }
         if (samples.length < 40 && s % 37 === 0) samples.push(`${recipe.id}: ${q.prompt} → ${q.options.join(' / ')}`);
+      }
+      // Red and orange are never offered together in a colour question (testers mixed them up).
+      if (q.type === 'colour') {
+        const only = (c: string, o: string) => new RegExp(`\\b${c}\\b`, 'i').test(o) && !new RegExp(`\\b${c === 'Red' ? 'Orange' : 'Red'}\\b`, 'i').test(o);
+        if (q.options.some((o) => only('Red', o)) && q.options.some((o) => only('Orange', o))) { bad++; if (bad < 6) console.log('RED AND ORANGE', recipe.id, q.prompt, q.options); }
       }
       if (q.options.some((o) => o === undefined || o === '')) { bad++; console.log('EMPTY option', q.prompt); }
     }

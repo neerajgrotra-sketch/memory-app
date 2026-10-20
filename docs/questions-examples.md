@@ -39,7 +39,7 @@ Scene `beach-c29hz`, colour scheme `day`.
 | position | where | Where was the sandcastle? | **✓ On the sand, on the left** · On the sand, in the middle · On the sand, on the right | sandcastle |
 | object | what-here | What was on the sand, on the left? | **✓ A sandcastle** · A bucket · A person · A starfish | sandcastle |
 | count | count | How many buoys were there? | **✓ 3** · 6 · 4 · 5 | buoy |
-| colour | colour | What colour were the buoys? | **✓ Orange** · White · Yellow · Red | buoy |
+| colour | colour | What colour were the buoys? | **✓ Orange** · White · Yellow · Brown | buoy |
 | position | where | Where were the buoys? | **✓ In the sea, on the left** · In the sea, in the middle · In the sea, on the right | buoy |
 | object | what-here | What was in the sea, on the left? | **✓ Buoys** · Dolphins · Sailboats | buoy |
 | count | count | How many crabs were there? | **✓ 1** · 3 · 2 · 4 | crab |
@@ -100,7 +100,7 @@ Detail `clock`: 11:30.
 | colour | colour | What colour were the people’s shirts? | **✓ Purple** · Blue · White · Orange | person |
 | position | where | Where were the people? | **✓ On the pavement, in the middle** · On the pavement, on the right · On the pavement, on the left | person |
 | object | what-here | What was on the pavement, in the middle? | **✓ People** · Benches · Market stalls · Bicycles | person |
-| colour | colour | What colour was the helicopter? | **✓ Orange** · Red · Blue · Green | helicopter |
+| colour | colour | What colour was the helicopter? | **✓ Orange** · Blue · Green · Yellow | helicopter |
 | position | where | Where was the helicopter? | **✓ In the sky, on the left** · In the sky, in the middle · In the sky, on the right | helicopter |
 | object | what-here | What was in the sky, on the left? | **✓ A helicopter** · A bird · A hot-air balloon · A plane | helicopter |
 | count | count | How many flags were there? | **✓ 1** · 4 · 3 · 2 | flag |
@@ -122,11 +122,11 @@ Detail `clock`: 11:30.
 | count | compare | Were there more hot-air balloons or more flags? | **✓ Hot-air balloons** · Flags · The same number | compare-balloon-flag |
 | position | relation | What was on the roofs, above the tree? | **✓ A flag** · A satellite dish · A rubbish bin · A helicopter | tree |
 | position | relation | What was in the sky, above the people? | **✓ Hot-air balloons** · Birds · Trees · Flags | person |
-| colour | twins | What else was the same colour as the helicopter? | **✓ The rubbish bin** · The hot-air balloons · The people’s shirts · The bus | helicopter |
-| colour | twins | What else was the same colour as the rubbish bin? | **✓ The helicopter** · The flag · The bus · The hot-air balloons | bin |
-| count | true-false | True or false? There were two rubbish bins. | True · **✓ False** | bin |
-| colour | true-false | True or false? The rubbish bin was blue. | True · **✓ False** | bin |
-| colour | true-false | True or false? The people’s shirts were yellow. | True · **✓ False** | person |
+| colour | twins | What else was the same colour as the helicopter? | **✓ The rubbish bin** · The people’s shirts · The bus · The flag | helicopter |
+| colour | twins | What else was the same colour as the rubbish bin? | **✓ The helicopter** · The bus · The flag · The people’s shirts | bin |
+| colour | true-false | True or false? The bus was green. | **✓ True** · False | bus |
+| colour | true-false | True or false? The rubbish bin was orange. | **✓ True** · False | bin |
+| object | true-false | True or false? There was a plane in the picture. | True · **✓ False** | plane |
 
 ## Living room
 
@@ -152,7 +152,7 @@ Detail `clock`: 7:30.
 | --- | --- | --- | --- | --- |
 | position | where | Where was the television? | **✓ On the floor, on the left** · On the floor, on the right · On the floor, in the middle | tv |
 | count | count | How many armchairs were there? | **✓ 2** · 3 · 5 · 1 | armchair |
-| colour | colour | What colour were the armchairs? | **✓ Red** · Green · Yellow · Orange | armchair |
+| colour | colour | What colour were the armchairs? | **✓ Red** · Green · Yellow · Blue | armchair |
 | position | where | Where was the window? | **✓ On the wall, in the middle** · On the wall, on the right · On the wall, on the left | window |
 | object | what-here | What was on the wall, in the middle? | **✓ A window** · A mirror · A clock · A picture frame | window |
 | position | where | Where was the mirror? | **✓ On the wall, on the left** · On the wall, in the middle · On the wall, on the right | mirror |
@@ -206,11 +206,11 @@ Detail `clock`: 7:30.
 | position | where | Where was the fountain? | **✓ On the pond, in the middle** · On the pond, on the right · On the pond, on the left | fountain |
 | object | what-here | What was on the pond, in the middle? | **✓ A fountain** · A rowing boat · A swan | fountain |
 | count | count | How many kites were there? | **✓ 1** · 2 · 3 · 4 | kite |
-| colour | colour | What colour was the kite? | **✓ Orange** · Green · Purple · Red | kite |
+| colour | colour | What colour was the kite? | **✓ Orange** · Green · Purple · Blue | kite |
 | position | where | Where was the kite? | **✓ In the sky, in the middle** · In the sky, on the right · In the sky, on the left | kite |
 | object | what-here | What was in the sky, in the middle? | **✓ A kite** · A bird · A hot-air balloon · A plane | kite |
 | count | count | How many picnic blankets were there? | **✓ 1** · 2 · 3 · 4 | picnic |
-| colour | colour | What colour was the picnic blanket? | **✓ Red** · Blue · Yellow · Orange | picnic |
+| colour | colour | What colour was the picnic blanket? | **✓ Red** · Blue · Yellow · Purple | picnic |
 | position | where | Where was the picnic blanket? | **✓ On the grass, on the left** · On the grass, in the middle · On the grass, on the right | picnic |
 | count | count | How many people were there? | **✓ 2** · 5 · 1 · 4 | person |
 | colour | colour | What colour were the people’s shirts? | **✓ Red** · Blue · White · Pink | person |
@@ -365,7 +365,7 @@ Detail `chest`: Red jewels.
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| colour | colour | What colour was the submarine? | **✓ Yellow** · Orange · Red · Grey | submarine |
+| colour | colour | What colour was the submarine? | **✓ Yellow** · Orange · Grey · Black | submarine |
 | position | where | Where was the submarine? | **✓ In the open water, in the middle** · In the open water, on the right · In the open water, on the left | submarine |
 | position | where | Where was the seaweed plant? | **✓ On the seabed, on the left** · On the seabed, in the middle · On the seabed, on the right | seaweed |
 | object | what-here | What was on the seabed, on the left? | **✓ A seaweed plant** · An octopus · A starfish · A seashell | seaweed |
@@ -379,7 +379,7 @@ Detail `chest`: Red jewels.
 | position | where | Where was the sea turtle? | **✓ Near the surface, on the right** · Near the surface, in the middle · In the open water, on the right · In the open water, in the middle | turtle |
 | object | what-here | What was near the surface, on the right? | **✓ A sea turtle** · A whale · A jellyfish · A dolphin | turtle |
 | count | count | How many starfish were there? | **✓ 2** · 3 · 4 · 5 | starfish |
-| colour | colour | What colour were the starfish? | **✓ Red** · Orange · Pink · Purple | starfish |
+| colour | colour | What colour were the starfish? | **✓ Red** · Pink · Purple · Blue | starfish |
 | position | where | Where were the starfish? | **✓ On the seabed, in the middle** · On the seabed, on the right · On the seabed, on the left | starfish |
 | object | what-here | What was on the seabed, in the middle? | **✓ Starfish** · Seashells · Crabs · Corals | starfish |
 | count | count | How many clownfish were there? | **✓ 3** · 1 · 4 · 5 | clownfish |
@@ -497,11 +497,11 @@ Detail `clock`: 4:00.
 | colour | colour | What colour was the signal light? | **✓ Green** · Red · Yellow · Blue | signal |
 | position | where | Where was the railway signal? | **✓ On the track, on the right** · On the track, in the middle · On the track, on the left | signal |
 | object | what-here | What was on the track, on the right? | **✓ A railway signal** · A train · A freight wagon | signal |
-| colour | colour | What colour was the vending machine? | **✓ Red** · Green · Orange · Blue | vending |
+| colour | colour | What colour was the vending machine? | **✓ Red** · Green · Blue · Grey | vending |
 | position | where | Where was the vending machine? | **✓ On the platform, on the right** · On the platform, on the left · On the platform, in the middle | vending |
 | object | what-here | What was on the platform, on the right? | **✓ A vending machine** · A ticket machine · A coffee cart · A dog | vending |
 | count | count | How many luggage trolleys were there? | **✓ 2** · 5 · 1 · 3 | luggage |
-| colour | colour | What colour were the big suitcases on the luggage trolleys? | **✓ Red** · Blue · Yellow · Orange | luggage |
+| colour | colour | What colour were the big suitcases on the luggage trolleys? | **✓ Red** · Blue · Yellow · Purple | luggage |
 | position | where | Where were the luggage trolleys? | **✓ On the platform, in the middle** · On the platform, on the right · On the platform, on the left | luggage |
 | object | what-here | What was on the platform, in the middle? | **✓ Luggage trolleys** · Benches · Passengers · Dogs | luggage |
 | count | count | How many passengers were there? | **✓ 2** · 5 · 1 · 4 | person |
@@ -624,11 +624,11 @@ Detail `bib`: 27.
 | position | where | Where was the hot chocolate stand? | **✓ By the lodge, on the left** · By the lodge, in the middle · By the lodge, on the right | cocoa-stand |
 | object | what-here | What was by the lodge, on the left? | **✓ A hot chocolate stand** · A person · A snowman · A sledge | cocoa-stand |
 | count | count | How many snowmen were there? | **✓ 2** · 3 · 5 · 4 | snowman |
-| colour | colour | What colour were the snowmen’s scarves? | **✓ Blue** · Orange · Red · Green | snowman |
+| colour | colour | What colour were the snowmen’s scarves? | **✓ Blue** · Orange · Green · Purple | snowman |
 | position | where | Where were the snowmen? | **✓ By the lodge, in the middle** · By the lodge, on the left · By the lodge, on the right | snowman |
 | object | what-here | What was by the lodge, in the middle? | **✓ Snowmen** · Dogs · Sledges · People | snowman |
 | count | count | How many slalom flags were there? | **✓ 1** · 3 · 4 · 2 | flag |
-| colour | colour | What colour was the slalom flag? | **✓ Blue** · Red · Purple · Orange | flag |
+| colour | colour | What colour was the slalom flag? | **✓ Blue** · Red · Purple · White | flag |
 | position | where | Where was the slalom flag? | **✓ On the ski slope, on the right** · On the ski slope, on the left · On the ski slope, in the middle | flag |
 | object | what-here | What was on the ski slope, on the right? | **✓ A slalom flag** · A snowboarder · A ski racer · A pine tree | flag |
 | count | count | How many snowboarders were there? | **✓ 2** · 1 · 4 · 3 | snowboarder |
@@ -638,7 +638,7 @@ Detail `bib`: 27.
 | position | where | Where was the plane? | **✓ In the sky, in the middle** · In the sky, on the left · In the sky, on the right | plane |
 | object | what-here | What was in the sky, in the middle? | **✓ A plane** · The sun · A cable car · A bird | plane |
 | count | count | How many sledges were there? | **✓ 1** · 4 · 3 · 2 | sledge |
-| colour | colour | What colour was the sledge? | **✓ Blue** · Orange · Green · Red | sledge |
+| colour | colour | What colour was the sledge? | **✓ Blue** · Orange · Green · Grey | sledge |
 | position | where | Where was the sledge? | **✓ By the lodge, on the right** · By the lodge, on the left · By the lodge, in the middle | sledge |
 | object | what-here | What was by the lodge, on the right? | **✓ A sledge** · A snowmobile · A person · A dog | sledge |
 | count | count | How many birds were there? | **✓ 3** · 6 · 5 · 1 | bird |
@@ -698,7 +698,7 @@ Detail `sum`: 8 ÷ 4.
 | position | where | Where was the world map? | **✓ On the wall, on the right** · On the wall, on the left · On the wall, in the middle | map |
 | object | what-here | What was on the wall, on the right? | **✓ A world map** · A poster · A noticeboard · A clock | map |
 | count | count | How many beanbags were there? | **✓ 1** · 2 · 4 · 3 | beanbag |
-| colour | colour | What colour was the beanbag? | **✓ Blue** · Orange · Purple · Red | beanbag |
+| colour | colour | What colour was the beanbag? | **✓ Blue** · Orange · Purple · Green | beanbag |
 | position | where | Where was the beanbag? | **✓ At the back of the class, in the middle** · At the back of the class, on the right · At the back of the class, on the left | beanbag |
 | object | what-here | What was at the back of the class, in the middle? | **✓ A beanbag** · A pupil · A fish tank · A potted plant | beanbag |
 | colour | colour | What colour was the piano? | **✓ Brown** · Black · Purple · Pink | piano |
@@ -797,11 +797,11 @@ Detail `flight`: GL 789.
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| colour | colour | What colour was the awning on the coffee kiosk? | **✓ Blue** · Orange · Red · Green | coffee-kiosk |
+| colour | colour | What colour was the awning on the coffee kiosk? | **✓ Blue** · Orange · Green · Purple | coffee-kiosk |
 | position | where | Where was the coffee kiosk? | **✓ In the departure lounge, on the left** · In the departure lounge, in the middle · In the departure lounge, on the right | coffee-kiosk |
 | object | what-here | What was in the departure lounge, on the left? | **✓ A coffee kiosk** · A luggage trolley · A row of seats · A traveller | coffee-kiosk |
 | count | count | How many luggage trolleys were there? | **✓ 2** · 5 · 3 · 4 | trolley |
-| colour | colour | What colour were the big suitcases on the trolleys? | **✓ Red** · Purple · Blue · Orange | trolley |
+| colour | colour | What colour were the big suitcases on the trolleys? | **✓ Red** · Purple · Blue · Green | trolley |
 | position | where | Where were the luggage trolleys? | **✓ In the departure lounge, in the middle** · In the departure lounge, on the right · In the departure lounge, on the left | trolley |
 | object | what-here | What was in the departure lounge, in the middle? | **✓ Luggage trolleys** · Potted plants · Flight attendants · Pilots | trolley |
 | count | count | How many pilots were there? | **✓ 1** · 2 · 4 · 3 | pilot |
@@ -809,7 +809,7 @@ Detail `flight`: GL 789.
 | object | what-here | What was in the departure lounge, on the right? | **✓ A pilot** · A flight attendant · An information desk · A coffee kiosk | pilot |
 | position | where | Where was the control tower? | **✓ Out on the airfield, in the middle** · Out on the airfield, on the left · Out on the airfield, on the right | control-tower |
 | object | what-here | What was out on the airfield, in the middle? | **✓ A control tower** · A fuel truck · A baggage train · A parked plane | control-tower |
-| colour | colour | What colour was the helicopter? | **✓ Orange** · Red · White · Yellow | helicopter |
+| colour | colour | What colour was the helicopter? | **✓ Orange** · White · Yellow · Purple | helicopter |
 | position | where | Where was the helicopter? | **✓ In the sky, on the right** · In the sky, on the left · In the sky, in the middle | helicopter |
 | object | what-here | What was in the sky, on the right? | **✓ A helicopter** · A bird · A plane | helicopter |
 | position | where | Where was the baggage train? | **✓ Out on the airfield, on the left** · Out on the airfield, in the middle · Out on the airfield, on the right | baggage-train |
@@ -825,7 +825,7 @@ Detail `flight`: GL 789.
 | count | compare | Were there more luggage trolleys or more birds? | Luggage trolleys · Birds · **✓ The same number** | compare-trolley-bird |
 | count | most | Which was there just one of? | **✓ A pilot** · A bird · A luggage trolley · A flight attendant | only-pilot |
 | count | true-false | True or false? There were two pilots. | True · **✓ False** | pilot |
-| colour | true-false | True or false? The helicopter was yellow. | True · **✓ False** | helicopter |
+| colour | true-false | True or false? The helicopter was white. | True · **✓ False** | helicopter |
 | count | true-false | True or false? There were three luggage trolleys. | True · **✓ False** | trolley |
 
 ## On the Moon
@@ -852,17 +852,17 @@ Detail `base`: 27.
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| colour | colour | What colour was the stripe on the habitat pod? | **✓ Red** · Green · Blue · Orange | habitat |
+| colour | colour | What colour was the stripe on the habitat pod? | **✓ Red** · Green · Blue · Grey | habitat |
 | position | where | Where was the habitat pod? | **✓ Near the hills, in the middle** · Near the hills, on the left · Near the hills, on the right | habitat |
 | object | what-here | What was near the hills, in the middle? | **✓ A habitat pod** · A solar panel · A lunar lander · A radio dish | habitat |
-| colour | colour | What colour was the moon buggy’s seat? | **✓ Blue** · Yellow · Red · Orange | rover |
+| colour | colour | What colour was the moon buggy’s seat? | **✓ Blue** · Yellow · Red · Purple | rover |
 | position | where | Where was the moon buggy? | **✓ Close by, on the left** · Close by, in the middle · Close by, on the right | rover |
 | object | what-here | What was close by, on the left? | **✓ A moon buggy** · A crater · A robot · An astronaut | rover |
 | count | count | How many astronauts were there? | **✓ 2** · 1 · 5 · 4 | astronaut |
 | colour | colour | What colour were the astronauts’ backpacks? | **✓ Green** · Blue · Yellow · Purple | astronaut |
 | position | where | Where were the astronauts? | **✓ Close by, on the right** · Close by, on the left · Close by, in the middle | astronaut |
 | object | what-here | What was close by, on the right? | **✓ Astronauts** · Boulders · Craters | astronaut |
-| colour | colour | What colour were the rocket’s fins? | **✓ Orange** · Blue · Green · Red | rocket |
+| colour | colour | What colour were the rocket’s fins? | **✓ Orange** · Blue · Green · Purple | rocket |
 | position | where | Where was the rocket? | **✓ Out in space, on the left** · Out in space, on the right · Out in space, in the middle | rocket |
 | object | what-here | What was out in space, on the left? | **✓ A rocket** · A satellite · A comet · The Earth | rocket |
 | position | where | Where was the space station? | **✓ Out in space, in the middle** · Out in space, on the left · Out in space, on the right | space-station |

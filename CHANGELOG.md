@@ -10,6 +10,15 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.20 (2026-10-20)
+
+- **Red and orange are never in the same question.** Even with the new red, telling red from orange from memory on a phone is the hardest colour call, so a colour question never offers both:
+  - when the answer is red, orange is never a wrong choice, and the other way round; with any other answer, at most one of the two appears;
+  - the same goes for colour combinations ("Red and blue" vs "Orange and blue") and the house colours;
+  - true or false never says "The kites were orange" when they were red;
+  - "What else was the same colour as the kites?" never offers an orange thing for red kites.
+- `npm run check:questions` fails if any colour question offers both, so it can't come back. More pairs can be added to `CLASHING_COLOURS` in `generateQuestions.ts` if testers find them.
+
 ## 4.0.19 (2026-10-20)
 
 - **Red and orange are easier to tell apart.** Testers mixed up red and orange kites, especially on the sunset beach, where the warm light pushed the old coral red (`#e63946`) towards orange. Red is now a true red (`#d00000`). On the game's colour-difference scale, red and orange went from 15 to 20.5 apart, and red and pink from 13 to 20.8. Brown is a little darker (`#7a4a22`), so the deeper red doesn't get close to it (17.3 apart, the same as blue and purple, the closest pair). Every red and brown thing that can be asked about changes with it: kites, balloons, umbrellas, cars, sofas and so on. Things drawn in a fixed colour, like the crab, are unchanged.
