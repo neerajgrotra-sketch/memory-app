@@ -108,7 +108,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   const itemOf = (kind: string) => recipe.items.find((i) => i.kind === kind)!;
   const zoneOf = (id: string) => recipe.zones.find((z) => z.id === id)!;
   const present = spec.groups.map((g) => itemOf(g.kind));
-  const absent = recipe.items.filter((i) => !spec.groups.some((g) => g.kind === i.kind));
+  const absent = recipe.items.filter((i) => !spec.groups.some((g) => g.kind === i.kind) && !spec.details?.alsoSeen?.includes(i.kind));
   const questions: Question[] = [];
   /** Every side a group is on: one, or each side a spread group has a copy on. */
   const sidesOf = (g: PlacedGroup): Set<Region> => {
@@ -192,7 +192,8 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     // For a plural answer ("Hot-air balloons"), only things that can appear in groups make believable
     // wrong options: never "Suns" or "Buses".
     const fits = (i: ItemDef) => i.kind !== item.kind && (!plural || canBeSeveral(i));
-    const sameZoneKinds = recipe.items.filter((i) => fits(i) && i.zones.includes(zone.id));
+    // Never something hiding in the picture (a crab under the beach towel): it could really be there.
+    const sameZoneKinds = recipe.items.filter((i) => fits(i) && i.zones.includes(zone.id) && !spec.details?.alsoSeen?.includes(i.kind));
     if (!spread && !sharesSpot) add('what-here', group, {
       type: 'object',
       subject: item.kind,

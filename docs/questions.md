@@ -104,6 +104,8 @@ House numbers rise left to right with uneven gaps, so remembering one doesn't gi
 
 A recipe can add facts about its backdrop in `details` (`DetailFact` in `src/scenes/types.ts`): an id, a type, a prompt, the answer and believable wrong answers. They're asked on the same levels as house numbers, with no other code. The farm uses one: "What colour was the barn?", answered from the barn colour chosen for that picture. New recipes should use facts rather than adding code here.
 
+Some facts are about something hiding in the picture: from Level 20 the snowy mountain's danger-sign animal and the beach's crab, asked first in the round (`spotlight`) as "Where was the crab hiding?". When the hider is one of the recipe's own kinds (the crab), the recipe only hides it when none of that kind is in the picture, and lists it in `details.alsoSeen`, so it's never offered as "not in the picture" or as a wrong answer to "What was on the sand, on the left?".
+
 Optional fields:
 
 - `needs`: only asked when that kind of thing is in the picture

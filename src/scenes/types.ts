@@ -232,6 +232,11 @@ export interface SceneDetails {
   facts?: DetailFact[];
   /** Other per-picture choices the backdrop draws from (e.g. which side the barn is on). */
   values?: Record<string, string>;
+  /**
+   * Kinds of thing that show in the picture without being one of its groups (a crab hiding under the beach towel),
+   * so no question offers them as "not in the picture".
+   */
+  alsoSeen?: string[];
 }
 
 export interface VariantDef {

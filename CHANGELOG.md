@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.15 (2026-10-20)
+
+- **A crab hiding on the beach.** From Level 20, a crab can hide **under the beach towel** (claws and eyes out past the far edge) or **behind the sandcastle** (peeking out past the right-hand tower), and the round opens with **"Where was the crab hiding?"**. From Level 25 it shows less: just its eyes at the towel's edge, or a claw by the castle. Wrong answers are the other hiding spot when it's in the picture, then "Behind the bucket", "Under the beach umbrella" or "Behind the palm tree". A crab behind the bucket was tried and dropped: it looked to be inside the bucket.
+- **No clash with the beach's own crabs.** The crab only hides when no other crabs are in the picture, so "How many crabs were there?" stays clear, and it's never offered as "not in the picture" or as a wrong answer to "What was on the sand, on the left?". A new `alsoSeen` list in a picture's details does this for anything that shows without being one of its groups. The crab hides in about 4 in 10 beach pictures at those levels.
+
 ## 4.0.14 (2026-10-20)
 
 - **Dropped coconuts on the beach.** When the beach has two palm trees, coconuts can lie on the sand at the foot of one of them, both or neither, and a new question asks **"Which palm tree had coconuts on the sand by it?"** (The one on the left / The one on the right / Both of them / Neither of them). All four answers really happen (left and right about a third of the time each, both or neither about one in seven each), so none can be ruled out without remembering. It's asked from Level 8, like the other questions about the backdrop. About one beach picture in five has two palm trees.

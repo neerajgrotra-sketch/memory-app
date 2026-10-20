@@ -39,3 +39,5 @@ The sea band is drawn from 35% to 60%. Its placement band is inset at both ends,
 Counts and colours of everything, positions ("In the sea, on the right"), "What was on the sand, on the left?" when only one kind is there, and in / NOT in the picture.
 
 With two palm trees, coconuts may lie on the sand by the one on the left, the one on the right, both or neither (`fitDetails`), and from Level 8 "Which palm tree had coconuts on the sand by it?" asks which. All four answers happen, so none is a giveaway.
+
+From Level 20 a crab can hide under the beach towel or behind the sandcastle (`CRAB_SPOTS`, drawn before the spot so the spot covers most of it; less shows from Level 25), and the round opens with "Where was the crab hiding?". It only hides when no crabs are in the picture, and `alsoSeen` keeps it out of "not in the picture" choices. A crab behind the bucket looked to be in it, so the bucket isn't a hiding spot.
