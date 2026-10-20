@@ -38,7 +38,9 @@ Code: `src/scenes/recipes/livingRoom.tsx`. Exact sizes, counts and colours: [ref
 
 An oval at 50% across, 80% down, 72% of the width wide. Anything touching it must be fully on it (toy cars, pets, balls). Furniture, plants, lamps and piles of books (`avoidRug`) never touch it.
 
-Rugs are solid pale colours, so every toy colour stands out on them. The rug's outline is part of the background and never runs through anything.
+Rugs are solid pale colours, so every toy colour stands out on them.
+
+In questions the rug is **"the carpet"** (`RUG.label`), the word players use. Each group records whether it's on it (`onRug`: all copies, none, or some), and laying the picture out again keeps that, so "Where were the dogs? On the carpet" stays true on every screen. Things on it are never the answer to "What was on the floor, in the middle?"; instead "What was on the carpet?" asks about them when one or two kinds are there ("A cat and a cushion"). The rug's outline is part of the background and never runs through anything.
 
 ## Backdrop
 
@@ -62,4 +64,5 @@ Counts and colours, positions ("On the wall, in the middle"), "What was on the w
 | "What was the cat playing with?" | from Level 8, one cat | a ball of yarn, a toy mouse or a feather (`PET_TOYS`), with one of the dog's toys as a wrong answer |
 | "What was the dog playing with?" | from Level 8, one dog | a bone, a rope toy or a sock, held in its mouth (no ball: balls are things of their own; a slipper looked like a paddle, and toys lying by its paws weren't clear) |
 | "How many books were on the top / middle / bottom shelf?" | from Level 14 (`closeCounts`), one bookshelf | 1 to 5 books on each shelf, spaced so they can be counted; the nearest counts as wrong answers |
+| "Where was the cat?" | from Level 8; no other cat in the room | a cat curled up on the sofa or the armchair (one of it): On the sofa / On the armchair / On the carpet / On the floor |
 | "Where was the cat hiding?" | from Level 20, asked first; no cat in the room | behind the sofa (its head over the back) or behind the potted plant (peeking out towards the middle of the picture); less of it shows from Level 25. Never a dog: its head is barely higher than its back, so it looked to be lying on the sofa. The hiding cat is in `alsoSeen`, so it's never offered as "not in the picture". |

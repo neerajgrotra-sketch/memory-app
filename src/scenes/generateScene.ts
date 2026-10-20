@@ -20,6 +20,7 @@ import {
   rectOf,
   regionOf,
   rowsOf,
+  insideRug,
   rugOk,
   samplePoints,
   zoneBounds,
@@ -108,6 +109,15 @@ interface Want {
   third?: number;
   /** Fixed colours (laying out again) that must still stand out where they go: one, or one per copy. */
   colour?: string | string[];
+  /** On the rug or off it (laying out again): a fact the questions ask about. */
+  onRug?: PlacedGroup['onRug'];
+}
+
+/** Whether every copy is on the recipe's rug, none is, or some are (undefined without a rug). */
+function rugStateOf(recipe: Recipe, rects: Rect[], ratio: number): PlacedGroup['onRug'] {
+  if (!recipe.rug) return undefined;
+  const on = rects.filter((r) => insideRug(r, recipe.rug!, ratio)).length;
+  return on === rects.length ? 'all' : on === 0 ? 'none' : 'some';
 }
 
 /** Everything a candidate group must pass besides its slot: clearances, rug, doors, contrast. */
@@ -115,6 +125,7 @@ function clearToPlace(ctx: Context, want: Want, rects: Rect[]): boolean {
   const { item } = want;
   if (rects.some((r) => ctx.taken.some((t) => gapBetween(r, t) < GAP))) return false;
   if (rects.some((r) => !rugOk(item, r, ctx.recipe, ctx.ratio))) return false;
+  if (want.onRug && want.onRug !== 'some' && rugStateOf(ctx.recipe, rects, ctx.ratio) !== want.onRug) return false;
   if (rects.some((r) => coversKeepClear(r, ctx.recipe, ctx.ratio))) return false;
   if (item.tone && !colourFits(ctx, item.tone, rects)) return false;
   if (typeof want.colour === 'string' && !item.framedColour && !colourFits(ctx, want.colour, rects)) return false;
@@ -340,6 +351,7 @@ function build(recipe: Recipe, knobs: SceneKnobs, seed: number, rng: Rng, size: 
           region: item.spread && count > 1 ? regionOf(centreOf(boundsOf(placed.rects)).x) : REGIONS[placed.slot.col],
           slot: placed.slot,
           boxes: placed.boxes,
+          onRug: rugStateOf(recipe, placed.rects, ratio),
         });
         return true;
       }
@@ -452,7 +464,14 @@ export function relayoutScene(spec: SceneSpec, size: SceneSize): SceneSpec | nul
       const item = recipe.items.find((i) => i.kind === group.kind)!;
       const zone = recipe.zones.find((z) => z.id === group.zoneId)!;
       const spread = item.spread && group.count > 1;
-      const placed = place(ctx, { item, count: group.count, zone, col: spread ? undefined : REGIONS.indexOf(group.region), colour: group.colours ? group.colours.map((c) => c.hex) : group.colour?.hex });
+      const placed = place(ctx, {
+        item,
+        count: group.count,
+        zone,
+        col: spread ? undefined : REGIONS.indexOf(group.region),
+        colour: group.colours ? group.colours.map((c) => c.hex) : group.colour?.hex,
+        onRug: group.onRug,
+      });
       if (!placed) break;
       commit(ctx, placed);
       moved.set(group, { ...group, slot: placed.slot, boxes: placed.boxes, region: spread ? regionOf(centreOf(boundsOf(placed.rects)).x) : group.region });

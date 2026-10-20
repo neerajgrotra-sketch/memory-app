@@ -24,13 +24,24 @@ for (const recipe of RECIPES) {
     pictures++; total += qs.length; minPool = Math.min(minPool, qs.length);
     for (const q of qs) {
       optCounts[q.options.length] = (optCounts[q.options.length] ?? 0) + 1;
-      if (q.family === 'what-here') {
+      // The rug ("On the carpet") is part of the ground band; only things that may go on it are offered for it.
+      const rugLabel = recipe.rug?.label;
+      const groundZone = recipe.zones.find((z) => z.surface === 'ground');
+      const onRugOk = (o: string) => recipe.items.some((i) => !i.avoidRug && (cap(i.plural) === o || `${cap(i.article)} ${i.singular}` === o));
+      if (q.family === 'what-here' && rugLabel && q.prompt.includes(rugLabel.toLowerCase())) {
+        // "A cat and a cushion": each part must be something that can be on the rug.
+        for (const o of q.options) for (const part of o.split(' and ').map(cap)) if (!onRugOk(part)) { bad++; if (bad < 6) console.log('BAD on the carpet', recipe.id, '→', o); }
+      } else if (q.family === 'what-here') {
         const zone = recipe.zones.find((z) => q.prompt.toLowerCase().includes(z.label.toLowerCase()))!;
         for (const o of q.options) if (!phrase.get(o)?.includes(zone.id)) { bad++; if (bad < 6) console.log('BAD what-here', recipe.id, q.prompt, '→', o); }
       }
       if (q.family === 'where') {
         const item = recipe.items.find((i) => i.kind === q.subject)!;
         for (const o of q.options) {
+          if (o === rugLabel) {
+            if (item.avoidRug || !groundZone || !item.zones.includes(groundZone.id)) { bad++; if (bad < 6) console.log('BAD where (carpet)', recipe.id, q.prompt); }
+            continue;
+          }
           const zone = recipe.zones.find((z) => o.startsWith(z.label))!;
           if (!item.zones.includes(zone.id)) { bad++; if (bad < 6) console.log('BAD where', recipe.id, q.prompt, '→', o); }
         }

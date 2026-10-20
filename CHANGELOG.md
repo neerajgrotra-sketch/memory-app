@@ -10,6 +10,14 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.1.3 (2026-10-20)
+
+- **"On the carpet", not "on the floor".** Testers saw the dogs on the carpet, but "Where were the dogs?" said "On the floor, in the middle". Things on the living room's rug are now "On the carpet", and "On the carpet" is a wrong answer for things off it. Each group records whether it's on the carpet, and laying the picture out again for another screen keeps that, so the answer holds on every phone.
+- **"What was on the carpet?"** A new question when one or two kinds of thing are on it, with answers like "A cat and a cushion". Wrong answers mix one thing and two things ("A cat and a teddy bear", "A cushion"), so both have to be remembered and the answer is never the odd one out. Things on the carpet are never the answer to "What was on the floor, in the middle?" any more: players rightly saw both the cat and the cushion there.
+- **Wall questions name a landmark.** "What was on the wall, on the right?" was hard to place. When one thing stands right below it, against the wall, it's named: "What was on the wall on the right, above the armchair?". In every indoor place with a wall.
+- **A cat on the sofa or the armchair.** From Level 8, when there's no other cat in the room, a cat can be curled up on the sofa or the armchair, and "Where was the cat?" asks where: On the sofa / On the armchair / On the carpet / On the floor. Places, not just a side of the picture.
+- `npm run check:questions` now understands "On the carpet": only things that may go on the rug are offered for it.
+
 ## 4.1.2 (2026-10-20)
 
 - **Above and below questions skip nothing in between.** "What was on the wall, above the box of crayons?" answered the mirror, but the armchair stood right above the crayons, at the back of the floor, so players rightly thought of the chair. The rule only looked at other bands. Now the question is only asked when the thing asked about and the answer are each the only thing in that third of their own band, so nothing can stand between them; the same goes for "below" (a picture frame between the clock and the TV). It's decided by thirds, not exact positions, so it still holds when the picture is laid out for another screen. About a quarter of above/below questions were like this and are gone; every picture still has plenty of questions (at least 13, 31 on average).

@@ -17,7 +17,7 @@ const WALL = ['wall'];
 const FLOOR_ZONE = ['floor'];
 
 /** The rug, shared by the drawing, the contrast rules and placement: things are fully on it or off it. */
-const RUG: Rug = { cx: 0.5, cy: 0.8, rx: 0.36, ry: 0.09 };
+const RUG: Rug = { cx: 0.5, cy: 0.8, rx: 0.36, ry: 0.09, label: 'On the carpet' };
 
 const items: ItemDef[] = [
   {
@@ -168,6 +168,7 @@ const items: ItemDef[] = [
           <Rect x={10} y={108} width={12} height={12} fill="#5c3d1e" />
           <Rect x={208} y={108} width={12} height={12} fill="#5c3d1e" />
         </G>
+        {seatedCat('sofa', details)}
       </G>
     ),
   },
@@ -186,7 +187,8 @@ const items: ItemDef[] = [
     spread: true,
     avoidRug: true,
     colours: [C.red, C.blue, C.green, C.yellow, C.orange, C.pink],
-    draw: (colour) => (
+    // A cat can be curled up on the seat (see `fitDetails`).
+    draw: (colour, details) => (
       <G>
         <Rect x={18} y={0} width={84} height={70} rx={14} fill={colour} />
         <Rect x={0} y={42} width={30} height={66} rx={10} fill={colour} />
@@ -203,6 +205,7 @@ const items: ItemDef[] = [
           <Rect x={8} y={108} width={10} height={12} fill="#5c3d1e" />
           <Rect x={102} y={108} width={10} height={12} fill="#5c3d1e" />
         </G>
+        {seatedCat('armchair', details)}
       </G>
     ),
   },
@@ -880,6 +883,27 @@ function hidingPet(spot: string, details?: SceneDetails) {
   );
 }
 
+/**
+ * Where a cat can be curled up on a seat: its top-left corner and size in the seat's own units, so it's the same
+ * size as the cats on the floor, sitting on the seat cushion in front of the back. And how the answer says it.
+ */
+const CAT_SEATS: Record<string, { name: string; at: [number, number]; scale: number }> = {
+  sofa: { name: 'On the sofa', at: [44, 16], scale: 0.7 },
+  armchair: { name: 'On the armchair', at: [24, 12], scale: 0.8 },
+};
+
+/** The cat on the sofa or armchair, when the picture's details put it there. */
+function seatedCat(seat: string, details?: SceneDetails) {
+  const v = details?.values;
+  if (!v || v.catSeat !== seat || !v.catColour) return null;
+  const { at, scale } = CAT_SEATS[seat];
+  return (
+    <G transform={`translate(${at[0]} ${at[1]}) scale(${scale})`} stroke={shade(v.catColour)} strokeWidth={2.5}>
+      {items.find((i) => i.kind === 'cat')!.draw(v.catColour)}
+    </G>
+  );
+}
+
 /** The time on the clock (every level) and what's on the television; the rest is chosen once things are placed. */
 function details(random: Rng, { clockStep, hidden = 0, closeCounts = false }: DetailKnobs): SceneDetails {
   const time = randomTime(random, clockStep);
@@ -984,6 +1008,26 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
         wrong: Object.values(PET_SPOTS).map((s) => s.name).filter((n) => n !== answer),
         fallback: ['Under the armchair', 'Behind the television', 'Behind the bookshelf'],
         spotlight: true,
+      });
+    }
+  }
+  // A cat curled up on the sofa or the armchair (one of it), when no cat is in the room or hiding: "Where was the
+  // cat?" with places for answers, not just a side of the picture. About half the time there's a seat for it.
+  if (!count('cat') && !values.pet) {
+    const seats = Object.keys(CAT_SEATS).filter((seat) => one(seat));
+    if (seats.length && random.next() < 0.5) {
+      const seat = random.pick(seats);
+      const answer = CAT_SEATS[seat].name;
+      values.catSeat = seat;
+      values.catColour = random.pick(items.find((i) => i.kind === 'cat')!.colours!).hex;
+      alsoSeen.push('cat');
+      facts.push({
+        id: 'cat-seat',
+        type: 'position',
+        prompt: 'Where was the cat?',
+        answer,
+        wrong: [...Object.values(CAT_SEATS).map((s) => s.name).filter((n) => n !== answer), 'On the carpet', 'On the floor'],
+        fallback: ['On the windowsill'],
       });
     }
   }

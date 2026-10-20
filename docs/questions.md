@@ -48,10 +48,13 @@ For every group in the scene (one per kind of thing), in this order:
 - **Asked:** for every group except things spread across the picture (`spread` with 2 or more copies, e.g. street lamps along the pavement), which have no single side.
 - **Answer:** `"<band label>, <side>"`. The side is the third of the width the group's centre is in. Placement keeps centres 5% clear of the lines between thirds, so it's never borderline.
 - **Wrong options:** only the other sides of the bands this thing can go in ("In the sky" is never offered for a dog). A thing that only goes in one band gets three options: left, middle and right. Bands with no slot rows (the room's ceiling, the city's building fronts) are never offered.
+- **On a rug** (the living room's carpet): things fully on it are "On the carpet" (`rug.label`), and that's a wrong option for things off it that could go on it. A group with some copies on and some off isn't asked. Whether a group is on the rug (`onRug`) is a fact like its side: laying the picture out again keeps it.
 
 ### What was here: "What was on the wall, on the right?" → "A mirror"
 
-- **Asked:** only when exactly one kind of thing is in that band and side. Spread groups count as being in every third they have a copy in. Not asked for spread groups themselves.
+- **Asked:** only when exactly one kind of thing is in that band and side, and it isn't on a rug. Spread groups count as being in every third they have a copy in. Not asked for spread groups themselves.
+- **A landmark on walls:** when one thing stands right below it, alone in that third of the band below (an armchair against the wall), it's named: "What was on the wall on the right, above the armchair?". "On the right" alone was hard to place.
+- **On the carpet:** "What was on the carpet?" when one or two kinds are fully on it, answered "A cat and a cushion" for two; wrong options mix one thing and two things (one of them swapped for something else), so the answer is never the odd one out.
 - **Answer:** "A mirror" for one, "Mirrors" for several, using the thing's `article`.
 - **Wrong options:**
   - only things that belong in the same band (never "Zookeepers" for the sky); with only two such things the question has three options, with fewer it isn't asked

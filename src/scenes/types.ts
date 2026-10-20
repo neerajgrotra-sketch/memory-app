@@ -173,6 +173,8 @@ export interface Rug {
   cy: number;
   rx: number;
   ry: number;
+  /** Where things on it are, in questions: "On the carpet" (players called it that, not "on the floor"). */
+  label: string;
 }
 
 /**
@@ -343,6 +345,11 @@ export interface PlacedGroup {
   zoneId: string;
   /** Which third of the picture the group's centre is in. */
   region: Region;
+  /**
+   * In a picture with a rug: whether every copy is on it, none is, or some are. A fact like the side: laying the
+   * picture out again keeps it, so "Where were the dogs? On the carpet" stays true.
+   */
+  onRug?: 'all' | 'none' | 'some';
   slot: Slot;
   boxes: Box[];
 }
