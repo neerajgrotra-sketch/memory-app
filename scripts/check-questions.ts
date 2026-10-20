@@ -74,6 +74,8 @@ for (const recipe of RECIPES) {
 }
 if (process.env.SHOW_SAMPLES) console.log(samples.join('\n'));
 console.log(`  above/below: ${relation}, naming where: ${named}, with an option that can't be there: ${outOfBand}`);
-if (minPool < 12) { bad++; console.log('a picture gave fewer than 12 questions'); }
+// A round asks 5; 10 leaves room for variety. (Places that only ask "where" by places and landmarks, never left /
+// middle / right, can have 11 in a thin easy picture; the game never shows one: under 12 it tries the next seed.)
+if (minPool < 10) { bad++; console.log('a picture gave fewer than 10 questions'); }
 console.log(bad ? '✗' : '✓', 'bad options:', bad, '| options per question:', JSON.stringify(optCounts), '| questions per picture: avg', (total / pictures).toFixed(1), 'min', minPool);
 if (bad) process.exit(1);

@@ -42,6 +42,12 @@ export interface ZoneDef {
    * so it's never "above" or "below" anything in the picture.
    */
   faraway?: boolean;
+  /**
+   * The band lies flat, away from us (ground, a lake): a thing lower in the picture is nearer, not "below". Two flat
+   * bands are never "above" or "below" each other. By default ground bands are flat unless things stand flush on a
+   * line (shelves, roofs, the worktop); set it for water that lies flat (the sea at the beach).
+   */
+  flat?: boolean;
   /** Everything here faces the same way (traffic on a road), chosen once per picture. */
   oneWay?: boolean;
   /** At least this many of the band's kinds are anchors (tall, against the wall or extra wide): a room always has furniture. */

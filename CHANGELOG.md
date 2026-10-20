@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.1.8 (2026-10-20)
+
+- **No more "below the dog" on flat ground.** "What was on the grass, below the dog?" made no sense: the dog was on the path and the slide on the grass in front of it. On flat ground, lower in the picture means nearer, not below. Above and below are now only asked when one of the two is really upright: the sky, a wall, shelves, the city's roofs, the worktop, under the sea. Never between two flat bands (the path and the grass, the sand and the sea, the road and the pavement, the field and the farmyard). Bands are flat by default when they're ground, unless things stand flush on a line; the beach's sea is marked flat.
+- **The park answers by places.** Like the living room: "Where was the dog?" answers "On the path" or "On the grass", with wrong answers "On the bench", "On the slide", "In the fountain" (nothing loose is ever put there), plus landmark answers ("Between the slide and the flower bed"). No more "On the grass, on the left". Only for things that could be in more than one band: "On the pond" for a swan would be a giveaway.
+- **"What was on the pond?"** A new question everywhere when only one kind of thing is in a whole band: "What was on the pond? A swan", "What was on the road? A bus", "What was in the sea? Dolphins". No side needed.
+- `npm run check:questions` accepts 10 questions in a thin picture (it was 12): places that never ask left / middle / right can have 11 in a thin easy picture, and the game itself never shows a picture with fewer than 12 (it tries the next one).
+
 ## 4.1.7 (2026-10-20)
 
 - **"Where was the window?" says what was below.** Instead of "On the wall, on the right", the answers name what stood against the wall under each part of it: **"On the wall on the right, above the table lamp"**, "On the wall in the middle, above the table lamp", "On the wall on the left, above the television". One of a pair of table lamps is "the table lamp". A part of the wall with nothing below it is named with something that wasn't there (so the right answer isn't the only one with a landmark), and one wrong answer pairs the right part of the wall with the wrong thing, so both have to be remembered. About 9 in 10 "where" questions about the living room's walls now read like this; the same goes for the classroom.

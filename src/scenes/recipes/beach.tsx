@@ -459,7 +459,8 @@ export const beach: Recipe = {
   zones: [
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: HORIZON, rows: 2 },
     // Boats, buoys and dolphins float in the water: clear of the horizon and well clear of the shore.
-    { id: 'sea', label: 'In the sea', surface: 'air', top: HORIZON + 0.015, bottom: SHORE - 0.03, rows: 1 },
+    // The sea lies flat: a boat in it is behind the people on the sand, not above them.
+    { id: 'sea', label: 'In the sea', surface: 'air', top: HORIZON + 0.015, bottom: SHORE - 0.03, rows: 1, flat: true },
     { id: 'sand', label: 'On the sand', surface: 'ground', top: SHORE, bottom: 1, rows: 2 },
   ],
   items,

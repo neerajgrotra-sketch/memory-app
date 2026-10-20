@@ -144,6 +144,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   // positions: they never change when the picture is laid out again for another screen. Wide things (a sofa, a
   // bus) reach into the next third, so they're never asked about there.
   const zoneIndex = (g: PlacedGroup) => recipe.zones.findIndex((z) => z.id === g.zoneId);
+  const isFlat = (z: ZoneDef) => z.flat ?? (z.surface === 'ground' && !z.flush);
   const NEXT: Record<Region, Region[]> = { left: ['centre'], centre: ['left', 'right'], right: ['centre'] };
   const isWide = (g: PlacedGroup) => itemOf(g.kind).wide === true;
   const reaches = (g: PlacedGroup, region: Region) => sidesOf(g).has(region) || (isWide(g) && NEXT[g.region].includes(region));
@@ -323,18 +324,23 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     // on a small screen than "on the left".
     const nextTo = besideLandmark(group);
     const prompt = plural ? `Where were the ${item.plural}?` : `Where was the ${item.singular}?`;
-    // Loose things in a room that names its places: places, not sides ("On the carpet" or "On the floor", against "On
-    // the sofa", "On top of the bookshelf"). Players didn't like left / middle / right here.
-    const placesHere = onRugBand && !standsBack(group) && recipe.places?.length;
+    // Loose things in a place that names its places: places, not sides ("On the carpet" or "On the floor", "On the
+    // path" or "On the grass", against "On the sofa", "On the bench"). Players didn't like left / middle / right.
+    // Only when the thing could really be in more than one of them: "On the pond" for a swan would be a giveaway.
+    // The other bands it could be in. (Bands it can't be in would be free eliminations: "Where was the slide? On the
+    // pond".)
+    const otherBands = zones.filter((z) => z.id !== group.zoneId && item.zones.includes(z.id)).map((z) => z.label);
+    const onGround = zone.surface === 'ground' && isFlat(zone);
+    const placesHere = !!recipe.places?.length && onGround && !standsBack(group) && ((onRugBand && !item.avoidRug) || otherBands.length > 0);
     // On a wall, with what stood below it: "On the wall on the right, above the table lamp".
     const onWall = spread ? null : wallWhere(group);
     if (onWall) {
       add('where', group, { type: 'position', subject: item.kind, prompt, options: withDistractors(onWall.answer, onWall.wrong, [], rng) });
     } else if (!spread && !(onRugBand && group.onRug === 'some')) {
       if (placesHere) {
-        const answer = rugAnswer ? rug.label : 'On the floor';
-        // The other of carpet and floor always, when the thing could be there; then the room's other places.
-        const opposite = rugAnswer ? ['On the floor'] : rugOption;
+        const answer = rugAnswer ? rug.label : zone.label;
+        // The other of carpet and floor, and the other bands it could be in, always; then the place's other places.
+        const opposite = [...(rugAnswer ? [zone.label] : rugOption), ...otherBands];
         add('where', group, { type: 'position', subject: item.kind, prompt, options: withDistractors(answer, opposite, recipe.places!, rng) });
         // The landmark version too (the round still asks at most one "where").
         if (nextTo) add('beside', group, { type: 'position', subject: item.kind, prompt, options: withDistractors(nextTo.answer, nextTo.wrong, nextTo.fallback, rng) });
@@ -408,6 +414,24 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         options: withDistractors(answer, wrong, [], rng),
       });
     }
+  }
+
+  // "What was on the pond?": when only one kind of thing is in a whole band, no side needed. (A rug's band has its
+  // own question, "What was on the carpet?".)
+  for (const z of zones) {
+    if (rug && z.id === rugZone) continue;
+    const here = spec.groups.filter((g) => g.zoneId === z.id);
+    if (here.length !== 1) continue;
+    const group = here[0];
+    const item = itemOf(group.kind);
+    const plural = group.count > 1;
+    const could = recipe.items.filter((i) => i.kind !== item.kind && i.zones.includes(z.id) && (!plural || canBeSeveral(i)) && !spec.details?.alsoSeen?.includes(i.kind));
+    add('what-here', null, {
+      type: 'object',
+      subject: `band-${z.id}`,
+      prompt: `What was ${lower(z.label)}?`,
+      options: withDistractors(nounPhrase(item, plural), could.map((i) => nounPhrase(i, plural)), [], rng),
+    });
   }
 
   // Houses in the street: "What number was the yellow house?" and "What colour was number 1210?".
@@ -556,6 +580,9 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       const isDir = (g: PlacedGroup) => (dir === 'above' ? zoneIndex(g) < zoneIndex(group) : zoneIndex(g) > zoneIndex(group));
       const near = spec.groups.filter((g) => g !== group && isDir(g) && reaches(g, group.region) && !faraway(g));
       if (near.length !== 1 || !single.includes(near[0]) || !alone(near[0])) continue;
+      // Two flat bands (the path and the grass): the one lower down is nearer, not "below". "What was on the grass,
+      // below the dog?" made no sense.
+      if (isFlat(zoneOf(group.zoneId)) && isFlat(zoneOf(near[0].zoneId))) continue;
       const target = near[0];
       const answerItem = itemOf(target.kind);
       const plural = target.count > 1;

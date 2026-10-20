@@ -537,6 +537,9 @@ function surfaceAt(_x: number, y: number): string {
 export const park: Recipe = {
   id: 'park',
   title: 'In the park',
+  // Where things could believably be but nothing is ever put, for wrong answers to "Where was the dog?" next to "On
+  // the path" and "On the grass".
+  places: ['On the bench', 'On the slide', 'In the fountain'],
   zones: [
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: BUSHES, rows: 1 },
     { id: 'bushes', label: 'By the trees', surface: 'ground', top: BUSHES, bottom: POND, rows: 0 },
