@@ -2,7 +2,7 @@ import type { ColourDef } from './types';
 
 /** Clearly different colours only, so colour questions are fair. */
 export const C = {
-  red: { name: 'Red', hex: '#e63946' },
+  red: { name: 'Red', hex: '#d00000' },
   blue: { name: 'Blue', hex: '#1d70d6' },
   yellow: { name: 'Yellow', hex: '#ffd60a' },
   green: { name: 'Green', hex: '#2b9348' },
@@ -11,7 +11,7 @@ export const C = {
   pink: { name: 'Pink', hex: '#ff5fa2' },
   white: { name: 'White', hex: '#f8f9fa' },
   black: { name: 'Black', hex: '#262626' },
-  brown: { name: 'Brown', hex: '#8b5a2b' },
+  brown: { name: 'Brown', hex: '#7a4a22' },
   grey: { name: 'Grey', hex: '#8d99ae' },
 } satisfies Record<string, ColourDef>;
 

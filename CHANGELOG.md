@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.19 (2026-10-20)
+
+- **Red and orange are easier to tell apart.** Testers mixed up red and orange kites, especially on the sunset beach, where the warm light pushed the old coral red (`#e63946`) towards orange. Red is now a true red (`#d00000`). On the game's colour-difference scale, red and orange went from 15 to 20.5 apart, and red and pink from 13 to 20.8. Brown is a little darker (`#7a4a22`), so the deeper red doesn't get close to it (17.3 apart, the same as blue and purple, the closest pair). Every red and brown thing that can be asked about changes with it: kites, balloons, umbrellas, cars, sofas and so on. Things drawn in a fixed colour, like the crab, are unchanged.
+
 ## 4.0.18 (2026-10-20)
 
 - **"How many coconuts were on the sand?"** A second coconut question on the beach. Each pile now has 1 to 4 coconuts (it was always 3, which would have made counting pointless), set out so each one can be counted; with coconuts by both palm trees, the answer is the total. Wrong answers are the nearest counts, never fewer than one.

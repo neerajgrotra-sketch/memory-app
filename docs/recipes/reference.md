@@ -301,8 +301,8 @@ Per-picture details: "What colour was the barn?".
 
 | Scheme | Surface colours |
 | --- | --- |
-| summer | sky `#8fd3f4`, hillsFar `#9fcf6b`, hills `#7fbf55`, field `#b5d86a`, rows `#7a9a3a`, yard `#7cb24a`, fence `#f1e7d0`, barn `#e63946` |
-| harvest | sky `#ffd8a8`, hillsFar `#c9b458`, hills `#a8a24a`, field `#c4cf7a`, rows `#8f9a45`, yard `#7f9a45`, fence `#f1e7d0`, barn `#e63946` |
+| summer | sky `#8fd3f4`, hillsFar `#9fcf6b`, hills `#7fbf55`, field `#b5d86a`, rows `#7a9a3a`, yard `#7cb24a`, fence `#f1e7d0`, barn `#d00000` |
+| harvest | sky `#ffd8a8`, hillsFar `#c9b458`, hills `#a8a24a`, field `#c4cf7a`, rows `#8f9a45`, yard `#7f9a45`, fence `#f1e7d0`, barn `#d00000` |
 
 ### Things (17)
 

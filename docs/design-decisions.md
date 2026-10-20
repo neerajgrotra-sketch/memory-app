@@ -57,6 +57,7 @@ Rules that pass every overlap and contrast check can still show something that n
 
 ## Contrast
 
+- **Answer colours far apart, measured.** Testers mixed up red and orange kites on the sunset beach: the old red (`#e63946`) was a coral red, only 15 apart from orange and 13 from pink on the game's colour-difference scale. Red is now a true red (`#d00000`) and brown a little darker (`#7a4a22`), so no two answer colours are closer than about 17 (blue and purple, red and brown), and red is over 20 from orange and pink.
 - **Outlines in each thing's own darker colour, plus a lightness rule.** White buoys on blue water and green toy cars on a mauve rug were hard to see. Buoys got a bold band, and rugs became solid pale colours.
 
 ## Questions

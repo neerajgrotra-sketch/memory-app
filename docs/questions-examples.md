@@ -728,7 +728,7 @@ Scene `night-campsite-c29hz`, colour scheme `clear`.
 | lantern posts | 2 | fixed | On the pitches | spread (not asked) |
 | tent | 1 | Pink | On the pitches | centre |
 | campfire | 1 | fixed | At the front | centre |
-| sleeping bag | 1 | Orange | At the front | right |
+| sleeping bag | 1 | Yellow | At the front | right |
 | shooting star | 1 | fixed | In the sky | right |
 | fox | 1 | fixed | At the front | left |
 | owl | 1 | fixed | In the sky | centre |
@@ -749,7 +749,7 @@ Detail `pitch`: 27.
 | position | where | Where was the campfire? | **✓ At the front, in the middle** · At the front, on the right · At the front, on the left | campfire |
 | object | what-here | What was at the front, in the middle? | **✓ A campfire** · A log seat · A dog · A person | campfire |
 | count | count | How many sleeping bags were there? | **✓ 1** · 3 · 4 · 2 | sleeping-bag |
-| colour | colour | What colour was the sleeping bag? | **✓ Orange** · Blue · Green · Yellow | sleeping-bag |
+| colour | colour | What colour was the sleeping bag? | **✓ Yellow** · Blue · Green · Orange | sleeping-bag |
 | position | where | Where was the sleeping bag? | **✓ At the front, on the right** · At the front, in the middle · At the front, on the left | sleeping-bag |
 | object | what-here | What was at the front, on the right? | **✓ A sleeping bag** · A fox · A campfire · A log seat | sleeping-bag |
 | position | where | Where was the shooting star? | **✓ In the sky, on the right** · In the sky, in the middle · In the sky, on the left | shooting-star |
