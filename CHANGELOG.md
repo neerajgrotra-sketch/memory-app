@@ -10,6 +10,12 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.1.1 (2026-10-20)
+
+- **Table lamps on side tables.** A new thing against the living room wall: a little side table with a lamp on it (up to two, spread apart); when it's on, a warm halo glows round its shade. Its shade colour is asked about ("What colour was the table lamp's shade?"), and it's on or off like the floor lamps ("Was the table lamp on or off?", or "Which table lamp was on?" with two). The floor lamp's colour question now says "the floor lamp's shade", so the two lamps never get mixed up.
+- **The TV has an aerial**, so it's never taken for a fish tank when it shows fish.
+- **The dog holds its toy in its mouth.** Testers couldn't tell what it was playing with when the toy lay by its paws. The slipper, which looked like a paddle in its mouth, is now a striped sock.
+
 ## 4.1.0 (2026-10-20)
 
 A wider range of questions in the living room, built so other places can use the same ideas.

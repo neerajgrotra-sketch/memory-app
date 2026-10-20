@@ -221,7 +221,8 @@ const items: ItemDef[] = [
     maxCount: 2,
     avoidRug: true,
     colours: [C.red, C.blue, C.yellow, C.green, C.white, C.orange],
-    colourPrompt: (plural) => (plural ? 'What colour were the lampshades?' : 'What colour was the lampshade?'),
+    // Says which lamp: a table lamp's shade could be asked about too.
+    colourPrompt: (plural) => (plural ? 'What colour were the floor lamps’ shades?' : 'What colour was the floor lamp’s shade?'),
     // On or off per picture (see `fitDetails`); on when drawn on its own.
     draw: (colour, details, _copy, index = 0) => (
       <G>
@@ -249,7 +250,7 @@ const items: ItemDef[] = [
     plural: 'televisions',
     article: 'a',
     w: 170,
-    h: 140,
+    h: 175,
     tier: 'large',
     size: 0.28,
     zones: FLOOR_ZONE,
@@ -258,23 +259,57 @@ const items: ItemDef[] = [
     avoidRug: true,
     tone: '#212529',
     countable: false,
-    // What's on the screen is chosen per picture (see `details`): off, a cartoon, football or fish.
+    // What's on the screen is chosen per picture (see `details`): off, a cartoon, football or fish. An aerial on
+    // top, so it's never taken for a fish tank.
     draw: (_colour, details) => (
       <G>
-        <Rect x={20} y={100} width={130} height={40} fill="#8b5a2b" stroke="#4a2f16" />
-        <G stroke="none">
-          {/* Two cupboard doors with knobs. */}
-          <Path d="M85,104 V136" stroke="#4a2f16" strokeWidth={2} />
-          <Circle cx={78} cy={120} r={3} fill="#e9c46a" />
-          <Circle cx={92} cy={120} r={3} fill="#e9c46a" />
+        <G stroke="#212529" strokeWidth={4} strokeLinecap="round">
+          <Path d="M85,30 L52,4 M85,30 L120,2" />
         </G>
-        <Rect x={0} y={0} width={170} height={100} rx={6} fill="#212529" />
-        <G stroke="none">
-          {tvScreen(details?.values?.tv ?? 'cartoon')}
-          {/* A glare across the glass, and the power light: red when off, green when on. */}
-          <Path d="M14,12 L60,12 L24,60 L14,60 Z" fill="#ffffff" fillOpacity={0.18} />
-          <Circle cx={160} cy={95} r={2} fill={details?.values?.tv === 'off' ? '#ff6b6b' : '#51cf66'} />
-        </G>
+        <Circle cx={52} cy={4} r={4} fill="#495057" />
+        <Circle cx={120} cy={2} r={4} fill="#495057" />
+        <Path d="M68,36 Q68,24 85,24 Q102,24 102,36 Z" fill="#343a40" />
+        <G transform="translate(0 35)">{tvSet(details)}</G>
+      </G>
+    ),
+  },
+  {
+    // A table lamp on a little side table, against the wall like the furniture. On or off per picture.
+    kind: 'table-lamp',
+    singular: 'table lamp',
+    plural: 'table lamps',
+    article: 'a',
+    w: 70,
+    h: 112,
+    tier: 'medium',
+    size: 0.13,
+    backRow: true,
+    spread: true,
+    zones: FLOOR_ZONE,
+    maxCount: 2,
+    avoidRug: true,
+    colours: [C.blue, C.yellow, C.green, C.white, C.pink, C.purple],
+    colourPrompt: (plural) => (plural ? 'What colour were the table lamps’ shades?' : 'What colour was the table lamp’s shade?'),
+    draw: (colour, details, _copy, index = 0) => (
+      <G>
+        {lampIsOn(details, index, 'tableLamps') && (
+          <G stroke="none">
+            {/* A warm halo round the shade and a pool of light under it, so "on" shows on a phone. */}
+            <Circle cx={35} cy={22} r={36} fill="#fff3bf" fillOpacity={0.55} />
+            <Circle cx={35} cy={22} r={26} fill="#fff3bf" fillOpacity={0.6} />
+            <Ellipse cx={35} cy={44} rx={30} ry={12} fill="#fff3bf" fillOpacity={0.95} />
+          </G>
+        )}
+        {/* The side table: a top, a drawer with a knob, and two legs. */}
+        <Rect x={8} y={74} width={6} height={38} fill="#8b5a2b" stroke="#4a2f16" />
+        <Rect x={56} y={74} width={6} height={38} fill="#8b5a2b" stroke="#4a2f16" />
+        <Rect x={4} y={60} width={62} height={18} rx={2} fill="#8b5a2b" stroke="#4a2f16" />
+        <Circle cx={35} cy={69} r={2.5} fill="#e9c46a" stroke="none" />
+        {/* The lamp on it: a round base, a stem and the shade. */}
+        <Ellipse cx={35} cy={58} rx={12} ry={4} fill="#495057" stroke="none" />
+        <Rect x={33} y={30} width={4} height={28} fill="#495057" stroke="none" />
+        <Path d="M16,4 H54 L62,34 H8 Z" fill={colour} />
+        <Path d="M18,8 L12,32 H18 L23,8 Z" fill="#ffffff" fillOpacity={0.3} stroke="none" />
       </G>
     ),
   },
@@ -677,9 +712,34 @@ function tvScreen(show: string) {
   }
 }
 
-/** Whether the floor lamp at `index` (0 the left one) is on: `lamps` is on/off for one lamp, or which of two. */
-function lampIsOn(details: SceneDetails | undefined, index: number): boolean {
-  const lamps = details?.values?.lamps;
+/** The television and its stand, below the aerial (170 × 140). */
+function tvSet(details?: SceneDetails) {
+  return (
+    <G>
+      <Rect x={20} y={100} width={130} height={40} fill="#8b5a2b" stroke="#4a2f16" />
+      <G stroke="none">
+        {/* Two cupboard doors with knobs. */}
+        <Path d="M85,104 V136" stroke="#4a2f16" strokeWidth={2} />
+        <Circle cx={78} cy={120} r={3} fill="#e9c46a" />
+        <Circle cx={92} cy={120} r={3} fill="#e9c46a" />
+      </G>
+      <Rect x={0} y={0} width={170} height={100} rx={6} fill="#212529" />
+      <G stroke="none">
+        {tvScreen(details?.values?.tv ?? 'cartoon')}
+        {/* A glare across the glass, and the power light: red when off, green when on. */}
+        <Path d="M14,12 L60,12 L24,60 L14,60 Z" fill="#ffffff" fillOpacity={0.18} />
+        <Circle cx={160} cy={95} r={2} fill={details?.values?.tv === 'off' ? '#ff6b6b' : '#51cf66'} />
+      </G>
+    </G>
+  );
+}
+
+/**
+ * Whether the lamp at `index` (0 the left one) is on: `values[key]` is on/off for one lamp, or which of two
+ * (`lamps` for floor lamps, `tableLamps` for table lamps).
+ */
+function lampIsOn(details: SceneDetails | undefined, index: number, key = 'lamps'): boolean {
+  const lamps = details?.values?.[key];
   if (!lamps || lamps === 'on' || lamps === 'both') return true;
   if (lamps === 'off' || lamps === 'none') return false;
   return lamps === (index === 0 ? 'left' : 'right');
@@ -714,16 +774,19 @@ function shelfBooks(shelf: number, count: number) {
 /** What a pet can be playing with, and how the answer says it. */
 const PET_TOYS: Record<'cat' | 'dog', Record<string, string>> = {
   cat: { yarn: 'A ball of yarn', mouse: 'A toy mouse', feather: 'A feather' },
-  dog: { bone: 'A bone', rope: 'A rope toy', slipper: 'A slipper' },
+  dog: { bone: 'A bone', rope: 'A rope toy', sock: 'A sock' },
 };
 
-/** The toy by the pet's front paws (cat: in front of its face, on the left; dog: under its head, on the right). */
+/**
+ * The pet's toy: the cat's by its front paws, in front of its face; the dog's in its mouth (lying by its paws,
+ * testers couldn't tell what it was playing with).
+ */
 function petToy(animal: 'cat' | 'dog', details?: SceneDetails) {
   const toy = details?.values?.[`${animal}Toy`];
   if (!toy) return null;
-  // Drawn 1.4 times bigger around where it lies, so it can be made out on a phone.
-  const [ax, ay] = animal === 'cat' ? [8, 66] : [90, 68];
-  return <G transform={`translate(${ax} ${ay}) scale(1.4) translate(${-ax} ${-ay})`}>{toyDrawing(toy)}</G>;
+  // Drawn bigger around where it is, so it can be made out on a phone.
+  const [ax, ay, k] = animal === 'cat' ? [8, 66, 1.4] : [96, 38, 1.25];
+  return <G transform={`translate(${ax} ${ay}) scale(${k}) translate(${-ax} ${-ay})`}>{toyDrawing(toy)}</G>;
 }
 
 function toyDrawing(toy: string) {
@@ -752,31 +815,34 @@ function toyDrawing(toy: string) {
           <Path d="M-6,70 Q14,60 30,52" fill="none" stroke="#1864ab" strokeWidth={1.5} />
         </G>
       );
+    // The dog's toys, held across its mouth (below its nose, at about 96,38).
     case 'bone':
       return (
         <G fill="#f8f9fa" stroke="#868e96">
-          <Rect x={76} y={64} width={26} height={7} rx={3} />
-          <Circle cx={76} cy={64} r={4.5} />
-          <Circle cx={76} cy={71} r={4.5} />
-          <Circle cx={102} cy={64} r={4.5} />
-          <Circle cx={102} cy={71} r={4.5} />
+          <Rect x={84} y={35} width={26} height={7} rx={3} />
+          <Circle cx={84} cy={35} r={4.5} />
+          <Circle cx={84} cy={42} r={4.5} />
+          <Circle cx={110} cy={35} r={4.5} />
+          <Circle cx={110} cy={42} r={4.5} />
         </G>
       );
     case 'rope':
       return (
         <G>
-          <Path d="M78,68 H104" stroke="#e03131" strokeWidth={7} strokeLinecap="round" />
-          <Path d="M82,64 L86,72 M90,64 L94,72 M98,64 L102,72" stroke="#ffffff" strokeWidth={2} />
-          <Circle cx={76} cy={68} r={5} fill="#e03131" stroke="#a61e1e" />
-          <Circle cx={106} cy={68} r={5} fill="#e03131" stroke="#a61e1e" />
+          <Path d="M84,40 L110,35" stroke="#e03131" strokeWidth={7} strokeLinecap="round" />
+          <Path d="M88,35 L91,43 M96,34 L99,42 M104,33 L107,41" stroke="#ffffff" strokeWidth={2} />
+          <Circle cx={82} cy={41} r={5} fill="#e03131" stroke="#a61e1e" />
+          <Circle cx={112} cy={34} r={5} fill="#e03131" stroke="#a61e1e" />
         </G>
       );
     default:
-      // A slipper.
+      // A striped sock hanging from its mouth by the top: its L shape reads even when small. (A slipper looked
+      // like a paddle.)
       return (
-        <G>
-          <Path d="M74,72 C72,62 86,60 100,62 C110,63 110,72 100,74 Z" fill="#4dabf7" stroke="#1864ab" />
-          <Path d="M88,62 C90,68 98,70 104,68" fill="none" stroke="#1864ab" strokeWidth={1.5} />
+        <G transform="translate(89 34) scale(0.72)">
+          <Path d="M0,0 H12 V22 Q12,26 16,26 H24 Q30,26 30,32 Q30,38 24,38 H8 Q0,38 0,30 Z" fill="#f8f9fa" stroke="#1864ab" />
+          <Path d="M0,7 H12 M0,14 H12 M24,26 V38" stroke="#1c7ed6" strokeWidth={4} />
+          <Path d="M0,0 H12 V3 H0 Z" fill="#1c7ed6" stroke="none" />
         </G>
       );
   }
@@ -842,17 +908,23 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
   const one = (kind: string) => groups.find((g) => g.kind === kind && g.count === 1);
   const count = (kind: string) => groups.find((g) => g.kind === kind)?.count ?? 0;
 
-  // Floor lamps on or off: "Was the floor lamp on or off?" with one, "Which floor lamp was on?" with two.
-  const lamps = count('floor-lamp');
-  if (lamps === 1) {
-    values.lamps = random.next() < 0.5 ? 'on' : 'off';
-    const answer = values.lamps === 'on' ? 'On' : 'Off';
-    facts.push({ id: 'lamp', type: 'object', prompt: 'Was the floor lamp on or off?', answer, wrong: [answer === 'On' ? 'Off' : 'On'], needs: 'floor-lamp' });
-  } else if (lamps === 2) {
-    const r = random.next();
-    values.lamps = r < 0.35 ? 'left' : r < 0.7 ? 'right' : r < 0.85 ? 'both' : 'none';
-    const answer = WHICH_OF_TWO[values.lamps];
-    facts.push({ id: 'lamp', type: 'position', prompt: 'Which floor lamp was on?', answer, wrong: Object.values(WHICH_OF_TWO).filter((a) => a !== answer), needs: 'floor-lamp' });
+  // Lamps on or off: "Was the floor lamp on or off?" with one, "Which floor lamp was on?" with two; the same for
+  // table lamps.
+  for (const { kind, key, name } of [
+    { kind: 'floor-lamp', key: 'lamps', name: 'floor lamp' },
+    { kind: 'table-lamp', key: 'tableLamps', name: 'table lamp' },
+  ]) {
+    const lamps = count(kind);
+    if (lamps === 1) {
+      values[key] = random.next() < 0.5 ? 'on' : 'off';
+      const answer = values[key] === 'on' ? 'On' : 'Off';
+      facts.push({ id: `${kind}-on`, type: 'object', prompt: `Was the ${name} on or off?`, answer, wrong: [answer === 'On' ? 'Off' : 'On'], needs: kind });
+    } else if (lamps === 2) {
+      const r = random.next();
+      values[key] = r < 0.35 ? 'left' : r < 0.7 ? 'right' : r < 0.85 ? 'both' : 'none';
+      const answer = WHICH_OF_TWO[values[key]];
+      facts.push({ id: `${kind}-on`, type: 'position', prompt: `Which ${name} was on?`, answer, wrong: Object.values(WHICH_OF_TWO).filter((a) => a !== answer), needs: kind });
+    }
   }
 
   // From Level 14, with one bookshelf: 1 to 5 books on each shelf, and how many on one of them.
