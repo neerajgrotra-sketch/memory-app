@@ -576,6 +576,8 @@ function surfaceAt(_x: number, y: number): string {
 
 export const nightCampsite: Recipe = {
   id: 'night-campsite',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'At the campsite at night',
   zones: [
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: SKY, rows: 1 },

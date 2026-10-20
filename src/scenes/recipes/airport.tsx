@@ -567,6 +567,8 @@ function surfaceAt(_x: number, y: number): string {
 
 export const airport: Recipe = {
   id: 'airport',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'At the airport',
   zones: [
     // Both seen far off through the window, so never "above" or "below" anything in the lounge.

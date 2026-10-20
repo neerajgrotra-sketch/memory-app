@@ -549,6 +549,8 @@ const PALETTES: Record<string, Palette> = {
 
 export const underSea: Recipe = {
   id: 'under-sea',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'Under the sea',
   zones: [
     { id: 'top', label: 'Near the surface', surface: 'air', top: SURFACE + 0.025, bottom: TOP, rows: 1 },

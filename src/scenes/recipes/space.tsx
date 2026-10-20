@@ -653,6 +653,8 @@ function surfaceAt(_x: number, y: number): string {
 
 export const space: Recipe = {
   id: 'space',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'On the Moon',
   zones: [
     // One row holds three kinds; any more and the smallest (a satellite) would never fit.

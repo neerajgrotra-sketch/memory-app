@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.2.1 (2026-10-20)
+
+- **No left / middle / right anywhere.** The last five places, under the sea, the zoo, the campsite, the airport and space, now ask "where" by landmarks too: "Between the owls and the shooting star", "Between the luggage trolley and the coffee kiosk", "To the left of the ostrich", "Between the fish and the jellyfish".
+- **"Which of these was in the departure lounge?"** A new question for any band with two or more kinds of thing: the answer is one of them, and the wrong answers are things that could have been there but weren't in the picture at all, so exactly one choice is right. It keeps the smaller places' rounds varied without sides.
+- **Two-choice questions where two is all there can be.** With a single landmark, the only answers are "To the left of the moon" and "To the right of the moon". These were being thrown away, and so, it turned out, was **"Was the floor lamp on or off?"** (and the table lamp's), which had never been asked since 4.1.0. Both are now kept. A round prefers a "where" with more choices: in a test of 1,200 rounds, 8 asked a two-choice one.
+- Checked: every place has enough questions in almost every picture (the game skips the rare thin one), and "where" answers stayed the same in every picture laid out again for another screen.
+
 ## 4.2.0 (2026-10-20)
 
 - **No more left / middle / right in most places.** The beach, the city, the kitchen, the farm, the supermarket, the train station, the snowy mountain and the classroom now ask "where" the way the living room and the park do: next to things at the same depth ("Between the coffee cart and the bench", "To the left of the farmer", "Between the plane and the sun"), on walls with what stood below ("On the wall on the right, above the bookcase"), and "What was on the road? A bus" for a band with one kind of thing. A "where" or "what was there" question with nothing to place it by isn't asked. Under the sea, the zoo, the campsite, the airport and space keep sides for now: without them too many of their pictures would have too few questions (they need landmarks of their own first). A new `sides: false` on a recipe turns sides off.

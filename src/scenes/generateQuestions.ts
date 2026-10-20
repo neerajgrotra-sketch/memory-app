@@ -254,7 +254,8 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     const falses = statements.filter((s) => !s.truth);
     const same = falses.filter((s) => s.landmarks.some((l) => pick.landmarks.includes(l))).map((s) => s.text);
     const others = falses.filter((s) => !s.landmarks.some((l) => pick.landmarks.includes(l))).map((s) => s.text);
-    if (same.length + others.length < 2) return null;
+    // With a single landmark only left and right are possible: a two-choice question, easier, like true or false.
+    if (same.length + others.length < 1) return null;
     return { answer: pick.text, wrong: same, fallback: others };
   };
   // The rug, when the recipe has one: things on it are "On the carpet", never "On the floor".
@@ -420,6 +421,24 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         options: withDistractors(answer, wrong, [], rng),
       });
     }
+  }
+
+  // "Which of these was in the departure lounge?": one thing that was in a band with several, against things that
+  // could have been there but weren't in the picture at all, so exactly one choice is right. No side needed.
+  for (const z of zones) {
+    if (z.faraway) continue;
+    const here = spec.groups.filter((g) => g.zoneId === z.id && !(rug && z.id === rugZone && g.onRug === 'all'));
+    if (here.length < 2) continue;
+    const group = rng.pick(here);
+    const item = itemOf(group.kind);
+    const missing = absent.filter((i) => i.zones.includes(z.id));
+    if (missing.length < 2) continue;
+    add('what-here', null, {
+      type: 'object',
+      subject: `in-${z.id}`,
+      prompt: `Which of these was ${lower(z.label)}?`,
+      options: withDistractors(nounPhrase(item, false), missing.map((i) => nounPhrase(i, false)), [], rng),
+    });
   }
 
   // "What was on the pond?": when only one kind of thing is in a whole band, no side needed. (A rug's band has its
@@ -684,5 +703,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   }
 
   // A question needs at least three options to be a fair choice (true or false has its own two).
-  return questions.filter((q) => q.family === 'true-false' || q.options.length >= 3);
+  // At least three choices, except where two is all there can be: true or false, "Was the floor lamp on or off?", and
+  // left or right of a single landmark ("To the right of the moon").
+  return questions.filter((q) => q.options.length >= 3 || (q.options.length === 2 && (q.family === 'true-false' || q.family === 'detail' || q.family === 'where')));
 }
