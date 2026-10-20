@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.1.5 (2026-10-20)
+
+- **Lamps that are on look on.** Testers didn't read the yellow halo round a table lamp as "on". Lamps now show a bulb under the shade: **bright yellow with rays of light** coming out past the shade when the lamp is on, **plain grey** when it's off, with a beam of light shining down from a lit shade (onto the table, or the floor for a floor lamp). The halo is gone. The same for floor lamps and table lamps, so both read the same way.
+
 ## 4.1.4 (2026-10-20)
 
 - **"Where was it?" next to a landmark.** Testers said left, middle and right are hard to judge on a small iPhone. When something stands against the wall or tall nearby (table lamps, a floor lamp, the TV, a bookshelf, an armchair, a plant), the answers say where the thing was next to it: **"To the left of the table lamps"**, **"Between the table lamps"**, **"To the right of the armchair"**. The wrong answers are the false statements, about the same landmark first. It's worked out from thirds of the picture, and a landmark in the same third as the thing is left out, since "left of" would be a guess there. Used for about one in eight "where" questions in the living room, and also in the park ("Between the trees"), the classroom ("To the left of the teacher"), the campsite and the snowy mountain. The rest keep "On the floor, on the left".

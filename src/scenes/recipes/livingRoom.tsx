@@ -229,13 +229,8 @@ const items: ItemDef[] = [
     // On or off per picture (see `fitDetails`); on when drawn on its own.
     draw: (colour, details, _copy, index = 0) => (
       <G>
-        {lampIsOn(details, index) && (
-          <G stroke="none">
-            {/* Light spilling down from the shade, and a warm glow under it. */}
-            <Path d="M4,64 H76 L80,222 H0 Z" fill="#fff3bf" fillOpacity={0.35} />
-            <Ellipse cx={40} cy={74} rx={34} ry={12} fill="#fff3bf" fillOpacity={0.9} />
-          </G>
-        )}
+        {/* Light shining down from the shade when it's on. */}
+        {lampIsOn(details, index) && <Path d="M4,64 H76 L80,222 H0 Z" fill="#ffe066" fillOpacity={0.4} stroke="none" />}
         <Rect x={36} y={60} width={8} height={160} fill="#495057" stroke="none" />
         <Rect x={34} y={120} width={12} height={6} rx={2} fill="#343a40" stroke="none" />
         <Ellipse cx={40} cy={224} rx={30} ry={6} fill="#495057" stroke="none" />
@@ -244,6 +239,7 @@ const items: ItemDef[] = [
           <Path d="M12,8 H68 L69,12 H11 Z M3,52 H77 L78,57 H2 Z" fill="#000000" fillOpacity={0.15} />
           <Path d="M18,4 L10,60 H20 L26,4 Z" fill="#ffffff" fillOpacity={0.3} />
         </G>
+        {lampBulb(lampIsOn(details, index), 40, 72, 10, 0, 80)}
       </G>
     ),
   },
@@ -295,14 +291,8 @@ const items: ItemDef[] = [
     colourPrompt: (plural) => (plural ? 'What colour were the table lamps’ shades?' : 'What colour was the table lamp’s shade?'),
     draw: (colour, details, _copy, index = 0) => (
       <G>
-        {lampIsOn(details, index, 'tableLamps') && (
-          <G stroke="none">
-            {/* A warm halo round the shade and a pool of light under it, so "on" shows on a phone. */}
-            <Circle cx={35} cy={22} r={36} fill="#fff3bf" fillOpacity={0.55} />
-            <Circle cx={35} cy={22} r={26} fill="#fff3bf" fillOpacity={0.6} />
-            <Ellipse cx={35} cy={44} rx={30} ry={12} fill="#fff3bf" fillOpacity={0.95} />
-          </G>
-        )}
+        {/* Light shining down from the shade onto the table when it's on. (A halo round the shade wasn't read as "on".) */}
+        {lampIsOn(details, index, 'tableLamps') && <Path d="M8,34 H62 L72,62 H-2 Z" fill="#ffe066" fillOpacity={0.5} stroke="none" />}
         {/* The side table: a top, a drawer with a knob, and two legs. */}
         <Rect x={8} y={74} width={6} height={38} fill="#8b5a2b" stroke="#4a2f16" />
         <Rect x={56} y={74} width={6} height={38} fill="#8b5a2b" stroke="#4a2f16" />
@@ -313,6 +303,7 @@ const items: ItemDef[] = [
         <Rect x={33} y={30} width={4} height={28} fill="#495057" stroke="none" />
         <Path d="M16,4 H54 L62,34 H8 Z" fill={colour} />
         <Path d="M18,8 L12,32 H18 L23,8 Z" fill="#ffffff" fillOpacity={0.3} stroke="none" />
+        {lampBulb(lampIsOn(details, index, 'tableLamps'), 35, 40, 8, 8, 62)}
       </G>
     ),
   },
@@ -733,6 +724,27 @@ function tvSet(details?: SceneDetails) {
         <Path d="M14,12 L60,12 L24,60 L14,60 Z" fill="#ffffff" fillOpacity={0.18} />
         <Circle cx={160} cy={95} r={2} fill={details?.values?.tv === 'off' ? '#ff6b6b' : '#51cf66'} />
       </G>
+    </G>
+  );
+}
+
+/**
+ * A lamp's bulb just under its shade: bright yellow when the lamp is on, grey when it's off, so the two can be told
+ * apart at a glance. When it's on, short rays of light come out past the shade's lower corners (`x0`, `x1`).
+ */
+function lampBulb(on: boolean, cx: number, y: number, r: number, x0: number, x1: number) {
+  return (
+    <G>
+      <Circle cx={cx} cy={y} r={r} fill={on ? '#ffe066' : '#ced4da'} stroke={on ? '#e67700' : '#868e96'} strokeWidth={1.5} />
+      {on && <Circle cx={cx - r * 0.3} cy={y - r * 0.3} r={r * 0.35} fill="#ffffff" stroke="none" />}
+      {on && (
+        <Path
+          d={`M${x0 - 3},${y - 6} l-15,2 M${x0 + 1},${y + 3} l-12,11 M${x1 + 3},${y - 6} l15,2 M${x1 - 1},${y + 3} l12,11`}
+          stroke="#f59f00"
+          strokeWidth={4.5}
+          strokeLinecap="round"
+        />
+      )}
     </G>
   );
 }

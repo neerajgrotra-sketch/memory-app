@@ -59,7 +59,7 @@ Counts and colours, positions ("On the wall, in the middle"), "What was on the w
 | --- | --- | --- |
 | "What time was on the clock?" | every level, with the clock | the time, and times close to it |
 | "What was on the television?" | from Level 8, with the TV | Nothing, it was off / A cartoon / A football match / Fish swimming (`TV_SHOWS`, all four happen) |
-| "Was the floor lamp on or off?" / "Was the table lamp on or off?" | from Level 8, one of them | On / Off (a lamp that's on has a warm glow) |
+| "Was the floor lamp on or off?" / "Was the table lamp on or off?" | from Level 8, one of them | On / Off (a lamp that's on has a bright yellow bulb with rays and a beam of light; off, a grey bulb) |
 | "Which floor lamp was on?" / "Which table lamp was on?" | from Level 8, two of them | the one on the left / right / both / neither, as for the beach's coconuts |
 | "What was the cat playing with?" | from Level 8, one cat | a ball of yarn, a toy mouse or a feather (`PET_TOYS`), with one of the dog's toys as a wrong answer |
 | "What was the dog playing with?" | from Level 8, one dog | a bone, a rope toy or a sock, held in its mouth (no ball: balls are things of their own; a slipper looked like a paddle, and toys lying by its paws weren't clear) |
