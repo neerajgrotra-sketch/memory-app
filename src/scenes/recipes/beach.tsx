@@ -23,18 +23,21 @@ const SAND = ['sand'];
  * and eyes. (Testers on phones found less than that too hard to see.)
  * It's drawn before the spot, so the spot covers the rest of it.
  */
-const CRAB_SPOTS: Record<string, { name: string; scale: number; clear: [number, number]; small: [number, number] }> = {
+const CRAB_SPOTS: Record<string, { name: string; w: number; scale: number; clear: [number, number]; small: [number, number] }> = {
   // Under the towel, peeking out past the far edge.
-  towel: { name: 'Under the beach towel', scale: 0.92, clear: [64, -34], small: [64, -22] },
-  // Behind the sandcastle, peeking out past the right-hand tower. (Not the bucket: a crab behind it looked to be in it.)
-  sandcastle: { name: 'Behind the sandcastle', scale: 1.15, clear: [94, 52], small: [80, 52] },
+  towel: { name: 'Under the beach towel', w: 160, scale: 0.92, clear: [64, -34], small: [64, -22] },
+  // Behind the sandcastle, peeking out past a side tower: the right one, or the left one when the castle is on the
+  // right of the picture, so the crab is never cut off by the edge. (Not the bucket: a crab behind it looked to be in it.)
+  sandcastle: { name: 'Behind the sandcastle', w: 130, scale: 1.15, clear: [104, 50], small: [94, 50] },
 };
 
 /** The hiding crab, behind the thing at `kind` when the picture's details put it there. */
 function hidingCrab(kind: string, details?: SceneDetails) {
   if (details?.values?.crab !== kind) return null;
   const spot = CRAB_SPOTS[kind];
-  const [x, y] = details.values.peek === '2' ? spot.small : spot.clear;
+  const [x0, y] = details.values.peek === '2' ? spot.small : spot.clear;
+  // Peeking out of the other side: the same distance out past the left edge.
+  const x = details.values.crabSide === 'left' ? spot.w - x0 - 80 * spot.scale : x0;
   return (
     <G transform={`translate(${x} ${y}) scale(${spot.scale})`} stroke={shade(crab.tone!)} strokeWidth={2.5}>
       {crab.draw('')}
@@ -255,6 +258,8 @@ const items: ItemDef[] = [
     zones: SAND,
     maxCount: 2,
     tone: '#b07d3a',
+    // Never mirrored, so the hiding crab peeks out of the side `crabSide` says.
+    noFlip: true,
     draw: (_colour, details) => (
       <G>
         {hidingCrab('sandcastle', details)}
@@ -381,7 +386,7 @@ function hideCrab(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDet
   const elsewhere = Object.keys(CRAB_SPOTS).filter((k) => !spots.includes(k)).map((k) => CRAB_SPOTS[k].name);
   return {
     ...d,
-    values: { ...d.values, crab: hiding },
+    values: { ...d.values, crab: hiding, crabSide: groups.find((g) => g.kind === hiding)!.region === 'right' ? 'left' : 'right' },
     alsoSeen: [...(d.alsoSeen ?? []), 'crab'],
     facts: [
       ...(d.facts ?? []),

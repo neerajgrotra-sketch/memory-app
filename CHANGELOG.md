@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.17 (2026-10-20)
+
+- **The crab behind the sandcastle is easier to spot, and never cut off.** Testers could barely see it: only a claw showed. It now peeks further out: from Level 20 most of the crab, from Level 25 both eyes and a claw. It always peeks out towards the middle of the picture (from the left side of a castle on the right, otherwise from the right side), so a castle at the edge never pushes it off the picture. The sandcastle is no longer drawn mirrored, so the side is always the one chosen.
+
 ## 4.0.16 (2026-10-20)
 
 - **The hiding crab is easier to spot.** Testers on phones could barely see it under the beach towel. It now shows more at both steps: from Level 20, its claws, eyes and the top of its shell over the towel (or half of it past the sandcastle's tower); from Level 25, its claws and eyes (or an eye and a claw by the castle), which is what Level 20 used to show.
