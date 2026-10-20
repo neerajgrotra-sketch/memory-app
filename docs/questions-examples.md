@@ -148,31 +148,32 @@ Detail `clock`: 7:30.
 
 Detail `tv`: football.
 
-### Questions (21)
+### Questions (22)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
 | count | count | How many bookshelves were there? | **✓ 1** · 2 · 4 · 3 | bookshelf |
-| object | what-here | What was on the wall on the right, above the bookshelf? | **✓ A clock** · A mirror · A window · A picture frame | wall-clock |
-| count | count | How many toy cars were there? | **✓ 1** · 2 · 4 · 3 | toy-car |
-| colour | colour | What colour was the toy car? | **✓ Green** · Yellow · Blue · Orange | toy-car |
-| position | where | Where was the toy car? | **✓ On the floor** · On the carpet · On top of the bookshelf · On the sofa | toy-car |
-| count | count | How many cushions were there? | **✓ 2** · 1 · 3 · 5 | cushion |
-| colour | colour | What colour were the cushions? | **✓ Red** · Green · Yellow · Purple | cushion |
-| position | where | Where were the cushions? | **✓ On the carpet** · On the floor · On top of the bookshelf · On the armchair | cushion |
-| position | where | Where was the box of crayons? | **✓ On the floor** · On the carpet · On top of the bookshelf · On the windowsill | crayons |
-| object | what-here | What was on the carpet? | **✓ Cushions** · A teddy bear · Cushions and a ball · A ball | rug-cushion |
-| number | detail | What time was on the clock? | **✓ 7:30** · 6:30 · 8:30 · 4:30 | clock-time |
-| object | detail | What was on the television? | **✓ A football match** · A cartoon · Nothing, it was off · Fish swimming | tv-show |
-| object | seen | Which of these was in the picture? | **✓ Cushion** · Teddy bear · Mirror · Spilled cup | cushion |
-| object | seen | Which of these was NOT in the picture? | **✓ Dog** · Clock · Box of crayons · Toy car | dog |
+| position | where | Where was the clock? | **✓ On the wall on the right, above the bookshelf** · On the wall on the left, above the floor lamp · On the wall on the right, above the floor lamp · On the wall in the middle, above the television | wall-clock |
+| object | what-here | What was on the wall on the right, above the bookshelf? | **✓ A clock** · A window · A picture frame · A mirror | wall-clock |
+| count | count | How many toy cars were there? | **✓ 1** · 4 · 3 · 2 | toy-car |
+| colour | colour | What colour was the toy car? | **✓ Green** · Blue · Red · Yellow | toy-car |
+| position | where | Where was the toy car? | **✓ On the floor** · On the carpet · On the armchair · On the sofa | toy-car |
+| count | count | How many cushions were there? | **✓ 2** · 3 · 5 · 1 | cushion |
+| colour | colour | What colour were the cushions? | **✓ Red** · Purple · Pink · Green | cushion |
+| position | where | Where were the cushions? | **✓ On the carpet** · On the floor · On the windowsill · On the sofa | cushion |
+| position | where | Where was the box of crayons? | **✓ On the floor** · On the carpet · On the windowsill · On the sofa | crayons |
+| object | what-here | What was on the carpet? | **✓ Cushions** · Cushions and a cat · A box of crayons · A dog | rug-cushion |
+| number | detail | What time was on the clock? | **✓ 7:30** · 4:30 · 6:30 · 8:30 | clock-time |
+| object | detail | What was on the television? | **✓ A football match** · Nothing, it was off · Fish swimming · A cartoon | tv-show |
+| object | seen | Which of these was in the picture? | **✓ Cushion** · Sofa · Picture frame · Potted plant | cushion |
+| object | seen | Which of these was NOT in the picture? | **✓ Armchair** · Toy car · Bookshelf · Cushion | armchair |
 | count | compare | Were there more toy cars or more cushions? | Toy cars · **✓ Cushions** · The same number | compare-toy-car-cushion |
-| count | compare | Were there more bookshelves or more cushions? | Bookshelves · **✓ Cushions** · The same number | compare-bookshelf-cushion |
+| count | compare | Were there more bookshelves or more toy cars? | Bookshelves · Toy cars · **✓ The same number** | compare-bookshelf-toy-car |
 | position | relation | What was on the wall, above the bookshelf? | **✓ A clock** · A window · A picture frame · A mirror | bookshelf |
-| position | relation | What was on the floor, below the clock? | **✓ A bookshelf** · An armchair · A table lamp · A television | wall-clock |
+| position | relation | What was on the floor, below the clock? | **✓ A bookshelf** · A dog · A potted plant · A cat | wall-clock |
 | count | true-false | True or false? There were two bookshelves. | True · **✓ False** | bookshelf |
-| colour | true-false | True or false? The toy car was yellow. | True · **✓ False** | toy-car |
-| object | true-false | True or false? There was a ball in the picture. | True · **✓ False** | ball |
+| object | true-false | True or false? There was a dog in the picture. | True · **✓ False** | dog |
+| count | true-false | True or false? There were two toy cars. | True · **✓ False** | toy-car |
 
 ## In the park
 
@@ -684,27 +685,27 @@ Detail `sum`: 8 ÷ 4.
 | count | count | How many pupils were there? | **✓ 2** · 5 · 3 · 1 | pupil |
 | colour | colour | What colour were the pupils’ jumpers? | **✓ Purple** · Grey · Red · Green | pupil |
 | colour | colour | What colour were the curtains? | **✓ Orange** · Blue · Yellow · Purple | window |
-| position | where | Where was the window? | **✓ On the wall, on the left** · On the wall, on the right · On the wall, in the middle | window |
-| object | what-here | What was on the wall on the left, above the bookcase? | **✓ A window** · A clock · A poster · A noticeboard | window |
-| position | where | Where was the world map? | **✓ On the wall, on the right** · On the wall, in the middle · On the wall, on the left | map |
-| object | what-here | What was on the wall on the right, above the teacher? | **✓ A world map** · A clock · A window · A poster | map |
-| count | count | How many beanbags were there? | **✓ 1** · 4 · 3 · 2 | beanbag |
-| colour | colour | What colour was the beanbag? | **✓ Blue** · Orange · Green · Purple | beanbag |
+| position | where | Where was the window? | **✓ On the wall on the left, above the bookcase** · On the wall in the middle, above the teacher · On the wall on the left, above the teacher · On the wall on the right, above the teacher | window |
+| object | what-here | What was on the wall on the left, above the bookcase? | **✓ A window** · A poster · A world map · A clock | window |
+| position | where | Where was the world map? | **✓ On the wall on the right, above the teacher** · On the wall on the right, above the bookcase · On the wall on the left, above the bookcase · On the wall in the middle, above the bookcase | map |
+| object | what-here | What was on the wall on the right, above the teacher? | **✓ A world map** · A window · A clock · A poster | map |
+| count | count | How many beanbags were there? | **✓ 1** · 2 · 4 · 3 | beanbag |
+| colour | colour | What colour was the beanbag? | **✓ Blue** · Red · Yellow · Purple | beanbag |
 | position | where | Where was the beanbag? | **✓ Between the pupils** · To the right of the pupils · To the left of the pupils | beanbag |
-| object | what-here | What was at the back of the class, in the middle? | **✓ A beanbag** · A potted plant · An easel · A fish tank | beanbag |
-| colour | colour | What colour was the piano? | **✓ Brown** · Black · White · Green | piano |
-| position | where | Where was the piano? | **✓ At the front of the class, in the middle** · At the front of the class, on the left · At the front of the class, on the right | piano |
-| object | what-here | What was at the front of the class, in the middle? | **✓ A piano** · A bookcase · The teacher · A globe | piano |
-| object | detail | What day was written on the board? | **✓ Wednesday** · Friday · Monday · Tuesday | board-day |
-| number | detail | What sum was on the board? | **✓ 8 ÷ 4** · 8 × 4 · 8 + 4 · 8 − 4 | board-sum |
-| object | seen | Which of these was in the picture? | **✓ Pupil** · Poster · Fish tank · Easel | pupil |
-| object | seen | Which of these was NOT in the picture? | **✓ Fish tank** · Window · Bookcase · Teacher | fish-tank |
+| object | what-here | What was at the back of the class, in the middle? | **✓ A beanbag** · A fish tank · A pupil · A computer | beanbag |
+| colour | colour | What colour was the piano? | **✓ Brown** · Black · Red · Blue | piano |
+| position | where | Where was the piano? | **✓ At the front of the class, in the middle** · At the front of the class, on the right · At the front of the class, on the left | piano |
+| object | what-here | What was at the front of the class, in the middle? | **✓ A piano** · A bookcase · A globe · The teacher | piano |
+| object | detail | What day was written on the board? | **✓ Wednesday** · Tuesday · Friday · Monday | board-day |
+| number | detail | What sum was on the board? | **✓ 8 ÷ 4** · 12 ÷ 4 · 8 − 4 · 8 + 4 | board-sum |
+| object | seen | Which of these was in the picture? | **✓ World map** · Fish tank · Clock · Noticeboard | map |
+| object | seen | Which of these was NOT in the picture? | **✓ Potted plant** · Bookcase · Teacher · Piano | plant |
 | count | compare | Were there more pupils or more beanbags? | **✓ Pupils** · Beanbags · The same number | compare-pupil-beanbag |
-| position | relation | What was on the wall, above the bookcase? | **✓ A window** · A world map · A noticeboard · A clock | bookcase |
-| position | relation | What was on the wall, above the teacher? | **✓ A world map** · A clock · A noticeboard · A window | teacher |
-| colour | true-false | True or false? The pupils’ jumpers were purple. | **✓ True** · False | pupil |
-| count | true-false | True or false? There were two pupils. | **✓ True** · False | pupil |
-| colour | true-false | True or false? The beanbag was yellow. | True · **✓ False** | beanbag |
+| position | relation | What was on the wall, above the bookcase? | **✓ A window** · A clock · A poster · A noticeboard | bookcase |
+| position | relation | What was on the wall, above the teacher? | **✓ A world map** · A clock · A poster · A window | teacher |
+| colour | true-false | True or false? The piano was black. | True · **✓ False** | piano |
+| colour | true-false | True or false? The curtains were purple. | True · **✓ False** | window |
+| colour | true-false | True or false? The teacher’s jumper was orange. | True · **✓ False** | teacher |
 
 ## At the campsite at night
 

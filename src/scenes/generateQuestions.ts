@@ -155,18 +155,46 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   // above them.
   const alone = (g: PlacedGroup) => !spec.groups.some((o) => o !== g && o.zoneId === g.zoneId && (reaches(o, g.region) || reaches(g, o.region)));
   /**
-   * The thing right below a group on a wall, to name as a landmark ("on the wall in the middle, above the armchair"):
-   * the one thing standing against the wall in that third (furniture, a tall lamp). Things out on the floor in front
-   * don't count; they aren't below the wall.
+   * What stands against the wall in one third, below the wall band at `wallIdx`, to name as a landmark ("on the wall
+   * in the middle, above the armchair"): the one thing there (furniture, a tall lamp), or one copy of a pair standing
+   * apart ("the table lamp"). Things out on the floor in front don't count; they aren't below the wall. Nothing when
+   * that third has none, or two (a sofa reaching across from the next one).
    */
-  const landmarkBelow = (group: PlacedGroup): PlacedGroup | undefined => {
-    if (zoneOf(group.zoneId).surface !== 'wall') return undefined;
-    const atBack = (g: PlacedGroup) => zoneIndex(g) === zoneIndex(group) + 1 && !!(itemOf(g.kind).backRow || itemOf(g.kind).tall);
-    const below = spec.groups.filter((g) => atBack(g) && reaches(g, group.region));
-    if (below.length !== 1 || (itemOf(below[0].kind).spread && below[0].count > 1)) return undefined;
-    // Nothing else against the wall shares its third (a sofa reaching across from the next one).
-    const crowded = spec.groups.some((o) => o !== below[0] && atBack(o) && (reaches(o, below[0].region) || reaches(below[0], o.region)));
-    return crowded ? undefined : below[0];
+  const backAt = (wallIdx: number) => (g: PlacedGroup) => zoneIndex(g) === wallIdx + 1 && !!(itemOf(g.kind).backRow || itemOf(g.kind).tall);
+  const backLandmark = (wallIdx: number, region: Region): string | undefined => {
+    const here = spec.groups.filter((g) => backAt(wallIdx)(g) && reaches(g, region));
+    if (here.length !== 1) return undefined;
+    const g = here[0];
+    const it = itemOf(g.kind);
+    if (it.spread && g.count > 1) return g.boxes.filter((b) => regionOf(b.x + b.w / 2) === region).length === 1 ? `the ${it.singular}` : undefined;
+    return the(g);
+  };
+  const landmarkBelow = (group: PlacedGroup) => (zoneOf(group.zoneId).surface === 'wall' ? backLandmark(zoneIndex(group), group.region) : undefined);
+  /**
+   * "Where was the window?" for a thing on a wall, with what stood below each third: "On the wall on the right, above
+   * the table lamp" / "On the wall on the left, above the television". A third with nothing against the wall is
+   * named with something that wasn't there (so the answer isn't the only one with a landmark), and one more wrong
+   * answer pairs the right third with the wrong thing, so both have to be remembered. Null without a landmark below.
+   */
+  const wallWhere = (group: PlacedGroup): { answer: string; wrong: string[] } | null => {
+    const z = zoneOf(group.zoneId);
+    const idx = zoneIndex(group);
+    const own = landmarkBelow(group);
+    if (!own || !recipe.zones[idx + 1]) return null;
+    const at = (r: Region) => `${z.label} ${REGION_PHRASE[r]}`;
+    // Things that could stand against this wall, never a wide one.
+    const backKinds = recipe.items.filter((i) => (i.backRow || i.tall) && !i.wide && i.zones.includes(recipe.zones[idx + 1].id));
+    const notIn = (r: Region) =>
+      backKinds.filter((i) => !spec.groups.some((g) => g.kind === i.kind && backAt(idx)(g) && reaches(g, r)) && `the ${i.singular}` !== own);
+    const wrong: string[] = [];
+    for (const r of ['left', 'centre', 'right'] as Region[]) {
+      if (r === group.region) continue;
+      const there = backLandmark(idx, r) ?? (notIn(r).length ? `the ${rng.pick(notIn(r)).singular}` : undefined);
+      if (there) wrong.push(`${at(r)}, above ${there}`);
+    }
+    const swap = notIn(group.region);
+    if (swap.length) wrong.push(`${at(group.region)}, above the ${rng.pick(swap).singular}`);
+    return wrong.length >= 2 ? { answer: `${at(group.region)}, above ${own}`, wrong } : null;
   };
   const the = (g: PlacedGroup) => `the ${g.count > 1 ? itemOf(g.kind).plural : itemOf(g.kind).singular}`;
   const COL: Record<Region, number> = { left: 0, centre: 1, right: 2 };
@@ -298,7 +326,11 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     // Loose things in a room that names its places: places, not sides ("On the carpet" or "On the floor", against "On
     // the sofa", "On top of the bookshelf"). Players didn't like left / middle / right here.
     const placesHere = onRugBand && !standsBack(group) && recipe.places?.length;
-    if (!spread && !(onRugBand && group.onRug === 'some')) {
+    // On a wall, with what stood below it: "On the wall on the right, above the table lamp".
+    const onWall = spread ? null : wallWhere(group);
+    if (onWall) {
+      add('where', group, { type: 'position', subject: item.kind, prompt, options: withDistractors(onWall.answer, onWall.wrong, [], rng) });
+    } else if (!spread && !(onRugBand && group.onRug === 'some')) {
       if (placesHere) {
         const answer = rugAnswer ? rug.label : 'On the floor';
         // The other of carpet and floor always, when the thing could be there; then the room's other places.
@@ -336,7 +368,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     if (!spread && !sharesSpot && (landmark || !recipe.places)) add('what-here', group, {
       type: 'object',
       subject: item.kind,
-      prompt: landmark ? `What was ${cell.replace(', ', ' ')}, above ${the(landmark)}?` : `What was ${cell}?`,
+      prompt: landmark ? `What was ${cell.replace(', ', ' ')}, above ${landmark}?` : `What was ${cell}?`,
       options: withDistractors(
         nounPhrase(item, plural),
         // Only things that belong in this band: never "Zookeepers" for the sky.

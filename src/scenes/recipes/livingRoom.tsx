@@ -187,9 +187,10 @@ const items: ItemDef[] = [
     spread: true,
     avoidRug: true,
     colours: [C.red, C.blue, C.green, C.yellow, C.orange, C.pink],
-    // A cat can be curled up on the seat (see `fitDetails`).
+    // A cat can be curled up on the seat, or a pet hiding behind it (see `fitDetails`).
     draw: (colour, details) => (
       <G>
+        {hidingPet('armchair', details)}
         <Rect x={18} y={0} width={84} height={70} rx={14} fill={colour} />
         <Rect x={0} y={42} width={30} height={66} rx={10} fill={colour} />
         <Rect x={90} y={42} width={30} height={66} rx={10} fill={colour} />
@@ -262,6 +263,7 @@ const items: ItemDef[] = [
     // top, so it's never taken for a fish tank.
     draw: (_colour, details) => (
       <G>
+        {hidingPet('tv', details)}
         <G stroke="#212529" strokeWidth={4} strokeLinecap="round">
           <Path d="M85,30 L52,4 M85,30 L120,2" />
         </G>
@@ -864,16 +866,21 @@ function toyDrawing(toy: string) {
 }
 
 /**
- * Where a cat can hide on harder levels (one of each in the picture): over the back of the sofa, or beside the
- * potted plant. Not a dog: its head is barely higher than its back, so a dog peeking over the sofa looked to be
- * lying on top of it, and it's bigger than the pot. Where the cat's top-left corner goes and how big it's drawn, in
- * the spot's own units, so it's the same size as the cats in the room; drawn before the spot, so the spot covers
- * the rest. A clear peek shows its head; a small one its ears and eyes.
+ * Where a pet can hide on harder levels (one of each spot in the picture). Over the back of the sofa (a cat only: a
+ * dog's head is barely higher than its back, so it looked to be lying on the sofa). Out from the side of the potted
+ * plant (a cat: a dog is bigger than the pot), the armchair or the TV (a cat or a dog), on the side facing the middle
+ * of the picture. Where the pet's top-left corner goes and how big it's drawn, in the spot's own units, so it's the
+ * same size as the pets in the room; drawn before the spot, so the spot covers the rest. For a side peek, the
+ * position is for the pet's own way round (a cat's head on the left, a dog's on the right); it's mirrored to peek
+ * out of the other side. A clear peek shows its head; a small one less.
  */
-const PET_SPOTS: Record<string, { name: string; animals: ('cat' | 'dog')[]; w: number; scale: Record<string, number>; clear: Record<string, [number, number]>; small: Record<string, [number, number]> }> = {
-  sofa: { name: 'Behind the sofa', animals: ['cat'], w: 230, scale: { cat: 0.7 }, clear: { cat: [140, -34] }, small: { cat: [140, -26] } },
-  plant: { name: 'Behind the potted plant', animals: ['cat'], w: 80, scale: { cat: 0.82 }, clear: { cat: [-28, 49] }, small: { cat: [-16, 49] } },
+const PET_SPOTS: Record<string, { name: string; w: number; over?: boolean; scale: Partial<Record<'cat' | 'dog', number>>; clear: Partial<Record<'cat' | 'dog', [number, number]>>; small: Partial<Record<'cat' | 'dog', [number, number]>> }> = {
+  sofa: { name: 'Behind the sofa', w: 230, over: true, scale: { cat: 0.7 }, clear: { cat: [140, -34] }, small: { cat: [140, -26] } },
+  plant: { name: 'Behind the potted plant', w: 80, scale: { cat: 0.82 }, clear: { cat: [-28, 49] }, small: { cat: [-16, 49] } },
+  armchair: { name: 'Behind the armchair', w: 120, scale: { cat: 0.8, dog: 0.84 }, clear: { cat: [-24, 60], dog: [60, 57] }, small: { cat: [-16, 60], dog: [54, 57] } },
+  tv: { name: 'Behind the television', w: 170, scale: { cat: 0.81, dog: 0.85 }, clear: { cat: [-24, 114], dog: [110, 111] }, small: { cat: [-16, 114], dog: [104, 111] } },
 };
+const petsFor = (spot: string) => Object.keys(PET_SPOTS[spot].scale) as ('cat' | 'dog')[];
 
 /** The hiding pet, behind the thing at `spot` when the picture's details put it there. */
 function hidingPet(spot: string, details?: SceneDetails) {
@@ -881,12 +888,12 @@ function hidingPet(spot: string, details?: SceneDetails) {
   if (!v || v.petSpot !== spot || !v.pet) return null;
   const animal = v.pet as 'cat' | 'dog';
   const def = PET_SPOTS[spot];
-  const s = def.scale[animal];
-  const [x0, y] = v.peek === '2' ? def.small[animal] : def.clear[animal];
+  const s = def.scale[animal]!;
+  const [x0, y] = (v.peek === '2' ? def.small[animal] : def.clear[animal])!;
   const item = animal === 'cat' ? items.find((i) => i.kind === 'cat')! : dog;
-  // Beside the plant, it peeks out of the side facing the middle of the picture: the cat's head is on its left,
-  // so to peek out of the right it's mirrored.
-  const mirrored = spot === 'plant' && v.petSide === 'right';
+  // From the side, it peeks out of the side facing the middle of the picture: mirrored when that isn't the side its
+  // head is on (a cat's is on the left, a dog's on the right).
+  const mirrored = !def.over && (v.petSide === 'right') === (animal === 'cat');
   const transform = mirrored ? `translate(${def.w - x0} ${y}) scale(${-s} ${s})` : `translate(${x0} ${y}) scale(${s})`;
   return (
     <G transform={transform} stroke={shade(v.petColour)} strokeWidth={2.5}>
@@ -998,11 +1005,10 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
     });
   }
 
-  // From Level 20: a cat hiding behind the sofa or the potted plant, when no cat is in the room already.
+  // From Level 20: a cat or a dog hiding behind the sofa, the potted plant, the armchair or the TV, when none of that
+  // animal is in the room already.
   if (values.peek) {
-    const choices = Object.entries(PET_SPOTS).flatMap(([spot, def]) =>
-      one(spot) ? def.animals.filter((a) => !count(a)).map((animal) => ({ spot, animal })) : [],
-    );
+    const choices = Object.keys(PET_SPOTS).flatMap((spot) => (one(spot) ? petsFor(spot).filter((a) => !count(a)).map((animal) => ({ spot, animal })) : []));
     if (choices.length) {
       const { spot, animal } = random.pick(choices);
       const answer = PET_SPOTS[spot].name;
@@ -1018,7 +1024,7 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
         prompt: `Where was the ${animal} hiding?`,
         answer,
         wrong: Object.values(PET_SPOTS).map((s) => s.name).filter((n) => n !== answer),
-        fallback: ['Under the armchair', 'Behind the television', 'Behind the bookshelf'],
+        fallback: ['Behind the bookshelf', 'Under the table'],
         spotlight: true,
       });
     }

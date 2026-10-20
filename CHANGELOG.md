@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.1.7 (2026-10-20)
+
+- **"Where was the window?" says what was below.** Instead of "On the wall, on the right", the answers name what stood against the wall under each part of it: **"On the wall on the right, above the table lamp"**, "On the wall in the middle, above the table lamp", "On the wall on the left, above the television". One of a pair of table lamps is "the table lamp". A part of the wall with nothing below it is named with something that wasn't there (so the right answer isn't the only one with a landmark), and one wrong answer pairs the right part of the wall with the wrong thing, so both have to be remembered. About 9 in 10 "where" questions about the living room's walls now read like this; the same goes for the classroom.
+- **Dogs hide too.** From Level 20, a dog can hide behind the armchair or the TV, peeking out from the side that faces the middle of the picture, and a cat can now hide there as well as behind the sofa and the potted plant. "Where was the dog hiding?" opens the round. From Level 25 less of it shows. (Below Level 20 nothing hides; tester mode can start at Level 20 from the game page.)
+
 ## 4.1.6 (2026-10-20)
 
 Testers didn't like "where" answers by sides of the screen, and some landmark answers made no sense. Reworked:
