@@ -10,6 +10,15 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.11 (2026-10-20)
+
+- **Countdown ticks land on their numbers on phones.** Testers in Expo Go heard the tick drift away from the number. On phones each sound now has two players that take turns, so a tick starts the moment its number shows:
+  - The sound files are copied onto the phone first. In Expo Go they used to stream from the dev server through the tunnel on every play, which made each tick late by a different amount.
+  - iPhone keeps its audio session switched on between sounds, instead of switching it off after each tick and back on for the next.
+  - A player rewinds as soon as it finishes, so it's ready before the next tick. Before, it rewound at the moment the tick was needed.
+- **Each number ticks once.** The first number of the countdown could tick twice, about 40 ms apart, when the timer started again as the picture appeared.
+- The browser build was already in time (each tick within about 25 ms of its number, even with the computer slowed 8×) and is unchanged.
+
 ## 4.0.10 (2026-10-19)
 
 - **Hiding animals on the snowy mountain.** From Level 20 (and in Hard practice), the animal on the danger sign really is there, peeking out from behind the **pine tree**, the **snowmobile** or the **hot chocolate stand**, and the round opens with **"Where was the bear hiding?"**. Levels 20 to 24 show a clear peek (head and ears); from Level 25 only the ears and eyes show. Each of the five animals has its own head: a bear, a wolf, a fox, a deer and a moose with antlers. Wrong answers are the other hiding spots in the picture first, so none can be ruled out at a glance. The level-up screen announces it ("Animals hiding in the picture: find where").
