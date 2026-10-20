@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.2.0 (2026-10-20)
+
+- **No more left / middle / right in most places.** The beach, the city, the kitchen, the farm, the supermarket, the train station, the snowy mountain and the classroom now ask "where" the way the living room and the park do: next to things at the same depth ("Between the coffee cart and the bench", "To the left of the farmer", "Between the plane and the sun"), on walls with what stood below ("On the wall on the right, above the bookcase"), and "What was on the road? A bus" for a band with one kind of thing. A "where" or "what was there" question with nothing to place it by isn't asked. Under the sea, the zoo, the campsite, the airport and space keep sides for now: without them too many of their pictures would have too few questions (they need landmarks of their own first). A new `sides: false` on a recipe turns sides off.
+- **Fairer wall answers.** When a part of the wall has nothing below it, its answer names something that isn't in the picture at all, not something standing elsewhere ("on the left, above the teacher" with the teacher in the middle was easy to rule out).
+- "Between the mop and bucket, and the pet bowl": a comma when a name has its own "and".
+- Checked: in 985 pictures laid out again for a smaller screen, every "where" and "what was there" answer stayed the same.
+
 ## 4.1.8 (2026-10-20)
 
 - **No more "below the dog" on flat ground.** "What was on the grass, below the dog?" made no sense: the dog was on the path and the slide on the grass in front of it. On flat ground, lower in the picture means nearer, not below. Above and below are now only asked when one of the two is really upright: the sky, a wall, shelves, the city's roofs, the worktop, under the sea. Never between two flat bands (the path and the grass, the sand and the sea, the road and the pavement, the field and the farmyard). Bands are flat by default when they're ground, unless things stand flush on a line; the beach's sea is marked flat.

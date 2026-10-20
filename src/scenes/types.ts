@@ -294,6 +294,11 @@ export interface Recipe {
    * ever placed there, so they're always wrong. Used with a rug.
    */
   places?: string[];
+  /**
+   * False: never ask "where" by left / middle / right of the picture (players found thirds of a small screen hard to
+   * judge). "Where" questions then use landmarks ("Between the bucket and the beach ball"), places and bands only.
+   */
+  sides?: boolean;
   /** Areas nothing may cover (building doors), as fractions: x of the width, y of the height. */
   keepClear?: Rect[];
   /** Light across bands of the backdrop (see `LightBand`), back to front. */

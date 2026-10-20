@@ -713,6 +713,8 @@ function surfaceAt(_x: number, y: number): string {
 
 export const snowyMountain: Recipe = {
   id: 'snowy-mountain',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'On the snowy mountain',
   zones: [
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: SKY, rows: 1 },

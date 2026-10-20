@@ -688,6 +688,8 @@ function surfaceAt(_x: number, y: number): string {
 
 export const trainStation: Recipe = {
   id: 'train-station',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'At the train station',
   zones: [
     { id: 'roof', label: 'Hanging from the roof', surface: 'air', top: 0.03, bottom: ROOF - 0.02, rows: 1 },

@@ -1060,6 +1060,8 @@ function surfaceAt(x: number, y: number): string {
 
 export const livingRoom: Recipe = {
   id: 'living-room',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'Living room',
   details,
   fitDetails,

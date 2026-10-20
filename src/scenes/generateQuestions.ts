@@ -185,8 +185,13 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     const at = (r: Region) => `${z.label} ${REGION_PHRASE[r]}`;
     // Things that could stand against this wall, never a wide one.
     const backKinds = recipe.items.filter((i) => (i.backRow || i.tall) && !i.wide && i.zones.includes(recipe.zones[idx + 1].id));
-    const notIn = (r: Region) =>
-      backKinds.filter((i) => !spec.groups.some((g) => g.kind === i.kind && backAt(idx)(g) && reaches(g, r)) && `the ${i.singular}` !== own);
+    // Things not in the picture at all first: "on the left, above the teacher" with the teacher in the middle would be
+    // an easy one to rule out. Then things elsewhere, if there's nothing else.
+    const notIn = (r: Region) => {
+      const fits = backKinds.filter((i) => !spec.groups.some((g) => g.kind === i.kind && backAt(idx)(g) && reaches(g, r)) && `the ${i.singular}` !== own);
+      const absentOnes = fits.filter((i) => !spec.groups.some((g) => g.kind === i.kind));
+      return absentOnes.length ? absentOnes : fits;
+    };
     const wrong: string[] = [];
     for (const r of ['left', 'centre', 'right'] as Region[]) {
       if (r === group.region) continue;
@@ -234,8 +239,9 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     for (const a of landmarks)
       for (const b of landmarks) {
         if (a === b || Math.max(...colsOf(a)) >= Math.min(...colsOf(b))) continue;
+        // "Between the mop and bucket, and the pet bowl": a comma when the first name has its own "and".
         statements.push({
-          text: `Between ${the(a)} and ${the(b)}`,
+          text: `Between ${the(a)}${the(a).includes(' and ') ? ',' : ''} and ${the(b)}`,
           truth: Math.max(...colsOf(a)) < at && Math.min(...colsOf(b)) > at,
           landmarks: [a, b],
         });
@@ -344,8 +350,8 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         add('where', group, { type: 'position', subject: item.kind, prompt, options: withDistractors(answer, opposite, recipe.places!, rng) });
         // The landmark version too (the round still asks at most one "where").
         if (nextTo) add('beside', group, { type: 'position', subject: item.kind, prompt, options: withDistractors(nextTo.answer, nextTo.wrong, nextTo.fallback, rng) });
-      } else if (nextTo || !recipe.places) {
-        // A room that names its places never falls back to left / middle / right: with no landmark, no "where".
+      } else if (nextTo || recipe.sides !== false) {
+        // A place without sides (`sides: false`) never falls back to left / middle / right: with no landmark, no "where".
         add('where', group, {
           type: 'position',
           subject: item.kind,
@@ -369,9 +375,9 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     const fits = (i: ItemDef) => i.kind !== item.kind && (!plural || canBeSeveral(i));
     // Never something hiding in the picture (a crab under the beach towel): it could really be there.
     const sameZoneKinds = recipe.items.filter((i) => fits(i) && i.zones.includes(zone.id) && !spec.details?.alsoSeen?.includes(i.kind));
-    // A room that names its places only asks this with a landmark ("above the armchair"): "on the wall, in the
-    // middle" alone was too hard to place.
-    if (!spread && !sharesSpot && (landmark || !recipe.places)) add('what-here', group, {
+    // A place without sides (`sides: false`) only asks this with a landmark ("above the armchair"): "on the wall, in
+    // the middle" alone was too hard to place.
+    if (!spread && !sharesSpot && (landmark || recipe.sides !== false)) add('what-here', group, {
       type: 'object',
       subject: item.kind,
       prompt: landmark ? `What was ${cell.replace(', ', ' ')}, above ${landmark}?` : `What was ${cell}?`,

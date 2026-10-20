@@ -597,6 +597,8 @@ const PALETTES: Record<string, Palette> = {
 
 export const farm: Recipe = {
   id: 'farm',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'On the farm',
   zones: [
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: HILLS, rows: 1 },

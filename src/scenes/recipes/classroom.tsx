@@ -692,6 +692,8 @@ function surfaceAt(_x: number, y: number): string {
 
 export const classroom: Recipe = {
   id: 'classroom',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'In the classroom',
   zones: [
     { id: 'ceiling', label: 'On the ceiling', surface: 'air', top: 0, bottom: CEILING, rows: 0 },

@@ -760,6 +760,8 @@ function surfaceAt(_x: number, y: number): string {
 
 export const supermarket: Recipe = {
   id: 'supermarket',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'In the supermarket',
   zones: [
     // Signs only (backdrop): nothing else hangs here.

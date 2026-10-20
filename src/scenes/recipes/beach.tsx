@@ -455,6 +455,8 @@ const PALETTES: Record<string, Palette> = {
 
 export const beach: Recipe = {
   id: 'beach',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'At the beach',
   zones: [
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: HORIZON, rows: 2 },
