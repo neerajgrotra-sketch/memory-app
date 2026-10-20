@@ -111,6 +111,8 @@ interface Want {
   colour?: string | string[];
   /** On the rug or off it (laying out again): a fact the questions ask about. */
   onRug?: PlacedGroup['onRug'];
+  /** For things that spread out (laying out again): the third each copy stands in, left to right, kept as it was. */
+  spreadCols?: number[];
 }
 
 /** Whether every copy is on the recipe's rug, none is, or some are (undefined without a rug). */
@@ -183,10 +185,12 @@ function placeSpread(ctx: Context, want: Want): Placement | null {
   const cellsOf = (c: number) => usedRows.map((r) => cellKey(zone.id, c, r));
   const free = [0, 1, 2].filter((c) => cellsOf(c).every((k) => !ctx.cells.has(k)) && fitsHere(ctx, item, zone, c));
   if (free.length < count) return null;
+  // Laying out again: each copy stays in its third, so "between the table lamps" stays true.
+  if (want.spreadCols && !want.spreadCols.every((c) => free.includes(c))) return null;
 
   for (let attempt = 0; attempt < JITTERS * 4; attempt++) {
     // Two copies go at opposite ends (left and right thirds) when both are free, as far apart as possible.
-    const cols = count === 2 && free.includes(0) && free.includes(2) && attempt < JITTERS * 2 ? [0, 2] : rng.shuffle(free).slice(0, count).sort();
+    const cols = want.spreadCols ?? (count === 2 && free.includes(0) && free.includes(2) && attempt < JITTERS * 2 ? [0, 2] : rng.shuffle(free).slice(0, count).sort());
     const y0 = verticalSpot(ctx, item, zone, row.top, row.bottom, h);
     if (y0 === null) return null;
     // Each copy stands near the middle of its third, so neighbours never end up side by side at a boundary.
@@ -471,6 +475,7 @@ export function relayoutScene(spec: SceneSpec, size: SceneSize): SceneSpec | nul
         col: spread ? undefined : REGIONS.indexOf(group.region),
         colour: group.colours ? group.colours.map((c) => c.hex) : group.colour?.hex,
         onRug: group.onRug,
+        spreadCols: spread ? group.boxes.map((b) => REGIONS.indexOf(regionOf(b.x + b.w / 2))) : undefined,
       });
       if (!placed) break;
       commit(ctx, placed);

@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.1.4 (2026-10-20)
+
+- **"Where was it?" next to a landmark.** Testers said left, middle and right are hard to judge on a small iPhone. When something stands against the wall or tall nearby (table lamps, a floor lamp, the TV, a bookshelf, an armchair, a plant), the answers say where the thing was next to it: **"To the left of the table lamps"**, **"Between the table lamps"**, **"To the right of the armchair"**. The wrong answers are the false statements, about the same landmark first. It's worked out from thirds of the picture, and a landmark in the same third as the thing is left out, since "left of" would be a guess there. Used for about one in eight "where" questions in the living room, and also in the park ("Between the trees"), the classroom ("To the left of the teacher"), the campsite and the snowy mountain. The rest keep "On the floor, on the left".
+- **Pairs keep their places.** When a picture is laid out again for another screen, each copy of a pair (table lamps, trees) now stays in its third, so "Between the table lamps" stays true. Re-layouts kept every landmark answer in testing.
+
 ## 4.1.3 (2026-10-20)
 
 - **"On the carpet", not "on the floor".** Testers saw the dogs on the carpet, but "Where were the dogs?" said "On the floor, in the middle". Things on the living room's rug are now "On the carpet", and "On the carpet" is a wrong answer for things off it. Each group records whether it's on the carpet, and laying the picture out again for another screen keeps that, so the answer holds on every phone.

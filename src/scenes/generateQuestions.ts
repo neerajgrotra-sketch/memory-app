@@ -161,6 +161,42 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     return below.length === 1 && alone(below[0]) && !(itemOf(below[0].kind).spread && below[0].count > 1) ? below[0] : undefined;
   };
   const the = (g: PlacedGroup) => `the ${g.count > 1 ? itemOf(g.kind).plural : itemOf(g.kind).singular}`;
+  const COL: Record<Region, number> = { left: 0, centre: 1, right: 2 };
+  /**
+   * Where a thing was next to a landmark in its own band: furniture against the wall or a tall thing (a lamp, the TV,
+   * a bookshelf, a plant), never a wide one (a sofa reaches into the next third). By thirds, which never change when
+   * the picture is laid out again (copies of a pair keep theirs too): "To the left of the table lamps" when every
+   * copy is in a third to its right, "Between the table lamps" when copies are on both sides. A landmark sharing the
+   * thing's third says nothing for sure, so it's left out. One true statement is the answer; false ones about the
+   * same landmark are the best wrong answers. Null when there are too few.
+   */
+  const besideLandmark = (group: PlacedGroup): { answer: string; wrong: string[]; fallback: string[] } | null => {
+    const at = COL[group.region];
+    const landmarks = spec.groups.filter((g) => {
+      const it = itemOf(g.kind);
+      return g !== group && g.zoneId === group.zoneId && (it.backRow || it.tall) && !isWide(g) && ![...sidesOf(g)].some((r) => COL[r] === at);
+    });
+    // Every statement is believable to the eye (a thing can stand just right of a lamp in the right-hand third), so
+    // all three are offered for each landmark; truth comes from the thirds.
+    const statements = landmarks.flatMap((g) => {
+      const cols = [...sidesOf(g)].map((r) => COL[r]);
+      const facts = [
+        { text: `To the left of ${the(g)}`, truth: cols.every((c) => c > at), landmark: g },
+        { text: `To the right of ${the(g)}`, truth: cols.every((c) => c < at), landmark: g },
+      ];
+      if (g.count > 1) facts.push({ text: `Between ${the(g)}`, truth: Math.min(...cols) < at && Math.max(...cols) > at, landmark: g });
+      return facts;
+    });
+    const truths = statements.filter((s) => s.truth);
+    if (!truths.length) return null;
+    // A pair of landmarks first ("between the table lamps" was what players asked for), then any.
+    const pick = rng.pick(truths.filter((s) => s.landmark.count > 1).length ? truths.filter((s) => s.landmark.count > 1) : truths);
+    const falses = statements.filter((s) => !s.truth);
+    const same = falses.filter((s) => s.landmark === pick.landmark).map((s) => s.text);
+    const others = falses.filter((s) => s.landmark !== pick.landmark).map((s) => s.text);
+    if (same.length + others.length < 2) return null;
+    return { answer: pick.text, wrong: same, fallback: others };
+  };
   // The rug, when the recipe has one: things on it are "On the carpet", never "On the floor".
   const rug = recipe.rug;
   const rugZone = rug ? recipe.zones.find((z) => z.surface === 'ground')?.id : undefined;
@@ -230,12 +266,17 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     const onRugBand = rug && group.zoneId === rugZone;
     const rugAnswer = onRugBand && group.onRug === 'all';
     const rugOption = onRugBand && !item.avoidRug ? [rug.label] : [];
+    // Next to a landmark, when there is one: "To the left of the table lamps" is easier to judge on a small screen
+    // than "on the left". Only for things not on the rug (that's "On the carpet").
+    const nextTo = rugAnswer ? null : besideLandmark(group);
     if (!spread && !(onRugBand && group.onRug === 'some')) add('where', group, {
       type: 'position',
       subject: item.kind,
       prompt: plural ? `Where were the ${item.plural}?` : `Where was the ${item.singular}?`,
       // Only places this thing could really be ("In the sky" is never offered for a dog).
-      options: withDistractors(rugAnswer ? rug.label : cellLabel(zone, group.region), [...sameZoneCells, ...rugOption], [], rng),
+      options: nextTo
+        ? withDistractors(nextTo.answer, nextTo.wrong, nextTo.fallback, rng)
+        : withDistractors(rugAnswer ? rug.label : cellLabel(zone, group.region), [...sameZoneCells, ...rugOption], [], rng),
     });
 
     // Only ask "what was on the left…" when exactly one kind of thing is there (and it isn't on the rug: that's

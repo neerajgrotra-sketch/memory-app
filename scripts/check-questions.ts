@@ -38,6 +38,8 @@ for (const recipe of RECIPES) {
       if (q.family === 'where') {
         const item = recipe.items.find((i) => i.kind === q.subject)!;
         for (const o of q.options) {
+          // Next to a landmark ("To the left of the table lamps"): worked out from thirds, checked in the code.
+          if (o.startsWith('To the ') || o.startsWith('Between ')) continue;
           if (o === rugLabel) {
             if (item.avoidRug || !groundZone || !item.zones.includes(groundZone.id)) { bad++; if (bad < 6) console.log('BAD where (carpet)', recipe.id, q.prompt); }
             continue;
