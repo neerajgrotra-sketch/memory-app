@@ -10,6 +10,18 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.1.0 (2026-10-20)
+
+A wider range of questions in the living room, built so other places can use the same ideas.
+
+- **What's on the television.** The TV shows a cartoon, a football match, fish swimming, or nothing (it's off, with a red power light). "What was on the television?" from Level 8; all four answers happen.
+- **Floor lamps on or off.** A lamp that's on has a warm glow and light spilling down. With one lamp, "Was the floor lamp on or off?"; with two, "Which floor lamp was on?" (left, right, both or neither, like the beach's coconuts). From Level 8. The shade colour is still asked about as before.
+- **Pets playing.** One cat plays with a ball of yarn, a toy mouse or a feather; one dog with a bone, a rope toy or a slipper. "What was the cat playing with?" from Level 8. The dog never gets a ball, since balls are things you can be asked to count. Toys are drawn 1.4 times bigger, so they can be made out on a phone.
+- **Books on the shelves.** From Level 14, with one bookshelf, each shelf holds 1 to 5 books, and "How many books were on the middle shelf?" asks about one of them. Only with one bookshelf, since "the middle shelf" would be ambiguous with two.
+- **A cat hiding.** From Level 20, a cat hides behind the sofa (its head over the back) or behind the potted plant (peeking out towards the middle of the picture), and the round opens with "Where was the cat hiding?". Less of it shows from Level 25. It only hides when there's no cat in the room. A dog was tried and dropped: its head is barely higher than its back, so it looked to be lying on top of the sofa.
+- **Spills.** Two new things on the floor: a box of crayons spilled across it, and a knocked-over mug with water running out into a puddle with splash drops ("What colour was the spilled cup?"). The first drawing of the cup didn't read as a spill, so it was redrawn: a mug with a handle, tipped mouth-down, and a flat, uneven puddle. Both join the usual questions: in / not in the picture, where, and so on.
+- Details now know when counting gets harder (`closeCounts` in `DetailKnobs`, from Level 14), for counts like the books on a shelf. The plant pot is no longer drawn mirrored, so the hiding cat peeks out of the side chosen.
+
 ## 4.0.20 (2026-10-20)
 
 - **Red and orange are never in the same question.** Even with the new red, telling red from orange from memory on a phone is the hardest colour call, so a colour question never offers both:

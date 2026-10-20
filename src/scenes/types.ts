@@ -269,6 +269,8 @@ export interface DetailKnobs {
   clockStep: ClockStep;
   /** Animals hiding in the picture: 0 none, 1 a clear peek (head and ears), 2 a small one (ears and eyes). */
   hidden?: 0 | 1 | 2;
+  /** Harder counting (from Level 14): details may add counts that need a careful look, like books on one shelf. */
+  closeCounts?: boolean;
 }
 
 /** A setting: its bands, backdrop and the things that belong in it. */

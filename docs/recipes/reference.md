@@ -157,7 +157,7 @@ Per-picture details: three houses with different named colours and rising house 
 
 Rug: an oval centred at 50% across, 80% down, 72% wide and 18% of the height tall.
 
-Per-picture details: "What time was on the clock?" (when there's a wall-clock) on every level.
+Per-picture details: "What time was on the clock?" (when there's a wall-clock) on every level; "What was on the television?" (when there's a tv).
 
 ### Colour schemes
 
@@ -167,7 +167,7 @@ Per-picture details: "What time was on the clock?" (when there's a wall-clock) o
 | blue | wall `#cfe0ec`, ceiling `#eef4f8`, floor `#d4b48c`, plank `#86663f`, rug `#f6efe0`, rugEdge `#9c6644` |
 | sage | wall `#dce5d1`, ceiling `#f1f5ec`, floor `#c9a47a`, plank `#7d5d38`, rug `#f4e6ea`, rugEdge `#9d4e6a` |
 
-### Things (17)
+### Things (19)
 
 | Thing | Band | Size | Most | Colours | Habits |
 | --- | --- | --- | --- | --- | --- |
@@ -188,6 +188,8 @@ Per-picture details: "What time was on the clock?" (when there's a wall-clock) o
 | teddy bear | floor | small 11% | 3 | fixed (`#a0612b`) | – |
 | toy car | floor | small 11% | 4 | Red, Blue, Yellow, Green, Orange | – |
 | pile of books | floor | small 12% | 3 | fixed (`#1d70d6`) | never on the rug |
+| box of crayons | floor | medium 17% | 1 | fixed (`#ffd60a`) | one only, not counted |
+| spilled cup | floor | medium 17% | 1 | Red, Blue, Green, Purple, Pink | never on the rug |
 
 ## In the park (`park`)
 

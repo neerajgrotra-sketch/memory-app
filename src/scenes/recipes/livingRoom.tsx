@@ -2,9 +2,10 @@ import { Circle, Ellipse, G, Path, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
 import { ClockFace, randomTime, timeLookalikes } from '../clock';
+import { shade } from '../contrast';
 import { ball, dog, plantPot } from '../items/common';
 import { lineMarks } from '../marks';
-import type { DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, Rug, SceneDetails } from '../types';
+import type { DetailKnobs, ItemDef, Mark, PlacedGroup, Recipe, Rect as Box, Rug, SceneDetails } from '../types';
 import type { Rng } from '../random';
 import { speckles } from '../texture';
 
@@ -149,8 +150,10 @@ const items: ItemDef[] = [
     maxCount: 1,
     avoidRug: true,
     colours: [C.red, C.blue, C.green, C.grey, C.yellow, C.purple, C.brown],
-    draw: (colour) => (
+    // A pet can hide behind it on harder levels, peeking over the back (see `fitDetails`).
+    draw: (colour, details) => (
       <G>
+        {hidingPet('sofa', details)}
         <Rect x={20} y={0} width={190} height={70} rx={16} fill={colour} />
         <Rect x={0} y={40} width={40} height={70} rx={12} fill={colour} />
         <Rect x={190} y={40} width={40} height={70} rx={12} fill={colour} />
@@ -219,10 +222,16 @@ const items: ItemDef[] = [
     avoidRug: true,
     colours: [C.red, C.blue, C.yellow, C.green, C.white, C.orange],
     colourPrompt: (plural) => (plural ? 'What colour were the lampshades?' : 'What colour was the lampshade?'),
-    draw: (colour) => (
+    // On or off per picture (see `fitDetails`); on when drawn on its own.
+    draw: (colour, details, _copy, index = 0) => (
       <G>
-        {/* A warm glow under the shade. */}
-        <Ellipse cx={40} cy={74} rx={34} ry={12} fill="#fff3bf" fillOpacity={0.7} stroke="none" />
+        {lampIsOn(details, index) && (
+          <G stroke="none">
+            {/* Light spilling down from the shade, and a warm glow under it. */}
+            <Path d="M4,64 H76 L80,222 H0 Z" fill="#fff3bf" fillOpacity={0.35} />
+            <Ellipse cx={40} cy={74} rx={34} ry={12} fill="#fff3bf" fillOpacity={0.9} />
+          </G>
+        )}
         <Rect x={36} y={60} width={8} height={160} fill="#495057" stroke="none" />
         <Rect x={34} y={120} width={12} height={6} rx={2} fill="#343a40" stroke="none" />
         <Ellipse cx={40} cy={224} rx={30} ry={6} fill="#495057" stroke="none" />
@@ -249,7 +258,8 @@ const items: ItemDef[] = [
     avoidRug: true,
     tone: '#212529',
     countable: false,
-    draw: () => (
+    // What's on the screen is chosen per picture (see `details`): off, a cartoon, football or fish.
+    draw: (_colour, details) => (
       <G>
         <Rect x={20} y={100} width={130} height={40} fill="#8b5a2b" stroke="#4a2f16" />
         <G stroke="none">
@@ -259,19 +269,32 @@ const items: ItemDef[] = [
           <Circle cx={92} cy={120} r={3} fill="#e9c46a" />
         </G>
         <Rect x={0} y={0} width={170} height={100} rx={6} fill="#212529" />
-        <Rect x={8} y={8} width={154} height={84} fill="#4dabf7" stroke="none" />
         <G stroke="none">
-          {/* A cartoon on the screen: hills and the sun, then a glare across the glass. */}
-          <Path d="M8,92 V66 Q46,44 86,64 Q120,48 162,62 V92 Z" fill="#74c69d" />
-          <Circle cx={128} cy={30} r={11} fill="#ffd93b" />
+          {tvScreen(details?.values?.tv ?? 'cartoon')}
+          {/* A glare across the glass, and the power light: red when off, green when on. */}
           <Path d="M14,12 L60,12 L24,60 L14,60 Z" fill="#ffffff" fillOpacity={0.18} />
-          <Circle cx={160} cy={95} r={2} fill="#ff6b6b" />
+          <Circle cx={160} cy={95} r={2} fill={details?.values?.tv === 'off' ? '#ff6b6b' : '#51cf66'} />
         </G>
       </G>
     ),
   },
   // Plants stand along the wall, never out in the room or on the rug.
-  { ...plantPot, zones: FLOOR_ZONE, maxCount: 3, avoidRug: true, backRow: true, spread: true },
+  // A pet can hide behind one on harder levels (see `fitDetails`).
+  {
+    ...plantPot,
+    zones: FLOOR_ZONE,
+    maxCount: 3,
+    avoidRug: true,
+    backRow: true,
+    spread: true,
+    noFlip: true,
+    draw: (colour, details) => (
+      <G>
+        {hidingPet('plant', details)}
+        {plantPot.draw(colour)}
+      </G>
+    ),
+  },
   {
     kind: 'bookshelf',
     singular: 'bookshelf',
@@ -287,20 +310,16 @@ const items: ItemDef[] = [
     maxCount: 2,
     avoidRug: true,
     tone: '#8b5a2b',
-    draw: () => (
+    // How many books stand on each shelf is chosen per picture on harder levels (see `fitDetails`); 5 otherwise.
+    draw: (_colour, details) => (
       <G>
         <Rect x={0} y={0} width={120} height={200} fill="#8b5a2b" />
         <G stroke="none">
           {[0, 1, 2].map((shelf) => (
             <G key={shelf}>
               <Rect x={8} y={8 + shelf * 64} width={104} height={56} fill="#5c3d1e" />
-              <Rect x={14} y={20 + shelf * 64} width={14} height={44} fill={['#e63946', '#1d70d6', '#2b9348'][shelf]} />
-              <Rect x={30} y={26 + shelf * 64} width={12} height={38} fill="#ffd60a" />
-              <Rect x={44} y={18 + shelf * 64} width={16} height={46} fill={['#7b2cbf', '#f77f00', '#e63946'][shelf]} />
-              <Rect x={62} y={24 + shelf * 64} width={10} height={40} fill={['#2b9348', '#e63946', '#1d70d6'][shelf]} />
-              {/* A leaning book, then spine bands and a shelf edge catching the light. */}
-              <Path d={`M76,${64 + shelf * 64} L92,${30 + shelf * 64} L102,${34 + shelf * 64} L86,${64 + shelf * 64} Z`} fill={['#f77f00', '#7b2cbf', '#ffd60a'][shelf]} />
-              <Path d={`M14,${28 + shelf * 64} H28 M30,${34 + shelf * 64} H42 M44,${26 + shelf * 64} H60 M62,${32 + shelf * 64} H72`} stroke="#ffffff" strokeOpacity={0.5} strokeWidth={2} />
+              {shelfBooks(shelf, booksOn(details, shelf))}
+              {/* The shelf edge catching the light. */}
               <Rect x={8} y={64 + shelf * 64} width={104} height={4} fill="#ffffff" fillOpacity={0.15} />
             </G>
           ))}
@@ -321,7 +340,8 @@ const items: ItemDef[] = [
     zones: FLOOR_ZONE,
     maxCount: 3,
     colours: [C.orange, C.black, C.grey, C.white],
-    draw: (colour) => (
+    // Playing with a toy, chosen per picture (see `fitDetails`).
+    draw: (colour, details) => (
       <G>
         <Path d="M72,60 C95,55 92,25 80,20" fill="none" stroke={colour} strokeWidth={9} strokeLinecap="round" />
         <Ellipse cx={45} cy={56} rx={32} ry={19} fill={colour} />
@@ -338,10 +358,11 @@ const items: ItemDef[] = [
           <Path d="M20,37 H24 L22,40 Z" fill="#e5737a" />
           <Path d="M18,40 L2,37 M18,42 L3,44 M26,40 L42,37 M26,42 L41,44" stroke="#495057" strokeOpacity={0.6} strokeWidth={1.2} />
         </G>
+        {petToy('cat', details)}
       </G>
     ),
   },
-  { ...dog, zones: FLOOR_ZONE, maxCount: 2 },
+  { ...dog, zones: FLOOR_ZONE, maxCount: 2, draw: (colour, details) => <G>{dog.draw(colour)}{petToy('dog', details)}</G> },
   { ...ball, zones: FLOOR_ZONE, maxCount: 3 },
   {
     kind: 'cushion',
@@ -463,6 +484,84 @@ const items: ItemDef[] = [
       </G>
     ),
   },
+  {
+    // Spills: something knocked over on the floor, for "Which of these was in the picture?" and the like.
+    kind: 'crayons',
+    singular: 'box of crayons',
+    plural: 'boxes of crayons',
+    article: 'a',
+    w: 110,
+    h: 50,
+    // Big enough to make out the crayons on a phone.
+    tier: 'medium',
+    size: 0.17,
+    zones: FLOOR_ZONE,
+    maxCount: 1,
+    countable: false,
+    tone: '#ffd60a',
+    draw: () => (
+      <G>
+        {/* The box on its side with crayons spilled out of it across the floor. */}
+        <Path d="M0,22 L34,14 L42,46 L8,50 Z" fill="#ffd60a" />
+        <Path d="M34,14 L42,46 L50,38 L44,10 Z" fill="#e0b800" />
+        {/* Thick crayons with pointed tips, each outlined in its own darker colour so it isn't muddied. */}
+        {[
+          ['#d00000', 'M48,36 L76,30 L78,40 L50,46 Z M76,30 L84,34 L78,40 Z'],
+          ['#1d70d6', 'M54,18 L82,22 L81,32 L53,28 Z M82,22 L90,28 L81,32 Z'],
+          ['#2b9348', 'M58,44 L88,44 L88,54 L58,54 Z M88,44 L96,49 L88,54 Z'],
+          ['#7b2cbf', 'M78,10 L102,2 L105,11 L81,19 Z M102,2 L110,4 L105,11 Z'],
+        ].map(([fill, d]) => (
+          <Path key={d} d={d} fill={fill} stroke={shade(fill)} />
+        ))}
+        <Path d="M6,30 L36,23 M9,40 L38,34" stroke="#ffffff" strokeOpacity={0.5} strokeWidth={2} />
+      </G>
+    ),
+  },
+  {
+    kind: 'spilled-cup',
+    singular: 'spilled cup',
+    plural: 'spilled cups',
+    article: 'a',
+    w: 110,
+    h: 46,
+    tier: 'medium',
+    size: 0.17,
+    zones: FLOOR_ZONE,
+    maxCount: 1,
+    // Off the rug: a puddle there would barely show.
+    avoidRug: true,
+    colours: [C.red, C.blue, C.green, C.purple, C.pink],
+    colourPrompt: () => 'What colour was the spilled cup?',
+    draw: (colour) => (
+      <G>
+        {/* An uneven puddle with splash drops, wider than the mug, so it reads as spilled water. */}
+        <Path
+          d="M30,38 C32,32 44,30 54,32 C62,27 80,28 88,31 C100,29 112,34 108,40 C112,45 98,48 88,46 C74,49 56,49 46,46 C36,47 28,43 30,38 Z"
+          fill="#74c0fc"
+          stroke="#1c7ed6"
+        />
+        <G stroke="none">
+          <Path d="M56,36 Q70,32 88,35" fill="none" stroke="#ffffff" strokeOpacity={0.8} strokeWidth={3} strokeLinecap="round" />
+          <Path d="M66,42 Q76,40 84,41" fill="none" stroke="#ffffff" strokeOpacity={0.6} strokeWidth={2} strokeLinecap="round" />
+        </G>
+        <G fill="#74c0fc" stroke="#1c7ed6">
+          <Circle cx={100} cy={22} r={3.5} />
+          <Circle cx={110} cy={28} r={2.5} />
+          <Circle cx={78} cy={22} r={2.5} />
+        </G>
+        {/* The mug knocked over, tipped mouth-down into the puddle, its handle sticking up by its closed end. */}
+        <G transform="rotate(14 42 30)">
+          <Path d="M8,18 C2,4 20,0 22,16" fill="none" stroke={colour} strokeWidth={6} strokeLinecap="round" />
+          <Rect x={4} y={16} width={38} height={28} rx={5} fill={colour} />
+          <Ellipse cx={42} cy={30} rx={6} ry={14} fill={colour} />
+          <Ellipse cx={42} cy={30} rx={4} ry={11} fill="#1c3d5a" fillOpacity={0.7} stroke="none" />
+          <Path d="M8,22 H36" stroke="#ffffff" strokeOpacity={0.45} strokeWidth={3} strokeLinecap="round" />
+        </G>
+        {/* Water running out of the mug's mouth. */}
+        <Path d="M42,32 C48,32 50,36 56,36 L48,44 C44,40 43,38 42,38 Z" fill="#74c0fc" stroke="none" />
+      </G>
+    ),
+  },
 ];
 
 type Palette = Record<'wall' | 'ceiling' | 'floor' | 'plank' | 'rug' | 'rugEdge', string>;
@@ -523,14 +622,300 @@ const PALETTES: Record<string, Palette> = {
   sage: { wall: '#dce5d1', ceiling: '#f1f5ec', floor: '#c9a47a', plank: '#7d5d38', rug: '#f4e6ea', rugEdge: '#9d4e6a' },
 };
 
-/** The time on the clock: something to remember whenever the clock is in the picture, on every level. */
-function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
+/** What can be on the television, and how the answer says it. All four happen, so none can be ruled out. */
+const TV_SHOWS: Record<string, string> = {
+  off: 'Nothing, it was off',
+  cartoon: 'A cartoon',
+  football: 'A football match',
+  fish: 'Fish swimming',
+};
+
+/** The picture on the television screen (154 × 84, at 8,8). */
+function tvScreen(show: string) {
+  switch (show) {
+    case 'off':
+      return <Rect x={8} y={8} width={154} height={84} fill="#343a40" />;
+    case 'football':
+      return (
+        <G>
+          <Rect x={8} y={8} width={154} height={84} fill="#2f9e44" />
+          <Path d="M8,30 H162 M8,60 H162" stroke="#37b24d" strokeWidth={14} />
+          <Path d="M85,8 V92 M8,8 H162 V92 H8 Z" fill="none" stroke="#ffffff" strokeWidth={2.5} />
+          <Circle cx={85} cy={50} r={14} fill="none" stroke="#ffffff" strokeWidth={2.5} />
+          <Circle cx={118} cy={62} r={6} fill="#ffffff" />
+          <Path d="M115,60 L121,64 M121,60 L115,64" stroke="#212529" strokeWidth={1.5} />
+        </G>
+      );
+    case 'fish':
+      return (
+        <G>
+          <Rect x={8} y={8} width={154} height={84} fill="#1c7ed6" />
+          <Path d="M8,92 V80 Q30,72 50,82 Q80,70 110,80 Q140,72 162,80 V92 Z" fill="#e9c46a" />
+          <Path d="M30,88 Q26,70 32,56 M36,88 Q42,74 38,62" fill="none" stroke="#2b9348" strokeWidth={3} />
+          {[
+            [70, 36, '#ff922b'],
+            [118, 54, '#ffd43b'],
+            [96, 26, '#ff6b6b'],
+          ].map(([x, y, fill]) => (
+            <G key={String(x)}>
+              <Ellipse cx={Number(x)} cy={Number(y)} rx={11} ry={7} fill={String(fill)} />
+              <Path d={`M${Number(x) + 9},${y} l9,-6 v12 Z`} fill={String(fill)} />
+              <Circle cx={Number(x) - 5} cy={Number(y) - 1} r={1.6} fill="#111" />
+            </G>
+          ))}
+        </G>
+      );
+    default:
+      // A cartoon: hills and the sun.
+      return (
+        <G>
+          <Rect x={8} y={8} width={154} height={84} fill="#4dabf7" />
+          <Path d="M8,92 V66 Q46,44 86,64 Q120,48 162,62 V92 Z" fill="#74c69d" />
+          <Circle cx={128} cy={30} r={11} fill="#ffd93b" />
+        </G>
+      );
+  }
+}
+
+/** Whether the floor lamp at `index` (0 the left one) is on: `lamps` is on/off for one lamp, or which of two. */
+function lampIsOn(details: SceneDetails | undefined, index: number): boolean {
+  const lamps = details?.values?.lamps;
+  if (!lamps || lamps === 'on' || lamps === 'both') return true;
+  if (lamps === 'off' || lamps === 'none') return false;
+  return lamps === (index === 0 ? 'left' : 'right');
+}
+
+/** Book spines on a shelf, left to right (the last one leans), with their colours per shelf. */
+const BOOK_SLOTS: { d: (y: number) => string; band?: (y: number) => string; fills: string[] }[] = [
+  { d: (y) => `M14,${y + 20} H28 V${y + 64} H14 Z`, band: (y) => `M14,${y + 28} H28`, fills: ['#d00000', '#1d70d6', '#2b9348'] },
+  { d: (y) => `M30,${y + 26} H42 V${y + 64} H30 Z`, band: (y) => `M30,${y + 34} H42`, fills: ['#ffd60a', '#ffd60a', '#ffd60a'] },
+  { d: (y) => `M44,${y + 18} H60 V${y + 64} H44 Z`, band: (y) => `M44,${y + 26} H60`, fills: ['#7b2cbf', '#f77f00', '#d00000'] },
+  { d: (y) => `M62,${y + 24} H72 V${y + 64} H62 Z`, band: (y) => `M62,${y + 32} H72`, fills: ['#2b9348', '#d00000', '#1d70d6'] },
+  { d: (y) => `M76,${y + 64} L92,${y + 30} L102,${y + 34} L86,${y + 64} Z`, fills: ['#f77f00', '#7b2cbf', '#ffd60a'] },
+];
+
+/** How many books stand on `shelf` (0 the top one): chosen per picture on harder levels, else all five. */
+function booksOn(details: SceneDetails | undefined, shelf: number): number {
+  const counts = details?.values?.shelves?.split(',').map(Number);
+  return counts?.[shelf] ?? BOOK_SLOTS.length;
+}
+
+/** The first `count` books on a shelf, each clear of the next so they can be counted. */
+function shelfBooks(shelf: number, count: number) {
+  const y = shelf * 64;
+  return BOOK_SLOTS.slice(0, count).map((slot, i) => (
+    <G key={i}>
+      <Path d={slot.d(y)} fill={slot.fills[shelf]} />
+      {slot.band && <Path d={slot.band(y)} stroke="#ffffff" strokeOpacity={0.5} strokeWidth={2} />}
+    </G>
+  ));
+}
+
+/** What a pet can be playing with, and how the answer says it. */
+const PET_TOYS: Record<'cat' | 'dog', Record<string, string>> = {
+  cat: { yarn: 'A ball of yarn', mouse: 'A toy mouse', feather: 'A feather' },
+  dog: { bone: 'A bone', rope: 'A rope toy', slipper: 'A slipper' },
+};
+
+/** The toy by the pet's front paws (cat: in front of its face, on the left; dog: under its head, on the right). */
+function petToy(animal: 'cat' | 'dog', details?: SceneDetails) {
+  const toy = details?.values?.[`${animal}Toy`];
+  if (!toy) return null;
+  // Drawn 1.4 times bigger around where it lies, so it can be made out on a phone.
+  const [ax, ay] = animal === 'cat' ? [8, 66] : [90, 68];
+  return <G transform={`translate(${ax} ${ay}) scale(1.4) translate(${-ax} ${-ay})`}>{toyDrawing(toy)}</G>;
+}
+
+function toyDrawing(toy: string) {
+  switch (toy) {
+    case 'yarn':
+      return (
+        <G>
+          <Path d="M14,68 Q30,76 44,70" fill="none" stroke="#e64980" strokeWidth={2} />
+          <Circle cx={8} cy={64} r={10} fill="#ff5fa2" stroke="#a61e4d" />
+          <Path d="M1,60 Q8,54 15,62 M2,68 Q9,62 16,70" fill="none" stroke="#a61e4d" strokeWidth={1.5} />
+        </G>
+      );
+    case 'mouse':
+      return (
+        <G stroke="#495057">
+          <Path d="M16,70 Q26,76 34,70" fill="none" strokeWidth={2} />
+          <Ellipse cx={8} cy={68} rx={10} ry={6} fill="#ced4da" />
+          <Circle cx={2} cy={62} r={3.5} fill="#ffadc6" />
+          <Circle cx={0} cy={68} r={1.2} fill="#111" stroke="none" />
+        </G>
+      );
+    case 'feather':
+      return (
+        <G>
+          <Path d="M-6,70 C2,54 18,50 30,52 C20,60 8,68 -6,70 Z" fill="#4dabf7" stroke="#1864ab" />
+          <Path d="M-6,70 Q14,60 30,52" fill="none" stroke="#1864ab" strokeWidth={1.5} />
+        </G>
+      );
+    case 'bone':
+      return (
+        <G fill="#f8f9fa" stroke="#868e96">
+          <Rect x={76} y={64} width={26} height={7} rx={3} />
+          <Circle cx={76} cy={64} r={4.5} />
+          <Circle cx={76} cy={71} r={4.5} />
+          <Circle cx={102} cy={64} r={4.5} />
+          <Circle cx={102} cy={71} r={4.5} />
+        </G>
+      );
+    case 'rope':
+      return (
+        <G>
+          <Path d="M78,68 H104" stroke="#e03131" strokeWidth={7} strokeLinecap="round" />
+          <Path d="M82,64 L86,72 M90,64 L94,72 M98,64 L102,72" stroke="#ffffff" strokeWidth={2} />
+          <Circle cx={76} cy={68} r={5} fill="#e03131" stroke="#a61e1e" />
+          <Circle cx={106} cy={68} r={5} fill="#e03131" stroke="#a61e1e" />
+        </G>
+      );
+    default:
+      // A slipper.
+      return (
+        <G>
+          <Path d="M74,72 C72,62 86,60 100,62 C110,63 110,72 100,74 Z" fill="#4dabf7" stroke="#1864ab" />
+          <Path d="M88,62 C90,68 98,70 104,68" fill="none" stroke="#1864ab" strokeWidth={1.5} />
+        </G>
+      );
+  }
+}
+
+/**
+ * Where a cat can hide on harder levels (one of each in the picture): over the back of the sofa, or beside the
+ * potted plant. Not a dog: its head is barely higher than its back, so a dog peeking over the sofa looked to be
+ * lying on top of it, and it's bigger than the pot. Where the cat's top-left corner goes and how big it's drawn, in
+ * the spot's own units, so it's the same size as the cats in the room; drawn before the spot, so the spot covers
+ * the rest. A clear peek shows its head; a small one its ears and eyes.
+ */
+const PET_SPOTS: Record<string, { name: string; animals: ('cat' | 'dog')[]; w: number; scale: Record<string, number>; clear: Record<string, [number, number]>; small: Record<string, [number, number]> }> = {
+  sofa: { name: 'Behind the sofa', animals: ['cat'], w: 230, scale: { cat: 0.7 }, clear: { cat: [140, -34] }, small: { cat: [140, -26] } },
+  plant: { name: 'Behind the potted plant', animals: ['cat'], w: 80, scale: { cat: 0.82 }, clear: { cat: [-28, 49] }, small: { cat: [-16, 49] } },
+};
+
+/** The hiding pet, behind the thing at `spot` when the picture's details put it there. */
+function hidingPet(spot: string, details?: SceneDetails) {
+  const v = details?.values;
+  if (!v || v.petSpot !== spot || !v.pet) return null;
+  const animal = v.pet as 'cat' | 'dog';
+  const def = PET_SPOTS[spot];
+  const s = def.scale[animal];
+  const [x0, y] = v.peek === '2' ? def.small[animal] : def.clear[animal];
+  const item = animal === 'cat' ? items.find((i) => i.kind === 'cat')! : dog;
+  // Beside the plant, it peeks out of the side facing the middle of the picture: the cat's head is on its left,
+  // so to peek out of the right it's mirrored.
+  const mirrored = spot === 'plant' && v.petSide === 'right';
+  const transform = mirrored ? `translate(${def.w - x0} ${y}) scale(${-s} ${s})` : `translate(${x0} ${y}) scale(${s})`;
+  return (
+    <G transform={transform} stroke={shade(v.petColour)} strokeWidth={2.5}>
+      {item.draw(v.petColour)}
+    </G>
+  );
+}
+
+/** The time on the clock (every level) and what's on the television; the rest is chosen once things are placed. */
+function details(random: Rng, { clockStep, hidden = 0, closeCounts = false }: DetailKnobs): SceneDetails {
   const time = randomTime(random, clockStep);
   const { close, other } = timeLookalikes(time, clockStep);
+  const tv = random.pick(Object.keys(TV_SHOWS));
   return {
-    values: { clock: time },
-    facts: [{ id: 'clock-time', type: 'number', prompt: 'What time was on the clock?', answer: time, wrong: close, fallback: other, needs: 'wall-clock', everyLevel: true, spotlight: true }],
+    values: { clock: time, tv, ...(hidden ? { peek: String(hidden) } : {}), ...(closeCounts ? { countShelves: '1' } : {}) },
+    facts: [
+      { id: 'clock-time', type: 'number', prompt: 'What time was on the clock?', answer: time, wrong: close, fallback: other, needs: 'wall-clock', everyLevel: true, spotlight: true },
+      { id: 'tv-show', type: 'object', prompt: 'What was on the television?', answer: TV_SHOWS[tv], wrong: Object.values(TV_SHOWS).filter((s) => s !== TV_SHOWS[tv]), needs: 'tv' },
+    ],
   };
+}
+
+/** The nearest counts first, never fewer than one. */
+const nearCounts = (n: number) => [n - 1, n + 1, n - 2, n + 2, n + 3].filter((c) => c >= 1).map(String);
+
+/** Which of two things (left, right, both, neither): the answers, as for the beach's coconuts. */
+const WHICH_OF_TWO: Record<string, string> = { left: 'The one on the left', right: 'The one on the right', both: 'Both of them', none: 'Neither of them' };
+
+/** Once things are placed: the lamps, the books on the shelves, the pets' toys, then a hiding pet. */
+function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  const values = { ...d.values };
+  const facts = [...(d.facts ?? [])];
+  const alsoSeen = [...(d.alsoSeen ?? [])];
+  const one = (kind: string) => groups.find((g) => g.kind === kind && g.count === 1);
+  const count = (kind: string) => groups.find((g) => g.kind === kind)?.count ?? 0;
+
+  // Floor lamps on or off: "Was the floor lamp on or off?" with one, "Which floor lamp was on?" with two.
+  const lamps = count('floor-lamp');
+  if (lamps === 1) {
+    values.lamps = random.next() < 0.5 ? 'on' : 'off';
+    const answer = values.lamps === 'on' ? 'On' : 'Off';
+    facts.push({ id: 'lamp', type: 'object', prompt: 'Was the floor lamp on or off?', answer, wrong: [answer === 'On' ? 'Off' : 'On'], needs: 'floor-lamp' });
+  } else if (lamps === 2) {
+    const r = random.next();
+    values.lamps = r < 0.35 ? 'left' : r < 0.7 ? 'right' : r < 0.85 ? 'both' : 'none';
+    const answer = WHICH_OF_TWO[values.lamps];
+    facts.push({ id: 'lamp', type: 'position', prompt: 'Which floor lamp was on?', answer, wrong: Object.values(WHICH_OF_TWO).filter((a) => a !== answer), needs: 'floor-lamp' });
+  }
+
+  // From Level 14, with one bookshelf: 1 to 5 books on each shelf, and how many on one of them.
+  if (values.countShelves && one('bookshelf')) {
+    const counts = [0, 1, 2].map(() => random.int(1, BOOK_SLOTS.length));
+    values.shelves = counts.join(',');
+    const shelf = random.int(0, 2);
+    const n = counts[shelf];
+    facts.push({
+      id: 'shelf-books',
+      type: 'count',
+      prompt: `How many books were on the ${['top', 'middle', 'bottom'][shelf]} shelf?`,
+      answer: String(n),
+      wrong: nearCounts(n).slice(0, 3),
+      fallback: nearCounts(n).slice(3),
+      needs: 'bookshelf',
+    });
+  }
+
+  // One cat or one dog: what it was playing with. (With several, "the cat" wouldn't say which.)
+  for (const animal of ['cat', 'dog'] as const) {
+    if (!one(animal)) continue;
+    const toys = PET_TOYS[animal];
+    const toy = random.pick(Object.keys(toys));
+    values[`${animal}Toy`] = toy;
+    const other = PET_TOYS[animal === 'cat' ? 'dog' : 'cat'];
+    facts.push({
+      id: `${animal}-toy`,
+      type: 'object',
+      prompt: `What was the ${animal} playing with?`,
+      answer: toys[toy],
+      // Its other toys first, then one of the other pet's.
+      wrong: [...Object.values(toys).filter((t) => t !== toys[toy]), random.pick(Object.values(other))],
+      needs: animal,
+    });
+  }
+
+  // From Level 20: a cat hiding behind the sofa or the potted plant, when no cat is in the room already.
+  if (values.peek) {
+    const choices = Object.entries(PET_SPOTS).flatMap(([spot, def]) =>
+      one(spot) ? def.animals.filter((a) => !count(a)).map((animal) => ({ spot, animal })) : [],
+    );
+    if (choices.length) {
+      const { spot, animal } = random.pick(choices);
+      const answer = PET_SPOTS[spot].name;
+      const colours = (animal === 'cat' ? items.find((i) => i.kind === 'cat')! : dog).colours!;
+      values.pet = animal;
+      values.petSpot = spot;
+      values.petColour = random.pick(colours).hex;
+      values.petSide = groups.find((g) => g.kind === spot)!.region === 'right' ? 'left' : 'right';
+      alsoSeen.push(animal);
+      facts.push({
+        id: 'pet-hiding',
+        type: 'position',
+        prompt: `Where was the ${animal} hiding?`,
+        answer,
+        wrong: Object.values(PET_SPOTS).map((s) => s.name).filter((n) => n !== answer),
+        fallback: ['Under the armchair', 'Behind the television', 'Behind the bookshelf'],
+        spotlight: true,
+      });
+    }
+  }
+  return { ...d, values, facts, alsoSeen };
 }
 
 function surfaceAt(x: number, y: number): string {
@@ -543,6 +928,7 @@ export const livingRoom: Recipe = {
   id: 'living-room',
   title: 'Living room',
   details,
+  fitDetails,
   zones: [
     { id: 'ceiling', label: 'On the ceiling', surface: 'air', top: 0, bottom: CEILING, rows: 0 },
     // Things on the wall hang on two lines: a clock high up (top row of slots), the rest at eye level.

@@ -28,7 +28,7 @@ Code: `src/scenes/recipes/livingRoom.tsx`. Exact sizes, counts and colours: [ref
   - the TV, on its stand
   - potted plants, spread along the wall.
 - **Tall anchors** against the wall: bookshelves and floor lamps, spread apart.
-- **Out on the floor:** cats, dogs, balls, cushions, teddy bears, toy cars and piles of books.
+- **Out on the floor:** cats, dogs, balls, cushions, teddy bears, toy cars, piles of books, and two spills: a box of crayons spilled across the floor and a spilled cup with its puddle (kept off the rug, where the puddle wouldn't show).
 - **Order:** furniture is chosen and placed before the toys, so a room always has at least two pieces of furniture and still has something out in front of them.
 - **Wall clearance:** pictures and mirrors keep clear of the furniture, so they can hang above a sofa but never behind a TV or bookshelf.
 
@@ -49,4 +49,15 @@ Rugs are solid pale colours, so every toy colour stands out on them. The rug's o
 
 ## Questions it gives
 
-Counts and colours, positions ("On the wall, in the middle"), "What was on the wall, on the right?" when only one kind is there, and in / NOT in the picture.
+Counts and colours, positions ("On the wall, in the middle"), "What was on the wall, on the right?" when only one kind is there, and in / NOT in the picture. Plus questions about the picture's details (`details` and `fitDetails`):
+
+| Question | When | Answers |
+| --- | --- | --- |
+| "What time was on the clock?" | every level, with the clock | the time, and times close to it |
+| "What was on the television?" | from Level 8, with the TV | Nothing, it was off / A cartoon / A football match / Fish swimming (`TV_SHOWS`, all four happen) |
+| "Was the floor lamp on or off?" | from Level 8, one floor lamp | On / Off (a lamp that's on has a glow and light spilling down) |
+| "Which floor lamp was on?" | from Level 8, two floor lamps | the one on the left / right / both / neither, as for the beach's coconuts |
+| "What was the cat playing with?" | from Level 8, one cat | a ball of yarn, a toy mouse or a feather (`PET_TOYS`), with one of the dog's toys as a wrong answer |
+| "What was the dog playing with?" | from Level 8, one dog | a bone, a rope toy or a slipper (no ball: balls are things of their own) |
+| "How many books were on the top / middle / bottom shelf?" | from Level 14 (`closeCounts`), one bookshelf | 1 to 5 books on each shelf, spaced so they can be counted; the nearest counts as wrong answers |
+| "Where was the cat hiding?" | from Level 20, asked first; no cat in the room | behind the sofa (its head over the back) or behind the potted plant (peeking out towards the middle of the picture); less of it shows from Level 25. Never a dog: its head is barely higher than its back, so it looked to be lying on the sofa. The hiding cat is in `alsoSeen`, so it's never offered as "not in the picture". |

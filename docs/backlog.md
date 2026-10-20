@@ -26,6 +26,20 @@ Ideas we've agreed are worth doing but have parked for now, with enough detail t
 - **Music (parked).** A relaxed loop for menus only, ducking under effects, with separate Music and Effects switches; no music while looking at a picture by default.
 - **Place ambiences.** Waves at the beach, birdsong in the park, a crackling campfire, station announcements.
 
+## More question variety (carry the living room's ideas to other places)
+
+The living room (4.1.0) and the beach use five kinds of detail question that any place can reuse:
+
+| Kind | Living room / beach | Good next places |
+| --- | --- | --- |
+| **Something hiding** (`alsoSeen`, peeking drawn before the spot) | cat behind the sofa or plant; crab under the towel or behind the sandcastle; the mountain's danger-sign animal | park: a squirrel behind a tree trunk; farm: a cat in the haystack, a mouse by the barn door; kitchen: a mouse behind the bin; campsite: a fox behind a tent; zoo: a meerkat behind a rock |
+| **Which of two** (left / right / both / neither, by `index`) | which floor lamp was on; which palm tree had coconuts | campsite: which tent had its light on; city: which house had a light in the window; park: which bench had someone on it; farm: which field had the tractor |
+| **What's showing / what's it doing** (a per-picture choice drawn on the thing) | what was on the TV; what the cat or dog was playing with | airport and train station: what was on the screens; kitchen: what was in the oven or on the hob; classroom: what was drawn on the board; park: what the dog was chasing (a ball, a stick, a frisbee) |
+| **On or off** | the floor lamp | kitchen: the oven light, a tap running; city: street lamps at dusk; classroom: the projector |
+| **Counting parts of a thing** (from Level 14) | books on one shelf; coconuts by the palm trees | kitchen: eggs in the box, apples in the bowl; supermarket: tins on the top shelf; city: lit windows on a house; farm: eggs under the hen; zoo: bananas by the monkey |
+
+Rules learned so far: every answer of a "which" or "what" question must really happen, or players learn to rule some out; something hidden or small must still be easy to see on a phone (check at real size); one question per detail per picture when one would give the other away; never a pet or thing that could be confused with one of the place's own countable things.
+
 ## Pictures
 
 - **Depth in the outdoor places.** Things in the nearest band drawn bigger than those at the back (as in the classroom, about 1.25×): beach, park, farm, campsite, zoo.

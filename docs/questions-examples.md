@@ -136,45 +136,51 @@ Scene `living-room-c29hz`, colour scheme `blue`.
 
 | Thing | Count | Colour | Band | Side |
 | --- | --- | --- | --- | --- |
-| television | 1 | fixed | On the floor | left |
-| armchairs | 2 | Red | On the floor | spread (not asked) |
+| bookshelves | 2 | fixed | On the floor | spread (not asked) |
+| television | 1 | fixed | On the floor | centre |
 | window | 1 | fixed | On the wall | centre |
-| mirror | 1 | fixed | On the wall | left |
-| clock | 1 | fixed | On the wall | right |
-| piles of books | 2 | fixed | On the floor | centre |
-| balls | 2 | Purple | On the floor | left |
+| clock | 1 | fixed | On the wall | left |
+| dogs | 2 | White | On the floor | centre |
+| toy cars | 2 | Orange | On the floor | centre |
+| cushion | 1 | Pink | On the floor | left |
 
 Detail `clock`: 7:30.
 
-### Questions (25)
+Detail `tv`: football.
+
+### Questions (29)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| position | where | Where was the television? | **✓ On the floor, on the left** · On the floor, on the right · On the floor, in the middle | tv |
-| count | count | How many armchairs were there? | **✓ 2** · 3 · 5 · 1 | armchair |
-| colour | colour | What colour were the armchairs? | **✓ Red** · Green · Yellow · Blue | armchair |
-| position | where | Where was the window? | **✓ On the wall, in the middle** · On the wall, on the right · On the wall, on the left | window |
-| object | what-here | What was on the wall, in the middle? | **✓ A window** · A mirror · A clock · A picture frame | window |
-| position | where | Where was the mirror? | **✓ On the wall, on the left** · On the wall, in the middle · On the wall, on the right | mirror |
-| object | what-here | What was on the wall, on the left? | **✓ A mirror** · A window · A clock · A picture frame | mirror |
-| position | where | Where was the clock? | **✓ On the wall, on the right** · On the wall, on the left · On the wall, in the middle | wall-clock |
-| object | what-here | What was on the wall, on the right? | **✓ A clock** · A window · A mirror · A picture frame | wall-clock |
-| count | count | How many piles of books were there? | **✓ 2** · 4 · 5 · 3 | books |
-| position | where | Where were the piles of books? | **✓ On the floor, in the middle** · On the floor, on the right · On the floor, on the left | books |
-| count | count | How many balls were there? | **✓ 2** · 1 · 3 · 4 | ball |
-| colour | colour | What colour were the balls? | **✓ Purple** · Orange · Green · Yellow | ball |
-| position | where | Where were the balls? | **✓ On the floor, on the left** · On the floor, in the middle · On the floor, on the right | ball |
-| number | detail | What time was on the clock? | **✓ 7:30** · 8:30 · 6:30 · 4:30 | clock-time |
-| object | seen | Which of these was in the picture? | **✓ Ball** · Cat · Dog · Sofa | ball |
-| object | seen | Which of these was NOT in the picture? | **✓ Floor lamp** · Armchair · Clock · Television | floor-lamp |
-| count | compare | Were there more armchairs or more piles of books? | Armchairs · Piles of books · **✓ The same number** | compare-armchair-books |
-| count | compare | Were there more piles of books or more balls? | Piles of books · Balls · **✓ The same number** | compare-books-ball |
-| position | relation | What was on the wall, above the television? | **✓ A mirror** · A clock · A window · A picture frame | tv |
-| position | relation | What was on the wall, above the piles of books? | **✓ A window** · A mirror · A picture frame · A clock | books |
-| position | relation | What was on the wall, above the balls? | **✓ A mirror** · A picture frame · A clock · A window | ball |
-| colour | true-false | True or false? The balls were purple. | **✓ True** · False | ball |
-| count | true-false | True or false? There were three piles of books. | True · **✓ False** | books |
-| object | true-false | True or false? There was a bookshelf in the picture. | True · **✓ False** | bookshelf |
+| count | count | How many bookshelves were there? | **✓ 2** · 1 · 5 · 3 | bookshelf |
+| position | where | Where was the television? | **✓ On the floor, in the middle** · On the floor, on the right · On the floor, on the left | tv |
+| position | where | Where was the window? | **✓ On the wall, in the middle** · On the wall, on the left · On the wall, on the right | window |
+| object | what-here | What was on the wall, in the middle? | **✓ A window** · A clock · A mirror · A picture frame | window |
+| position | where | Where was the clock? | **✓ On the wall, on the left** · On the wall, in the middle · On the wall, on the right | wall-clock |
+| object | what-here | What was on the wall, on the left? | **✓ A clock** · A mirror · A window · A picture frame | wall-clock |
+| count | count | How many dogs were there? | **✓ 2** · 1 · 3 · 5 | dog |
+| colour | colour | What colour were the dogs? | **✓ White** · Black · Brown · Green | dog |
+| position | where | Where were the dogs? | **✓ On the floor, in the middle** · On the floor, on the left · On the floor, on the right | dog |
+| count | count | How many toy cars were there? | **✓ 2** · 5 · 1 · 4 | toy-car |
+| colour | colour | What colour were the toy cars? | **✓ Orange** · Blue · Green · Yellow | toy-car |
+| position | where | Where were the toy cars? | **✓ On the floor, in the middle** · On the floor, on the right · On the floor, on the left | toy-car |
+| count | count | How many cushions were there? | **✓ 1** · 4 · 3 · 2 | cushion |
+| colour | colour | What colour was the cushion? | **✓ Pink** · Red · Yellow · Purple | cushion |
+| position | where | Where was the cushion? | **✓ On the floor, on the left** · On the floor, on the right · On the floor, in the middle | cushion |
+| number | detail | What time was on the clock? | **✓ 7:30** · 6:30 · 4:30 · 8:30 | clock-time |
+| object | detail | What was on the television? | **✓ A football match** · Nothing, it was off · Fish swimming · A cartoon | tv-show |
+| object | seen | Which of these was in the picture? | **✓ Clock** · Spilled cup · Mirror · Teddy bear | wall-clock |
+| object | seen | Which of these was NOT in the picture? | **✓ Sofa** · Cushion · Window · Bookshelf | sofa |
+| count | compare | Were there more dogs or more cushions? | **✓ Dogs** · Cushions · The same number | compare-dog-cushion |
+| count | compare | Were there more toy cars or more cushions? | **✓ Toy cars** · Cushions · The same number | compare-toy-car-cushion |
+| count | most | Which was there just one of? | **✓ A cushion** · A bookshelf · A dog · A toy car | only-cushion |
+| position | relation | What was on the wall, above the television? | **✓ A window** · A mirror · A clock · A picture frame | tv |
+| position | relation | What was on the wall, above the dogs? | **✓ A window** · A clock · A picture frame · A mirror | dog |
+| position | relation | What was on the wall, above the toy cars? | **✓ A window** · A picture frame · A mirror · A clock | toy-car |
+| position | relation | What was on the wall, above the cushion? | **✓ A clock** · A mirror · A window · A picture frame | cushion |
+| count | true-false | True or false? There were three dogs. | True · **✓ False** | dog |
+| count | true-false | True or false? There were two toy cars. | **✓ True** · False | toy-car |
+| colour | true-false | True or false? The cushion was green. | True · **✓ False** | cushion |
 
 ## In the park
 
