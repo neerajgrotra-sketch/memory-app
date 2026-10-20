@@ -335,7 +335,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     });
   }
 
-  // "What was above the buoys?": the only thing above (or below) it, in the same third and another band.
+  // "What was in the sky, above the pumpkins?": the only thing above (or below) it, in the same third and another band.
   // Thirds, not exact positions: they never change when the picture is laid out again for another
   // screen. Wide things (a sofa, a bus) reach into the next third, so they're never asked about here.
   const zoneIndex = (g: PlacedGroup) => recipe.zones.findIndex((z) => z.id === g.zoneId);
@@ -346,6 +346,14 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   // far away, not above anything: "below the sun" or "above the crater: a satellite" reads oddly.
   const faraway = (g: PlacedGroup) => zoneOf(g.zoneId).faraway === true || (itemOf(g.kind).countable === false && zoneOf(g.zoneId).surface === 'air');
   const single = spec.groups.filter((g) => !(itemOf(g.kind).spread && g.count > 1) && !isWide(g) && !faraway(g));
+  // The question names where the answer was ("in the sky", "on the wall"): "above the pumpkins" alone made players
+  // think of the barn on the hill. A few band names read oddly there ("What was close by, above the bench?"), so
+  // those questions stay plain.
+  const PLAIN_BANDS = new Set(['Close by', 'At the front', 'Near the hills']);
+  const where = (zoneId: string) => {
+    const label = zoneOf(zoneId).label;
+    return PLAIN_BANDS.has(label) ? '' : `${label[0].toLowerCase()}${label.slice(1)}, `;
+  };
   for (const group of single) {
     const item = itemOf(group.kind);
     for (const dir of ['above', 'below'] as const) {
@@ -357,16 +365,20 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       const plural = target.count > 1;
       const fits = (i: ItemDef) => i.kind !== answerItem.kind && i.kind !== item.kind && (!plural || canBeSeveral(i));
       const elsewhere = spec.groups.filter((g) => g !== group && g !== target).map((g) => itemOf(g.kind));
+      // Once the question says where, wrong answers that can't be there are easy to rule out: so first come
+      // things that could be in the answer's band, from the picture and then not in it.
+      const inBand = (i: ItemDef) => i.zones.includes(target.zoneId);
+      const inBandWrong = [...elsewhere, ...absent].filter((i) => fits(i) && inBand(i)).map((i) => nounPhrase(i, plural));
       add(dir, group, {
         type: 'position',
         family: 'relation',
         subject: item.kind,
-        prompt: `What was ${dir} ${group.count > 1 ? `the ${item.plural}` : `the ${item.singular}`}?`,
+        prompt: `What was ${where(target.zoneId)}${dir} ${group.count > 1 ? `the ${item.plural}` : `the ${item.singular}`}?`,
         options: withDistractors(
           nounPhrase(answerItem, plural),
-          elsewhere.filter(fits).map((i) => nounPhrase(i, plural)),
-          // Things not in the picture, but only ones that could be where the answer was.
-          absent.filter((i) => fits(i) && i.zones.includes(target.zoneId)).map((i) => nounPhrase(i, plural)),
+          inBandWrong,
+          // Something that can't be there is a giveaway: only to make up three choices, never a fourth.
+          where(target.zoneId) && new Set(inBandWrong).size >= 2 ? [] : elsewhere.filter((i) => fits(i) && !inBand(i)).map((i) => nounPhrase(i, plural)),
           rng,
         ),
       });

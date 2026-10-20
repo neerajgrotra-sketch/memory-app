@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.12 (2026-10-20)
+
+- **Above and below questions say where to look.** Testers read "What was above the pumpkins?" and thought of the barn on the hill, and found "What was above the teacher?" too vague. The question now names the band the answer is in: **"What was in the sky, above the pumpkins?"**, "What was on the wall, above the teacher?", "What was on the top shelf, above the cereal?". Three band names read oddly there ("Close by", "At the front", "Near the hills"), so those questions stay as they were.
+- **Wrong answers that could really be there.** Once the question says "in the sky", a choice like "Beach towels" gives the answer away. Wrong answers now come from things that can be in that band, from the picture or not in it. Something that can't be there is used only to make up three choices, so some of these questions now have three choices instead of four. `npm run check:questions` reports how many above and below questions name a band and how many still need an out-of-band choice (about 7%, in bands with only two kinds of thing, like the city's roofs).
+
 ## 4.0.11 (2026-10-20)
 
 - **Countdown ticks land on their numbers on phones.** Testers in Expo Go heard the tick drift away from the number. On phones each sound now has two players that take turns, so a tick starts the moment its number shows:

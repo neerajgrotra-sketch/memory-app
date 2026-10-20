@@ -9,6 +9,7 @@ import { generateScene } from '@/scenes/generateScene';
 import { generateQuestions } from '@/scenes/generateQuestions';
 import { RECIPES } from '@/scenes/recipes';
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+let relation = 0; let named = 0; let outOfBand = 0; const samples: string[] = [];
 let bad = 0; const optCounts: Record<string, number> = {}; let minPool = 999; let total = 0; let pictures = 0;
 for (const recipe of RECIPES) {
   for (const i of recipe.items) for (const z of recipe.zones.filter((z) => i.zones.includes(z.id)))
@@ -33,10 +34,22 @@ for (const recipe of RECIPES) {
           if (!item.zones.includes(zone.id)) { bad++; if (bad < 6) console.log('BAD where', recipe.id, q.prompt, '→', o); }
         }
       }
+      if (q.family === 'relation') {
+        // "What was in the sky, above the pumpkins?": wrong options that can't be in the sky give the answer away.
+        relation++;
+        const zone = recipe.zones.find((z) => q.prompt.includes(` ${z.label[0].toLowerCase()}${z.label.slice(1)}, `));
+        if (zone) {
+          named++;
+          if (q.options.some((o) => !phrase.get(o)?.includes(zone.id))) outOfBand++;
+        }
+        if (samples.length < 40 && s % 37 === 0) samples.push(`${recipe.id}: ${q.prompt} → ${q.options.join(' / ')}`);
+      }
       if (q.options.some((o) => o === undefined || o === '')) { bad++; console.log('EMPTY option', q.prompt); }
     }
   }
 }
+if (process.env.SHOW_SAMPLES) console.log(samples.join('\n'));
+console.log(`  above/below: ${relation}, naming where: ${named}, with an option that can't be there: ${outOfBand}`);
 if (minPool < 12) { bad++; console.log('a picture gave fewer than 12 questions'); }
 console.log(bad ? '✗' : '✓', 'bad options:', bad, '| options per question:', JSON.stringify(optCounts), '| questions per picture: avg', (total / pictures).toFixed(1), 'min', minPool);
 if (bad) process.exit(1);
