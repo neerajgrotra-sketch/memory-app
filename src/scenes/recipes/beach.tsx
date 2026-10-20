@@ -4,7 +4,8 @@ import { C } from '../colours';
 import { ball, balloon, bird, cloudShape, crab, dolphin, kite, person, plane, starfish, sun } from '../items/common';
 import { lineMarks, markIfClear, scatterMarks } from '../marks';
 import { glints, speckles } from '../texture';
-import type { ItemDef, Mark, Recipe, Rect as Box, VariantDef } from '../types';
+import type { Rng } from '../random';
+import type { ItemDef, Mark, PlacedGroup, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
 
 /** Band edges, as fractions of the picture height. */
 const HORIZON = 0.35;
@@ -183,8 +184,10 @@ const items: ItemDef[] = [
     zones: SAND,
     maxCount: 2,
     tone: '#2b9348',
-    draw: () => (
+    // Coconuts dropped on the sand by its foot, when the picture's details put them there (see `fitDetails`).
+    draw: (_colour, details, _copy, index = 0) => (
       <G>
+        {droppedCoconuts(details, index)}
         <Path d="M70,270 C75,200 70,120 88,55 L100,58 C88,120 92,200 92,270 Z" fill="#8b5a2b" stroke="#5c3a1b" />
         {/* Rings up the trunk. */}
         <Path d="M72,250 Q81,244 91,250 M73,220 Q82,214 91,220 M74,190 Q83,184 91,190 M76,160 Q85,154 92,160 M78,130 Q87,124 94,130 M82,100 Q90,94 96,100" fill="none" stroke="#5c3a1b" strokeOpacity={0.55} strokeWidth={2.5} />
@@ -300,6 +303,61 @@ function marks(height: number, boxes: Box[], random: () => number, variant: Vari
   ];
 }
 
+/** Which of two palm trees has coconuts on the sand by it: the question's answer for each choice. */
+const COCONUT_ANSWERS: Record<string, string> = {
+  left: 'The one on the left',
+  right: 'The one on the right',
+  both: 'Both of them',
+  none: 'Neither of them',
+};
+
+/** The coconuts at a palm's foot, beside the trunk, if this palm (0 on the left, 1 on the right) has them. */
+function droppedCoconuts(details: SceneDetails | undefined, index: number) {
+  const where = details?.values?.coconuts;
+  if (!where || !(where === 'both' || where === (index === 0 ? 'left' : 'right'))) return null;
+  return (
+    <G stroke="#3d2412" strokeWidth={2}>
+      {[
+        [112, 256, 13],
+        [140, 258, 12],
+        [126, 235, 12],
+      ].map(([cx, cy, r]) => (
+        <G key={cx}>
+          <Circle cx={cx} cy={cy} r={r} fill="#6b3e1f" />
+          <Circle cx={cx - r * 0.35} cy={cy - r * 0.35} r={r * 0.3} fill="#9c6b3f" stroke="none" />
+        </G>
+      ))}
+    </G>
+  );
+}
+
+/**
+ * With two palm trees, coconuts can lie on the sand by one of them, both or neither, and "Which palm tree had
+ * coconuts by it?" asks which. All four answers happen, so none of them can be ruled out. One palm tree: none.
+ */
+function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  const palms = groups.find((g) => g.kind === 'palm');
+  if (!palms || palms.count !== 2) return d;
+  const r = random.next();
+  const coconuts = r < 0.35 ? 'left' : r < 0.7 ? 'right' : r < 0.85 ? 'both' : 'none';
+  const answer = COCONUT_ANSWERS[coconuts];
+  return {
+    ...d,
+    values: { ...d.values, coconuts },
+    facts: [
+      ...(d.facts ?? []),
+      {
+        id: 'coconuts',
+        type: 'position',
+        prompt: 'Which palm tree had coconuts on the sand by it?',
+        answer,
+        wrong: Object.values(COCONUT_ANSWERS).filter((a) => a !== answer),
+        needs: 'palm',
+      },
+    ],
+  };
+}
+
 const PALETTES: Record<string, Palette> = {
   day: { sky: '#8fd3f4', sea: '#2a9fd6', sand: '#f2d49b', foam: '#ffffff', headland: '#7fb0c9', wetSand: '#dcb97c', grain: '#c99e5c' },
   sunset: { sky: '#ffb38a', sea: '#3d6fa8', sand: '#e9c46a', foam: '#ffd6a5', headland: '#c98a7a', wetSand: '#d2aa55', grain: '#b88a3a' },
@@ -326,5 +384,8 @@ export const beach: Recipe = {
   ],
   surfaceAt: (_x, y) => (y < HORIZON ? 'sky' : y < SHORE ? 'sea' : 'sand'),
   marks,
+  // No backdrop details of its own: just the coconuts, chosen once things are placed.
+  details: () => ({}),
+  fitDetails,
   variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number) => backdrop(h, p) })),
 };

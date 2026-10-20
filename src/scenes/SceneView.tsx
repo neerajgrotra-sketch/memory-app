@@ -89,7 +89,7 @@ export function SceneContent({ spec, pointsPerUnit, overlay, layer = 'all' }: Sc
         // A colour on the thing's own frame (a signal light, a snowman's scarf) doesn't set the outline: the frame does.
         const outline = shade((item.framedColour ? item.tone : own?.hex) ?? item.tone ?? '#555555');
         const copy = copyNumber(spec.seed, g, i);
-        return { key: `${group.kind}-${i}`, kind: group.kind, item, box, colour, outline, moves, shadow, copy, bottom: rectOf(item, box, ratio).y1 };
+        return { key: `${group.kind}-${i}`, kind: group.kind, item, box, colour, outline, moves, shadow, copy, index: i, bottom: rectOf(item, box, ratio).y1 };
       });
     })
     // Things marked `behind` first (a cable car's cable), then by where they stand.
@@ -124,9 +124,9 @@ export function SceneContent({ spec, pointsPerUnit, overlay, layer = 'all' }: Sc
           </LinearGradient>
         ))}
         {/* Each thing's silhouette, so its light stays inside its own shape. */}
-        {drawn.map(({ key, item, box, colour, copy }) => (
+        {drawn.map(({ key, item, box, colour, copy, index }) => (
           <Mask key={key} id={`${uid}mask-${key}`} maskType="alpha">
-            <G transform={transformOf(box, item).t}>{item.draw(colour, spec.details, copy)}</G>
+            <G transform={transformOf(box, item).t}>{item.draw(colour, spec.details, copy, index)}</G>
           </Mask>
         ))}
       </Defs>
@@ -142,12 +142,12 @@ export function SceneContent({ spec, pointsPerUnit, overlay, layer = 'all' }: Sc
             const w = box.w * SCENE_WIDTH;
             return <Ellipse key={`shadow-${key}`} cx={(box.x + box.w / 2) * SCENE_WIDTH} cy={bottom * SCENE_WIDTH - 2} rx={w * 0.44} ry={Math.max(5, w * 0.06)} fill="#000000" fillOpacity={0.16} />;
           })}
-      {drawn.map(({ key, item, box, colour, outline, copy }) => {
+      {drawn.map(({ key, item, box, colour, outline, copy, index }) => {
         const { scale, x, y, t } = transformOf(box, item);
         return (
           <G key={key}>
             <G transform={t} stroke={outline} strokeWidth={OUTLINE_POINTS / (scale * pointsPerUnit)} strokeLinejoin="round">
-              {item.draw(colour, spec.details, copy)}
+              {item.draw(colour, spec.details, copy, index)}
             </G>
             {/* The light starts below the rod a hanging thing hangs from, so the rod reads as one piece up to the roof. */}
             <Rect x={x} y={y + (item.hanger ?? 0) * scale} width={item.w * scale} height={(item.h - (item.hanger ?? 0)) * scale} fill={`url(#${uid}light)`} mask={`url(#${uid}mask-${key})`} />

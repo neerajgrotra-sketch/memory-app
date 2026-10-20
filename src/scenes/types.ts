@@ -161,9 +161,10 @@ export interface ItemDef {
    * Draws the thing in its w × h box. Shapes without their own `stroke` get the outline: 2–3 pt in a
    * darker shade of the thing's own colour. Small details set `stroke="none"`. Things that show a
    * per-picture detail (the time on a clock) read it from `details`. `copy` is a number fixed per copy,
-   * for small variations that are never asked about (a person's hair and skin).
+   * for small variations that are never asked about (a person's hair and skin). `index` is the copy's place in
+   * its group: for things that spread out (palm trees), 0 is always the one furthest left, on any screen.
    */
-  draw: (colour: string, details?: SceneDetails, copy?: number) => ReactElement;
+  draw: (colour: string, details?: SceneDetails, copy?: number, index?: number) => ReactElement;
 }
 
 /** An oval on the floor; things are either fully on it or clear of it. Fractions of width (x) and height (y). */

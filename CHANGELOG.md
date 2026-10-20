@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.0.14 (2026-10-20)
+
+- **Dropped coconuts on the beach.** When the beach has two palm trees, coconuts can lie on the sand at the foot of one of them, both or neither, and a new question asks **"Which palm tree had coconuts on the sand by it?"** (The one on the left / The one on the right / Both of them / Neither of them). All four answers really happen (left and right about a third of the time each, both or neither about one in seven each), so none can be ruled out without remembering. It's asked from Level 8, like the other questions about the backdrop. About one beach picture in five has two palm trees.
+- Drawings now also get each copy's place in its group (`index`): for things that spread out, like palm trees, 0 is always the one on the left, on every screen size. That's how the coconuts and the answer always agree.
+
 ## 4.0.13 (2026-10-20)
 
 - **No more hair bun on top of the head.** A tester said the person on the beach looked like they wore a patka, and we'd rather people stay neutral. The third hairstyle for people (beach, city and airport) is now a ponytail tied at the back and swinging out to one side, like the classroom pupils'. The snowy mountain's skier keeps the bobble on their hat.

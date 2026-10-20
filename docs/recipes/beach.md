@@ -37,3 +37,5 @@ The sea band is drawn from 35% to 60%. Its placement band is inset at both ends,
 ## Questions it gives
 
 Counts and colours of everything, positions ("In the sea, on the right"), "What was on the sand, on the left?" when only one kind is there, and in / NOT in the picture.
+
+With two palm trees, coconuts may lie on the sand by the one on the left, the one on the right, both or neither (`fitDetails`), and from Level 8 "Which palm tree had coconuts on the sand by it?" asks which. All four answers happen, so none is a giveaway.

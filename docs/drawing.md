@@ -35,6 +35,8 @@ Thumbnails, the full-size picture viewer and the screenshot tools draw the pictu
 
 `draw(colour, details, copy)` gets a `copy` number fixed for each copy in each picture (from the scene's seed). People use it for **skin tone, hair colour and hairstyle** (short, long, a ponytail), so a crowd isn't one person repeated. Variations are never asked about: the shirt colour, which is, comes from the scene's facts as before.
 
+`draw(colour, details, copy, index)` also gets `index`, the copy's place in its group. For things that spread out (palm trees, street lamps), 0 is always the one furthest left, on every screen size, so a detail can belong to one particular copy and still be asked about: the beach's dropped coconuts lie by "the one on the left" because `fitDetails` stored `coconuts: 'left'` and the palm drawn with `index` 0 draws them.
+
 ## Richer drawing (detail and texture)
 
 Things are drawn in layers inside their own box: the main shape in the asked-about colour (it gets the outline and is what the contrast rules check), then details with `stroke="none"` on top. Details only use white or black at low opacity, or small fixed colours, so a thing still reads as its colour:

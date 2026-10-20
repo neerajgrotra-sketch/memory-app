@@ -66,6 +66,8 @@ See [Levels and scoring](../levels-and-scoring.md).
 | In the sea (`sea`) | 36.5% – 57% | air | 1 | – |
 | On the sand (`sand`) | 60% – 100% | ground | 2 | – |
 
+Per-picture details: .
+
 ### Colour schemes
 
 | Scheme | Surface colours |
