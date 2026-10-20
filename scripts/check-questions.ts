@@ -40,6 +40,11 @@ for (const recipe of RECIPES) {
         for (const o of q.options) {
           // Next to a landmark ("To the left of the table lamps"): worked out from thirds, checked in the code.
           if (o.startsWith('To the ') || o.startsWith('Between ')) continue;
+          // The room's other places ("On the sofa"): always wrong, since nothing loose is put there.
+          if (recipe.places?.includes(o)) {
+            if (q.options[q.answerIndex] === o) { bad++; console.log('BAD where: a place nothing is put is the answer', recipe.id, q.prompt); }
+            continue;
+          }
           if (o === rugLabel) {
             if (item.avoidRug || !groundZone || !item.zones.includes(groundZone.id)) { bad++; if (bad < 6) console.log('BAD where (carpet)', recipe.id, q.prompt); }
             continue;

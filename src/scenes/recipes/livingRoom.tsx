@@ -1066,6 +1066,7 @@ export const livingRoom: Recipe = {
   ],
   items,
   rug: RUG,
+  places: ['On the sofa', 'On the armchair', 'On top of the bookshelf', 'On the windowsill'],
   // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
   light: [
     // Light from above on the wall.

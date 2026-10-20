@@ -282,6 +282,12 @@ export interface Recipe {
   zones: ZoneDef[];
   items: ItemDef[];
   rug?: Rug;
+  /**
+   * Other places in the room where loose things could believably be, for wrong answers to "Where was the box of
+   * crayons?" next to "On the carpet" and "On the floor": "On the sofa", "On top of the bookshelf". Nothing loose is
+   * ever placed there, so they're always wrong. Used with a rug.
+   */
+  places?: string[];
   /** Areas nothing may cover (building doors), as fractions: x of the width, y of the height. */
   keepClear?: Rect[];
   /** Light across bands of the backdrop (see `LightBand`), back to front. */

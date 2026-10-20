@@ -10,6 +10,17 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.1.6 (2026-10-20)
+
+Testers didn't like "where" answers by sides of the screen, and some landmark answers made no sense. Reworked:
+
+- **Landmarks at the same depth.** "Where was the pile of books? To the left of the bookshelf" compared books on the floor at the front with a bookshelf against the back wall. Things are now only placed next to things at their own depth: furniture and tall lamps next to each other ("Between the table lamps"), things out on the floor next to other things on the floor, and things on the carpet next to things on it.
+- **Between two things.** "Between the teddy bear and the ball", the way people describe it, with the left one named first. "Between the toy cars" is only offered for a pair standing apart (table lamps, trees), never for copies side by side.
+- **Places, not sides, in the living room.** "Where was the box of crayons?" answers "On the carpet" or "On the floor", with wrong answers that are real places in the room: "On the sofa", "On the armchair", "On top of the bookshelf", "On the windowsill" (nothing loose is ever put there). The landmark version is asked too, but a round has only one "where".
+- **No more left / middle / right in the living room.** With no landmark, there's no "where" question about it, and "What was on the wall, in the middle?" is only asked with a landmark: "What was on the wall in the middle, above the armchair?".
+- **The wall landmark is found more often.** It used to need the armchair to be the only thing in that third of the floor, so a box of crayons on the carpet in front stopped it. Now only things against the wall count: about 4 in 10 living room wall questions name one (and over half in the classroom), up from almost none.
+- Other places keep the landmark answers from 4.1.4 at the same depth, and left / middle / right where there's none.
+
 ## 4.1.5 (2026-10-20)
 
 - **Lamps that are on look on.** Testers didn't read the yellow halo round a table lamp as "on". Lamps now show a bulb under the shade: **bright yellow with rays of light** coming out past the shade when the lamp is on, **plain grey** when it's off, with a beam of light shining down from a lit shade (onto the table, or the floor for a floor lamp). The halo is gone. The same for floor lamps and table lamps, so both read the same way.
