@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.2.5 (2026-10-21)
+
+- **Spills in the supermarket.** Next to the wet floor sign there can now be a mess on the floor: a cracked honey jar in a pool of honey, a tipped-over mop bucket of water or a knocked-over bottle of juice. "What had spilled on the floor?" (Honey / Water / Juice / Milk). One spill at most, so the question never has two right answers.
+- **The offer sign has a deal.** It now says 10% OFF, 20% OFF, HALF PRICE, BUY 1 GET 1 FREE or 3 FOR 2 next to its picture, and there's a new question: "What did the offer sign say?". "What was on special offer?" was already asked, as one of the place's detail questions (from Level 8, at most two of those a round), so it didn't come up often.
+
 ## 4.2.4 (2026-10-21)
 
 - **Every product says what it is.** Like the milk, the cereal boxes, bottles of water, jars of honey, bottles of juice and the egg boxes now have their name on the label (**CEREAL**, **WATER**, **HONEY**, **JUICE**, **EGGS**). Players couldn't tell what the jar or the boxes were. Colours that are asked about (the cereal box, the juice bottle, the honey jar's lid) are still the main colour.

@@ -445,6 +445,25 @@ const items: ItemDef[] = [
     ),
   },
   {
+    // Something knocked over on the floor: honey, water or juice, chosen per picture (`SPILLS`), for "What had
+    // spilled on the floor?". One kind of thing, so a picture never has two spills and two right answers.
+    kind: 'spill',
+    singular: 'spill',
+    plural: 'spills',
+    article: 'a',
+    w: 120,
+    h: 50,
+    // Big enough to make out what tipped over on a phone.
+    tier: 'large',
+    size: 0.23,
+    zones: FLOOR,
+    maxCount: 1,
+    countable: false,
+    noFlip: true,
+    tone: '#e8962a',
+    draw: (_colour, d) => (SPILLS.find((x) => x.name === d?.values?.spill) ?? SPILLS[0]).draw(),
+  },
+  {
     kind: 'box',
     singular: 'cardboard box',
     plural: 'cardboard boxes',
@@ -570,6 +589,90 @@ function fruitCrate(fruit: string, edge: string) {
   );
 }
 
+/** A puddle spreading right from where the thing tipped over, in the spilled thing's colours. */
+function puddle(fill: string, edge: string) {
+  return (
+    <G>
+      <Path
+        d="M34,38 C36,31 50,29 60,31 C70,26 88,27 96,30 C108,28 120,34 116,40 C120,46 104,49 94,47 C80,50 60,50 50,47 C40,48 32,44 34,38 Z"
+        fill={fill}
+        stroke={edge}
+      />
+      <G fill={fill} stroke={edge}>
+        <Circle cx={108} cy={22} r={3.5} />
+        <Circle cx={86} cy={21} r={2.5} />
+      </G>
+      <Path d="M60,36 Q76,32 96,35" fill="none" stroke="#ffffff" strokeOpacity={0.7} strokeWidth={3} strokeLinecap="round" />
+    </G>
+  );
+}
+
+/** What can be spilled on the floor (see the `spill` item). */
+const SPILLS: { name: string; draw: () => ReactElement }[] = [
+  {
+    // A honey jar on its side, cracked, with honey oozing out of it.
+    name: 'Honey',
+    draw: () => (
+      <G>
+        {puddle('#f2a93b', '#a8590f')}
+        <Path d="M50,30 C56,32 58,36 64,36 L54,44 C50,41 50,40 50,40 Z" fill="#f2a93b" stroke="none" />
+        <Rect x={8} y={6} width={44} height={40} rx={8} fill="#f2a93b" stroke="#a8590f" />
+        <Rect x={0} y={9} width={11} height={34} rx={3} fill={C.red.hex} stroke="#8f1d26" />
+        <G stroke="none">
+          <Rect x={15} y={17} width={32} height={18} rx={3} fill="#ffffff" />
+          <SvgText x={31} y={29.5} fontSize={9} fontWeight="bold" fontFamily="Arial" fill="#a8590f" textAnchor="middle">
+            HONEY
+          </SvgText>
+          {/* A crack across the glass and bits of it broken off. */}
+          <Path d="M36,6 L40,11 L35,14 L41,17" fill="none" stroke="#5c3a1a" strokeWidth={2} strokeLinejoin="round" />
+          <Path d="M62,20 L67,16 L68,22 Z M74,18 L78,15 L78,20 Z" fill="#e7f5ff" stroke="#adb5bd" strokeWidth={1} />
+        </G>
+      </G>
+    ),
+  },
+  {
+    // A mop bucket tipped over, with water running out across the floor.
+    name: 'Water',
+    draw: () => (
+      <G>
+        {puddle('#74c0fc', '#1c7ed6')}
+        <Path d="M2,18 L42,10 V46 L2,40 Z" fill={C.yellow.hex} stroke="#a07800" />
+        <Ellipse cx={42} cy={28} rx={7} ry={18} fill="#ffd60a" stroke="#a07800" />
+        <Ellipse cx={42} cy={28} rx={4.5} ry={15} fill="#3d5a73" stroke="none" />
+        <Path d="M10,16 C2,2 30,-2 30,12" fill="none" stroke="#6c757d" strokeWidth={3} strokeLinecap="round" />
+        <Path d="M44,32 C50,32 52,36 58,36 L48,44 C45,41 44,40 44,38 Z" fill="#74c0fc" stroke="none" />
+      </G>
+    ),
+  },
+  {
+    // A juice bottle knocked over, orange juice pouring out.
+    name: 'Juice',
+    draw: () => (
+      <G>
+        {puddle('#ff922b', '#c25e00')}
+        <Path d="M56,30 C62,32 62,36 66,36 L56,44 C54,40 54,38 54,36 Z" fill="#ff922b" stroke="none" />
+        <Path d="M5,10 H34 Q42,10 46,20 H54 V32 H46 Q42,42 34,42 H5 Q0,42 0,37 V15 Q0,10 5,10 Z" fill={C.orange.hex} stroke="#8a4500" />
+        <Rect x={52} y={19} width={7} height={14} rx={1.5} fill="#ffffff" stroke="#adb5bd" />
+        <G stroke="none">
+          <Rect x={4} y={17} width={34} height={18} fill="#ffffff" />
+          <SvgText x={21} y={29.5} fontSize={9.5} fontWeight="bold" fontFamily="Arial" fill="#212529" textAnchor="middle">
+            JUICE
+          </SvgText>
+        </G>
+      </G>
+    ),
+  },
+];
+
+/** What the offer sign can say, drawn on two lines (`line2` may be empty). */
+const DEALS = [
+  { name: '10% off', line1: '10%', line2: 'OFF' },
+  { name: '20% off', line1: '20%', line2: 'OFF' },
+  { name: 'Half price', line1: 'HALF', line2: 'PRICE' },
+  { name: 'Buy one, get one free', line1: 'BUY 1', line2: 'GET 1 FREE' },
+  { name: '3 for 2', line1: '3 FOR 2', line2: '' },
+];
+
 /** What the offer sign can show, with its little picture (drawn around 0,0, about 50 across). */
 const OFFERS: { name: string; icon: () => ReactElement }[] = [
   {
@@ -619,12 +722,14 @@ function aisleLookalikes(n: number): string[] {
   return [...new Set([...swapped, ...near].filter((x) => x !== n).map(String))];
 }
 
-/** The aisle number and what's on offer, both on signs hanging from the ceiling. */
+/** The aisle number and the offer (what's on offer and the deal), on signs hanging from the ceiling, and what spilled. */
 function details(random: Rng): SceneDetails {
   const aisle = random.int(1, 15);
   const offer = random.pick(OFFERS);
+  const deal = random.pick(DEALS);
+  const spill = random.pick(SPILLS);
   return {
-    values: { aisle: String(aisle), offer: offer.name, aisleSide: random.next() < 0.5 ? 'left' : 'right' },
+    values: { aisle: String(aisle), offer: offer.name, deal: deal.name, spill: spill.name, aisleSide: random.next() < 0.5 ? 'left' : 'right' },
     facts: [
       { id: 'aisle-number', type: 'number', prompt: 'What was the aisle number?', answer: String(aisle), wrong: aisleLookalikes(aisle) },
       {
@@ -633,6 +738,15 @@ function details(random: Rng): SceneDetails {
         prompt: 'What was on special offer?',
         answer: offer.name,
         wrong: OFFERS.filter((o) => o !== offer).map((o) => o.name),
+      },
+      { id: 'deal', type: 'object', prompt: 'What did the offer sign say?', answer: deal.name, wrong: DEALS.filter((x) => x !== deal).map((x) => x.name) },
+      {
+        id: 'spill',
+        type: 'object',
+        prompt: 'What had spilled on the floor?',
+        answer: spill.name,
+        wrong: [...SPILLS.filter((x) => x !== spill).map((x) => x.name), 'Milk'],
+        needs: 'spill',
       },
     ],
   };
@@ -656,6 +770,7 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
   const floorLine = height * FLOOR_LINE;
   const aisle = d?.values?.aisle ?? '7';
   const offer = OFFERS.find((o) => o.name === d?.values?.offer) ?? OFFERS[0];
+  const deal = DEALS.find((x) => x.name === d?.values?.deal) ?? DEALS[0];
   const aisleX = d?.values?.aisleSide === 'right' ? 640 : 260;
   const offerX = d?.values?.aisleSide === 'right' ? 250 : 650;
   // The signs hang just above the top shelf, as big as the ceiling band allows.
@@ -735,9 +850,18 @@ function backdrop(height: number, p: Palette, d?: SceneDetails) {
         signH,
         <G transform={`scale(${s})`}>
           <Rect x={0} y={0} width={240} height={96} rx={12} fill={C.red.hex} stroke="#ffffff" strokeWidth={5} />
-          <SvgText x={82} y={50} fontSize={30} fontWeight="bold" fontFamily="Arial" fill="#ffd60a" textAnchor="middle" alignmentBaseline="central">
+          {/* "OFFER" small on top, the deal big underneath. */}
+          <SvgText x={76} y={22} fontSize={16} fontWeight="bold" fontFamily="Arial" fill="#ffffff" textAnchor="middle">
             OFFER
           </SvgText>
+          <SvgText x={76} y={deal.line2 ? 55 : 68} fontSize={deal.line1.length > 5 ? 30 : 36} fontWeight="bold" fontFamily="Arial" fill="#ffd60a" textAnchor="middle">
+            {deal.line1}
+          </SvgText>
+          {deal.line2 ? (
+            <SvgText x={76} y={83} fontSize={deal.line2.length > 5 ? 19 : 26} fontWeight="bold" fontFamily="Arial" fill="#ffd60a" textAnchor="middle">
+              {deal.line2}
+            </SvgText>
+          ) : null}
           <Circle cx={188} cy={48} r={42} fill="#ffffff" />
           <G transform="translate(188 50) scale(1.35)">{offer.icon()}</G>
         </G>,

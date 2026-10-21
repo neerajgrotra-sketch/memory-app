@@ -373,50 +373,56 @@ Scene `supermarket-c29hz`, colour scheme `modern`.
 
 | Thing | Count | Colour | Band | Side |
 | --- | --- | --- | --- | --- |
-| sack of potatoes | 1 | fixed | On the floor | right |
-| shopping basket | 1 | Yellow | On the floor | left |
+| crate of apples | 1 | fixed | On the floor | right |
 | shopping bag | 1 | fixed | On the floor | centre |
-| bottles of water | 2 | fixed | On the top shelf | centre |
-| carton of milk | 1 | fixed | On the middle shelf | left |
-| loaves of bread | 2 | fixed | On the bottom shelf | centre |
-| toilet roll | 1 | fixed | On the top shelf | right |
+| spill | 1 | fixed | On the floor | left |
+| bottle of juice | 1 | Green | On the top shelf | right |
+| bottle of water | 1 | fixed | On the bottom shelf | centre |
+| box of eggs | 1 | fixed | On the middle shelf | left |
+| toilet rolls | 2 | fixed | On the top shelf | left |
 
 Detail `aisle`: 8.
 
 Detail `offer`: Bread.
 
-Detail `aisleSide`: right.
+Detail `deal`: Half price.
 
-### Questions (26)
+Detail `spill`: Juice.
+
+Detail `aisleSide`: left.
+
+### Questions (28)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| count | count | How many sacks of potatoes were there? | **✓ 1** · 2 · 4 · 3 | potatoes |
-| position | where | Where was the sack of potatoes? | **✓ To the right of the shopping bag** · Between the shopping basket and the shopping bag · To the left of the shopping bag · To the left of the shopping basket | potatoes |
-| count | count | How many shopping baskets were there? | **✓ 1** · 4 · 3 · 2 | basket |
-| colour | colour | What colour was the shopping basket? | **✓ Yellow** · Green · Red · Blue | basket |
-| position | where | Where was the shopping basket? | **✓ To the left of the shopping bag** · Between the shopping bag and the sack of potatoes · To the right of the shopping bag · To the right of the sack of potatoes | basket |
-| count | count | How many shopping bags were there? | **✓ 1** · 3 · 2 · 4 | shopping-bag |
-| position | where | Where was the shopping bag? | **✓ Between the shopping basket and the sack of potatoes** · To the right of the sack of potatoes · To the left of the shopping basket | shopping-bag |
-| count | count | How many bottles of water were there? | **✓ 2** · 5 · 3 · 1 | water |
-| position | where | Where were the bottles of water? | **✓ To the left of the toilet roll** · To the right of the toilet roll | water |
-| count | count | How many cartons of milk were there? | **✓ 1** · 3 · 2 · 4 | milk |
-| count | count | How many loaves of bread were there? | **✓ 2** · 3 · 5 · 1 | bread |
-| count | count | How many toilet rolls were there? | **✓ 1** · 3 · 4 · 2 | toilet-rolls |
-| position | where | Where was the toilet roll? | **✓ To the right of the bottles of water** · To the left of the bottles of water | toilet-rolls |
-| object | what-here | Which of these was on the top shelf? | **✓ A toilet roll** · A cereal box · A bottle of juice | in-top |
-| object | what-here | Which of these was on the floor? | **✓ A shopping bag** · A crate of oranges · A watermelon · A wet floor sign | in-floor |
-| object | what-here | What was on the middle shelf? | **✓ A carton of milk** · A tin of beans · A cereal box · A bottle of juice | band-middle |
-| object | what-here | What was on the bottom shelf? | **✓ Loaves of bread** · Cartons of milk · Tins of beans · Bottles of water | band-bottom |
-| number | detail | What was the aisle number? | **✓ 8** · 7 · 6 · 18 | aisle-number |
-| object | detail | What was on special offer? | **✓ Bread** · Cheese · Apples · Milk | offer |
-| object | seen | Which of these was in the picture? | **✓ Sack of potatoes** · Bottle of juice · Cardboard box · Tin of beans | potatoes |
-| object | seen | Which of these was NOT in the picture? | **✓ Crate of apples** · Shopping basket · Toilet roll · Loaf of bread | apples |
-| count | compare | Were there more shopping baskets or more shopping bags? | Shopping baskets · Shopping bags · **✓ The same number** | compare-basket-shopping-bag |
-| count | compare | Were there more sacks of potatoes or more bottles of water? | Sacks of potatoes · **✓ Bottles of water** · The same number | compare-potatoes-water |
-| count | true-false | True or false? There was one loaf of bread. | True · **✓ False** | bread |
-| colour | true-false | True or false? The shopping basket was green. | True · **✓ False** | basket |
-| count | true-false | True or false? There was one sack of potatoes. | **✓ True** · False | potatoes |
+| position | where | Where was the crate of apples? | **✓ To the right of the spill** · To the left of the spill · Between the spill and the shopping bag · To the left of the shopping bag | apples |
+| count | count | How many shopping bags were there? | **✓ 1** · 4 · 2 · 3 | shopping-bag |
+| position | where | Where was the shopping bag? | **✓ Between the spill and the crate of apples** · To the right of the crate of apples · To the left of the spill | shopping-bag |
+| position | where | Where was the spill? | **✓ To the left of the crate of apples** · Between the shopping bag and the crate of apples · To the right of the crate of apples · To the right of the shopping bag | spill |
+| count | count | How many bottles of juice were there? | **✓ 1** · 2 · 4 · 3 | juice |
+| colour | colour | What colour was the bottle of juice? | **✓ Green** · Red · Pink · Yellow | juice |
+| position | where | Where was the bottle of juice? | **✓ To the right of the toilet rolls** · To the left of the toilet rolls | juice |
+| count | count | How many bottles of water were there? | **✓ 1** · 4 · 2 · 3 | water |
+| count | count | How many boxes of eggs were there? | **✓ 1** · 2 · 3 · 4 | eggs |
+| count | count | How many toilet rolls were there? | **✓ 2** · 5 · 3 · 1 | toilet-rolls |
+| position | where | Where were the toilet rolls? | **✓ To the left of the bottle of juice** · To the right of the bottle of juice | toilet-rolls |
+| object | what-here | Which of these was on the top shelf? | **✓ A bottle of juice** · A loaf of bread · A cereal box | in-top |
+| object | what-here | Which of these was on the floor? | **✓ A crate of apples** · A crate of oranges · A shopping basket · A wet floor sign | in-floor |
+| object | what-here | What was on the middle shelf? | **✓ A box of eggs** · A bottle of juice · A jar of honey · A tin of beans | band-middle |
+| object | what-here | What was on the bottom shelf? | **✓ A bottle of water** · A carton of milk · A tin of beans · A loaf of bread | band-bottom |
+| number | detail | What was the aisle number? | **✓ 8** · 10 · 6 · 7 | aisle-number |
+| object | detail | What was on special offer? | **✓ Bread** · Bananas · Cheese · Milk | offer |
+| object | detail | What did the offer sign say? | **✓ Half price** · 3 for 2 · 10% off · Buy one, get one free | deal |
+| object | detail | What had spilled on the floor? | **✓ Juice** · Water · Milk · Honey | spill |
+| object | seen | Which of these was in the picture? | **✓ Box of eggs** · Loaf of bread · Crate of oranges · Tin of beans | eggs |
+| object | seen | Which of these was NOT in the picture? | **✓ Crate of oranges** · Crate of apples · Spill · Bottle of water | oranges |
+| count | compare | Were there more boxes of eggs or more toilet rolls? | Boxes of eggs · **✓ Toilet rolls** · The same number | compare-eggs-toilet-rolls |
+| count | compare | Were there more bottles of water or more toilet rolls? | Bottles of water · **✓ Toilet rolls** · The same number | compare-water-toilet-rolls |
+| count | most | Which was there the most of? | **✓ Toilet rolls** · Boxes of eggs · Bottles of juice · Shopping bags | most-toilet-rolls |
+| position | relation | What was on the top shelf, above the box of eggs? | **✓ Toilet rolls** · Bottles of water · Bottles of juice · Loaves of bread | eggs |
+| count | true-false | True or false? There was one bottle of juice. | **✓ True** · False | juice |
+| count | true-false | True or false? There was one shopping bag. | **✓ True** · False | shopping-bag |
+| object | true-false | True or false? There was a sack of potatoes in the picture. | True · **✓ False** | potatoes |
 
 ## At the train station
 

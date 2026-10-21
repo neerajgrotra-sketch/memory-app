@@ -382,7 +382,7 @@ Per-picture details: "What was in the treasure chest?".
 | On the bottom shelf (`bottom`) | 53% – 68.5% | ground | 1 | things stand exactly on its bottom line |
 | On the floor (`floor`) | 72% – 100% | ground | 2 | – |
 
-Per-picture details: "What was the aisle number?"; "What was on special offer?".
+Per-picture details: "What was the aisle number?"; "What was on special offer?"; "What did the offer sign say?"; "What had spilled on the floor?" (when there's a spill).
 
 ### Colour schemes
 
@@ -391,7 +391,7 @@ Per-picture details: "What was the aisle number?"; "What was on special offer?".
 | modern | ceiling `#f1f4f7`, light `#ffffff`, backing `#3b4a5c`, board `#e9eef2`, tag `#ffd60a`, upright `#2b3644`, floor `#dfe5ea`, tile `#8c99a6` |
 | corner | ceiling `#f6efe2`, light `#fffaf0`, backing `#4b3a2c`, board `#a0703c`, tag `#f8f9fa`, upright `#3a2c20`, floor `#e6d2b5`, tile `#9c7a50` |
 
-### Things (17)
+### Things (18)
 
 | Thing | Band | Size | Most | Colours | Habits |
 | --- | --- | --- | --- | --- | --- |
@@ -409,6 +409,7 @@ Per-picture details: "What was the aisle number?"; "What was on special offer?".
 | crate of oranges | floor | large 26% | 1 | fixed (`#8a5a2b`) | – |
 | watermelon | floor | medium 16% | 3 | fixed (`#3a8f3a`) | – |
 | wet floor sign | floor | medium 16% | 1 | fixed (`#ffd60a`) | one only, not counted |
+| spill | floor | large 23% | 1 | fixed (`#e8962a`) | one only, not counted |
 | cardboard box | floor | large 21% | 2 | fixed (`#b07d45`) | – |
 | shopping bag | floor | medium 16% | 2 | fixed (`#c8955a`) | – |
 | sack of potatoes | floor | large 20% | 2 | fixed (`#a68a64`) | – |
