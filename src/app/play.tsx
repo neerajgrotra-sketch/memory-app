@@ -1,8 +1,10 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Button } from '@/components/Button';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { LevelUpScreen } from '@/components/LevelUpScreen';
 import { MemoriseStage } from '@/components/MemoriseStage';
 import { PeekView } from '@/components/PeekView';
@@ -13,11 +15,12 @@ import { ResultStage } from '@/components/ResultStage';
 import { isPlayMode } from '@/game/difficulty';
 import { dailyResultOn, streakOf, type Streak } from '@/games/lookRemember/daily';
 import { peekSecondsFor } from '@/games/lookRemember/peeks';
+import { answeredOf, clearSavedRound, loadSavedRound, slotFor, type SavedRound } from '@/games/lookRemember/savedRound';
 import { loadProgress } from '@/hooks/useGameProgress';
 import { useProfile } from '@/profile';
 import { statsStore } from '@/stats';
 import { useGameSession, type SessionStart } from '@/hooks/useGameSession';
-import { colors } from '@/theme';
+import { colors, radius } from '@/theme';
 import type { PlayMode } from '@/types/game';
 
 function goBack() {
@@ -26,23 +29,54 @@ function goBack() {
 }
 
 export default function PlayScreen() {
-  const params = useLocalSearchParams<{ mode?: string }>();
-  const mode: PlayMode = isPlayMode(params.mode) ? params.mode : 'levels';
+  // `resume=1` (the Resume card on Home) goes straight back into the saved round, whatever its mode.
+  const params = useLocalSearchParams<{ mode?: string; resume?: string }>();
+  const asked: PlayMode = isPlayMode(params.mode) ? params.mode : 'levels';
   // Your level and high score come from saved rounds, so wait for them before the first picture.
   const [start, setStart] = useState<(SessionStart & { streak: Streak }) | null>(null);
+  // A Levels or Practice round in progress when another one is started: resume it or start a new one?
+  const [choice, setChoice] = useState<{ saved: SavedRound; begin: (resume?: SavedRound) => void } | null>(null);
   useEffect(() => {
     let live = true;
-    Promise.all([loadProgress('look-remember'), statsStore.listResults()]).then(([progress, all]) => {
+    Promise.all([loadProgress('look-remember'), statsStore.listResults(), loadSavedRound(slotFor(asked))]).then(([progress, all, saved]) => {
       if (!live) return;
-      // One Daily Challenge a day.
-      if (mode === 'daily' && dailyResultOn(all)) return goBack();
-      setStart({ mode, ladder: progress.ladder, highScore: progress.highScore, peeks: progress.peeks, streak: streakOf(all) });
+      const begin = (resume?: SavedRound) => {
+        const mode = resume?.mode ?? asked;
+        setChoice(null);
+        setStart({ mode, ladder: progress.ladder, highScore: progress.highScore, peeks: progress.peeks, streak: streakOf(all), resume });
+      };
+      if (asked === 'daily') {
+        // One Daily Challenge a day; one closed part way through carries on.
+        if (dailyResultOn(all)) {
+          clearSavedRound('daily');
+          return goBack();
+        }
+        return begin(saved ?? undefined);
+      }
+      if (!saved) return begin();
+      if (params.resume === '1') return begin(saved);
+      setChoice({ saved, begin });
     });
     return () => {
       live = false;
     };
-  }, [mode]);
+  }, [asked, params.resume]);
 
+  if (choice) {
+    const { saved, begin } = choice;
+    return (
+      <SafeAreaView style={[styles.container, styles.loading, styles.choiceWrap]}>
+        <View style={styles.choice}>
+          <Text style={styles.choiceTitle}>You have a round in progress</Text>
+          <Text style={styles.choiceText}>
+            {saved.stage.title}: {answeredOf(saved)} of {saved.round.questions.length} answered. Resume it, or start a new round and lose it?
+          </Text>
+          <Button label="Resume round" onPress={() => begin(saved)} />
+          <Button label="Start a new round" variant="secondary" onPress={() => begin()} />
+        </View>
+      </SafeAreaView>
+    );
+  }
   if (!start) {
     return (
       <View style={[styles.container, styles.loading]}>
@@ -50,7 +84,7 @@ export default function PlayScreen() {
       </View>
     );
   }
-  return <Game key={mode} start={start} />;
+  return <Game key={start.mode} start={start} />;
 }
 
 function Game({ start }: { start: SessionStart & { streak: Streak } }) {
@@ -66,11 +100,14 @@ function Game({ start }: { start: SessionStart & { streak: Streak } }) {
   // The first round today extends the streak (or starts one); later rounds today keep it.
   const firstToday = !start.streak.playedToday && round.index === 0;
   const streak = { days: start.streak.playedToday ? start.streak.current : start.streak.current + 1, isNew: firstToday };
+  // Leaving asks first when there's something to come back to: the questions, or today's Daily picture.
+  const [leaving, setLeaving] = useState(false);
+  const quit = () => (phase === 'quiz' || start.mode === 'daily' ? setLeaving(true) : goBack());
 
   return (
     <View style={styles.container}>
       {phase === 'memorise' && (
-        <MemoriseStage key={round.index} scene={stage.scene} seconds={round.viewSeconds} onDone={finishMemorising} onQuit={goBack} />
+        <MemoriseStage key={round.index} scene={stage.scene} seconds={round.viewSeconds} onDone={finishMemorising} onQuit={quit} />
       )}
 
       {phase === 'quiz' && (
@@ -131,11 +168,28 @@ function Game({ start }: { start: SessionStart & { streak: Streak } }) {
       {phase === 'quiz' && (
         <SafeAreaView style={styles.closeWrap} pointerEvents="box-none">
           <View style={styles.close}>
-            <QuitButton onPress={goBack} />
+            <QuitButton onPress={quit} />
             <SoundToggle />
           </View>
         </SafeAreaView>
       )}
+
+      <ConfirmDialog
+        visible={leaving}
+        title={phase === 'memorise' ? 'Leave today’s challenge?' : 'Leave this round?'}
+        message={
+          phase === 'memorise'
+            ? 'You’ve seen the picture, so when you come back it goes straight to the questions.'
+            : 'Your answers are saved. You can resume the round from Home.'
+        }
+        cancelLabel="Keep playing"
+        confirmLabel="Leave"
+        onCancel={() => setLeaving(false)}
+        onConfirm={() => {
+          setLeaving(false);
+          goBack();
+        }}
+      />
 
       {phase === 'quiz' && peeking && <PeekView scene={stage.scene} seconds={peekSecondsFor(profile)} onDone={() => setPeeking(false)} />}
     </View>
@@ -145,6 +199,10 @@ function Game({ start }: { start: SessionStart & { streak: Streak } }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   loading: { alignItems: 'center', justifyContent: 'center' },
+  choiceWrap: { padding: 16 },
+  choice: { width: '100%', maxWidth: 420, padding: 20, gap: 14, backgroundColor: colors.surface, borderRadius: radius.md },
+  choiceTitle: { color: colors.text, fontSize: 22, fontWeight: '900' },
+  choiceText: { color: colors.textMuted, fontSize: 16, lineHeight: 22 },
   closeWrap: { position: 'absolute', top: 0, left: 0 },
   close: { margin: 16, flexDirection: 'row', gap: 10 },
 });

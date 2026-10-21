@@ -13,7 +13,7 @@ Checks: `npm run typecheck`, `npm run lint` and `npm run check:scenes` (the leve
 
 Every change bumps the version (shown on the Games tab). See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
 
-## Status (4.2.5)
+## Status (4.3.0)
 
 - **Works:** the Look & Remember game with 30 levels, 15 places, points, the Daily Challenge and streak, Peeks, sounds and vibration. Played and tested in the browser (Expo web), with every automated check passing.
 - **Ready, not yet run:** builds for real phones with EAS: TestFlight for iPhone, an APK for Android ([docs/building.md](docs/building.md)).
@@ -37,6 +37,8 @@ A round:
 1. **Memorise**: a brand-new picture with a countdown. Tap **I'm ready** to go to the questions early (it ignores taps in the first second).
 2. **Quiz**: 5 questions, 4 options each. The numbered dots turn green or red as you answer. A right answer flashes green and moves on. A wrong answer shakes red, then shows the right one and waits for **Next**. **Skip for now** moves on; skipped questions come back at the end. **👀 Peek** (top right, with how many you hold) flips the picture back in over the question for 3 seconds with a countdown, then flips it away: once a round, never in the Daily Challenge.
 3. **Level up** (when you go up a level): an animated ring (it fills, spins, sparks fly, and the new number pops in), your new level, its title at every 5th level, and exactly what's new, with **Play Level N** to carry straight on or **See my results** first.
+Closing the app part way through (or leaving with ✕, which asks first) keeps the round: a **Resume** card at the top of the Games tab ("Round in progress · 3 of 5 answered") goes straight back to the next question. It never shows the picture again: remembering it is the game. The countdown pauses while the app is in the background (a phone call).
+
 4. **Result**: your points with how they were earned, how the round moved your level, and every question with all its options (the right answer in green, your wrong pick in red). Tap the picture to see it full size. The main button plays a new picture at your level (**Try again**, **Keep going** or **Play Level N**). After a weaker round, and always in Practice, **Same picture again** replays the picture with different questions as practice: it never moves your level or sets a high score.
 
 **Levels** run from 1 to 30. 3 good rounds (4 or 5 right) take you up a level; 2 very poor rounds in a row (0 or 1 right) take you back one. Your best level never goes down. Each level adds a little: more kinds of thing, more of each, less time, new places (living room at 2, park at 4, city street at 6, kitchen at 8, farm at 10, under the sea at 12, supermarket at 14, train station at 16, zoo at 18, snowy mountain at 20, classroom at 22, night campsite at 24, airport at 26, the Moon at 28), house numbers (8), mixed-colour hydrants (12) and closer counting choices (14). Players from before levels start at a level worked out from their earlier rounds.
@@ -107,7 +109,8 @@ src/
   components/          Countdown (Reanimated), Memorise/Quiz/Result stages, Peek, daily card, level ring, level-up screen, charts, game art
   games/
     registry.ts        Every game and skill; the Games tab is built from it
-    lookRemember/      ladder.ts (levels 1–30, moving up and down, unlocks, titles), points.ts, daily.ts (Daily Challenge, streak), peeks.ts
+    lookRemember/      ladder.ts (levels 1–30, moving up and down, unlocks, titles), points.ts, daily.ts (Daily Challenge, streak), peeks.ts,
+                       savedRound.ts (the round in progress, for Resume)
   game/                Pure game logic: practice bands, question selection, option shuffling, quiz navigation, score messages
   feedback/            Sounds (placeholder files in assets/sounds/, swap them freely) and vibration for the game's moments
   hooks/               useGameSession (memorise → quiz → result → next picture, scoring and levels), useGameProgress

@@ -15,6 +15,7 @@ import { getGame } from '@/games/registry';
 import { myPlaces, placesOff, togglePlace } from '@/games/lookRemember/places';
 import { useReloadableGameProgress } from '@/hooks/useGameProgress';
 import { useProfile } from '@/profile';
+import { clearSavedRound } from '@/games/lookRemember/savedRound';
 import { statsStore } from '@/stats';
 import { colors, radius } from '@/theme';
 
@@ -42,6 +43,8 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
   const [startAgain, setStartAgain] = useState<'idle' | 'confirm' | 'done'>('idle');
   const restart = async () => {
     await statsStore.restart(gameId);
+    // A round in progress was played at the old level.
+    await clearSavedRound('play');
     setStartAgain('done');
     reload();
   };
@@ -49,6 +52,7 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
   const pickLevel = async (level: number) => {
     feedback('tick');
     await statsStore.restart(gameId, level);
+    await clearSavedRound('play');
     setStartAgain('idle');
     reload();
   };

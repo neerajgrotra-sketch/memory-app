@@ -3,6 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { DailyCard } from '@/components/DailyCard';
+import { ResumeCard } from '@/components/ResumeCard';
 import { GameThumb } from '@/components/GameArt';
 import { LevelRing } from '@/components/LevelRing';
 import { SoundToggle } from '@/components/SoundToggle';
@@ -43,6 +44,9 @@ export default function GamesScreen() {
           </View>
           <SoundToggle />
         </View>
+
+        {/* A round closed part way through, to pick up where you left off. */}
+        <ResumeCard />
 
         {/* The daily habit (streak, this week, today's challenge), once you've played a first round. */}
         {played && <DailyCard />}

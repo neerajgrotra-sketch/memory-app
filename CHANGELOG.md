@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.3.0 (2026-10-21)
+
+- **Resume a round.** Close the app (or leave with ✕) part way through a round and it's kept: a **Resume** card at the top of the Games tab ("Round in progress · 3 of 5 answered") goes straight back to the next question. Only the questions resume, never the picture, since remembering it is the game. A round lasts 24 hours; starting another one asks first ("Resume round" / "Start a new round"). A round closed while still looking at the picture is dropped.
+- **The Daily Challenge resumes too, and can't be replayed.** A Daily quit part way wasn't saved, so it could be played again with its picture already seen. It's now saved from the moment the picture shows; the daily card says **Resume**, and one closed while looking comes back at the questions. It lasts until midnight.
+- **✕ asks first** during the questions ("Leave this round? Your answers are saved. You can resume the round from Home."), and while looking at the Daily. A mis-tap used to throw the round away.
+- **The countdown pauses in the background.** A phone call or switching apps no longer eats the time to look: the countdown waits and carries on from where it was.
+
 ## 4.2.5 (2026-10-21)
 
 - **Spills in the supermarket.** Next to the wet floor sign there can now be a mess on the floor: a cracked honey jar in a pool of honey, a tipped-over mop bucket of water or a knocked-over bottle of juice. "What had spilled on the floor?" (Honey / Water / Juice / Milk). One spill at most, so the question never has two right answers.

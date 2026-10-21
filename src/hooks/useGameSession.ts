@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -16,6 +16,7 @@ import {
 import { DAILY_MULTIPLIER, dailySeed, localDay } from '@/games/lookRemember/daily';
 import { MAX_PEEKS, earnPeeks, peekSecondsFor, spendPeek, type PeekWallet } from '@/games/lookRemember/peeks';
 import { placesOff } from '@/games/lookRemember/places';
+import { clearSavedRound, saveRound, slotFor, type SavedRound } from '@/games/lookRemember/savedRound';
 import { pointsFor, type PointsBreakdown } from '@/games/lookRemember/points';
 import { EXTRA_SECONDS, useProfile } from '@/profile';
 import { createStage, type Stage } from '@/scenes/createStage';
@@ -115,13 +116,15 @@ export interface SessionStart {
   highScore: number;
   /** Peeks held when the session starts. */
   peeks: PeekWallet;
+  /** A round saved part way through (see `SavedRound`): the session starts at its next unanswered question. */
+  resume?: SavedRound;
 }
 
 /**
  * Runs one session of Look & Remember. The first picture is built on first render;
  * remount (e.g. with a `key`) to start over in another mode.
  */
-export function useGameSession({ mode, ladder: startLadder, highScore: startHighScore, peeks: startPeeks }: SessionStart) {
+export function useGameSession({ mode, ladder: startLadder, highScore: startHighScore, peeks: startPeeks, resume }: SessionStart) {
   // Pictures are laid out for the space below the countdown bar, down to the bottom safe-area inset.
   // (The picture measures itself too and lays the same contents out again if the space differs.)
   const { width, height } = useWindowDimensions();
@@ -143,6 +146,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
   const highScore = useRef(startHighScore);
 
   const [first] = useState(() => {
+    if (resume) return { stage: resume.stage, round: resume.round };
     const setup = setupFor(mode, startLadder.level);
     // The Daily Challenge: the day's picture (same seed all day), from every place you've reached.
     const daily = mode === 'daily';
@@ -154,17 +158,19 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
   });
   const [stage, setStage] = useState<Stage>(first.stage);
   const [round, setRound] = useState<Round>(first.round);
-  const [phase, setPhase] = useState<Phase>('memorise');
-  const [answers, setAnswers] = useState<Answers>(() => emptyAnswers(first.round.questions.length));
+  // A resumed round goes straight to its questions, never the picture again.
+  const [phase, setPhase] = useState<Phase>(resume ? 'quiz' : 'memorise');
+  const [answers, setAnswers] = useState<Answers>(() => resume?.answers ?? emptyAnswers(first.round.questions.length));
   const [outcome, setOutcome] = useState<RoundOutcome | null>(null);
-  const [wallet, setWallet] = useState<PeekWallet>(startPeeks);
+  // A Peek is only recorded when its round ends, so one used before the round was closed is spent again here.
+  const [wallet, setWallet] = useState<PeekWallet>(() => (resume?.peeked.length && !unlimitedPeeks ? spendPeek(startPeeks) : startPeeks));
   /** The questions peeked at this round (one peek per round, except with a tester's unlimited Peeks). */
-  const [peeked, setPeeked] = useState<number[]>([]);
+  const [peeked, setPeeked] = useState<number[]>(resume?.peeked ?? []);
 
   /** Question ids already asked about the current picture. */
-  const seenIds = useRef(new Set<string>());
-  const roundCount = useRef(0);
-  const sessionId = useRef(makeId());
+  const seenIds = useRef(new Set<string>(resume?.seenIds ?? []));
+  const roundCount = useRef(resume?.round.index ?? 0);
+  const sessionId = useRef(resume?.sessionId ?? makeId());
 
   /** Builds a brand-new picture for round `index`, in a different setting from the last one. */
   const startStage = useCallback(
@@ -183,8 +189,8 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     [size, mode, extra, off, tester],
   );
 
-  /** How long the player looked at the current picture before answering. */
-  const looked = useRef(0);
+  /** How long the player looked at the current picture before answering (all of it, for a Daily closed while looking). */
+  const looked = useRef(resume ? (resume.phase === 'memorise' ? resume.round.viewSeconds : resume.looked) : 0);
   const finishMemorising = useCallback((lookedSeconds: number) => {
     looked.current = lookedSeconds;
     setPhase('quiz');
@@ -295,6 +301,29 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     },
     [canPeek, unlimitedPeeks],
   );
+
+  // Keeps the round in progress saved, so it can be resumed after the app is closed (see `SavedRound`): the
+  // questions after every answer, and the Daily Challenge from the moment its picture shows. A finished round,
+  // or a Levels picture still being looked at, leaves nothing to resume.
+  useEffect(() => {
+    if (phase === 'result' || (phase === 'memorise' && mode !== 'daily')) {
+      clearSavedRound(slotFor(mode));
+      return;
+    }
+    saveRound({
+      mode,
+      savedAt: new Date().toISOString(),
+      day: localDay(),
+      phase,
+      stage,
+      round,
+      answers,
+      peeked,
+      looked: looked.current,
+      sessionId: sessionId.current,
+      seenIds: [...seenIds.current],
+    });
+  }, [mode, phase, stage, round, answers, peeked]);
 
   const score = answers.filter((choice, i) => choice === round.questions[i]?.answerIndex).length;
 

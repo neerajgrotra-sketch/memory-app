@@ -48,7 +48,8 @@ interface QuizStageProps {
  * question (answered, skipped, current) and jump to any unanswered one.
  */
 export function QuizStage({ questions, answers, onAnswer, peek }: QuizStageProps) {
-  const [current, setCurrent] = useState(0);
+  // A resumed round starts at its first unanswered question.
+  const [current, setCurrent] = useState(() => Math.max(0, answers.indexOf(null)));
   const [skipped, setSkipped] = useState<ReadonlySet<number>>(new Set());
   const [selected, setSelected] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<Feedback>('choosing');

@@ -22,7 +22,7 @@ How a player's level moves, what each level changes, and how points are worked o
 **Daily challenge and streak** (`src/games/lookRemember/daily.ts`, the card at the top of the Games tab once you've played a round):
 
 - **Streak:** days in a row with at least one finished round, in any mode. It stays alive all day until midnight ("Play today to keep your 3-day streak") and breaks only after a whole day without a round. Any round counts, not just the challenge: losing a streak after ten rounds because you skipped one picture would feel unfair. The best streak ever is kept (Progress tab). Days are the player's local calendar days.
-- **Daily Challenge:** one picture a day, the same all day (seeded by the date, `dailySeed`), at your level, from every place you've reached (My places doesn't apply, so it's the day's picture). Double points (`DAILY_MULTIPLIER`), one try: afterwards the card shows "Done ✓" with your score until tomorrow, and opening it again goes straight back. It never changes your level or high score, like Practice, and is saved as `mode: 'daily'`.
+- **Daily Challenge:** one picture a day, the same all day (seeded by the date, `dailySeed`), at your level, from every place you've reached (My places doesn't apply, so it's the day's picture). Double points (`DAILY_MULTIPLIER`), one try (a Daily closed part way through resumes at its questions, see [Resuming a round](#resuming-a-round)): afterwards the card shows "Done ✓" with your score until tomorrow, and opening it again goes straight back. It never changes your level or high score, like Practice, and is saved as `mode: 'daily'`.
 - **Result screen:** the first round of the day shows "🔥 N-day streak!" (or "Day 1 of your streak"); the challenge always shows it, with a "Daily ×2" points chip.
 - Everything is worked out from saved rounds, so there's nothing extra to store. `npm run check:daily` checks the rules, in two time zones.
 - **Not yet:** reminders (they need notifications on a real phone build) and streak freezes.
@@ -93,6 +93,17 @@ For charts and the Progress tab's "By band" table, levels are grouped into the o
 ## Practice
 
 Easy, Medium and Hard are the fixed settings from before levels (`LEVELS` in `src/game/difficulty.ts`), with every place. They earn points and never change your level.
+
+## Resuming a round
+
+A round closed part way through can be resumed (`src/games/lookRemember/savedRound.ts`): the round in progress is saved on the phone after every answer, with its picture, questions, answers so far and any Peek used.
+
+- **Only the questions resume, never the picture.** Remembering the picture is the game, so a resumed round goes straight to its next unanswered question. Coming back later only makes the questions harder, so it can't be used to do better. A Peek still works if one is left (a Peek used before closing stays used).
+- **Levels and Practice** are saved once the questions start, and shown on a **Resume** card at the top of the Games tab. A round closed while looking at the picture is simply dropped: there's nothing to lose but a few seconds. Starting another round while one is saved asks "Resume round" or "Start a new round" (which loses it). A saved round lasts 24 hours, and "Start again" on the game page drops it.
+- **The Daily Challenge** is saved from the moment its picture shows, and the daily card says **Resume** ("In progress · 3 of 5 answered"). Closed while looking, it comes back at the questions: before 4.3.0 a Daily quit part way wasn't saved at all, so it could be played again with the same picture already seen. It lasts until midnight; a Daily not finished by then is missed.
+- **✕ asks first** during the questions ("Leave this round? Your answers are saved…"), and while looking at the Daily ("You've seen the picture, so when you come back it goes straight to the questions"). Leaving a Levels picture while looking doesn't ask.
+- **The countdown pauses** while the app is in the background (a phone call, switching apps), and carries on from where it was. Time away doesn't count as looking for the ready-early bonus.
+- Points, level, streak and Peeks earned count as for any round.
 
 ## The result screen's buttons
 
