@@ -228,7 +228,7 @@ Per-picture details: "What number was on the rowing boat?" (when there's a boat)
 | bicycle | path | large 20% | 2 | Red, Blue, Green, Orange, Purple | – |
 | ice-cream cart | path, grass | large 21% | 1 | Red, Blue, Pink, Green, Yellow | one only, not counted |
 | bench | grass | large 21% | 2 | Green, Brown, Red, Blue | against the back (feet at the back line); copies spread one per third, on one line |
-| picnic blanket | grass | large 23% | 2 | Red, Blue, Yellow, Purple, Orange | – |
+| picnic blanket | grass | large 28% | 2 | Red, Blue, Yellow, Purple, Orange | – |
 | flower bed | grass | large 23% | 2 | Red, Yellow, Pink, Purple, Orange, White | – |
 | swing set | grass | large 28% | 1 | fixed (`#d62828`) | one only, not counted |
 | slide | grass | large 28% | 1 | Red, Blue, Orange | one only, not counted |

@@ -1,4 +1,4 @@
-import { Circle, G, Path, Rect, Text as SvgText } from 'react-native-svg';
+import { Circle, Ellipse, G, Path, Rect, Text as SvgText } from 'react-native-svg';
 
 import { ClockFace, randomTime, timeLookalikes } from '../clock';
 import { C } from '../colours';
@@ -270,27 +270,30 @@ const items: ItemDef[] = [
     plural: 'picnic blankets',
     article: 'a',
     w: 160,
-    h: 62,
+    h: 74,
+    // About as long as a person is tall, and deep enough to read as a blanket lying on the grass, not a strip.
     tier: 'large',
-    size: 0.23,
+    size: 0.28,
     zones: ON_GRASS,
     maxCount: 2,
     colours: [C.red, C.blue, C.yellow, C.purple, C.orange],
     draw: (colour) => (
       <G>
-        <Path d="M14,36 H146 L160,62 H0 Z" fill={colour} />
+        <Path d="M20,26 H140 L160,74 H0 Z" fill={colour} />
         {/* A gingham check: white stripes both ways, brighter where they cross. */}
         <G stroke="none">
-          <Path d="M36,36 L30,62 H40 L45,36 Z M68,36 L66,62 H76 L77,36 Z M100,36 L102,62 H112 L109,36 Z M132,36 L138,62 H148 L141,36 Z" fill="#ffffff" fillOpacity={0.5} />
-          <Path d="M10,42 H150 L152,46 H8 Z M4,53 H156 L158,57 H2 Z" fill="#ffffff" fillOpacity={0.5} />
+          <Path d="M44,26 L36,74 H48 L54,26 Z M76,26 L74,74 H86 L86,26 Z M106,26 L112,74 H124 L116,26 Z" fill="#ffffff" fillOpacity={0.5} />
+          <Path d="M15,38 H145 L148,44 H12 Z M8,56 H152 L155,62 H5 Z" fill="#ffffff" fillOpacity={0.5} />
         </G>
-        {/* A wicker basket on the blanket, with a red apple. */}
-        <Path d="M96,20 Q110,0 124,20" fill="none" stroke="#8a5a2b" strokeWidth={4} />
-        <Rect x={92} y={18} width={36} height={24} rx={4} fill="#c8955a" />
+        {/* A small wicker basket, a plate with a sandwich and an apple: in scale with the blanket. */}
+        <Path d="M103,26 Q115,10 127,26" fill="none" stroke="#8a5a2b" strokeWidth={3} />
+        <Rect x={100} y={23} width={30} height={19} rx={3} fill="#c8955a" />
         <G stroke="none">
-          <Path d="M94,26 H126 M94,34 H126 M102,20 V40 M110,20 V40 M118,20 V40" stroke="#8a5a2b" strokeOpacity={0.6} strokeWidth={1.5} />
-          <Circle cx={74} cy={44} r={6} fill="#e63946" />
-          <Path d="M74,38 L76,34" stroke="#5c3d1e" strokeWidth={2} />
+          <Path d="M101,30 H129 M101,36 H129 M110,24 V41 M120,24 V41" stroke="#8a5a2b" strokeOpacity={0.6} strokeWidth={1.2} />
+          <Ellipse cx={58} cy={50} rx={14} ry={5} fill="#f8f9fa" />
+          <Path d="M50,49 L64,46 L66,50 L52,53 Z" fill="#f4d58d" />
+          <Circle cx={86} cy={54} r={3.5} fill="#d00000" />
+          <Path d="M86,50.5 L87,48" stroke="#5c3d1e" strokeWidth={1.2} />
         </G>
       </G>
     ),
@@ -547,7 +550,8 @@ export const park: Recipe = {
     { id: 'bushes', label: 'By the trees', surface: 'ground', top: BUSHES, bottom: POND, rows: 0 },
     { id: 'pond', label: 'On the pond', surface: 'ground', top: POND, bottom: BANK, rows: 1, maxGroups: 2 },
     // Bikes and walkers all go the same way along the path.
-    { id: 'path', label: 'On the path', surface: 'ground', top: PATH, bottom: GRASS, rows: 1, maxGroups: 2, oneWay: true },
+    // Feet well inside the path, so people and bikes clearly stand on it (at its bottom edge they looked to be on the grass).
+    { id: 'path', label: 'On the path', surface: 'ground', top: PATH, bottom: GRASS, rows: 1, maxGroups: 2, oneWay: true, feetInset: 0.2 },
     { id: 'grass', label: 'On the grass', surface: 'ground', top: GRASS_TOP, bottom: 1, rows: 2 },
   ],
   items,

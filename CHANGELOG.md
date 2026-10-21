@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.2.2 (2026-10-21)
+
+- **People stand on the park's path.** Things on the ground stood with their feet near the bottom of their band, and on the thin path that's the line where it meets the grass, so people asked about as "on the path" looked to be on the grass. The path now keeps feet well inside it (`feetInset` on a band).
+- **The picnic blanket in scale.** It was a thin strip with a big basket and an apple nearly the size of the basket. It's now deeper and as long as a person is tall, with a small basket, a plate with a sandwich and a little apple. (Things on the grass, nearer to us, still aren't drawn bigger than things on the path; that's "Depth in the outdoor places" on the backlog.)
+
 ## 4.2.1 (2026-10-20)
 
 - **No left / middle / right anywhere.** The last five places, under the sea, the zoo, the campsite, the airport and space, now ask "where" by landmarks too: "Between the owls and the shooting star", "Between the luggage trolley and the coffee kiosk", "To the left of the ostrich", "Between the fish and the jellyfish".

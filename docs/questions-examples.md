@@ -181,45 +181,49 @@ Scene `park-c29hz`, colour scheme `summer`.
 | park clock | 1 | fixed | On the grass | left |
 | swing set | 1 | fixed | On the grass | right |
 | fountain | 1 | fixed | On the pond | centre |
-| kite | 1 | Orange | In the sky | centre |
-| picnic blanket | 1 | Red | On the grass | left |
-| people | 2 | Red | On the path | right |
-| birds | 2 | fixed | In the sky | left |
+| picnic blanket | 1 | Orange | On the grass | centre |
+| kites | 2 | Blue | In the sky | right |
+| people | 2 | Pink | On the path | centre |
+| birds | 4 | fixed | In the sky | left |
 
 Detail `boat`: 13.
 
 Detail `clock`: 7:30.
 
-### Questions (26)
+### Questions (30)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
 | position | where | Where was the swing set? | **✓ To the right of the picnic blanket** · To the left of the picnic blanket | swings |
-| count | count | How many kites were there? | **✓ 1** · 2 · 4 · 3 | kite |
-| colour | colour | What colour was the kite? | **✓ Orange** · Blue · Yellow · Purple | kite |
-| position | where | Where was the kite? | **✓ To the right of the birds** · To the left of the birds | kite |
-| count | count | How many picnic blankets were there? | **✓ 1** · 3 · 2 · 4 | picnic |
-| colour | colour | What colour was the picnic blanket? | **✓ Red** · Purple · Blue · Yellow | picnic |
+| count | count | How many picnic blankets were there? | **✓ 1** · 2 · 4 · 3 | picnic |
+| colour | colour | What colour was the picnic blanket? | **✓ Orange** · Blue · Purple · Yellow | picnic |
 | position | where | Where was the picnic blanket? | **✓ To the left of the swing set** · To the right of the swing set | picnic |
-| count | count | How many people were there? | **✓ 2** · 1 · 5 · 4 | person |
-| colour | colour | What colour were the people’s shirts? | **✓ Red** · Green · Yellow · Blue | person |
-| position | where | Where were the people? | **✓ On the path** · On the grass · On the slide · On the bench | person |
-| count | count | How many birds were there? | **✓ 2** · 4 · 3 · 5 | bird |
-| position | where | Where were the birds? | **✓ To the left of the kite** · To the right of the kite | bird |
-| object | what-here | Which of these was in the sky? | **✓ A bird** · A hot-air balloon · The sun · A plane | in-sky |
-| object | what-here | Which of these was on the grass? | **✓ A park clock** · A tree · An ice-cream cart · A bench | in-grass |
-| object | what-here | What was on the pond? | **✓ A fountain** · A rowing boat · A swan | band-pond |
+| count | count | How many kites were there? | **✓ 2** · 5 · 1 · 4 | kite |
+| colour | colour | What colour were the kites? | **✓ Blue** · Purple · Yellow · Green | kite |
+| position | where | Where were the kites? | **✓ To the right of the birds** · To the left of the birds | kite |
+| count | count | How many people were there? | **✓ 2** · 1 · 3 · 4 | person |
+| colour | colour | What colour were the people’s shirts? | **✓ Pink** · Purple · Orange · Blue | person |
+| position | where | Where were the people? | **✓ On the path** · On the grass · On the slide · In the fountain | person |
+| count | count | How many birds were there? | **✓ 4** · 1 · 7 · 6 | bird |
+| position | where | Where were the birds? | **✓ To the left of the kites** · To the right of the kites | bird |
+| object | what-here | Which of these was in the sky? | **✓ A kite** · The sun · A plane · A hot-air balloon | in-sky |
+| object | what-here | Which of these was on the grass? | **✓ A swing set** · A dog · A tree · A bench | in-grass |
+| object | what-here | What was on the pond? | **✓ A fountain** · A swan · A rowing boat | band-pond |
 | object | what-here | What was on the path? | **✓ People** · Bicycles · Dogs | band-path |
-| number | detail | What time was on the park clock? | **✓ 7:30** · 8:30 · 6:30 · 4:30 | clock-time |
-| object | seen | Which of these was in the picture? | **✓ Fountain** · Tree · Hot-air balloon · Swan | fountain |
-| object | seen | Which of these was NOT in the picture? | **✓ Flower bed** · Kite · Bird · Picnic blanket | flowers |
-| count | compare | Were there more people or more birds? | People · Birds · **✓ The same number** | compare-person-bird |
-| count | compare | Were there more kites or more people? | Kites · **✓ People** · The same number | compare-kite-person |
-| position | relation | What was in the sky, above the fountain? | **✓ A kite** · A bird · A plane · A hot-air balloon | fountain |
-| position | relation | What was on the pond, below the kite? | **✓ A fountain** · A rowing boat · A swan | kite |
-| colour | true-false | True or false? The people’s shirts were red. | **✓ True** · False | person |
-| object | true-false | True or false? There was a bench in the picture. | True · **✓ False** | bench |
-| count | true-false | True or false? There was one kite. | **✓ True** · False | kite |
+| number | detail | What time was on the park clock? | **✓ 7:30** · 4:30 · 6:30 · 8:30 | clock-time |
+| object | seen | Which of these was in the picture? | **✓ Person** · Bicycle · Sun · Ice-cream cart | person |
+| object | seen | Which of these was NOT in the picture? | **✓ Rowing boat** · Kite · Person · Bird | boat |
+| count | compare | Were there more picnic blankets or more kites? | Picnic blankets · **✓ Kites** · The same number | compare-picnic-kite |
+| count | compare | Were there more kites or more birds? | Kites · **✓ Birds** · The same number | compare-kite-bird |
+| count | most | Which was there the most of? | **✓ Birds** · People · Kites · Picnic blankets | most-bird |
+| count | most | Which was there just one of? | **✓ A picnic blanket** · A bird · A person · A kite | only-picnic |
+| position | relation | What was in the sky, above the park clock? | **✓ Birds** · Kites · Hot-air balloons | park-clock |
+| position | relation | What was in the sky, above the swing set? | **✓ Kites** · Hot-air balloons · Birds | swings |
+| position | relation | What was on the grass, below the kites? | **✓ A swing set** · A park clock · A person · A dog | kite |
+| position | relation | What was on the grass, below the birds? | **✓ A park clock** · A swing set · A picnic blanket · A slide | bird |
+| count | true-false | True or false? There were three birds. | True · **✓ False** | bird |
+| count | true-false | True or false? There was one picnic blanket. | **✓ True** · False | picnic |
+| count | true-false | True or false? There were two people. | **✓ True** · False | person |
 
 ## In the kitchen
 

@@ -48,6 +48,11 @@ export interface ZoneDef {
    * line (shelves, roofs, the worktop); set it for water that lies flat (the sea at the beach).
    */
   flat?: boolean;
+  /**
+   * Ground bands: keep feet at least this fraction of the band's depth above its bottom edge, so things clearly
+   * stand on it. On the park's thin path, feet at the very bottom looked to be on the grass.
+   */
+  feetInset?: number;
   /** Everything here faces the same way (traffic on a road), chosen once per picture. */
   oneWay?: boolean;
   /** At least this many of the band's kinds are anchors (tall, against the wall or extra wide): a room always has furniture. */
