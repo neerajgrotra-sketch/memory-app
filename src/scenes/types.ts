@@ -49,6 +49,11 @@ export interface ZoneDef {
    */
   flat?: boolean;
   /**
+   * The band stands in front of the bands above it, not under them (the supermarket floor, in front of the shelves):
+   * nothing in it is ever "below" something up there. "What was on the floor, below the tins?" made no sense.
+   */
+  inFront?: boolean;
+  /**
    * Ground bands: keep feet at least this fraction of the band's depth above its bottom edge, so things clearly
    * stand on it. On the park's thin path, feet at the very bottom looked to be on the grass.
    */

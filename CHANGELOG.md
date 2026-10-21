@@ -10,6 +10,15 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.2.4 (2026-10-21)
+
+- **Every product says what it is.** Like the milk, the cereal boxes, bottles of water, jars of honey, bottles of juice and the egg boxes now have their name on the label (**CEREAL**, **WATER**, **HONEY**, **JUICE**, **EGGS**). Players couldn't tell what the jar or the boxes were. Colours that are asked about (the cereal box, the juice bottle, the honey jar's lid) are still the main colour.
+- **Tins of beans.** "Tins" was too vague: they're now **tins of beans**, with **BEANS** and some beans on the label.
+- **Eggs look like eggs.** The closed brown box had bumps that didn't read as eggs. It's now an open tray of **white** eggs with an EGGS label.
+- **One toilet roll per toilet roll.** A "pack of toilet rolls" showed three rolls, so "Were there more bottles of water or more packs of toilet rolls?" with one pack and two bottles had players counting three rolls. Each is now a single labelled **toilet roll**, so what you count is what you see.
+- **Labels never read backwards.** Copies were sometimes drawn mirrored, which turned MILK into "KLIM". Anything with words on it is never mirrored.
+- **Nothing on the floor is "below" a shelf.** "What was on the floor, below the tins?" made no sense: the floor is in front of the shelves, not under them. Above / below never links a band marked `inFront` (the supermarket floor) with the bands above it. Shelf to shelf stays ("What was on the middle shelf, above the cartons of milk?").
+
 ## 4.2.3 (2026-10-21)
 
 - **Milk looks like milk.** The supermarket's cartons had a blue drop on the front, which read as water. They now say **MILK** with cow-print patches.

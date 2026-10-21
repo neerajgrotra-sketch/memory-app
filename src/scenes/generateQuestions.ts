@@ -615,6 +615,8 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       // Two flat bands (the path and the grass): the one lower down is nearer, not "below". "What was on the grass,
       // below the dog?" made no sense.
       if (isFlat(zoneOf(group.zoneId)) && isFlat(zoneOf(near[0].zoneId))) continue;
+      const lower = zoneIndex(group) > zoneIndex(near[0]) ? group : near[0];
+      if (zoneOf(lower.zoneId).inFront) continue;
       const target = near[0];
       const answerItem = itemOf(target.kind);
       const plural = target.count > 1;

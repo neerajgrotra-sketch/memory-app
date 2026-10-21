@@ -52,13 +52,18 @@ const items: ItemDef[] = [
     size: 0.11,
     zones: [...TOP, ...MIDDLE],
     ...shelved,
+    noFlip: true, // the words on it would read backwards
     colours: PRODUCT,
     draw: (colour) => (
       <G>
         <Rect x={0} y={0} width={70} height={100} rx={3} fill={colour} />
         <G stroke="none">
           <Rect x={56} y={0} width={14} height={100} fill="#000000" fillOpacity={0.15} />
-          <Ellipse cx={30} cy={30} rx={22} ry={13} fill="#ffffff" />
+          {/* "CEREAL" on a white band: a plain logo didn't say what was in the box. */}
+          <Rect x={4} y={16} width={52} height={22} rx={4} fill="#ffffff" />
+          <SvgText x={30} y={31.5} fontSize={11} fontWeight="bold" fontFamily="Arial" fill="#212529" textAnchor="middle">
+            CEREAL
+          </SvgText>
           <Path d="M10,62 H50 A20,16 0 0 1 10,62 Z" fill="#ffffff" />
           <Circle cx={20} cy={59} r={5} fill="#f4c430" />
           <Circle cx={31} cy={57} r={5} fill="#f4c430" />
@@ -69,40 +74,39 @@ const items: ItemDef[] = [
           <Rect x={8} y={6} width={44} height={6} rx={3} fill="#ffffff" fillOpacity={0.55} />
           <Path d="M10,84 H46 M10,91 H36" stroke="#ffffff" strokeOpacity={0.5} strokeWidth={3} strokeLinecap="round" />
           <Path d="M4,6 V94" stroke="#ffffff" strokeOpacity={0.3} strokeWidth={3} strokeLinecap="round" />
-          <Ellipse cx={22} cy={27} rx={6} ry={3} fill="#ffffff" fillOpacity={0.7} />
-          <Circle cx={36} cy={32} r={3} fill="#f4c430" />
         </G>
       </G>
     ),
   },
   {
     kind: 'toilet-rolls',
-    singular: 'pack of toilet rolls',
-    plural: 'packs of toilet rolls',
+    singular: 'toilet roll',
+    plural: 'toilet rolls',
     article: 'a',
-    w: 90,
-    h: 80,
-    size: 0.12,
+    w: 62,
+    h: 76,
+    size: 0.1,
     zones: TOP,
     ...shelved,
+    noFlip: true, // the words on it would read backwards
     maxCount: 2,
     tone: '#f8f9fa',
+    // One roll per item, labelled: a pack showed three rolls, so people counted rolls instead of packs.
     draw: () => (
       <G>
-        <Rect x={0} y={6} width={90} height={74} rx={10} fill="#f8f9fa" />
+        <Path d="M0,12 V66 A31,10 0 0 0 62,66 V12 Z" fill="#f8f9fa" />
+        <Ellipse cx={31} cy={12} rx={31} ry={10} fill="#e9ecef" />
+        <Ellipse cx={31} cy={12} rx={9} ry={3.5} fill="#c9a27a" />
         <G stroke="none">
-          <Rect x={0} y={36} width={90} height={18} fill={C.blue.hex} />
-          {[16, 45, 74].map((cx) => (
-            <G key={cx}>
-              <Ellipse cx={cx} cy={10} rx={13} ry={6} fill="#e9ecef" />
-              <Ellipse cx={cx} cy={10} rx={4} ry={2.5} fill="#c9a27a" />
-            </G>
-          ))}
-          {/* Where the rolls press against the wrapper, a shine on the plastic and a white print on the band. */}
-          <Path d="M30,20 V34 M59,20 V34 M30,56 V76 M59,56 V76" stroke="#000000" strokeOpacity={0.08} strokeWidth={3} strokeLinecap="round" />
-          <Path d="M8,24 Q6,50 10,72" fill="none" stroke="#ffffff" strokeWidth={4} strokeLinecap="round" />
-          <Circle cx={20} cy={45} r={4} fill="#ffffff" fillOpacity={0.8} />
-          <Path d="M30,45 H72" stroke="#ffffff" strokeOpacity={0.8} strokeWidth={3} strokeLinecap="round" />
+          <Rect x={0} y={30} width={62} height={30} fill={C.blue.hex} />
+          <SvgText x={31} y={43} fontSize={11} fontWeight="bold" fontFamily="Arial" fill="#ffffff" textAnchor="middle">
+            TOILET
+          </SvgText>
+          <SvgText x={31} y={56} fontSize={11} fontWeight="bold" fontFamily="Arial" fill="#ffffff" textAnchor="middle">
+            ROLL
+          </SvgText>
+          {/* A shine down the wrapper. */}
+          <Path d="M7,24 V28 M7,62 V68" stroke="#ffffff" strokeWidth={4} strokeLinecap="round" />
         </G>
       </G>
     ),
@@ -117,15 +121,18 @@ const items: ItemDef[] = [
     size: 0.1,
     zones: [...TOP, ...BOTTOM],
     ...shelved,
+    noFlip: true, // the words on it would read backwards
     tone: '#5fb3e8',
     draw: () => (
       <G>
         <Path d="M16,14 H34 V20 Q46,26 46,38 V78 Q46,85 39,85 H11 Q4,85 4,78 V38 Q4,26 16,20 Z" fill="#5fb3e8" />
         <Rect x={17} y={2} width={16} height={12} rx={2} fill="#1e4fb8" />
         <G stroke="none">
-          <Rect x={4} y={48} width={42} height={16} fill="#ffffff" />
-          {/* A mountain on the label, ridges on the cap, ripples in the plastic and a shine. */}
-          <Path d="M14,61 L22,52 L27,57 L31,53 L38,61 Z" fill="#5fb3e8" />
+          <Rect x={4} y={47} width={42} height={18} fill="#ffffff" />
+          {/* "WATER" on the label, ridges on the cap, ripples in the plastic and a shine. */}
+          <SvgText x={25} y={59.5} fontSize={10.5} fontWeight="bold" fontFamily="Arial" fill="#1e4fb8" textAnchor="middle">
+            WATER
+          </SvgText>
           <Path d="M21,4 V12 M25,4 V12 M29,4 V12" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={1.5} />
           <Path d="M6,70 H44 M6,40 H44" stroke="#ffffff" strokeOpacity={0.4} strokeWidth={2} />
           <Path d="M11,30 Q8,36 9,44 M10,68 V78" stroke="#ffffff" strokeOpacity={0.7} strokeWidth={3} strokeLinecap="round" />
@@ -135,14 +142,15 @@ const items: ItemDef[] = [
   },
   {
     kind: 'tin',
-    singular: 'tin',
-    plural: 'tins',
+    singular: 'tin of beans',
+    plural: 'tins of beans',
     article: 'a',
     w: 60,
     h: 75,
     size: 0.1,
     zones: [...MIDDLE, ...BOTTOM],
     ...shelved,
+    noFlip: true, // the words on it would read backwards
     colours: PRODUCT,
     draw: (colour) => (
       <G>
@@ -150,14 +158,18 @@ const items: ItemDef[] = [
         <G stroke="none">
           <Rect x={0} y={0} width={60} height={9} rx={4} fill="#c0c7cf" />
           <Rect x={0} y={66} width={60} height={9} rx={4} fill="#c0c7cf" />
-          <Ellipse cx={30} cy={38} rx={19} ry={11} fill="#ffffff" />
-          {/* Ridges round the rims, the food on the label, the seam and a shine down the side. */}
+          {/* "BEANS" and a few beans on a white label: a plain tin didn't say what was inside. */}
+          <Rect x={4} y={22} width={44} height={32} rx={3} fill="#ffffff" />
+          <SvgText x={26} y={35} fontSize={10.5} fontWeight="bold" fontFamily="Arial" fill="#212529" textAnchor="middle">
+            BEANS
+          </SvgText>
+          {[16, 23, 30, 37].map((cx, i) => (
+            <Ellipse key={cx} cx={cx} cy={45 - (i % 2) * 2} rx={3.6} ry={2.6} fill="#e07a1f" />
+          ))}
+          {/* Ridges round the rims, the seam and a shine down the side. */}
           <Path d="M3,4.5 H57 M3,70.5 H57" stroke="#000000" strokeOpacity={0.2} strokeWidth={1.5} />
-          <Circle cx={24} cy={38} r={4} fill={colour} />
-          <Circle cx={33} cy={36} r={4} fill={colour} />
-          <Circle cx={38} cy={41} r={3.5} fill={colour} />
           <Path d="M52,12 V63" stroke="#000000" strokeOpacity={0.15} strokeWidth={4} />
-          <Path d="M8,14 V61" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={4} strokeLinecap="round" />
+          <Path d="M8,13 V18 M8,58 V62" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={4} strokeLinecap="round" />
         </G>
       </G>
     ),
@@ -172,6 +184,7 @@ const items: ItemDef[] = [
     size: 0.1,
     zones: MIDDLE,
     ...shelved,
+    noFlip: true, // the words on it would read backwards
     colours: [C.red, C.blue, C.yellow, C.green],
     colourPrompt: (plural) => (plural ? 'What colour were the lids on the honey jars?' : 'What colour was the lid on the honey jar?'),
     draw: (colour) => (
@@ -179,12 +192,11 @@ const items: ItemDef[] = [
         <Rect x={4} y={14} width={52} height={61} rx={12} fill="#f2a93b" />
         <Rect x={2} y={0} width={56} height={16} rx={4} fill={colour} />
         <G stroke="none">
-          <Rect x={12} y={36} width={36} height={22} rx={4} fill="#ffffff" />
-          {/* A bee on the label, ridges round the lid, a shine on the glass and darker honey at the bottom. */}
-          <Ellipse cx={27} cy={42} rx={3.5} ry={2.5} fill="#adb5bd" />
-          <Ellipse cx={33} cy={42} rx={3.5} ry={2.5} fill="#adb5bd" />
-          <Ellipse cx={30} cy={48} rx={6} ry={4.5} fill="#ffd60a" />
-          <Path d="M28,44 V52 M32,44 V52" stroke="#212529" strokeWidth={1.8} />
+          <Rect x={8} y={36} width={44} height={22} rx={4} fill="#ffffff" />
+          {/* "HONEY" on the label (a bee alone wasn't read as honey), ridges round the lid, a shine and darker honey. */}
+          <SvgText x={30} y={52} fontSize={11} fontWeight="bold" fontFamily="Arial" fill="#a8590f" textAnchor="middle">
+            HONEY
+          </SvgText>
           <Path d="M10,2 V14 M18,2 V14 M26,2 V14 M34,2 V14 M42,2 V14 M50,2 V14" stroke="#000000" strokeOpacity={0.15} strokeWidth={2} />
           <Path d="M10,22 V32 M10,62 V68" stroke="#ffffff" strokeOpacity={0.55} strokeWidth={3.5} strokeLinecap="round" />
           <Path d="M6,64 H54 V68 Q54,75 44,75 H16 Q6,75 6,68 Z" fill="#a8590f" fillOpacity={0.35} />
@@ -202,6 +214,7 @@ const items: ItemDef[] = [
     size: 0.1,
     zones: [...TOP, ...MIDDLE],
     ...shelved,
+    noFlip: true, // the words on it would read backwards
     // On Hard, a row can mix flavours.
     mixedColours: true,
     colours: [C.orange, C.red, C.green, C.yellow, C.pink],
@@ -211,10 +224,10 @@ const items: ItemDef[] = [
         <Rect x={17} y={2} width={16} height={12} rx={2} fill="#f8f9fa" />
         <G stroke="none">
           <Rect x={4} y={46} width={42} height={20} fill="#ffffff" />
-          <Circle cx={25} cy={56} r={6} fill={colour} />
-          {/* A leaf on the fruit, print on the label, ridges on the cap and a shine. */}
-          <Ellipse cx={30} cy={49} rx={4} ry={2} fill="#2b9348" transform="rotate(-30 30 49)" />
-          <Path d="M10,62 H18 M32,62 H40" stroke="#adb5bd" strokeWidth={2} strokeLinecap="round" />
+          {/* "JUICE" on the label, ridges on the cap and a shine. */}
+          <SvgText x={25} y={60} fontSize={12} fontWeight="bold" fontFamily="Arial" fill="#212529" textAnchor="middle">
+            JUICE
+          </SvgText>
           <Path d="M21,4 V12 M25,4 V12 M29,4 V12" stroke="#000000" strokeOpacity={0.15} strokeWidth={1.5} />
           <Path d="M11,30 Q8,36 9,42 M10,70 V78" stroke="#ffffff" strokeOpacity={0.5} strokeWidth={3} strokeLinecap="round" />
         </G>
@@ -231,6 +244,7 @@ const items: ItemDef[] = [
     size: 0.1,
     zones: [...BOTTOM, ...MIDDLE],
     ...shelved,
+    noFlip: true, // the words on it would read backwards
     tone: '#f8f9fa',
     draw: () => (
       <G>
@@ -262,24 +276,30 @@ const items: ItemDef[] = [
     size: 0.15,
     zones: [...BOTTOM, ...MIDDLE],
     ...shelved,
+    noFlip: true, // the words on it would read backwards
     tier: 'medium',
     maxCount: 2,
     tone: '#d8b98a',
+    // An open tray of white eggs with "EGGS" on the front: the closed brown box wasn't read as eggs.
     draw: () => (
       <G>
-        <Rect x={0} y={12} width={100} height={43} rx={8} fill="#d8b98a" />
         {[14, 38, 62, 86].map((cx) => (
-          <Ellipse key={cx} cx={cx} cy={14} rx={11} ry={9} fill="#d8b98a" />
+          <Ellipse key={cx} cx={cx} cy={18} rx={10.5} ry={14} fill="#f8f9fa" stroke="#adb5bd" />
         ))}
         <G stroke="none">
-          <Rect x={30} y={27} width={40} height={18} rx={3} fill="#ffffff" />
-          <Ellipse cx={50} cy={36} rx={6} ry={7} fill="#f2dcb3" />
-          {/* Light on the bumps of the lid, the hinge line and the moulded card. */}
           {[14, 38, 62, 86].map((cx) => (
-            <Ellipse key={cx} cx={cx - 3} cy={11} rx={4} ry={2.5} fill="#ffffff" fillOpacity={0.35} />
+            <Ellipse key={cx} cx={cx - 3.5} cy={12} rx={3} ry={4.5} fill="#ffffff" />
           ))}
-          <Path d="M2,22 H98" stroke="#000000" strokeOpacity={0.15} strokeWidth={2} />
-          <Path d="M8,32 V48 M20,32 V48 M80,32 V48 M92,32 V48" stroke="#000000" strokeOpacity={0.08} strokeWidth={3} strokeLinecap="round" />
+        </G>
+        <Rect x={0} y={24} width={100} height={31} rx={5} fill="#d8b98a" />
+        <G stroke="none">
+          {/* The cups the eggs sit in, the label and the moulded card. */}
+          <Path d="M2,26 Q14,34 26,26 Q38,34 50,26 Q62,34 74,26 Q86,34 98,26" fill="none" stroke="#000000" strokeOpacity={0.15} strokeWidth={2} />
+          <Rect x={26} y={34} width={48} height={18} rx={3} fill="#ffffff" />
+          <SvgText x={50} y={48} fontSize={14} fontWeight="bold" fontFamily="Arial" fill="#212529" textAnchor="middle">
+            EGGS
+          </SvgText>
+          <Path d="M8,36 V50 M92,36 V50" stroke="#000000" strokeOpacity={0.08} strokeWidth={3} strokeLinecap="round" />
         </G>
       </G>
     ),
@@ -773,7 +793,7 @@ export const supermarket: Recipe = {
     { id: 'top', label: 'On the top shelf', surface: 'ground', top: SHELVES[0][0], bottom: SHELVES[0][1], rows: 1, flush: true },
     { id: 'middle', label: 'On the middle shelf', surface: 'ground', top: SHELVES[1][0], bottom: SHELVES[1][1], rows: 1, flush: true },
     { id: 'bottom', label: 'On the bottom shelf', surface: 'ground', top: SHELVES[2][0], bottom: SHELVES[2][1], rows: 1, flush: true },
-    { id: 'floor', label: 'On the floor', surface: 'ground', top: FLOOR_TOP, bottom: 1, rows: 2 },
+    { id: 'floor', label: 'On the floor', surface: 'ground', top: FLOOR_TOP, bottom: 1, rows: 2, inFront: true },
   ],
   items,
   details,

@@ -396,9 +396,9 @@ Per-picture details: "What was the aisle number?"; "What was on special offer?".
 | Thing | Band | Size | Most | Colours | Habits |
 | --- | --- | --- | --- | --- | --- |
 | cereal box | top, middle | small 11% | 3 | Red, Blue, Yellow, Green, Orange, Pink | – |
-| pack of toilet rolls | top | small 12% | 2 | fixed (`#f8f9fa`) | – |
+| toilet roll | top | small 10% | 2 | fixed (`#f8f9fa`) | – |
 | bottle of water | top, bottom | small 10% | 3 | fixed (`#5fb3e8`) | – |
-| tin | middle, bottom | small 10% | 3 | Red, Blue, Yellow, Green, Orange, Pink | – |
+| tin of beans | middle, bottom | small 10% | 3 | Red, Blue, Yellow, Green, Orange, Pink | – |
 | jar of honey | middle | small 10% | 3 | Red, Blue, Yellow, Green | – |
 | bottle of juice | top, middle | small 10% | 3 | Orange, Red, Green, Yellow, Pink | copies may differ in colour on Hard |
 | carton of milk | bottom, middle | small 10% | 3 | fixed (`#f8f9fa`) | – |

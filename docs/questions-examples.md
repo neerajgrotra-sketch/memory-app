@@ -379,7 +379,7 @@ Scene `supermarket-c29hz`, colour scheme `modern`.
 | bottles of water | 2 | fixed | On the top shelf | centre |
 | carton of milk | 1 | fixed | On the middle shelf | left |
 | loaves of bread | 2 | fixed | On the bottom shelf | centre |
-| pack of toilet rolls | 1 | fixed | On the top shelf | right |
+| toilet roll | 1 | fixed | On the top shelf | right |
 
 Detail `aisle`: 8.
 
@@ -387,7 +387,7 @@ Detail `offer`: Bread.
 
 Detail `aisleSide`: right.
 
-### Questions (27)
+### Questions (26)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
@@ -399,25 +399,24 @@ Detail `aisleSide`: right.
 | count | count | How many shopping bags were there? | **✓ 1** · 3 · 2 · 4 | shopping-bag |
 | position | where | Where was the shopping bag? | **✓ Between the shopping basket and the sack of potatoes** · To the right of the sack of potatoes · To the left of the shopping basket | shopping-bag |
 | count | count | How many bottles of water were there? | **✓ 2** · 5 · 3 · 1 | water |
-| position | where | Where were the bottles of water? | **✓ To the left of the pack of toilet rolls** · To the right of the pack of toilet rolls | water |
+| position | where | Where were the bottles of water? | **✓ To the left of the toilet roll** · To the right of the toilet roll | water |
 | count | count | How many cartons of milk were there? | **✓ 1** · 3 · 2 · 4 | milk |
 | count | count | How many loaves of bread were there? | **✓ 2** · 3 · 5 · 1 | bread |
-| count | count | How many packs of toilet rolls were there? | **✓ 1** · 3 · 4 · 2 | toilet-rolls |
-| position | where | Where was the pack of toilet rolls? | **✓ To the right of the bottles of water** · To the left of the bottles of water | toilet-rolls |
-| object | what-here | Which of these was on the top shelf? | **✓ A pack of toilet rolls** · A cereal box · A bottle of juice | in-top |
+| count | count | How many toilet rolls were there? | **✓ 1** · 3 · 4 · 2 | toilet-rolls |
+| position | where | Where was the toilet roll? | **✓ To the right of the bottles of water** · To the left of the bottles of water | toilet-rolls |
+| object | what-here | Which of these was on the top shelf? | **✓ A toilet roll** · A cereal box · A bottle of juice | in-top |
 | object | what-here | Which of these was on the floor? | **✓ A shopping bag** · A crate of oranges · A watermelon · A wet floor sign | in-floor |
-| object | what-here | What was on the middle shelf? | **✓ A carton of milk** · A tin · A cereal box · A bottle of juice | band-middle |
-| object | what-here | What was on the bottom shelf? | **✓ Loaves of bread** · Cartons of milk · Tins · Bottles of water | band-bottom |
+| object | what-here | What was on the middle shelf? | **✓ A carton of milk** · A tin of beans · A cereal box · A bottle of juice | band-middle |
+| object | what-here | What was on the bottom shelf? | **✓ Loaves of bread** · Cartons of milk · Tins of beans · Bottles of water | band-bottom |
 | number | detail | What was the aisle number? | **✓ 8** · 7 · 6 · 18 | aisle-number |
 | object | detail | What was on special offer? | **✓ Bread** · Cheese · Apples · Milk | offer |
-| object | seen | Which of these was in the picture? | **✓ Sack of potatoes** · Bottle of juice · Cardboard box · Tin | potatoes |
-| object | seen | Which of these was NOT in the picture? | **✓ Crate of apples** · Shopping basket · Pack of toilet rolls · Loaf of bread | apples |
+| object | seen | Which of these was in the picture? | **✓ Sack of potatoes** · Bottle of juice · Cardboard box · Tin of beans | potatoes |
+| object | seen | Which of these was NOT in the picture? | **✓ Crate of apples** · Shopping basket · Toilet roll · Loaf of bread | apples |
 | count | compare | Were there more shopping baskets or more shopping bags? | Shopping baskets · Shopping bags · **✓ The same number** | compare-basket-shopping-bag |
 | count | compare | Were there more sacks of potatoes or more bottles of water? | Sacks of potatoes · **✓ Bottles of water** · The same number | compare-potatoes-water |
-| position | relation | What was on the floor, below the loaves of bread? | **✓ A shopping bag** · A watermelon · A shopping basket · A wet floor sign | bread |
-| count | true-false | True or false? There was one carton of milk. | **✓ True** · False | milk |
-| object | true-false | True or false? There was a jar of honey in the picture. | True · **✓ False** | jar |
-| count | true-false | True or false? There were two shopping bags. | True · **✓ False** | shopping-bag |
+| count | true-false | True or false? There was one loaf of bread. | True · **✓ False** | bread |
+| colour | true-false | True or false? The shopping basket was green. | True · **✓ False** | basket |
+| count | true-false | True or false? There was one sack of potatoes. | **✓ True** · False | potatoes |
 
 ## At the train station
 
