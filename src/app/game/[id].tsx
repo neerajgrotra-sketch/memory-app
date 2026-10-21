@@ -1,6 +1,6 @@
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/Button';
@@ -36,11 +36,20 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
   const { progress, reload } = useReloadableGameProgress(gameId);
   const { profile } = useProfile();
   const unlimitedPeeks = profile?.tester === true && profile.testPeeks === true;
+  // The rules, in a pop-up from the "How to play" button by the title.
+  const [rulesOpen, setRulesOpen] = useState(false);
   // Starting again: ask first, then say it's done.
   const [startAgain, setStartAgain] = useState<'idle' | 'confirm' | 'done'>('idle');
   const restart = async () => {
     await statsStore.restart(gameId);
     setStartAgain('done');
+    reload();
+  };
+  // Tester mode: jump straight to any level (a "start again" at that level), to test without climbing.
+  const pickLevel = async (level: number) => {
+    feedback('tick');
+    await statsStore.restart(gameId, level);
+    setStartAgain('idle');
     reload();
   };
   const play = (mode: string) => {
@@ -52,14 +61,20 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.content}>
         <GameArt style={styles.art} />
-        <SafeAreaView edges={['top']} style={styles.backWrap} pointerEvents="box-none">
-          <Pressable accessibilityRole="button" accessibilityLabel="Back" onPress={goBack} hitSlop={8} style={styles.back}>
-            <Text style={styles.backText}>←</Text>
-          </Pressable>
-        </SafeAreaView>
 
         <View style={styles.body}>
-          <Text style={styles.title}>{game.title}</Text>
+          <View style={styles.titleRow}>
+            <Text style={styles.title}>{game.title}</Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`How to play ${game.title}`}
+              onPress={() => setRulesOpen(true)}
+              hitSlop={6}
+              style={({ pressed }) => [styles.howTo, pressed && styles.backPressed]}
+            >
+              <Text style={styles.howToText}>ⓘ How to play</Text>
+            </Pressable>
+          </View>
           <Text style={styles.tagline}>{game.tagline}</Text>
 
           {!progress ? (
@@ -97,6 +112,8 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
                 </Text>
                 <Text style={styles.peeksDetail}>{peeksLine(progress.peeks)}</Text>
               </View>
+
+              {profile?.tester && <PickLevel current={progress.ladder.level} onPick={pickLevel} />}
 
               {startAgain === 'done' ? (
                 <Text style={styles.startedAgain}>You’re back at Level 1. Your high score, best level and history are kept.</Text>
@@ -139,8 +156,12 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
             </>
           )}
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>How to play</Text>
+        </View>
+      </ScrollView>
+      <Modal visible={rulesOpen} transparent animationType="fade" onRequestClose={() => setRulesOpen(false)}>
+        <Pressable style={styles.rulesBackdrop} onPress={() => setRulesOpen(false)} accessibilityRole="button" accessibilityLabel="Close">
+          <Pressable style={styles.rulesSheet} onPress={() => {}}>
+            <Text style={styles.rulesTitle}>How to play</Text>
             {game.howToPlay.map((step, i) => (
               <View key={step} style={styles.step}>
                 <Text style={styles.stepNumber}>{i + 1}</Text>
@@ -150,9 +171,47 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
             <Text style={styles.note}>
               {ROUNDS_TO_LEVEL_UP} good rounds (4 or 5 right) take you up a level. Two very poor rounds in a row (0 or 1 right) take you back one.
             </Text>
-          </View>
-        </View>
-      </ScrollView>
+            <Text style={styles.note}>
+              👀 Peeks: every {formatPoints(PEEK_POINTS)} points earns one (hold up to {MAX_PEEKS}). During the questions, a Peek shows the picture again for a few seconds; that answer earns half points.
+            </Text>
+            <Button label="Got it" onPress={() => setRulesOpen(false)} />
+          </Pressable>
+        </Pressable>
+      </Modal>
+      {/* Back to the Games tab: outside the scroll, so it never scrolls away, and solid with a label and a
+          light edge, so it shows on any picture behind it. */}
+      <SafeAreaView edges={['top']} style={styles.backWrap} pointerEvents="box-none">
+        <Pressable accessibilityRole="button" accessibilityLabel="Back to Games" onPress={goBack} hitSlop={8} style={({ pressed }) => [styles.back, pressed && styles.backPressed]}>
+          <Text style={styles.backText}>←  Games</Text>
+        </Pressable>
+      </SafeAreaView>
+    </View>
+  );
+}
+
+/** Tester mode: every level as a button; tap one to play from it. History, high score and best level are kept. */
+function PickLevel({ current, onPick }: { current: number; onPick: (level: number) => void }) {
+  return (
+    <View style={[styles.section, styles.testerCard]}>
+      <Text style={styles.sectionTitle}>Tester: play any level</Text>
+      <Text style={styles.note}>Tap a level to play from it now. Your history, high score and best level are kept.</Text>
+      <View style={styles.levelGrid}>
+        {Array.from({ length: MAX_LEVEL }, (_, i) => i + 1).map((level) => {
+          const on = level === current;
+          return (
+            <Pressable
+              key={level}
+              accessibilityRole="button"
+              accessibilityState={{ selected: on }}
+              accessibilityLabel={`Play from level ${level}`}
+              onPress={() => onPick(level)}
+              style={({ pressed }) => [styles.levelChip, on && styles.levelChipOn, pressed && { opacity: 0.8 }]}
+            >
+              <Text style={[styles.levelChipText, on && styles.levelChipTextOn]}>{level}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
     </View>
   );
 }
@@ -253,17 +312,31 @@ const styles = StyleSheet.create({
   art: { width: '100%' },
   backWrap: { position: 'absolute', top: 0, left: 0 },
   back: {
-    margin: 16,
-    width: 44,
+    margin: 12,
     height: 44,
+    paddingHorizontal: 16,
     borderRadius: 22,
-    backgroundColor: 'rgba(15,17,21,0.75)',
+    backgroundColor: colors.background,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.45)',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOpacity: 0.4,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 4,
   },
-  backText: { color: colors.text, fontSize: 20, fontWeight: '700' },
+  backPressed: { opacity: 0.7 },
+  backText: { color: colors.text, fontSize: 17, fontWeight: '800' },
   body: { padding: 20, gap: 20 },
-  title: { color: colors.text, fontSize: 30, fontWeight: '900', marginBottom: -12 },
+  titleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', marginBottom: -12 },
+  title: { color: colors.text, fontSize: 30, fontWeight: '900', flexShrink: 1 },
+  howTo: { borderRadius: radius.pill, borderWidth: 1, borderColor: colors.accent, paddingHorizontal: 14, minHeight: 40, justifyContent: 'center' },
+  howToText: { color: colors.accent, fontSize: 14, fontWeight: '800' },
+  rulesBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', alignItems: 'center', justifyContent: 'center', padding: 20 },
+  rulesSheet: { width: '100%', maxWidth: 420, backgroundColor: colors.surface, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, padding: 20, gap: 14 },
+  rulesTitle: { color: colors.text, fontSize: 22, fontWeight: '900' },
   tagline: { color: colors.textMuted, fontSize: 16, lineHeight: 22 },
   levelCard: { flexDirection: 'row', alignItems: 'center', gap: 16, backgroundColor: colors.surface, borderRadius: radius.md, padding: 16 },
   levelText: { flex: 1, gap: 4 },
@@ -275,6 +348,12 @@ const styles = StyleSheet.create({
   tileValue: { color: colors.text, fontSize: 26, fontWeight: '900', fontVariant: ['tabular-nums'] },
   tileLabel: { color: colors.textMuted, fontSize: 13 },
   section: { gap: 10 },
+  testerCard: { backgroundColor: colors.surface, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, padding: 14 },
+  levelGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  levelChip: { width: 48, height: 44, borderRadius: 10, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' },
+  levelChipOn: { backgroundColor: colors.accent, borderColor: colors.accent },
+  levelChipText: { color: colors.text, fontSize: 16, fontWeight: '700' },
+  levelChipTextOn: { color: colors.accentText },
   sectionTitle: { color: colors.textMuted, fontSize: 13, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1 },
   practice: { flexDirection: 'row', gap: 10 },
   practiceItem: {

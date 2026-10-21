@@ -65,6 +65,27 @@ function withDistractors(answer: string, preferred: string[], fallback: string[]
   return [answer, ...[...new Set(pool)].slice(0, 3)];
 }
 
+/** Colours too alike to tell apart from memory on a phone: never both offered in one question (testers mixed them up). */
+const CLASHING_COLOURS: [string, string][] = [['Red', 'Orange']];
+const mentions = (text: string, colour: string) => new RegExp(`\\b${colour}\\b`, 'i').test(text);
+/** Whether two options, or an option and the answer, ask the player to tell clashing colours apart. */
+function clashes(a: string, b: string): boolean {
+  return CLASHING_COLOURS.some(([x, y]) =>
+    [
+      [x, y],
+      [y, x],
+    ].some(([p, q]) => mentions(a, p) && !mentions(a, q) && mentions(b, q) && !mentions(b, p)),
+  );
+}
+
+/** `withDistractors` for colour answers: no wrong option clashes with the answer or with another option. */
+function withColourDistractors(answer: string, preferred: string[], fallback: string[], rng: Rng): string[] {
+  const pool = [...new Set([...rng.shuffle(preferred), ...rng.shuffle(fallback)].filter((o) => o !== answer))];
+  const picked = [answer];
+  for (const o of pool) if (picked.length < 4 && !picked.some((p) => clashes(p, o))) picked.push(o);
+  return picked;
+}
+
 function countOptions(n: number, close: boolean, rng: Rng): string[] {
   const candidates = Array.from({ length: Math.max(6, n + 3) }, (_, i) => i + 1).filter((c) => c !== n);
   const picked = close
@@ -108,7 +129,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   const itemOf = (kind: string) => recipe.items.find((i) => i.kind === kind)!;
   const zoneOf = (id: string) => recipe.zones.find((z) => z.id === id)!;
   const present = spec.groups.map((g) => itemOf(g.kind));
-  const absent = recipe.items.filter((i) => !spec.groups.some((g) => g.kind === i.kind));
+  const absent = recipe.items.filter((i) => !spec.groups.some((g) => g.kind === i.kind) && !spec.details?.alsoSeen?.includes(i.kind));
   const questions: Question[] = [];
   /** Every side a group is on: one, or each side a spread group has a copy on. */
   const sidesOf = (g: PlacedGroup): Set<Region> => {
@@ -119,7 +140,129 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   // Only bands things can go in make believable wrong answers (not the room's bare ceiling).
   const zones = recipe.zones.filter((z) => z.rows > 0);
 
-  const FAMILY: Record<string, QuestionFamily> = { colours: 'colour', missing: 'seen' };
+  // Thirds and bands, for questions that relate one thing to another ("above the armchair"). Thirds, not exact
+  // positions: they never change when the picture is laid out again for another screen. Wide things (a sofa, a
+  // bus) reach into the next third, so they're never asked about there.
+  const zoneIndex = (g: PlacedGroup) => recipe.zones.findIndex((z) => z.id === g.zoneId);
+  const isFlat = (z: ZoneDef) => z.flat ?? (z.surface === 'ground' && !z.flush);
+  const NEXT: Record<Region, Region[]> = { left: ['centre'], centre: ['left', 'right'], right: ['centre'] };
+  const isWide = (g: PlacedGroup) => itemOf(g.kind).wide === true;
+  const reaches = (g: PlacedGroup, region: Region) => sidesOf(g).has(region) || (isWide(g) && NEXT[g.region].includes(region));
+  // One-off things in the sky (the sun, a plane), and everything in a far-off band (space seen from the Moon), are
+  // far away, not above anything: "below the sun" or "above the crater: a satellite" reads oddly.
+  const faraway = (g: PlacedGroup) => zoneOf(g.zoneId).faraway === true || (itemOf(g.kind).countable === false && zoneOf(g.zoneId).surface === 'air');
+  // Nothing else in its own band shares its third: in a deep band (the living room floor), a thing at the back stands
+  // above one at the front, so "What was on the wall, above the crayons?" skipped the armchair players saw right
+  // above them.
+  const alone = (g: PlacedGroup) => !spec.groups.some((o) => o !== g && o.zoneId === g.zoneId && (reaches(o, g.region) || reaches(g, o.region)));
+  /**
+   * What stands against the wall in one third, below the wall band at `wallIdx`, to name as a landmark ("on the wall
+   * in the middle, above the armchair"): the one thing there (furniture, a tall lamp), or one copy of a pair standing
+   * apart ("the table lamp"). Things out on the floor in front don't count; they aren't below the wall. Nothing when
+   * that third has none, or two (a sofa reaching across from the next one).
+   */
+  const backAt = (wallIdx: number) => (g: PlacedGroup) => zoneIndex(g) === wallIdx + 1 && !!(itemOf(g.kind).backRow || itemOf(g.kind).tall);
+  const backLandmark = (wallIdx: number, region: Region): string | undefined => {
+    const here = spec.groups.filter((g) => backAt(wallIdx)(g) && reaches(g, region));
+    if (here.length !== 1) return undefined;
+    const g = here[0];
+    const it = itemOf(g.kind);
+    if (it.spread && g.count > 1) return g.boxes.filter((b) => regionOf(b.x + b.w / 2) === region).length === 1 ? `the ${it.singular}` : undefined;
+    return the(g);
+  };
+  const landmarkBelow = (group: PlacedGroup) => (zoneOf(group.zoneId).surface === 'wall' ? backLandmark(zoneIndex(group), group.region) : undefined);
+  /**
+   * "Where was the window?" for a thing on a wall, with what stood below each third: "On the wall on the right, above
+   * the table lamp" / "On the wall on the left, above the television". A third with nothing against the wall is
+   * named with something that wasn't there (so the answer isn't the only one with a landmark), and one more wrong
+   * answer pairs the right third with the wrong thing, so both have to be remembered. Null without a landmark below.
+   */
+  const wallWhere = (group: PlacedGroup): { answer: string; wrong: string[] } | null => {
+    const z = zoneOf(group.zoneId);
+    const idx = zoneIndex(group);
+    const own = landmarkBelow(group);
+    if (!own || !recipe.zones[idx + 1]) return null;
+    const at = (r: Region) => `${z.label} ${REGION_PHRASE[r]}`;
+    // Things that could stand against this wall, never a wide one.
+    const backKinds = recipe.items.filter((i) => (i.backRow || i.tall) && !i.wide && i.zones.includes(recipe.zones[idx + 1].id));
+    // Things not in the picture at all first: "on the left, above the teacher" with the teacher in the middle would be
+    // an easy one to rule out. Then things elsewhere, if there's nothing else.
+    const notIn = (r: Region) => {
+      const fits = backKinds.filter((i) => !spec.groups.some((g) => g.kind === i.kind && backAt(idx)(g) && reaches(g, r)) && `the ${i.singular}` !== own);
+      const absentOnes = fits.filter((i) => !spec.groups.some((g) => g.kind === i.kind));
+      return absentOnes.length ? absentOnes : fits;
+    };
+    const wrong: string[] = [];
+    for (const r of ['left', 'centre', 'right'] as Region[]) {
+      if (r === group.region) continue;
+      const there = backLandmark(idx, r) ?? (notIn(r).length ? `the ${rng.pick(notIn(r)).singular}` : undefined);
+      if (there) wrong.push(`${at(r)}, above ${there}`);
+    }
+    const swap = notIn(group.region);
+    if (swap.length) wrong.push(`${at(group.region)}, above the ${rng.pick(swap).singular}`);
+    return wrong.length >= 2 ? { answer: `${at(group.region)}, above ${own}`, wrong } : null;
+  };
+  const the = (g: PlacedGroup) => `the ${g.count > 1 ? itemOf(g.kind).plural : itemOf(g.kind).singular}`;
+  const COL: Record<Region, number> = { left: 0, centre: 1, right: 2 };
+  /**
+   * Where a thing was next to a landmark in its own band: furniture against the wall or a tall thing (a lamp, the TV,
+   * a bookshelf, a plant), never a wide one (a sofa reaches into the next third). By thirds, which never change when
+   * the picture is laid out again (copies of a pair keep theirs too): "To the left of the table lamps" when every
+   * copy is in a third to its right, "Between the table lamps" when copies are on both sides. A landmark sharing the
+   * thing's third says nothing for sure, so it's left out. One true statement is the answer; false ones about the
+   * same landmark are the best wrong answers. Null when there are too few.
+   */
+  // Things against the back wall (furniture, tall lamps, the TV) and things out on the floor are at different depths:
+  // a pile of books at the front isn't "to the left of the bookshelf" at the back, it's between the teddy bear and the
+  // ball. So things are only placed next to things at their own depth; things on a rug only next to things on it.
+  const standsBack = (g: PlacedGroup) => !!(itemOf(g.kind).backRow || itemOf(g.kind).tall);
+  const sameDepth = (a: PlacedGroup, b: PlacedGroup) =>
+    a.zoneId === b.zoneId && standsBack(a) === standsBack(b) && (a.onRug === 'all') === (b.onRug === 'all') && a.onRug !== 'some' && b.onRug !== 'some';
+  const besideLandmark = (group: PlacedGroup): { answer: string; wrong: string[]; fallback: string[] } | null => {
+    const at = COL[group.region];
+    const colsOf = (g: PlacedGroup) => [...sidesOf(g)].map((r) => COL[r]);
+    const landmarks = spec.groups.filter((g) => g !== group && sameDepth(g, group) && !isWide(g) && !colsOf(g).includes(at));
+    // Every statement is believable to the eye (a thing can stand just right of a lamp in the right-hand third), so
+    // all of them are offered for each landmark; truth comes from the thirds.
+    type Statement = { text: string; truth: boolean; landmarks: PlacedGroup[] };
+    const statements: Statement[] = landmarks.flatMap((g) => {
+      const cols = colsOf(g);
+      const facts: Statement[] = [
+        { text: `To the left of ${the(g)}`, truth: cols.every((c) => c > at), landmarks: [g] },
+        { text: `To the right of ${the(g)}`, truth: cols.every((c) => c < at), landmarks: [g] },
+      ];
+      // Only for a pair that stands apart (table lamps); toy cars side by side have nothing between them.
+      if (itemOf(g.kind).spread && g.count > 1) facts.push({ text: `Between ${the(g)}`, truth: Math.min(...cols) < at && Math.max(...cols) > at, landmarks: [g] });
+      return facts;
+    });
+    // Between two different things: "Between the teddy bear and the ball", the one on the left named first.
+    for (const a of landmarks)
+      for (const b of landmarks) {
+        if (a === b || Math.max(...colsOf(a)) >= Math.min(...colsOf(b))) continue;
+        // "Between the mop and bucket, and the pet bowl": a comma when the first name has its own "and".
+        statements.push({
+          text: `Between ${the(a)}${the(a).includes(' and ') ? ',' : ''} and ${the(b)}`,
+          truth: Math.max(...colsOf(a)) < at && Math.min(...colsOf(b)) > at,
+          landmarks: [a, b],
+        });
+      }
+    const truths = statements.filter((s) => s.truth);
+    if (!truths.length) return null;
+    // "Between" first (what players reach for), then any.
+    const between = truths.filter((s) => s.text.startsWith('Between'));
+    const pick = rng.pick(between.length ? between : truths);
+    const falses = statements.filter((s) => !s.truth);
+    const same = falses.filter((s) => s.landmarks.some((l) => pick.landmarks.includes(l))).map((s) => s.text);
+    const others = falses.filter((s) => !s.landmarks.some((l) => pick.landmarks.includes(l))).map((s) => s.text);
+    // With a single landmark only left and right are possible: a two-choice question, easier, like true or false.
+    if (same.length + others.length < 1) return null;
+    return { answer: pick.text, wrong: same, fallback: others };
+  };
+  // The rug, when the recipe has one: things on it are "On the carpet", never "On the floor".
+  const rug = recipe.rug;
+  const rugZone = rug ? recipe.zones.find((z) => z.surface === 'ground')?.id : undefined;
+
+  const FAMILY: Record<string, QuestionFamily> = { colours: 'colour', missing: 'seen', beside: 'where' };
   const add = (template: string, group: PlacedGroup | null, q: Omit<Question, 'id' | 'sceneId' | 'answerIndex'>, answerIndex = 0) =>
     questions.push({
       family: FAMILY[template] ?? (template as QuestionFamily),
@@ -149,7 +292,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         type: 'colour',
         subject: item.kind,
         prompt: item.colourPrompt?.(plural) ?? (plural ? `What colour were the ${item.plural}?` : `What colour was the ${item.singular}?`),
-        options: withDistractors(
+        options: withColourDistractors(
           group.colour.name,
           item.colours.map((c) => c.name),
           ALL_COLOURS.map((c) => c.name),
@@ -172,31 +315,73 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         type: 'colour',
         subject: item.kind,
         prompt: `What colours were the ${item.plural}?`,
-        options: withDistractors(answer, sameSize, [...allOne, ...combinations(names, Math.min(names.length, n + 1)).map(colourList)], rng),
+        options: withColourDistractors(answer, sameSize, [...allOne, ...combinations(names, Math.min(names.length, n + 1)).map(colourList)], rng),
       });
     }
 
     const sameZoneCells = zones
       .filter((z) => item.zones.includes(z.id))
       .flatMap((z) => (['left', 'centre', 'right'] as Region[]).map((r) => cellLabel(z, r)));
-    if (!spread) add('where', group, {
-      type: 'position',
-      subject: item.kind,
-      prompt: plural ? `Where were the ${item.plural}?` : `Where was the ${item.singular}?`,
-      // Only places this thing could really be ("In the sky" is never offered for a dog).
-      options: withDistractors(cellLabel(zone, group.region), sameZoneCells, [], rng),
-    });
+    // On the rug, the answer is "On the carpet"; off it, "On the floor, on the left" with "On the carpet" as a wrong
+    // answer for things that can go on it. Some copies on it and some off: not asked.
+    const onRugBand = rug && group.zoneId === rugZone;
+    const rugAnswer = onRugBand && group.onRug === 'all';
+    const rugOption = onRugBand && !item.avoidRug ? [rug.label] : [];
+    // Next to a landmark at its own depth, when there is one: "Between the teddy bear and the ball" is easier to judge
+    // on a small screen than "on the left".
+    const nextTo = besideLandmark(group);
+    const prompt = plural ? `Where were the ${item.plural}?` : `Where was the ${item.singular}?`;
+    // Loose things in a place that names its places: places, not sides ("On the carpet" or "On the floor", "On the
+    // path" or "On the grass", against "On the sofa", "On the bench"). Players didn't like left / middle / right.
+    // Only when the thing could really be in more than one of them: "On the pond" for a swan would be a giveaway.
+    // The other bands it could be in. (Bands it can't be in would be free eliminations: "Where was the slide? On the
+    // pond".)
+    const otherBands = zones.filter((z) => z.id !== group.zoneId && item.zones.includes(z.id)).map((z) => z.label);
+    const onGround = zone.surface === 'ground' && isFlat(zone);
+    const placesHere = !!recipe.places?.length && onGround && !standsBack(group) && ((onRugBand && !item.avoidRug) || otherBands.length > 0);
+    // On a wall, with what stood below it: "On the wall on the right, above the table lamp".
+    const onWall = spread ? null : wallWhere(group);
+    if (onWall) {
+      add('where', group, { type: 'position', subject: item.kind, prompt, options: withDistractors(onWall.answer, onWall.wrong, [], rng) });
+    } else if (!spread && !(onRugBand && group.onRug === 'some')) {
+      if (placesHere) {
+        const answer = rugAnswer ? rug.label : zone.label;
+        // The other of carpet and floor, and the other bands it could be in, always; then the place's other places.
+        const opposite = [...(rugAnswer ? [zone.label] : rugOption), ...otherBands];
+        add('where', group, { type: 'position', subject: item.kind, prompt, options: withDistractors(answer, opposite, recipe.places!, rng) });
+        // The landmark version too (the round still asks at most one "where").
+        if (nextTo) add('beside', group, { type: 'position', subject: item.kind, prompt, options: withDistractors(nextTo.answer, nextTo.wrong, nextTo.fallback, rng) });
+      } else if (nextTo || recipe.sides !== false) {
+        // A place without sides (`sides: false`) never falls back to left / middle / right: with no landmark, no "where".
+        add('where', group, {
+          type: 'position',
+          subject: item.kind,
+          prompt,
+          // Only places this thing could really be ("In the sky" is never offered for a dog).
+          options: nextTo
+            ? withDistractors(nextTo.answer, nextTo.wrong, nextTo.fallback, rng)
+            : withDistractors(rugAnswer ? rug.label : cellLabel(zone, group.region), [...sameZoneCells, ...rugOption], [], rng),
+        });
+      }
+    }
 
-    // Only ask "what was on the left…" when exactly one kind of thing is there.
-    const sharesSpot = spec.groups.some((g) => g !== group && g.zoneId === group.zoneId && sidesOf(g).has(group.region));
+    // Only ask "what was on the left…" when exactly one kind of thing is there (and it isn't on the rug: that's
+    // "on the carpet", not "on the floor").
+    const sharesSpot = spec.groups.some((g) => g !== group && g.zoneId === group.zoneId && sidesOf(g).has(group.region)) || (onRugBand && group.onRug !== 'none');
+    // On a wall, the thing below as a landmark: "What was on the wall on the right, above the armchair?"
+    const landmark = landmarkBelow(group);
+    const cell = lower(cellLabel(zone, group.region));
     // For a plural answer ("Hot-air balloons"), only things that can appear in groups make believable
     // wrong options: never "Suns" or "Buses".
     const fits = (i: ItemDef) => i.kind !== item.kind && (!plural || canBeSeveral(i));
-    const sameZoneKinds = recipe.items.filter((i) => fits(i) && i.zones.includes(zone.id));
-    if (!spread && !sharesSpot) add('what-here', group, {
+    // Never something hiding in the picture (a crab under the beach towel): it could really be there.
+    const sameZoneKinds = recipe.items.filter((i) => fits(i) && i.zones.includes(zone.id) && !spec.details?.alsoSeen?.includes(i.kind));
+    // A place without sides (`sides: false`) only asks this with a landmark ("above the armchair"): "on the wall, in
+    // the middle" alone was too hard to place.
+    if (!spread && !sharesSpot && (landmark || recipe.sides !== false)) add('what-here', group, {
       type: 'object',
       subject: item.kind,
-      prompt: `What was ${lower(cellLabel(zone, group.region))}?`,
+      prompt: landmark ? `What was ${cell.replace(', ', ' ')}, above ${landmark}?` : `What was ${cell}?`,
       options: withDistractors(
         nounPhrase(item, plural),
         // Only things that belong in this band: never "Zookeepers" for the sky.
@@ -204,6 +389,73 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         [],
         rng,
       ),
+    });
+  }
+
+  // "What was on the carpet?": when one or two kinds of thing are on it (and nothing is half on, half off). With two,
+  // the answer names both ("A cat and a cushion"); wrong answers swap one of them for something else, or name just
+  // one, so both have to be remembered.
+  if (rug) {
+    const onIt = spec.groups.filter((g) => g.zoneId === rugZone && g.onRug !== 'none');
+    if (onIt.length >= 1 && onIt.length <= 2 && onIt.every((g) => g.onRug === 'all')) {
+      // Each thing as it was ("A cat", "Two cushions" read as "Cushions"), in the picture's order.
+      const phraseOf = (kind: string, plural: boolean) => nounPhrase(itemOf(kind), plural);
+      const pair = (a: string, b: string) => `${a} and ${lower(b)}`;
+      const answerParts = onIt.map((g) => phraseOf(g.kind, g.count > 1));
+      const answer = answerParts.length === 2 ? pair(answerParts[0], answerParts[1]) : answerParts[0];
+      // Things that could be on it: never furniture or plants (`avoidRug`), or something hiding in the picture.
+      const others = recipe.items
+        .filter((i) => !onIt.some((g) => g.kind === i.kind) && i.zones.includes(rugZone!) && !i.avoidRug && !spec.details?.alsoSeen?.includes(i.kind))
+        .map((i) => nounPhrase(i, false));
+      // A mix of one thing and two things, so the answer isn't the odd one out: two pairs and a single for a pair,
+      // two singles and a pair for a single.
+      const swapped = rng.shuffle(others.flatMap((o) => [pair(answerParts[0], o), pair(answerParts[1] ?? answerParts[0], o)]));
+      const wrong =
+        answerParts.length === 2
+          ? [...swapped.slice(0, 2), rng.pick(answerParts)]
+          : [...rng.shuffle(others).slice(0, 2), ...swapped.slice(0, 1)];
+      add('what-here', null, {
+        type: 'object',
+        subject: `rug-${onIt.map((g) => g.kind).join('-')}`,
+        prompt: `What was ${lower(rug.label)}?`,
+        options: withDistractors(answer, wrong, [], rng),
+      });
+    }
+  }
+
+  // "Which of these was in the departure lounge?": one thing that was in a band with several, against things that
+  // could have been there but weren't in the picture at all, so exactly one choice is right. No side needed.
+  for (const z of zones) {
+    if (z.faraway) continue;
+    const here = spec.groups.filter((g) => g.zoneId === z.id && !(rug && z.id === rugZone && g.onRug === 'all'));
+    if (here.length < 2) continue;
+    const group = rng.pick(here);
+    const item = itemOf(group.kind);
+    const missing = absent.filter((i) => i.zones.includes(z.id));
+    if (missing.length < 2) continue;
+    add('what-here', null, {
+      type: 'object',
+      subject: `in-${z.id}`,
+      prompt: `Which of these was ${lower(z.label)}?`,
+      options: withDistractors(nounPhrase(item, false), missing.map((i) => nounPhrase(i, false)), [], rng),
+    });
+  }
+
+  // "What was on the pond?": when only one kind of thing is in a whole band, no side needed. (A rug's band has its
+  // own question, "What was on the carpet?".)
+  for (const z of zones) {
+    if (rug && z.id === rugZone) continue;
+    const here = spec.groups.filter((g) => g.zoneId === z.id);
+    if (here.length !== 1) continue;
+    const group = here[0];
+    const item = itemOf(group.kind);
+    const plural = group.count > 1;
+    const could = recipe.items.filter((i) => i.kind !== item.kind && i.zones.includes(z.id) && (!plural || canBeSeveral(i)) && !spec.details?.alsoSeen?.includes(i.kind));
+    add('what-here', null, {
+      type: 'object',
+      subject: `band-${z.id}`,
+      prompt: `What was ${lower(z.label)}?`,
+      options: withDistractors(nounPhrase(item, plural), could.map((i) => nounPhrase(i, plural)), [], rng),
     });
   }
 
@@ -233,7 +485,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         family: 'detail',
         ...subject,
         prompt: `What colour was house number ${n}?`,
-        options: withDistractors(
+        options: withColourDistractors(
           house.colour.name,
           houses.map((h) => h.colour.name),
           ['Yellow', 'Blue', 'Green', 'Pink', 'Orange', 'Purple'],
@@ -258,7 +510,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         spotlight: fact.spotlight,
         subject: fact.id,
         prompt: fact.prompt,
-        options: withDistractors(fact.answer, fact.wrong, fact.fallback ?? [], rng),
+        options: (fact.type === 'colour' ? withColourDistractors : withDistractors)(fact.answer, fact.wrong, fact.fallback ?? [], rng),
       });
     }
   }
@@ -335,38 +587,46 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     });
   }
 
-  // "What was above the buoys?": the only thing above (or below) it, in the same third and another band.
-  // Thirds, not exact positions: they never change when the picture is laid out again for another
-  // screen. Wide things (a sofa, a bus) reach into the next third, so they're never asked about here.
-  const zoneIndex = (g: PlacedGroup) => recipe.zones.findIndex((z) => z.id === g.zoneId);
-  const NEXT: Record<Region, Region[]> = { left: ['centre'], centre: ['left', 'right'], right: ['centre'] };
-  const isWide = (g: PlacedGroup) => itemOf(g.kind).wide === true;
-  const reaches = (g: PlacedGroup, region: Region) => sidesOf(g).has(region) || (isWide(g) && NEXT[g.region].includes(region));
-  // One-off things in the sky (the sun, a plane), and everything in a far-off band (space seen from the Moon), are
-  // far away, not above anything: "below the sun" or "above the crater: a satellite" reads oddly.
-  const faraway = (g: PlacedGroup) => zoneOf(g.zoneId).faraway === true || (itemOf(g.kind).countable === false && zoneOf(g.zoneId).surface === 'air');
+  // "What was in the sky, above the pumpkins?": the only thing above (or below) it, in the same third and another band.
   const single = spec.groups.filter((g) => !(itemOf(g.kind).spread && g.count > 1) && !isWide(g) && !faraway(g));
+  // The question names where the answer was ("in the sky", "on the wall"): "above the pumpkins" alone made players
+  // think of the barn on the hill. A few band names read oddly there ("What was close by, above the bench?"), so
+  // those questions stay plain.
+  const PLAIN_BANDS = new Set(['Close by', 'At the front', 'Near the hills']);
+  const where = (zoneId: string) => {
+    const label = zoneOf(zoneId).label;
+    return PLAIN_BANDS.has(label) ? '' : `${label[0].toLowerCase()}${label.slice(1)}, `;
+  };
+  // The thing asked about and the answer must both be alone in their third of their band (`alone`).
   for (const group of single) {
     const item = itemOf(group.kind);
+    if (!alone(group)) continue;
     for (const dir of ['above', 'below'] as const) {
       const isDir = (g: PlacedGroup) => (dir === 'above' ? zoneIndex(g) < zoneIndex(group) : zoneIndex(g) > zoneIndex(group));
       const near = spec.groups.filter((g) => g !== group && isDir(g) && reaches(g, group.region) && !faraway(g));
-      if (near.length !== 1 || !single.includes(near[0])) continue;
+      if (near.length !== 1 || !single.includes(near[0]) || !alone(near[0])) continue;
+      // Two flat bands (the path and the grass): the one lower down is nearer, not "below". "What was on the grass,
+      // below the dog?" made no sense.
+      if (isFlat(zoneOf(group.zoneId)) && isFlat(zoneOf(near[0].zoneId))) continue;
       const target = near[0];
       const answerItem = itemOf(target.kind);
       const plural = target.count > 1;
       const fits = (i: ItemDef) => i.kind !== answerItem.kind && i.kind !== item.kind && (!plural || canBeSeveral(i));
       const elsewhere = spec.groups.filter((g) => g !== group && g !== target).map((g) => itemOf(g.kind));
+      // Once the question says where, wrong answers that can't be there are easy to rule out: so first come
+      // things that could be in the answer's band, from the picture and then not in it.
+      const inBand = (i: ItemDef) => i.zones.includes(target.zoneId);
+      const inBandWrong = [...elsewhere, ...absent].filter((i) => fits(i) && inBand(i)).map((i) => nounPhrase(i, plural));
       add(dir, group, {
         type: 'position',
         family: 'relation',
         subject: item.kind,
-        prompt: `What was ${dir} ${group.count > 1 ? `the ${item.plural}` : `the ${item.singular}`}?`,
+        prompt: `What was ${where(target.zoneId)}${dir} ${group.count > 1 ? `the ${item.plural}` : `the ${item.singular}`}?`,
         options: withDistractors(
           nounPhrase(answerItem, plural),
-          elsewhere.filter(fits).map((i) => nounPhrase(i, plural)),
-          // Things not in the picture, but only ones that could be where the answer was.
-          absent.filter((i) => fits(i) && i.zones.includes(target.zoneId)).map((i) => nounPhrase(i, plural)),
+          inBandWrong,
+          // Something that can't be there is a giveaway: only to make up three choices, never a fourth.
+          where(target.zoneId) && new Set(inBandWrong).size >= 2 ? [] : elsewhere.filter((i) => fits(i) && !inBand(i)).map((i) => nounPhrase(i, plural)),
           rng,
         ),
       });
@@ -396,7 +656,8 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       prompt: `What else was the same colour as ${colourNoun(item, group.count > 1)}?`,
       options: withDistractors(
         label(twin),
-        coloured.filter((g) => g.colour!.name !== name).map(label),
+        // Never a thing in a colour that clashes with it ("the orange balloon" for red kites).
+        coloured.filter((g) => g.colour!.name !== name && !clashes(g.colour!.name, name)).map(label),
         absent.filter((i) => i.colours).map((i) => cap(colourNoun(i, false))),
         rng,
       ),
@@ -415,8 +676,9 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   }
   for (const group of coloured) {
     const item = itemOf(group.kind);
-    const truth = rng.next() < 0.5;
-    const others = item.colours!.filter((c) => c.name !== group.colour!.name);
+    // A false colour is never one that clashes with the real one: "The kites were orange" when they were red is unfair.
+    const others = item.colours!.filter((c) => c.name !== group.colour!.name && !clashes(c.name, group.colour!.name));
+    const truth = rng.next() < 0.5 || !others.length;
     const colour = truth ? group.colour!.name : rng.pick(others).name;
     const plural = group.count > 1;
     statements.push({ subject: item.kind, type: 'colour', text: `${cap(colourNoun(item, plural))} ${colourVerb(item, plural)} ${colour.toLowerCase()}.`, truth });
@@ -441,5 +703,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   }
 
   // A question needs at least three options to be a fair choice (true or false has its own two).
-  return questions.filter((q) => q.family === 'true-false' || q.options.length >= 3);
+  // At least three choices, except where two is all there can be: true or false, "Was the floor lamp on or off?", and
+  // left or right of a single landmark ("To the right of the moon").
+  return questions.filter((q) => q.options.length >= 3 || (q.options.length === 2 && (q.family === 'true-false' || q.family === 'detail' || q.family === 'where')));
 }

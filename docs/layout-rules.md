@@ -82,6 +82,7 @@ Every box keeps **4% of the width** (`GAP`) from every other box. Copies of one 
 | `usual` | Picked first for its band whenever the band gets at least two kinds, so most pictures have it (pupils in a classroom, tents and the campfire at the campsite). It still varies in count, colour and place, so its questions stay fresh. |
 | `framedColour` | The asked-about colour sits on the thing's own dark frame (a signal light in its housing), so the contrast rules check `tone` (the frame) against the backdrop, the outline is drawn from `tone`, and any of its colours can be used anywhere. Also used for a white snowman on snow (its grey outline is what shows it). |
 | `hanger` | Hangs on a rod or chain this tall at the top of its box, which runs on up off the top of the picture so it's plainly attached to the roof; the rod catches none of the item light (the station clock, lamps and baskets). |
+| `behind` | Drawn behind everything else in the picture, on the still and the moving screen alike, so it never covers anything: the cable car, whose cable crosses the whole sky. |
 | `still` | Fixed in place though it's in an air band: never bobs while you look (the station clock, lamps and baskets hanging from the roof, the sun, the moon, the Earth). |
 | `noFlip` | Never drawn mirrored: the clock (a mirrored face shows the wrong time). |
 | `avoidRug` | Never touches the rug. Everything else touching the rug must be fully on it (all four corners inside the oval). |

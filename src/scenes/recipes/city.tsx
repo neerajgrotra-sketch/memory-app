@@ -695,6 +695,8 @@ function marks(height: number, boxes: Box[], random: () => number): Mark[] {
 
 export const city: Recipe = {
   id: 'city',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'City street',
   zones: [
     // The roofs band overlaps the bottom of the sky: flags and dishes stand on the roofline against the sky.

@@ -13,7 +13,7 @@ Checks: `npm run typecheck`, `npm run lint` and `npm run check:scenes` (the leve
 
 Every change bumps the version (shown on the Games tab). See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
 
-## Status (4.0.2)
+## Status (4.2.1)
 
 - **Works:** the Look & Remember game with 30 levels, 15 places, points, the Daily Challenge and streak, Peeks, sounds and vibration. Played and tested in the browser (Expo web), with every automated check passing.
 - **Ready, not yet run:** builds for real phones with EAS: TestFlight for iPhone, an APK for Android ([docs/building.md](docs/building.md)).
@@ -24,13 +24,13 @@ Every change bumps the version (shown on the Games tab). See [CHANGELOG.md](CHAN
 
 It opens with a short launch animation (an eye opens, **glance** and "Look closer. Remember more." rise in, the eye blinks, about 2.5 s on the first launch and 1.7 s after; a tap skips it). On the very first launch a welcome follows (postcards of the places, "How much can you remember at a glance?" and **Let's go**). Then three tabs:
 
-- **Games**: once you've played, a **daily card** (your 🔥 streak, this week's days, and **today's challenge**: one picture a day, double points, one try), a slim **Continue** strip (your level ring and **Play**), then games grouped by skill. A skill only appears once it has a game, so today there's **Memory** with Look & Remember. Tapping a game opens its page.
+- **Games**: once you've played, a **daily card** (your 🔥 streak, this week's days, and **today's challenge**: one picture a day, double points, one try), then games grouped by skill, one full-width row each: the game's picture, your level ring and title, and **Play** (straight into your level; **Try it** before your first round). The game you played last comes first in its skill and is marked **Continue**. A skill only appears once it has a game, so today there's **Memory** with Look & Remember. Tapping a row anywhere else opens the game's page.
 - **Progress**: each game's level, best level, high score and a chart of your level over time, then your scores, accuracy per question type, practice habits, and **Your levels** (one row per level played, with rounds, best points and average).
 - **Profile**: name and age band (optional, asked once after the first round), "More time to look" (+3 s per picture, on by default for 55+), **Sounds** and **Vibration** switches (sound can also be muted in one tap with the speaker button on the Games tab and during a round), and "Clear my details". glance is a game, not a medical test: nothing compares you with other people or claims to measure brain health. Tapping the version number 7 times turns on a hidden tester mode (see [docs/testing.md](docs/testing.md)).
 
 ## Look & Remember
 
-**The game page** shows your level ring and title, what's coming next, then **Play level N** right below it, then your high score, best level, rounds played and perfect rounds, your **Peeks**, **Start again from Level 1**, **My places** (pick which places you train on: places your level hasn't reached show a lock and the level they unlock at, and join automatically when you get there; at least one stays on), **Practice** (Easy, Medium, Hard) and how to play.
+**The game page** has a **ⓘ How to play** button by the title (the rules in a pop-up), then shows your level ring and title, what's coming next, then **Play level N** right below it, then your high score, best level, rounds played and perfect rounds, your **Peeks**, **Start again from Level 1**, **My places** (pick which places you train on: places your level hasn't reached show a lock and the level they unlock at, and join automatically when you get there; at least one stays on), and **Practice** (Easy, Medium, Hard). In tester mode it also has a grid to play from any level.
 
 A round:
 
@@ -43,7 +43,7 @@ A round:
 
 **Points**: each right answer scores 100 at Level 1, plus 10 per level. Right answers in a row add a bonus (+20, +40, +60…), and so does tapping **I'm ready** early (5 points per spare second per right answer). Slow answers never cost points.
 
-**Peeks**: every 3,000 points earns a Peek (about every 6 good rounds at Level 1, every 2 at Level 30); you hold up to 3. A right answer after a peek earns half its points and doesn't count towards a level up. Peeks are never bought and never cost points you've already scored. The game page shows how many you hold and how far off the next one is.
+**Peeks**: every 3,000 points earns a Peek (about every 6 good rounds at Level 1, every 2 at Level 30); you hold up to 3. A right answer after a peek earns half its points; that's its only cost, and the round still counts towards your level. Peeks are never bought and never cost points you've already scored. The game page shows how many you hold and how far off the next one is.
 
 **Practice** plays a fixed Easy, Medium or Hard round. It earns points but never changes your level.
 
@@ -83,6 +83,7 @@ Every picture is generated on the device from a **recipe** in a few milliseconds
 | [Levels and scoring](docs/levels-and-scoring.md) | Look & Remember's 30 levels, moving up and down, points |
 | [Adding a game](docs/adding-a-game.md) | The game registry and what a new game needs |
 | [Design decisions](docs/design-decisions.md) | Why the rules are what they are |
+| [Backlog](docs/backlog.md) | Ideas agreed but parked for now |
 
 ## Project layout
 

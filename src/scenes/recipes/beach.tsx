@@ -1,10 +1,12 @@
 import { Circle, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
+import { shade } from '../contrast';
 import { ball, balloon, bird, cloudShape, crab, dolphin, kite, person, plane, starfish, sun } from '../items/common';
 import { lineMarks, markIfClear, scatterMarks } from '../marks';
 import { glints, speckles } from '../texture';
-import type { ItemDef, Mark, Recipe, Rect as Box, VariantDef } from '../types';
+import type { Rng } from '../random';
+import type { DetailKnobs, ItemDef, Mark, PlacedGroup, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
 
 /** Band edges, as fractions of the picture height. */
 const HORIZON = 0.35;
@@ -13,6 +15,35 @@ const SHORE = 0.6;
 const SKY = ['sky'];
 const SEA = ['sea'];
 const SAND = ['sand'];
+
+/**
+ * Where a crab can hide on harder levels (one of each in the picture, so "under the beach towel" means one
+ * place): where the crab's top-left corner goes and how big it's drawn, in the hiding spot's own drawing units,
+ * so it's the size of the other crabs. A clear peek shows its claws, eyes and the top of its shell; a small one its claws
+ * and eyes. (Testers on phones found less than that too hard to see.)
+ * It's drawn before the spot, so the spot covers the rest of it.
+ */
+const CRAB_SPOTS: Record<string, { name: string; w: number; scale: number; clear: [number, number]; small: [number, number] }> = {
+  // Under the towel, peeking out past the far edge.
+  towel: { name: 'Under the beach towel', w: 160, scale: 0.92, clear: [64, -34], small: [64, -22] },
+  // Behind the sandcastle, peeking out past a side tower: the right one, or the left one when the castle is on the
+  // right of the picture, so the crab is never cut off by the edge. (Not the bucket: a crab behind it looked to be in it.)
+  sandcastle: { name: 'Behind the sandcastle', w: 130, scale: 1.15, clear: [104, 50], small: [94, 50] },
+};
+
+/** The hiding crab, behind the thing at `kind` when the picture's details put it there. */
+function hidingCrab(kind: string, details?: SceneDetails) {
+  if (details?.values?.crab !== kind) return null;
+  const spot = CRAB_SPOTS[kind];
+  const [x0, y] = details.values.peek === '2' ? spot.small : spot.clear;
+  // Peeking out of the other side: the same distance out past the left edge.
+  const x = details.values.crabSide === 'left' ? spot.w - x0 - 80 * spot.scale : x0;
+  return (
+    <G transform={`translate(${x} ${y}) scale(${spot.scale})`} stroke={shade(crab.tone!)} strokeWidth={2.5}>
+      {crab.draw('')}
+    </G>
+  );
+}
 
 const items: ItemDef[] = [
   { ...sun, zones: SKY, maxCount: 1 },
@@ -153,8 +184,9 @@ const items: ItemDef[] = [
     zones: SAND,
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.orange, C.purple, C.pink],
-    draw: (colour) => (
+    draw: (colour, details) => (
       <G>
+        {hidingCrab('towel', details)}
         <Polygon points="20,0 160,0 140,70 0,70" fill={colour} />
         <G stroke="none">
           <Polygon points="50,0 70,0 50,70 30,70" fill="#ffffff" fillOpacity={0.7} />
@@ -183,8 +215,10 @@ const items: ItemDef[] = [
     zones: SAND,
     maxCount: 2,
     tone: '#2b9348',
-    draw: () => (
+    // Coconuts dropped on the sand by its foot, when the picture's details put them there (see `fitDetails`).
+    draw: (_colour, details, _copy, index = 0) => (
       <G>
+        {droppedCoconuts(details, index)}
         <Path d="M70,270 C75,200 70,120 88,55 L100,58 C88,120 92,200 92,270 Z" fill="#8b5a2b" stroke="#5c3a1b" />
         {/* Rings up the trunk. */}
         <Path d="M72,250 Q81,244 91,250 M73,220 Q82,214 91,220 M74,190 Q83,184 91,190 M76,160 Q85,154 92,160 M78,130 Q87,124 94,130 M82,100 Q90,94 96,100" fill="none" stroke="#5c3a1b" strokeOpacity={0.55} strokeWidth={2.5} />
@@ -224,8 +258,11 @@ const items: ItemDef[] = [
     zones: SAND,
     maxCount: 2,
     tone: '#b07d3a',
-    draw: () => (
+    // Never mirrored, so the hiding crab peeks out of the side `crabSide` says.
+    noFlip: true,
+    draw: (_colour, details) => (
       <G>
+        {hidingCrab('sandcastle', details)}
         <G fill="#b07d3a">
           <Rect x={10} y={55} width={110} height={60} />
           {/* Towers with battlements. */}
@@ -300,6 +337,117 @@ function marks(height: number, boxes: Box[], random: () => number, variant: Vari
   ];
 }
 
+/** Which of two palm trees has coconuts on the sand by it: the question's answer for each choice. */
+const COCONUT_ANSWERS: Record<string, string> = {
+  left: 'The one on the left',
+  right: 'The one on the right',
+  both: 'Both of them',
+  none: 'Neither of them',
+};
+
+/** Where 1 to 4 coconuts lie by a palm's foot: a little pile, each one clear of the others so they can be counted. */
+const COCONUT_PILES: [number, number, number][][] = [
+  [[124, 256, 13]],
+  [[110, 256, 13], [138, 258, 12]],
+  [[110, 256, 13], [138, 258, 12], [124, 234, 12]],
+  [[104, 257, 12], [130, 259, 12], [156, 256, 11], [117, 235, 11]],
+];
+
+/** The coconuts at a palm's foot, beside the trunk, if this palm (0 on the left, 1 on the right) has any. */
+function droppedCoconuts(details: SceneDetails | undefined, index: number) {
+  const count = Number(details?.values?.[index === 0 ? 'coconutsLeft' : 'coconutsRight'] ?? 0);
+  if (!count) return null;
+  return (
+    <G stroke="#3d2412" strokeWidth={2}>
+      {COCONUT_PILES[count - 1].map(([cx, cy, r]) => (
+        <G key={cx}>
+          <Circle cx={cx} cy={cy} r={r} fill="#6b3e1f" />
+          <Circle cx={cx - r * 0.35} cy={cy - r * 0.35} r={r * 0.3} fill="#9c6b3f" stroke="none" />
+        </G>
+      ))}
+    </G>
+  );
+}
+
+/** Once things are placed: the dropped coconuts, then the hiding crab. */
+function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  return hideCrab(dropCoconuts(d, groups, random), groups, random);
+}
+
+/**
+ * On harder levels a crab hides under the beach towel or behind the sandcastle (one of
+ * each in the picture), and the round opens with "Where was the crab hiding?". Only when no other crabs are
+ * in the picture, so "How many crabs were there?" stays clear; and it's never offered as "not in the picture".
+ */
+function hideCrab(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  if (!d.values?.peek || groups.some((g) => g.kind === 'crab')) return d;
+  const spots = groups.filter((g) => CRAB_SPOTS[g.kind] && g.count === 1).map((g) => g.kind);
+  if (!spots.length) return d;
+  const hiding = random.pick(spots);
+  const answer = CRAB_SPOTS[hiding].name;
+  // Other spots in the picture first, so the answer can't be told from the choices.
+  const inPicture = spots.filter((k) => k !== hiding).map((k) => CRAB_SPOTS[k].name);
+  const elsewhere = Object.keys(CRAB_SPOTS).filter((k) => !spots.includes(k)).map((k) => CRAB_SPOTS[k].name);
+  return {
+    ...d,
+    values: { ...d.values, crab: hiding, crabSide: groups.find((g) => g.kind === hiding)!.region === 'right' ? 'left' : 'right' },
+    alsoSeen: [...(d.alsoSeen ?? []), 'crab'],
+    facts: [
+      ...(d.facts ?? []),
+      {
+        id: 'crab-hiding',
+        type: 'position',
+        prompt: 'Where was the crab hiding?',
+        answer,
+        wrong: [...inPicture, ...elsewhere],
+        fallback: ['Behind the bucket', 'Under the beach umbrella', 'Behind the palm tree'],
+        spotlight: true,
+      },
+    ],
+  };
+}
+
+/**
+ * With two palm trees, 1 to 4 coconuts can lie on the sand by one of them, both or neither. One question asks about
+ * them: "Which palm tree had coconuts by it?" (all four answers happen, so none can be ruled out), or, when there
+ * are some, "How many coconuts were on the sand?". Never both: the count would give away that there were some.
+ * One palm tree: no coconuts.
+ */
+function dropCoconuts(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  const palms = groups.find((g) => g.kind === 'palm');
+  if (!palms || palms.count !== 2) return d;
+  const r = random.next();
+  const coconuts = r < 0.35 ? 'left' : r < 0.7 ? 'right' : r < 0.85 ? 'both' : 'none';
+  const left = coconuts === 'left' || coconuts === 'both' ? random.int(1, 4) : 0;
+  const right = coconuts === 'right' || coconuts === 'both' ? random.int(1, 4) : 0;
+  const total = left + right;
+  const answer = COCONUT_ANSWERS[coconuts];
+  const which = {
+    id: 'coconuts',
+    type: 'position' as const,
+    prompt: 'Which palm tree had coconuts on the sand by it?',
+    answer,
+    wrong: Object.values(COCONUT_ANSWERS).filter((a) => a !== answer),
+    needs: 'palm',
+  };
+  // The nearest counts first, never fewer than one (there were some).
+  const near = [total - 1, total + 1, total - 2, total + 2, total + 3].filter((n) => n >= 1);
+  const howMany = {
+    id: 'coconut-count',
+    type: 'count' as const,
+    prompt: 'How many coconuts were on the sand?',
+    answer: String(total),
+    wrong: near.slice(0, 3).map(String),
+    fallback: near.slice(3).map(String),
+    needs: 'palm',
+  };
+  return {
+    ...d,
+    values: { ...d.values, coconuts, coconutsLeft: String(left), coconutsRight: String(right) },
+    facts: [...(d.facts ?? []), total && random.next() < 0.5 ? howMany : which],
+  };
+}
+
 const PALETTES: Record<string, Palette> = {
   day: { sky: '#8fd3f4', sea: '#2a9fd6', sand: '#f2d49b', foam: '#ffffff', headland: '#7fb0c9', wetSand: '#dcb97c', grain: '#c99e5c' },
   sunset: { sky: '#ffb38a', sea: '#3d6fa8', sand: '#e9c46a', foam: '#ffd6a5', headland: '#c98a7a', wetSand: '#d2aa55', grain: '#b88a3a' },
@@ -307,11 +455,14 @@ const PALETTES: Record<string, Palette> = {
 
 export const beach: Recipe = {
   id: 'beach',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'At the beach',
   zones: [
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: HORIZON, rows: 2 },
     // Boats, buoys and dolphins float in the water: clear of the horizon and well clear of the shore.
-    { id: 'sea', label: 'In the sea', surface: 'air', top: HORIZON + 0.015, bottom: SHORE - 0.03, rows: 1 },
+    // The sea lies flat: a boat in it is behind the people on the sand, not above them.
+    { id: 'sea', label: 'In the sea', surface: 'air', top: HORIZON + 0.015, bottom: SHORE - 0.03, rows: 1, flat: true },
     { id: 'sand', label: 'On the sand', surface: 'ground', top: SHORE, bottom: 1, rows: 2 },
   ],
   items,
@@ -326,5 +477,8 @@ export const beach: Recipe = {
   ],
   surfaceAt: (_x, y) => (y < HORIZON ? 'sky' : y < SHORE ? 'sea' : 'sand'),
   marks,
+  // No backdrop details of its own: the coconuts and the hiding crab are chosen once things are placed.
+  details: (_random, { hidden = 0 }: DetailKnobs) => (hidden ? { values: { peek: String(hidden) } } : {}),
+  fitDetails,
   variants: Object.entries(PALETTES).map(([id, p]) => ({ id, palette: p, background: (h: number) => backdrop(h, p) })),
 };

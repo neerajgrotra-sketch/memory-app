@@ -10,6 +10,174 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.2.1 (2026-10-20)
+
+- **No left / middle / right anywhere.** The last five places, under the sea, the zoo, the campsite, the airport and space, now ask "where" by landmarks too: "Between the owls and the shooting star", "Between the luggage trolley and the coffee kiosk", "To the left of the ostrich", "Between the fish and the jellyfish".
+- **"Which of these was in the departure lounge?"** A new question for any band with two or more kinds of thing: the answer is one of them, and the wrong answers are things that could have been there but weren't in the picture at all, so exactly one choice is right. It keeps the smaller places' rounds varied without sides.
+- **Two-choice questions where two is all there can be.** With a single landmark, the only answers are "To the left of the moon" and "To the right of the moon". These were being thrown away, and so, it turned out, was **"Was the floor lamp on or off?"** (and the table lamp's), which had never been asked since 4.1.0. Both are now kept. A round prefers a "where" with more choices: in a test of 1,200 rounds, 8 asked a two-choice one.
+- Checked: every place has enough questions in almost every picture (the game skips the rare thin one), and "where" answers stayed the same in every picture laid out again for another screen.
+
+## 4.2.0 (2026-10-20)
+
+- **No more left / middle / right in most places.** The beach, the city, the kitchen, the farm, the supermarket, the train station, the snowy mountain and the classroom now ask "where" the way the living room and the park do: next to things at the same depth ("Between the coffee cart and the bench", "To the left of the farmer", "Between the plane and the sun"), on walls with what stood below ("On the wall on the right, above the bookcase"), and "What was on the road? A bus" for a band with one kind of thing. A "where" or "what was there" question with nothing to place it by isn't asked. Under the sea, the zoo, the campsite, the airport and space keep sides for now: without them too many of their pictures would have too few questions (they need landmarks of their own first). A new `sides: false` on a recipe turns sides off.
+- **Fairer wall answers.** When a part of the wall has nothing below it, its answer names something that isn't in the picture at all, not something standing elsewhere ("on the left, above the teacher" with the teacher in the middle was easy to rule out).
+- "Between the mop and bucket, and the pet bowl": a comma when a name has its own "and".
+- Checked: in 985 pictures laid out again for a smaller screen, every "where" and "what was there" answer stayed the same.
+
+## 4.1.8 (2026-10-20)
+
+- **No more "below the dog" on flat ground.** "What was on the grass, below the dog?" made no sense: the dog was on the path and the slide on the grass in front of it. On flat ground, lower in the picture means nearer, not below. Above and below are now only asked when one of the two is really upright: the sky, a wall, shelves, the city's roofs, the worktop, under the sea. Never between two flat bands (the path and the grass, the sand and the sea, the road and the pavement, the field and the farmyard). Bands are flat by default when they're ground, unless things stand flush on a line; the beach's sea is marked flat.
+- **The park answers by places.** Like the living room: "Where was the dog?" answers "On the path" or "On the grass", with wrong answers "On the bench", "On the slide", "In the fountain" (nothing loose is ever put there), plus landmark answers ("Between the slide and the flower bed"). No more "On the grass, on the left". Only for things that could be in more than one band: "On the pond" for a swan would be a giveaway.
+- **"What was on the pond?"** A new question everywhere when only one kind of thing is in a whole band: "What was on the pond? A swan", "What was on the road? A bus", "What was in the sea? Dolphins". No side needed.
+- `npm run check:questions` accepts 10 questions in a thin picture (it was 12): places that never ask left / middle / right can have 11 in a thin easy picture, and the game itself never shows a picture with fewer than 12 (it tries the next one).
+
+## 4.1.7 (2026-10-20)
+
+- **"Where was the window?" says what was below.** Instead of "On the wall, on the right", the answers name what stood against the wall under each part of it: **"On the wall on the right, above the table lamp"**, "On the wall in the middle, above the table lamp", "On the wall on the left, above the television". One of a pair of table lamps is "the table lamp". A part of the wall with nothing below it is named with something that wasn't there (so the right answer isn't the only one with a landmark), and one wrong answer pairs the right part of the wall with the wrong thing, so both have to be remembered. About 9 in 10 "where" questions about the living room's walls now read like this; the same goes for the classroom.
+- **Dogs hide too.** From Level 20, a dog can hide behind the armchair or the TV, peeking out from the side that faces the middle of the picture, and a cat can now hide there as well as behind the sofa and the potted plant. "Where was the dog hiding?" opens the round. From Level 25 less of it shows. (Below Level 20 nothing hides; tester mode can start at Level 20 from the game page.)
+
+## 4.1.6 (2026-10-20)
+
+Testers didn't like "where" answers by sides of the screen, and some landmark answers made no sense. Reworked:
+
+- **Landmarks at the same depth.** "Where was the pile of books? To the left of the bookshelf" compared books on the floor at the front with a bookshelf against the back wall. Things are now only placed next to things at their own depth: furniture and tall lamps next to each other ("Between the table lamps"), things out on the floor next to other things on the floor, and things on the carpet next to things on it.
+- **Between two things.** "Between the teddy bear and the ball", the way people describe it, with the left one named first. "Between the toy cars" is only offered for a pair standing apart (table lamps, trees), never for copies side by side.
+- **Places, not sides, in the living room.** "Where was the box of crayons?" answers "On the carpet" or "On the floor", with wrong answers that are real places in the room: "On the sofa", "On the armchair", "On top of the bookshelf", "On the windowsill" (nothing loose is ever put there). The landmark version is asked too, but a round has only one "where".
+- **No more left / middle / right in the living room.** With no landmark, there's no "where" question about it, and "What was on the wall, in the middle?" is only asked with a landmark: "What was on the wall in the middle, above the armchair?".
+- **The wall landmark is found more often.** It used to need the armchair to be the only thing in that third of the floor, so a box of crayons on the carpet in front stopped it. Now only things against the wall count: about 4 in 10 living room wall questions name one (and over half in the classroom), up from almost none.
+- Other places keep the landmark answers from 4.1.4 at the same depth, and left / middle / right where there's none.
+
+## 4.1.5 (2026-10-20)
+
+- **Lamps that are on look on.** Testers didn't read the yellow halo round a table lamp as "on". Lamps now show a bulb under the shade: **bright yellow with rays of light** coming out past the shade when the lamp is on, **plain grey** when it's off, with a beam of light shining down from a lit shade (onto the table, or the floor for a floor lamp). The halo is gone. The same for floor lamps and table lamps, so both read the same way.
+
+## 4.1.4 (2026-10-20)
+
+- **"Where was it?" next to a landmark.** Testers said left, middle and right are hard to judge on a small iPhone. When something stands against the wall or tall nearby (table lamps, a floor lamp, the TV, a bookshelf, an armchair, a plant), the answers say where the thing was next to it: **"To the left of the table lamps"**, **"Between the table lamps"**, **"To the right of the armchair"**. The wrong answers are the false statements, about the same landmark first. It's worked out from thirds of the picture, and a landmark in the same third as the thing is left out, since "left of" would be a guess there. Used for about one in eight "where" questions in the living room, and also in the park ("Between the trees"), the classroom ("To the left of the teacher"), the campsite and the snowy mountain. The rest keep "On the floor, on the left".
+- **Pairs keep their places.** When a picture is laid out again for another screen, each copy of a pair (table lamps, trees) now stays in its third, so "Between the table lamps" stays true. Re-layouts kept every landmark answer in testing.
+
+## 4.1.3 (2026-10-20)
+
+- **"On the carpet", not "on the floor".** Testers saw the dogs on the carpet, but "Where were the dogs?" said "On the floor, in the middle". Things on the living room's rug are now "On the carpet", and "On the carpet" is a wrong answer for things off it. Each group records whether it's on the carpet, and laying the picture out again for another screen keeps that, so the answer holds on every phone.
+- **"What was on the carpet?"** A new question when one or two kinds of thing are on it, with answers like "A cat and a cushion". Wrong answers mix one thing and two things ("A cat and a teddy bear", "A cushion"), so both have to be remembered and the answer is never the odd one out. Things on the carpet are never the answer to "What was on the floor, in the middle?" any more: players rightly saw both the cat and the cushion there.
+- **Wall questions name a landmark.** "What was on the wall, on the right?" was hard to place. When one thing stands right below it, against the wall, it's named: "What was on the wall on the right, above the armchair?". In every indoor place with a wall.
+- **A cat on the sofa or the armchair.** From Level 8, when there's no other cat in the room, a cat can be curled up on the sofa or the armchair, and "Where was the cat?" asks where: On the sofa / On the armchair / On the carpet / On the floor. Places, not just a side of the picture.
+- `npm run check:questions` now understands "On the carpet": only things that may go on the rug are offered for it.
+
+## 4.1.2 (2026-10-20)
+
+- **Above and below questions skip nothing in between.** "What was on the wall, above the box of crayons?" answered the mirror, but the armchair stood right above the crayons, at the back of the floor, so players rightly thought of the chair. The rule only looked at other bands. Now the question is only asked when the thing asked about and the answer are each the only thing in that third of their own band, so nothing can stand between them; the same goes for "below" (a picture frame between the clock and the TV). It's decided by thirds, not exact positions, so it still holds when the picture is laid out for another screen. About a quarter of above/below questions were like this and are gone; every picture still has plenty of questions (at least 13, 31 on average).
+
+## 4.1.1 (2026-10-20)
+
+- **Table lamps on side tables.** A new thing against the living room wall: a little side table with a lamp on it (up to two, spread apart); when it's on, a warm halo glows round its shade. Its shade colour is asked about ("What colour was the table lamp's shade?"), and it's on or off like the floor lamps ("Was the table lamp on or off?", or "Which table lamp was on?" with two). The floor lamp's colour question now says "the floor lamp's shade", so the two lamps never get mixed up.
+- **The TV has an aerial**, so it's never taken for a fish tank when it shows fish.
+- **The dog holds its toy in its mouth.** Testers couldn't tell what it was playing with when the toy lay by its paws. The slipper, which looked like a paddle in its mouth, is now a striped sock.
+
+## 4.1.0 (2026-10-20)
+
+A wider range of questions in the living room, built so other places can use the same ideas.
+
+- **What's on the television.** The TV shows a cartoon, a football match, fish swimming, or nothing (it's off, with a red power light). "What was on the television?" from Level 8; all four answers happen.
+- **Floor lamps on or off.** A lamp that's on has a warm glow and light spilling down. With one lamp, "Was the floor lamp on or off?"; with two, "Which floor lamp was on?" (left, right, both or neither, like the beach's coconuts). From Level 8. The shade colour is still asked about as before.
+- **Pets playing.** One cat plays with a ball of yarn, a toy mouse or a feather; one dog with a bone, a rope toy or a slipper. "What was the cat playing with?" from Level 8. The dog never gets a ball, since balls are things you can be asked to count. Toys are drawn 1.4 times bigger, so they can be made out on a phone.
+- **Books on the shelves.** From Level 14, with one bookshelf, each shelf holds 1 to 5 books, and "How many books were on the middle shelf?" asks about one of them. Only with one bookshelf, since "the middle shelf" would be ambiguous with two.
+- **A cat hiding.** From Level 20, a cat hides behind the sofa (its head over the back) or behind the potted plant (peeking out towards the middle of the picture), and the round opens with "Where was the cat hiding?". Less of it shows from Level 25. It only hides when there's no cat in the room. A dog was tried and dropped: its head is barely higher than its back, so it looked to be lying on top of the sofa.
+- **Spills.** Two new things on the floor: a box of crayons spilled across it, and a knocked-over mug with water running out into a puddle with splash drops ("What colour was the spilled cup?"). The first drawing of the cup didn't read as a spill, so it was redrawn: a mug with a handle, tipped mouth-down, and a flat, uneven puddle. Both join the usual questions: in / not in the picture, where, and so on.
+- Details now know when counting gets harder (`closeCounts` in `DetailKnobs`, from Level 14), for counts like the books on a shelf. The plant pot is no longer drawn mirrored, so the hiding cat peeks out of the side chosen.
+
+## 4.0.20 (2026-10-20)
+
+- **Red and orange are never in the same question.** Even with the new red, telling red from orange from memory on a phone is the hardest colour call, so a colour question never offers both:
+  - when the answer is red, orange is never a wrong choice, and the other way round; with any other answer, at most one of the two appears;
+  - the same goes for colour combinations ("Red and blue" vs "Orange and blue") and the house colours;
+  - true or false never says "The kites were orange" when they were red;
+  - "What else was the same colour as the kites?" never offers an orange thing for red kites.
+- `npm run check:questions` fails if any colour question offers both, so it can't come back. More pairs can be added to `CLASHING_COLOURS` in `generateQuestions.ts` if testers find them.
+
+## 4.0.19 (2026-10-20)
+
+- **Red and orange are easier to tell apart.** Testers mixed up red and orange kites, especially on the sunset beach, where the warm light pushed the old coral red (`#e63946`) towards orange. Red is now a true red (`#d00000`). On the game's colour-difference scale, red and orange went from 15 to 20.5 apart, and red and pink from 13 to 20.8. Brown is a little darker (`#7a4a22`), so the deeper red doesn't get close to it (17.3 apart, the same as blue and purple, the closest pair). Every red and brown thing that can be asked about changes with it: kites, balloons, umbrellas, cars, sofas and so on. Things drawn in a fixed colour, like the crab, are unchanged.
+
+## 4.0.18 (2026-10-20)
+
+- **"How many coconuts were on the sand?"** A second coconut question on the beach. Each pile now has 1 to 4 coconuts (it was always 3, which would have made counting pointless), set out so each one can be counted; with coconuts by both palm trees, the answer is the total. Wrong answers are the nearest counts, never fewer than one.
+- **One coconut question per picture.** A picture asks either "Which palm tree had coconuts on the sand by it?" or the count, half and half when there are coconuts, never both: "How many coconuts?" would give away that "Neither of them" is wrong. With no coconuts it's always the which-tree question. Both are asked from Level 8.
+
+## 4.0.17 (2026-10-20)
+
+- **The crab behind the sandcastle is easier to spot, and never cut off.** Testers could barely see it: only a claw showed. It now peeks further out: from Level 20 most of the crab, from Level 25 both eyes and a claw. It always peeks out towards the middle of the picture (from the left side of a castle on the right, otherwise from the right side), so a castle at the edge never pushes it off the picture. The sandcastle is no longer drawn mirrored, so the side is always the one chosen.
+
+## 4.0.16 (2026-10-20)
+
+- **The hiding crab is easier to spot.** Testers on phones could barely see it under the beach towel. It now shows more at both steps: from Level 20, its claws, eyes and the top of its shell over the towel (or half of it past the sandcastle's tower); from Level 25, its claws and eyes (or an eye and a claw by the castle), which is what Level 20 used to show.
+
+## 4.0.15 (2026-10-20)
+
+- **A crab hiding on the beach.** From Level 20, a crab can hide **under the beach towel** (claws and eyes out past the far edge) or **behind the sandcastle** (peeking out past the right-hand tower), and the round opens with **"Where was the crab hiding?"**. From Level 25 it shows less: just its eyes at the towel's edge, or a claw by the castle. Wrong answers are the other hiding spot when it's in the picture, then "Behind the bucket", "Under the beach umbrella" or "Behind the palm tree". A crab behind the bucket was tried and dropped: it looked to be inside the bucket.
+- **No clash with the beach's own crabs.** The crab only hides when no other crabs are in the picture, so "How many crabs were there?" stays clear, and it's never offered as "not in the picture" or as a wrong answer to "What was on the sand, on the left?". A new `alsoSeen` list in a picture's details does this for anything that shows without being one of its groups. The crab hides in about 4 in 10 beach pictures at those levels.
+
+## 4.0.14 (2026-10-20)
+
+- **Dropped coconuts on the beach.** When the beach has two palm trees, coconuts can lie on the sand at the foot of one of them, both or neither, and a new question asks **"Which palm tree had coconuts on the sand by it?"** (The one on the left / The one on the right / Both of them / Neither of them). All four answers really happen (left and right about a third of the time each, both or neither about one in seven each), so none can be ruled out without remembering. It's asked from Level 8, like the other questions about the backdrop. About one beach picture in five has two palm trees.
+- Drawings now also get each copy's place in its group (`index`): for things that spread out, like palm trees, 0 is always the one on the left, on every screen size. That's how the coconuts and the answer always agree.
+
+## 4.0.13 (2026-10-20)
+
+- **No more hair bun on top of the head.** A tester said the person on the beach looked like they wore a patka, and we'd rather people stay neutral. The third hairstyle for people (beach, city and airport) is now a ponytail tied at the back and swinging out to one side, like the classroom pupils'. The snowy mountain's skier keeps the bobble on their hat.
+- **Short hair covers the top of the head.** It used to stop just short of it, so a strip of skin showed above, and light hair on dark skin looked like a headband.
+
+## 4.0.12 (2026-10-20)
+
+- **Above and below questions say where to look.** Testers read "What was above the pumpkins?" and thought of the barn on the hill, and found "What was above the teacher?" too vague. The question now names the band the answer is in: **"What was in the sky, above the pumpkins?"**, "What was on the wall, above the teacher?", "What was on the top shelf, above the cereal?". Three band names read oddly there ("Close by", "At the front", "Near the hills"), so those questions stay as they were.
+- **Wrong answers that could really be there.** Once the question says "in the sky", a choice like "Beach towels" gives the answer away. Wrong answers now come from things that can be in that band, from the picture or not in it. Something that can't be there is used only to make up three choices, so some of these questions now have three choices instead of four. `npm run check:questions` reports how many above and below questions name a band and how many still need an out-of-band choice (about 7%, in bands with only two kinds of thing, like the city's roofs).
+
+## 4.0.11 (2026-10-20)
+
+- **Countdown ticks land on their numbers on phones.** Testers in Expo Go heard the tick drift away from the number. On phones each sound now has two players that take turns, so a tick starts the moment its number shows:
+  - The sound files are copied onto the phone first. In Expo Go they used to stream from the dev server through the tunnel on every play, which made each tick late by a different amount.
+  - iPhone keeps its audio session switched on between sounds, instead of switching it off after each tick and back on for the next.
+  - A player rewinds as soon as it finishes, so it's ready before the next tick. Before, it rewound at the moment the tick was needed.
+- **Each number ticks once.** The first number of the countdown could tick twice, about 40 ms apart, when the timer started again as the picture appeared.
+- The browser build was already in time (each tick within about 25 ms of its number, even with the computer slowed 8×) and is unchanged.
+
+## 4.0.10 (2026-10-19)
+
+- **Hiding animals on the snowy mountain.** From Level 20 (and in Hard practice), the animal on the danger sign really is there, peeking out from behind the **pine tree**, the **snowmobile** or the **hot chocolate stand**, and the round opens with **"Where was the bear hiding?"**. Levels 20 to 24 show a clear peek (head and ears); from Level 25 only the ears and eyes show. Each of the five animals has its own head: a bear, a wolf, a fox, a deer and a moose with antlers. Wrong answers are the other hiding spots in the picture first, so none can be ruled out at a glance. The level-up screen announces it ("Animals hiding in the picture: find where").
+
+## 4.0.9 (2026-10-19)
+
+- **Birds show in front of the cable car's cable.** On the snowy mountain the cable runs right across the sky, and it could be drawn over a bird, so the bird was hard to make out. The cable car now has a new `behind` habit: it's drawn behind everything else, on the still picture and on the moving memorise screen, so birds and planes always sit in front of its cable.
+
+## 4.0.8 (2026-10-19)
+
+- **"How to play" in a pop-up, by the game's title.** Testers said the rules were too far down the game page. A **ⓘ How to play** button next to "Look & Remember" now opens them: the three steps, how levels move, and how Peeks work, with a **Got it** button. The copy at the bottom of the page is gone, so the rules live in one place.
+- **Tester mode: play any level.** Climbing the levels took too long for testing. The game page now has a **Tester: play any level** grid (1 to 30): tap a level and **Play** starts there. It works like "Start again", at the level you pick: history, high score and best level are kept, and rounds played from there carry on as normal. Not in store builds.
+
+## 4.0.7 (2026-10-19)
+
+- **Tester mode: choose how long a Peek lasts.** Testers said 3 seconds is too long. Profile → Tester mode now has a **Peek time** setting from 1 to 5 seconds (3 is the standard), so we can try lengths and pick the best. Each round that used a peek records the length (`peekSeconds` on the saved round), so lengths can be compared afterwards. Leaving tester mode puts it back to 3 seconds; store builds always use 3.
+
+## 4.0.6 (2026-10-19)
+
+- **A Peek no longer holds you back a level.** Testers didn't like that a peek cost twice: half the points for that answer *and* the round not counting towards a level up, so 4 out of 5 with a peek said "Try again". Now a peek's only cost is the half points (still shown as "👀 Peek −50"), and the round counts towards your level like any other. Peeks are already scarce: earned with points, at most 3 held, one a round, none in the Daily Challenge.
+
+## 4.0.5 (2026-10-19)
+
+- **Each game carries its own progress on the Games tab.** With more games coming, a "Continue" strip for each game would have pushed the games further and further down. Instead:
+  - every game is one full-width row: its picture, your **level ring** and title, and **Play**, which goes straight into your level. Before your first round it says **Try it**. Tapping anywhere else on the row opens the game's page.
+  - the game you played last comes first in its skill, with a gold edge and **Continue** above its name, so carrying on is still one tap.
+  - the separate Continue strip is gone, and the sideways row of cards, which hid games off the edge of the screen, is now a list you scroll down.
+  - the planned games in tester mode use the same rows, marked **Soon**.
+
+## 4.0.4 (2026-10-19)
+
+- **Preview tiles for planned games, in tester mode.** To see how the Games tab will look with more games, tester mode (7 taps on the version) now adds six "Coming soon" tiles: **Pairs** and **Where Was It?** under Memory, **Spot the Change** and **Odd One Out** under Attention, **What Comes Next?** under Problem solving, and **Quick Count** under Speed. Each has its own colour and little picture; a tap opens a "Coming soon" card. Real players, and store builds, never see them. They live in `src/games/ComingSoon.tsx`.
+
+## 4.0.3 (2026-10-19)
+
+- **A back button you can find on the game page.** Testing on a real iPhone showed players couldn't see how to get back: the button was a see-through circle with a thin arrow that blended into the picture, and it scrolled away with the page. It's now a solid **"← Games"** button with a light edge and a shadow, so it shows on any picture, and it stays at the top while the page scrolls.
+
 ## 4.0.2 (2026-10-19)
 
 - **Fixes from a common-sense audit of every place** (three pictures of each, checked for anything that wouldn't happen in real life):

@@ -23,3 +23,7 @@ glance is a set of games grouped by skill. The Games tab, the game pages and the
 
 - **A daily workout** (a few games in a row) once there are at least three games.
 - **Skill ratings** (how you're doing at Memory, Attention…) once a skill has two games to average. They'll compare you only with yourself.
+
+## Planned games
+
+`src/games/ComingSoon.tsx` lists the games we're planning, with a title, skill, tagline, colour and a little picture. In tester mode they show on the Games tab as "Coming soon" tiles, to preview how the hub looks with more games; real players never see them. When a planned game is built, take it out of `PLANNED_GAMES` and add it to `GAMES` in `registry.ts`.

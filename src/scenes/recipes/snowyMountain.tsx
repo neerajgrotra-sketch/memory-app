@@ -4,7 +4,7 @@ import { C } from '../colours';
 import { bird, cloudShape, dog, person, plane, sun } from '../items/common';
 import { lineMarks, scatterMarks } from '../marks';
 import type { Rng } from '../random';
-import type { ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import type { DetailKnobs, ItemDef, Mark, PlacedGroup, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
 import { glints, speckles } from '../texture';
 
 /**
@@ -35,6 +35,105 @@ const COATS = [C.red, C.blue, C.green, C.orange, C.purple, C.pink];
 
 const skis = (colour: string) => <Path d="M2,104 H98 Q106,104 108,96" fill="none" stroke={colour} strokeWidth={5} strokeLinecap="round" />;
 
+/** Wild animals a mountain danger sign warns about. */
+const DANGER_ANIMALS = ['Deer', 'Bear', 'Wolf', 'Moose', 'Fox'];
+
+/**
+ * Where the danger sign's animal can hide on harder levels, peeking out from behind something (one of
+ * each in the picture, so "behind the pine tree" means one place): where its head is, in the thing's own
+ * drawing units, for a clear peek (head and ears) and a small one (ears and eyes), and how it's named.
+ */
+const HIDING_SPOTS: Record<string, { name: string; clear: [number, number]; small: [number, number] }> = {
+  // Out from behind the lowest branches, on the right.
+  pine: { name: 'Behind the pine tree', clear: [98, 126], small: [92, 132] },
+  // Over the seat at the back.
+  snowmobile: { name: 'Behind the snowmobile', clear: [24, 38], small: [24, 52] },
+  // Over the roof, on the right.
+  'cocoa-stand': { name: 'Behind the hot chocolate stand', clear: [130, 8], small: [134, 18] },
+};
+
+/** The hiding animal, drawn behind the thing at `kind` when the picture's details put it there. */
+function peeking(kind: string, details?: SceneDetails) {
+  if (details?.values?.hiding !== kind) return null;
+  const spot = HIDING_SPOTS[kind];
+  const small = details.values.peek === '2';
+  const [x, y] = small ? spot.small : spot.clear;
+  return (
+    <G transform={`translate(${x} ${y}) scale(${small ? 1.15 : 1.35})`} stroke="#212529" strokeOpacity={0.55} strokeWidth={1.5}>
+      {animalHead(details.values.animal ?? 'Bear')}
+    </G>
+  );
+}
+
+/** A wild animal's head, about 40 across, centred on 0,0 (ears and antlers above). */
+function animalHead(animal: string) {
+  const eyes = (fill = '#111111') => (
+    <G stroke="none">
+      <Circle cx={-5} cy={-2} r={2.2} fill={fill} />
+      <Circle cx={5} cy={-2} r={2.2} fill={fill} />
+    </G>
+  );
+  switch (animal) {
+    case 'Wolf':
+      return (
+        <G>
+          <Path d="M-13,-2 L-9,-21 L-2,-9 Z M13,-2 L9,-21 L2,-9 Z" fill="#6c757d" />
+          <Circle cx={0} cy={0} r={12} fill="#6c757d" />
+          <Ellipse cx={0} cy={7} rx={6} ry={5} fill="#ced4da" />
+          <Circle cx={0} cy={5} r={2.4} fill="#111111" stroke="none" />
+          {eyes('#ffb703')}
+        </G>
+      );
+    case 'Fox':
+      return (
+        <G>
+          <Path d="M-12,-2 L-9,-20 L-2,-9 Z M12,-2 L9,-20 L2,-9 Z" fill="#e8590c" />
+          <Path d="M-10,-14 L-9,-20 L-6,-15 Z M10,-14 L9,-20 L6,-15 Z" fill="#212529" stroke="none" />
+          <Circle cx={0} cy={0} r={11} fill="#e8590c" />
+          <Path d="M-11,3 Q0,14 11,3 Q6,10 0,11 Q-6,10 -11,3 Z" fill="#ffffff" stroke="none" />
+          <Circle cx={0} cy={7} r={2.2} fill="#111111" stroke="none" />
+          {eyes()}
+        </G>
+      );
+    case 'Deer':
+      return (
+        <G>
+          <Path d="M-6,-12 L-10,-24 M-10,-20 L-15,-23 M6,-12 L10,-24 M10,-20 L15,-23" fill="none" stroke="#6b4423" strokeWidth={2.5} strokeLinecap="round" strokeOpacity={1} />
+          <Ellipse cx={-13} cy={-8} rx={7} ry={4} fill="#a0703c" transform="rotate(-25 -13 -8)" />
+          <Ellipse cx={13} cy={-8} rx={7} ry={4} fill="#a0703c" transform="rotate(25 13 -8)" />
+          <Ellipse cx={0} cy={0} rx={10} ry={13} fill="#a0703c" />
+          <Ellipse cx={0} cy={9} rx={5} ry={4} fill="#6b4423" stroke="none" />
+          {eyes()}
+        </G>
+      );
+    case 'Moose':
+      return (
+        <G>
+          <Path d="M-6,-12 Q-16,-12 -22,-24 Q-14,-20 -12,-26 Q-8,-18 -6,-22 Z M6,-12 Q16,-12 22,-24 Q14,-20 12,-26 Q8,-18 6,-22 Z" fill="#c9a26b" />
+          <Ellipse cx={0} cy={2} rx={10} ry={15} fill="#5c3a1e" />
+          <Ellipse cx={0} cy={12} rx={7} ry={5} fill="#3d2412" stroke="none" />
+          {eyes('#f8f9fa')}
+        </G>
+      );
+    default:
+      // A bear.
+      return (
+        <G>
+          <Circle cx={-10} cy={-11} r={5.5} fill="#6b4423" />
+          <Circle cx={10} cy={-11} r={5.5} fill="#6b4423" />
+          <Circle cx={0} cy={0} r={14} fill="#6b4423" />
+          <G stroke="none">
+            <Circle cx={-10} cy={-11} r={2.5} fill="#a07850" />
+            <Circle cx={10} cy={-11} r={2.5} fill="#a07850" />
+            <Ellipse cx={0} cy={6} rx={7} ry={5} fill="#a07850" />
+            <Circle cx={0} cy={4} r={2.5} fill="#111111" />
+          </G>
+          {eyes()}
+        </G>
+      );
+  }
+}
+
 const items: ItemDef[] = [
   { ...sun, zones: IN_SKY, maxCount: 1, countable: false },
   { ...bird, zones: IN_SKY, maxCount: 4 },
@@ -52,8 +151,10 @@ const items: ItemDef[] = [
     zones: IN_SKY,
     maxCount: 2,
     spread: true,
-    // Its cable runs right across the sky, so cabins are never mirrored: every cable stays parallel.
+    // Its cable runs right across the sky, so cabins are never mirrored (every cable stays parallel), and
+    // it's drawn behind everything else, so the cable never crosses in front of a bird or a plane.
     noFlip: true,
+    behind: true,
     // The light starts below the pulley, so the cable reads as one line.
     hanger: 16,
     colours: [C.red, C.blue, C.green, C.orange],
@@ -244,8 +345,9 @@ const items: ItemDef[] = [
     zones: ON_SLOPE,
     maxCount: 2,
     tone: '#2f6b3a',
-    draw: () => (
+    draw: (_colour, details) => (
       <G>
+        {peeking('pine', details)}
         <Rect x={48} y={150} width={14} height={30} fill="#6b4423" />
         <G fill="#2f6b3a">
           <Polygon points="55,0 92,62 18,62" />
@@ -388,8 +490,9 @@ const items: ItemDef[] = [
     countable: false,
     colours: [C.red, C.green, C.blue, C.brown],
     colourPrompt: () => 'What colour was the roof of the hot chocolate stand?',
-    draw: (colour) => (
+    draw: (colour, details) => (
       <G>
+        {peeking('cocoa-stand', details)}
         <Path d="M0,40 L75,0 L150,40 Z" fill={colour} />
         <Path d="M10,40 H140 V60 H10 Z" fill="#ffffff" stroke="none" opacity={0.8} />
         <Rect x={14} y={40} width={122} height={110} fill="#a0703c" />
@@ -424,8 +527,9 @@ const items: ItemDef[] = [
     maxCount: 1,
     countable: false,
     colours: [C.red, C.blue, C.green, C.orange, C.black],
-    draw: (colour) => (
+    draw: (colour, details) => (
       <G>
+        {peeking('snowmobile', details)}
         <Path d="M10,84 H150 Q176,84 176,70" fill="none" stroke="#343a40" strokeWidth={6} strokeLinecap="round" />
         <Path d="M20,72 V60 H160 L176,72 Z" fill="#343a40" />
         <Path d="M30,62 Q40,30 80,30 L120,30 Q150,30 168,62 Z" fill={colour} />
@@ -445,9 +549,6 @@ const items: ItemDef[] = [
   },
 ];
 
-/** Wild animals a mountain danger sign warns about. */
-const DANGER_ANIMALS = ['Deer', 'Bear', 'Wolf', 'Moose', 'Fox'];
-
 /** Bib numbers easy to mix up with `n`: one or two along, the digits swapped, or ten more. */
 function bibLookalikes(n: number): string[] {
   const near = [n + 1, n - 1, n + 2, n - 2, n + 10].filter((x) => x >= 1 && x <= 60);
@@ -456,15 +557,49 @@ function bibLookalikes(n: number): string[] {
   return [...new Set([...swapped, ...near].filter((x) => x !== n).map(String))];
 }
 
-/** The animal on the danger sign and the racer's bib number, chosen per picture. */
-function details(random: Rng): SceneDetails {
+/**
+ * The animal on the danger sign and the racer's bib number, chosen per picture. On harder levels the
+ * sign's animal is also hiding somewhere in the picture (`fitDetails` picks where, once things are placed).
+ */
+function details(random: Rng, { hidden = 0 }: DetailKnobs): SceneDetails {
   const animal = random.pick(DANGER_ANIMALS);
   const bib = random.int(1, 49);
   return {
-    values: { animal, bib: String(bib) },
+    values: { animal, bib: String(bib), ...(hidden ? { peek: String(hidden) } : {}) },
     facts: [
       { id: 'danger', type: 'object', prompt: 'Which animal was the danger sign about?', answer: animal, wrong: DANGER_ANIMALS.filter((n) => n !== animal) },
       { id: 'bib', type: 'number', prompt: 'What number was on the ski racer’s bib?', answer: String(bib), wrong: bibLookalikes(bib), needs: 'racer' },
+    ],
+  };
+}
+
+/**
+ * Where the danger sign's animal hides: behind one of the hiding spots that's in the picture (one of it),
+ * peeking out. "Where was the bear hiding?" asks about it, first in the round. Nothing hides on easier levels,
+ * or when there's nowhere to hide.
+ */
+function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  if (!d.values?.peek) return d;
+  const spots = groups.filter((g) => HIDING_SPOTS[g.kind] && g.count === 1).map((g) => g.kind);
+  if (!spots.length) return d;
+  const hiding = random.pick(spots);
+  const animal = d.values.animal ?? 'Bear';
+  const name = HIDING_SPOTS[hiding].name;
+  return {
+    ...d,
+    values: { ...d.values, hiding },
+    facts: [
+      ...(d.facts ?? []),
+      {
+        id: 'hiding',
+        type: 'position',
+        prompt: `Where was the ${animal.toLowerCase()} hiding?`,
+        answer: name,
+        // Other hiding spots that are in the picture first (one that isn't would be too easy to rule out).
+        wrong: [...spots.filter((k) => k !== hiding), ...Object.keys(HIDING_SPOTS).filter((k) => !spots.includes(k))].map((k) => HIDING_SPOTS[k].name),
+        fallback: ['Behind the ski rack', 'Behind the snowman', 'Behind the fence'],
+        spotlight: true,
+      },
     ],
   };
 }
@@ -578,6 +713,8 @@ function surfaceAt(_x: number, y: number): string {
 
 export const snowyMountain: Recipe = {
   id: 'snowy-mountain',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'On the snowy mountain',
   zones: [
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: SKY, rows: 1 },
@@ -588,6 +725,7 @@ export const snowyMountain: Recipe = {
   items,
   keepClear: [SIGN],
   details,
+  fitDetails,
   // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
   light: [
     // Haze near the peaks.

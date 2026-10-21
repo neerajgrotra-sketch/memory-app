@@ -28,6 +28,7 @@ White and yellow can't be seen on snow, so coats, jackets and scarves come in re
 ## Detail facts
 
 - **The danger sign** on the fence (`keepClear`): a yellow sign with a red warning triangle, "DANGER" and the wild animal it warns about, chosen per picture. **"Which animal was the danger sign about?"** Deer, Bear, Wolf, Moose or Fox. (It replaced a ski run sign with a difficulty-colour dot: testers found the dot confusing, since few people know the run colour code.)
+- **The hiding animal** (from Level 20, and Hard practice): the danger sign's animal really is there, peeking out from behind the pine tree, the snowmobile or the hot chocolate stand (whichever of them is in the picture, one of it), so the sign still matches the picture. **"Where was the bear hiding?"** is asked first in the round. Levels 20 to 24 show a clear peek (head and ears); from Level 25 only ears and eyes. Wrong answers are the other hiding spots in the picture first. The head is drawn as part of the thing it hides behind (`peeking` in the recipe), so no layout rule is bent. The ski rack was tried as a spot and dropped: between the skis the animal was nearly invisible.
 - **"What number was on the ski racer's bib?"** (1–49) whenever the racer is there; wrong answers one or two along, the digits swapped, or ten more.
 
 All from Level 8 like other details, so always asked here.

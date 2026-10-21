@@ -42,6 +42,12 @@ export interface ZoneDef {
    * so it's never "above" or "below" anything in the picture.
    */
   faraway?: boolean;
+  /**
+   * The band lies flat, away from us (ground, a lake): a thing lower in the picture is nearer, not "below". Two flat
+   * bands are never "above" or "below" each other. By default ground bands are flat unless things stand flush on a
+   * line (shelves, roofs, the worktop); set it for water that lies flat (the sea at the beach).
+   */
+  flat?: boolean;
   /** Everything here faces the same way (traffic on a road), chosen once per picture. */
   oneWay?: boolean;
   /** At least this many of the band's kinds are anchors (tall, against the wall or extra wide): a room always has furniture. */
@@ -139,6 +145,11 @@ export interface ItemDef {
    */
   still?: boolean;
   /**
+   * Drawn behind everything else in the picture (a cable car, whose cable runs right across the sky), so
+   * it never covers a bird or a plane.
+   */
+  behind?: boolean;
+  /**
    * Hangs on a rod or chain this tall (in drawing units) at the top of its box, drawn on up off the top
    * of the picture so it's plainly attached to the roof. The rod catches no light, so it reads as one piece.
    */
@@ -156,9 +167,10 @@ export interface ItemDef {
    * Draws the thing in its w × h box. Shapes without their own `stroke` get the outline: 2–3 pt in a
    * darker shade of the thing's own colour. Small details set `stroke="none"`. Things that show a
    * per-picture detail (the time on a clock) read it from `details`. `copy` is a number fixed per copy,
-   * for small variations that are never asked about (a person's hair and skin).
+   * for small variations that are never asked about (a person's hair and skin). `index` is the copy's place in
+   * its group: for things that spread out (palm trees), 0 is always the one furthest left, on any screen.
    */
-  draw: (colour: string, details?: SceneDetails, copy?: number) => ReactElement;
+  draw: (colour: string, details?: SceneDetails, copy?: number, index?: number) => ReactElement;
 }
 
 /** An oval on the floor; things are either fully on it or clear of it. Fractions of width (x) and height (y). */
@@ -167,6 +179,8 @@ export interface Rug {
   cy: number;
   rx: number;
   ry: number;
+  /** Where things on it are, in questions: "On the carpet" (players called it that, not "on the floor"). */
+  label: string;
 }
 
 /**
@@ -226,6 +240,11 @@ export interface SceneDetails {
   facts?: DetailFact[];
   /** Other per-picture choices the backdrop draws from (e.g. which side the barn is on). */
   values?: Record<string, string>;
+  /**
+   * Kinds of thing that show in the picture without being one of its groups (a crab hiding under the beach towel),
+   * so no question offers them as "not in the picture".
+   */
+  alsoSeen?: string[];
 }
 
 export interface VariantDef {
@@ -256,6 +275,10 @@ export interface LightBand {
 export interface DetailKnobs {
   /** How exact clock times are: whole hours, half past, or quarters. */
   clockStep: ClockStep;
+  /** Animals hiding in the picture: 0 none, 1 a clear peek (head and ears), 2 a small one (ears and eyes). */
+  hidden?: 0 | 1 | 2;
+  /** Harder counting (from Level 14): details may add counts that need a careful look, like books on one shelf. */
+  closeCounts?: boolean;
 }
 
 /** A setting: its bands, backdrop and the things that belong in it. */
@@ -265,6 +288,17 @@ export interface Recipe {
   zones: ZoneDef[];
   items: ItemDef[];
   rug?: Rug;
+  /**
+   * Other places in the room where loose things could believably be, for wrong answers to "Where was the box of
+   * crayons?" next to "On the carpet" and "On the floor": "On the sofa", "On top of the bookshelf". Nothing loose is
+   * ever placed there, so they're always wrong. Used with a rug.
+   */
+  places?: string[];
+  /**
+   * False: never ask "where" by left / middle / right of the picture (players found thirds of a small screen hard to
+   * judge). "Where" questions then use landmarks ("Between the bucket and the beach ball"), places and bands only.
+   */
+  sides?: boolean;
   /** Areas nothing may cover (building doors), as fractions: x of the width, y of the height. */
   keepClear?: Rect[];
   /** Light across bands of the backdrop (see `LightBand`), back to front. */
@@ -328,6 +362,11 @@ export interface PlacedGroup {
   zoneId: string;
   /** Which third of the picture the group's centre is in. */
   region: Region;
+  /**
+   * In a picture with a rug: whether every copy is on it, none is, or some are. A fact like the side: laying the
+   * picture out again keeps it, so "Where were the dogs? On the carpet" stays true.
+   */
+  onRug?: 'all' | 'none' | 'some';
   slot: Slot;
   boxes: Box[];
 }

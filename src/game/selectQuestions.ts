@@ -37,10 +37,13 @@ export function selectQuestions(pool: Question[], options: SelectOptions): Quest
   const candidates = pool.filter((question) => !previousIds.has(question.id));
   const source = candidates.length >= count ? candidates : pool;
 
+  // A two-choice "where" ("To the left of the moon / To the right of the moon") is easier than one with three or four
+  // choices: within its group it comes after them, so a round asks it only when there's no better one about where.
+  const easy = (question: Question) => (question.options.length === 2 && question.family === 'where' ? 0.5 : 0);
   const rank = (question: Question) => {
     const preferred = preferredTypes.includes(question.type) ? 0 : 1;
-    if (seenIds.has(question.id)) return 3 + preferred;
-    return question.spotlight ? 0 : 1 + preferred;
+    if (seenIds.has(question.id)) return 3 + preferred + easy(question);
+    return question.spotlight ? 0 : 1 + preferred + easy(question);
   };
 
   const ranked = source

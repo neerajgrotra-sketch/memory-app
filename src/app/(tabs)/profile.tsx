@@ -3,6 +3,7 @@ import { Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, V
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AgeBandPicker } from '@/components/AgeBandPicker';
+import { PEEK_SECONDS, PEEK_SECONDS_CHOICES, peekSecondsFor } from '@/games/lookRemember/peeks';
 import { EXTRA_SECONDS, initialOf, TESTER_TOOLS, useProfile } from '@/profile';
 import { colors, radius } from '@/theme';
 import { APP_VERSION } from '@/version';
@@ -133,13 +134,13 @@ export default function ProfileScreen() {
         {profile?.tester && (
           <Section
             title="Tester mode"
-            footer="Unlock every place: any one place can be played at any level, from My places. Unlimited Peeks: the Peek button never runs out (still one a round, half points for the peeked answer) and your earned Peeks stay untouched. Levels and scores still count. Turning off Unlock every place leaves tester mode and switches every place back on."
+            footer="Unlock every place: any one place can be played at any level, from My places. Unlimited Peeks: the Peek button never runs out (still one a round, half points for the peeked answer) and your earned Peeks stay untouched. Peek time: how long a Peek shows the picture, to find the best length (3 s is the standard; each round records the length used). Levels and scores still count. Turning off Unlock every place leaves tester mode and puts everything back to normal."
           >
             <View style={styles.switchRow}>
               <Text style={[styles.rowTitle, styles.switchText]}>Unlock every place</Text>
               <Switch
                 value
-                onValueChange={() => update({ tester: false, testPeeks: false, placesOff: [], recipeFilter: null })}
+                onValueChange={() => update({ tester: false, testPeeks: false, peekSeconds: undefined, placesOff: [], recipeFilter: null })}
                 trackColor={{ true: colors.accent, false: colors.border }}
                 thumbColor={colors.text}
                 accessibilityLabel="Tester mode: unlock every place"
@@ -154,6 +155,26 @@ export default function ProfileScreen() {
                 thumbColor={colors.text}
                 accessibilityLabel="Tester mode: unlimited Peeks"
               />
+            </View>
+            <View style={styles.peekTime}>
+              <Text style={styles.rowTitle}>Peek time</Text>
+              <View style={styles.peekChoices} accessibilityRole="radiogroup">
+                {PEEK_SECONDS_CHOICES.map((s) => {
+                  const on = peekSecondsFor(profile) === s;
+                  return (
+                    <Pressable
+                      key={s}
+                      accessibilityRole="radio"
+                      accessibilityState={{ checked: on }}
+                      accessibilityLabel={`${s} second${s === 1 ? '' : 's'}${s === PEEK_SECONDS ? ', the standard' : ''}`}
+                      onPress={() => update({ peekSeconds: s })}
+                      style={({ pressed }) => [styles.peekChoice, on && styles.peekChoiceOn, pressed && { opacity: 0.8 }]}
+                    >
+                      <Text style={[styles.peekChoiceText, on && styles.peekChoiceTextOn]}>{s} s</Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
             </View>
           </Section>
         )}
@@ -179,6 +200,12 @@ function Section({ title, footer, children }: { title: string; footer?: string; 
 }
 
 const styles = StyleSheet.create({
+  peekTime: { gap: 10, paddingVertical: 8 },
+  peekChoices: { flexDirection: 'row', gap: 8 },
+  peekChoice: { flex: 1, minHeight: 44, borderRadius: radius.pill, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' },
+  peekChoiceOn: { backgroundColor: colors.accent, borderColor: colors.accent },
+  peekChoiceText: { color: colors.text, fontSize: 15, fontWeight: '700' },
+  peekChoiceTextOn: { color: colors.accentText },
   screen: { flex: 1, backgroundColor: colors.background },
   topBar: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 4, width: '100%', maxWidth: 520, alignSelf: 'center' },
   title: { color: colors.text, fontSize: 28, fontWeight: '900' },

@@ -8,7 +8,7 @@ import { PictureViewer } from '@/components/PictureViewer';
 import { ProfilePrompt } from '@/components/ProfilePrompt';
 import type { Answers } from '@/game/quizNavigation';
 import { randomScoreMessage } from '@/game/scoreMessages';
-import { MAX_LEVEL, ROUNDS_TO_LEVEL_UP, isGoodRound, isPoorRound, scoreForLevel, type LadderState } from '@/games/lookRemember/ladder';
+import { MAX_LEVEL, ROUNDS_TO_LEVEL_UP, isGoodRound, isPoorRound, type LadderState } from '@/games/lookRemember/ladder';
 import { formatPoints } from '@/games/lookRemember/points';
 import type { RoundOutcome } from '@/hooks/useGameSession';
 import { colors, radius } from '@/theme';
@@ -38,10 +38,6 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
   // Picked once per result screen so it doesn't change on re-render.
   const [message] = useState(() => randomScoreMessage(score));
   const [enlarged, setEnlarged] = useState(false);
-  // A right answer after a peek doesn't count towards a level up (see useGameSession).
-  const peekedRight = outcome.peeked.filter((i) => answers[i] === questions[i]?.answerIndex).length;
-  const levelScore = scoreForLevel(score, questions.length, peekedRight);
-  const peekHeldBack = isGoodRound(score, questions.length) && !isGoodRound(levelScore, questions.length);
   useEffect(() => {
     const moment = roundSound(outcome, score, questions.length);
     if (moment) feedback(moment);
@@ -80,7 +76,7 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
         )}
 
         {outcome.ladder ? (
-          <LevelPanel before={outcome.ladder.before} after={outcome.ladder.after} score={levelScore} total={questions.length} peekHeldBack={peekHeldBack} />
+          <LevelPanel before={outcome.ladder.before} after={outcome.ladder.after} score={score} total={questions.length} />
         ) : (
           <Text style={styles.practice}>
             {mode === 'daily'
@@ -167,7 +163,7 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
       {/* Pinned to the bottom so the next step is always visible without scrolling. */}
       <View style={styles.actions}>
         {(() => {
-          const next = nextStep(mode, outcome, levelScore, questions.length, nextLevel);
+          const next = nextStep(mode, outcome, score, questions.length, nextLevel);
           return (
             <>
               <Button
@@ -262,18 +258,14 @@ function LevelPanel({
   after,
   score,
   total,
-  peekHeldBack,
 }: {
   before: LadderState;
   after: LadderState;
   score: number;
   total: number;
-  /** Would have been a good round without the peeked answer counting. */
-  peekHeldBack?: boolean;
 }) {
   let line: string;
-  if (peekHeldBack) line = 'Peeked answers don’t count towards a level up. Try the next one without a peek!';
-  else if (after.level > before.level) line = `Level ${after.level} reached!`;
+  if (after.level > before.level) line = `Level ${after.level} reached!`;
   else if (after.level < before.level) line = `Back to Level ${after.level} for now. Take your time looking, you’ll climb back.`;
   else if (after.level >= MAX_LEVEL && isGoodRound(score, total)) line = 'Top level, and still on top.';
   else if (isGoodRound(score, total)) {

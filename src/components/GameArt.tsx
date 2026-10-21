@@ -69,6 +69,13 @@ export function GameArt({ style }: { style?: StyleProp<ViewStyle> }) {
   return <SceneSlice art={GAME_ART} style={style} />;
 }
 
+/** Look & Remember's square thumbnail, for its row on the Games tab: the same beach, sky to sand. */
+export const GAME_THUMB: ArtSpec = { recipeId: 'beach', seed: 1717, focus: 0.12, aspect: 1, leftOut: ['kite', 'sun'] };
+
+export function GameThumb({ style }: { style?: StyleProp<ViewStyle> }) {
+  return <SceneSlice art={GAME_THUMB} style={style} />;
+}
+
 const styles = StyleSheet.create({
   box: { overflow: 'hidden' },
 });

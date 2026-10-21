@@ -41,7 +41,12 @@ export const movesIn = (recipe: Recipe, item: ItemDef, zoneId: string) => item.f
 /** Kinds that move in this picture. */
 export function movingKinds(spec: SceneSpec): string[] {
   const recipe = getRecipe(spec.recipeId);
-  return spec.groups.filter((g) => movesIn(recipe, recipe.items.find((i) => i.kind === g.kind)!, g.zoneId)).map((g) => g.kind);
+  const itemOf = (kind: string) => recipe.items.find((i) => i.kind === kind)!;
+  // Each moving kind is its own layer, drawn in this order: things marked `behind` (a cable car) go first.
+  return spec.groups
+    .filter((g) => movesIn(recipe, itemOf(g.kind), g.zoneId))
+    .sort((a, b) => Number(!!itemOf(b.kind).behind) - Number(!!itemOf(a.kind).behind))
+    .map((g) => g.kind);
 }
 
 /** A number per copy, the same every time the picture is drawn, for small variations (a person's hair). */
@@ -84,10 +89,11 @@ export function SceneContent({ spec, pointsPerUnit, overlay, layer = 'all' }: Sc
         // A colour on the thing's own frame (a signal light, a snowman's scarf) doesn't set the outline: the frame does.
         const outline = shade((item.framedColour ? item.tone : own?.hex) ?? item.tone ?? '#555555');
         const copy = copyNumber(spec.seed, g, i);
-        return { key: `${group.kind}-${i}`, kind: group.kind, item, box, colour, outline, moves, shadow, copy, bottom: rectOf(item, box, ratio).y1 };
+        return { key: `${group.kind}-${i}`, kind: group.kind, item, box, colour, outline, moves, shadow, copy, index: i, bottom: rectOf(item, box, ratio).y1 };
       });
     })
-    .sort((a, b) => a.bottom - b.bottom);
+    // Things marked `behind` first (a cable car's cable), then by where they stand.
+    .sort((a, b) => Number(!!b.item.behind) - Number(!!a.item.behind) || a.bottom - b.bottom);
   const drawn = placed.filter((p) =>
     layer === 'all' ? true : layer === 'front' ? !p.moves : typeof layer === 'object' ? p.kind === layer.kind : false,
   );
@@ -118,9 +124,9 @@ export function SceneContent({ spec, pointsPerUnit, overlay, layer = 'all' }: Sc
           </LinearGradient>
         ))}
         {/* Each thing's silhouette, so its light stays inside its own shape. */}
-        {drawn.map(({ key, item, box, colour, copy }) => (
+        {drawn.map(({ key, item, box, colour, copy, index }) => (
           <Mask key={key} id={`${uid}mask-${key}`} maskType="alpha">
-            <G transform={transformOf(box, item).t}>{item.draw(colour, spec.details, copy)}</G>
+            <G transform={transformOf(box, item).t}>{item.draw(colour, spec.details, copy, index)}</G>
           </Mask>
         ))}
       </Defs>
@@ -136,12 +142,12 @@ export function SceneContent({ spec, pointsPerUnit, overlay, layer = 'all' }: Sc
             const w = box.w * SCENE_WIDTH;
             return <Ellipse key={`shadow-${key}`} cx={(box.x + box.w / 2) * SCENE_WIDTH} cy={bottom * SCENE_WIDTH - 2} rx={w * 0.44} ry={Math.max(5, w * 0.06)} fill="#000000" fillOpacity={0.16} />;
           })}
-      {drawn.map(({ key, item, box, colour, outline, copy }) => {
+      {drawn.map(({ key, item, box, colour, outline, copy, index }) => {
         const { scale, x, y, t } = transformOf(box, item);
         return (
           <G key={key}>
             <G transform={t} stroke={outline} strokeWidth={OUTLINE_POINTS / (scale * pointsPerUnit)} strokeLinejoin="round">
-              {item.draw(colour, spec.details, copy)}
+              {item.draw(colour, spec.details, copy, index)}
             </G>
             {/* The light starts below the rod a hanging thing hangs from, so the rod reads as one piece up to the roof. */}
             <Rect x={x} y={y + (item.hanger ?? 0) * scale} width={item.w * scale} height={(item.h - (item.hanger ?? 0)) * scale} fill={`url(#${uid}light)`} mask={`url(#${uid}mask-${key})`} />

@@ -39,13 +39,19 @@ export function Countdown({ seconds, running, onComplete, onTick }: CountdownPro
     onCompleteRef.current = onComplete;
     onTickRef.current = onTick;
   }, [onComplete, onTick]);
-  const tick = (left: number) => onTickRef.current?.(left);
+  // The last number announced: each number ticks once, even if the timer is started again as the picture appears.
+  const lastTick = useRef<number | null>(null);
+  const tick = (left: number) => {
+    if (left === lastTick.current) return;
+    lastTick.current = left;
+    onTickRef.current?.(left);
+  };
 
   useEffect(() => {
     if (!running) return;
     const complete = () => onCompleteRef.current();
     // The first number is shown without a change, so announce it as the countdown starts.
-    onTickRef.current?.(seconds);
+    tick(seconds);
     remaining.value = seconds;
     // A timer, not decoration: it always runs at real speed. (With the phone's "reduce motion" on,
     // animations otherwise finish at once, which skipped the picture entirely.)

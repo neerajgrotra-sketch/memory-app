@@ -9,13 +9,12 @@ import {
   PRACTICE_LEVEL,
   applyRound,
   bandOf,
-  scoreForLevel,
   knobsForLevel,
   recipesForLevel,
   type LadderState,
 } from '@/games/lookRemember/ladder';
 import { DAILY_MULTIPLIER, dailySeed, localDay } from '@/games/lookRemember/daily';
-import { MAX_PEEKS, earnPeeks, spendPeek, type PeekWallet } from '@/games/lookRemember/peeks';
+import { MAX_PEEKS, earnPeeks, peekSecondsFor, spendPeek, type PeekWallet } from '@/games/lookRemember/peeks';
 import { placesOff } from '@/games/lookRemember/places';
 import { pointsFor, type PointsBreakdown } from '@/games/lookRemember/points';
 import { EXTRA_SECONDS, useProfile } from '@/profile';
@@ -204,11 +203,10 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       const counts = !round.replay && mode !== 'daily';
       const newHighScore = counts && highScore.current > 0 && points.total > highScore.current;
       if (counts) highScore.current = Math.max(highScore.current, points.total);
-      // A peeked answer never tips a round into a good one: peeks can't carry you up a level.
+      // A peek's only cost is half points for that answer: the round counts towards your level as usual.
+      // (Costing both points and progress felt like being punished twice for a Peek you'd earned.)
       const total = round.questions.length;
-      const peekedRight = [...new Set(peeked)].filter((i) => correct[i]).length;
-      const levelScore = scoreForLevel(score, total, peekedRight);
-      const after = mode === 'levels' && counts ? applyRound(ladder, levelScore, total) : undefined;
+      const after = mode === 'levels' && counts ? applyRound(ladder, score, total) : undefined;
       const earned = earnPeeks(wallet, points.total);
       setWallet(earned.wallet);
       if (after) setLadder(after);
@@ -233,6 +231,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
         replay: round.replay || undefined,
         // A tester's unlimited peek isn't recorded, so it never comes off the real Peeks.
         peeked: (peeked.length > 0 && !unlimitedPeeks) || undefined,
+        peekSeconds: peeked.length > 0 ? peekSecondsFor(profile) : undefined,
         recipeId: stage.scene.recipeId,
         sceneId: stage.scene.id,
         score,
@@ -243,7 +242,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       };
       statsStore.addResult(result).catch(() => {});
     },
-    [ladder, mode, round, stage, peeked, wallet, unlimitedPeeks],
+    [ladder, mode, round, stage, peeked, wallet, unlimitedPeeks, profile],
   );
 
   /** Records the answer to question `questionIndex` (questions can be answered in any order after skipping). */

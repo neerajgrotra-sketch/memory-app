@@ -66,6 +66,8 @@ See [Levels and scoring](../levels-and-scoring.md).
 | In the sea (`sea`) | 36.5% – 57% | air | 1 | – |
 | On the sand (`sand`) | 60% – 100% | ground | 2 | – |
 
+Per-picture details: .
+
 ### Colour schemes
 
 | Scheme | Surface colours |
@@ -155,7 +157,7 @@ Per-picture details: three houses with different named colours and rising house 
 
 Rug: an oval centred at 50% across, 80% down, 72% wide and 18% of the height tall.
 
-Per-picture details: "What time was on the clock?" (when there's a wall-clock) on every level.
+Per-picture details: "What time was on the clock?" (when there's a wall-clock) on every level; "What was on the television?" (when there's a tv).
 
 ### Colour schemes
 
@@ -165,7 +167,7 @@ Per-picture details: "What time was on the clock?" (when there's a wall-clock) o
 | blue | wall `#cfe0ec`, ceiling `#eef4f8`, floor `#d4b48c`, plank `#86663f`, rug `#f6efe0`, rugEdge `#9c6644` |
 | sage | wall `#dce5d1`, ceiling `#f1f5ec`, floor `#c9a47a`, plank `#7d5d38`, rug `#f4e6ea`, rugEdge `#9d4e6a` |
 
-### Things (17)
+### Things (20)
 
 | Thing | Band | Size | Most | Colours | Habits |
 | --- | --- | --- | --- | --- | --- |
@@ -177,6 +179,7 @@ Per-picture details: "What time was on the clock?" (when there's a wall-clock) o
 | armchair | floor | large 20% | 2 | Red, Blue, Green, Yellow, Orange, Pink | against the back (feet at the back line); copies spread one per third, on one line; never on the rug |
 | floor lamp | floor | medium 13% | 2 | Red, Blue, Yellow, Green, White, Orange | tall anchor (stands at the back, rises above its band); copies spread one per third, on one line; never on the rug |
 | television | floor | large 28% | 1 | fixed (`#212529`) | against the back (feet at the back line); never on the rug; one only, not counted |
+| table lamp | floor | medium 13% | 2 | Blue, Yellow, Green, White, Pink, Purple | against the back (feet at the back line); copies spread one per third, on one line; never on the rug |
 | potted plant | floor | medium 13% | 3 | Orange, Blue, White, Yellow, Pink, Purple | against the back (feet at the back line); copies spread one per third, on one line; never on the rug |
 | bookshelf | floor | large 20% | 2 | fixed (`#8b5a2b`) | tall anchor (stands at the back, rises above its band); copies spread one per third, on one line; never on the rug |
 | cat | floor | small 12% | 3 | Orange, Black, Grey, White | – |
@@ -186,6 +189,8 @@ Per-picture details: "What time was on the clock?" (when there's a wall-clock) o
 | teddy bear | floor | small 11% | 3 | fixed (`#a0612b`) | – |
 | toy car | floor | small 11% | 4 | Red, Blue, Yellow, Green, Orange | – |
 | pile of books | floor | small 12% | 3 | fixed (`#1d70d6`) | never on the rug |
+| box of crayons | floor | medium 17% | 1 | fixed (`#ffd60a`) | one only, not counted |
+| spilled cup | floor | medium 17% | 1 | Red, Blue, Green, Purple, Pink | never on the rug |
 
 ## In the park (`park`)
 
@@ -299,8 +304,8 @@ Per-picture details: "What colour was the barn?".
 
 | Scheme | Surface colours |
 | --- | --- |
-| summer | sky `#8fd3f4`, hillsFar `#9fcf6b`, hills `#7fbf55`, field `#b5d86a`, rows `#7a9a3a`, yard `#7cb24a`, fence `#f1e7d0`, barn `#e63946` |
-| harvest | sky `#ffd8a8`, hillsFar `#c9b458`, hills `#a8a24a`, field `#c4cf7a`, rows `#8f9a45`, yard `#7f9a45`, fence `#f1e7d0`, barn `#e63946` |
+| summer | sky `#8fd3f4`, hillsFar `#9fcf6b`, hills `#7fbf55`, field `#b5d86a`, rows `#7a9a3a`, yard `#7cb24a`, fence `#f1e7d0`, barn `#d00000` |
+| harvest | sky `#ffd8a8`, hillsFar `#c9b458`, hills `#a8a24a`, field `#c4cf7a`, rows `#8f9a45`, yard `#7f9a45`, fence `#f1e7d0`, barn `#d00000` |
 
 ### Things (17)
 

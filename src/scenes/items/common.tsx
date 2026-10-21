@@ -160,6 +160,8 @@ export const person: CommonItem = {
       <G>
         {/* Long hair falls behind the head and shoulders. */}
         {style === 1 && <Path d="M15,16 C15,-2 49,-2 49,16 L51,40 Q32,46 13,40 Z" fill={hair} stroke="none" />}
+        {/* A ponytail, tied at the back and swinging out to one side (never a bun on top, which can read as a head covering). */}
+        {style === 2 && <Path d="M40,6 C52,4 60,12 58,26 C57,34 54,38 50,40 C53,32 52,24 46,18 Z" fill={hair} stroke="none" />}
         <Rect x={20} y={80} width={10} height={45} rx={4} fill="#343a40" stroke="none" />
         <Rect x={34} y={80} width={10} height={45} rx={4} fill="#343a40" stroke="none" />
         <Rect x={4} y={36} width={11} height={40} rx={5} fill={colour} />
@@ -172,8 +174,8 @@ export const person: CommonItem = {
         <Rect x={32} y={119} width={15} height={6} rx={3} fill="#212529" stroke="none" />
         <Path d="M24,32 L32,40 L40,32" fill="none" stroke="#ffffff" strokeOpacity={0.6} strokeWidth={2.5} strokeLinejoin="round" />
         <Circle cx={32} cy={16} r={15} fill={skin} stroke="none" />
-        <Path d="M17,14 C19,0 45,0 47,14 C39,8 25,8 17,14 Z" fill={hair} stroke="none" />
-        {style === 2 && <Circle cx={32} cy={2} r={6} fill={hair} stroke="none" />}
+        {/* Hair over the top of the head, so no skin shows above it (a thin crescent read as a headband). */}
+        <Path d="M16,15 C14,-5 50,-5 48,15 C40,8 24,8 16,15 Z" fill={hair} stroke="none" />
         <G stroke="none" fill="#2b2b2b">
           <Circle cx={26.5} cy={17} r={1.8} />
           <Circle cx={37.5} cy={17} r={1.8} />

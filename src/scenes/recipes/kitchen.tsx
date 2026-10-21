@@ -959,6 +959,8 @@ function surfaceAt(_x: number, y: number): string {
 
 export const kitchen: Recipe = {
   id: 'kitchen',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'In the kitchen',
   zones: [
     { id: 'shelf', label: 'On the shelf', surface: 'ground', top: SHELF[0], bottom: SHELF[1], rows: 1, flush: true },

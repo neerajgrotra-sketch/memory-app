@@ -800,6 +800,8 @@ function surfaceAt(x: number, y: number): string {
 
 export const zoo: Recipe = {
   id: 'zoo',
+  // Where questions by landmarks, places and bands, never left / middle / right (hard to judge on a phone).
+  sides: false,
   title: 'At the zoo',
   zones: [
     { id: 'sky', label: 'In the sky', surface: 'air', top: 0, bottom: SKY, rows: 1 },

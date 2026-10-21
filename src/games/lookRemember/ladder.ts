@@ -19,11 +19,6 @@ export const isGoodRound = (score: number, total: number) => score >= total - 1;
 /** 0 or 1 out of 5. */
 export const isPoorRound = (score: number) => score <= 1;
 
-/** The score a round counts as for your level: right answers after a peek can't tip it into a good round. */
-export function scoreForLevel(score: number, total: number, peekedRight: number): number {
-  return isGoodRound(score, total) ? score - peekedRight : score;
-}
-
 export interface LadderState {
   level: number;
   /** Good rounds so far towards the next level (0 to ROUNDS_TO_LEVEL_UP - 1). */
@@ -79,6 +74,7 @@ export function knobsForLevel(rawLevel: number): LevelConfig {
     mixedColours: level >= 12,
     houseNumbers: level >= 8,
     clockStep: level < 8 ? 60 : level < 18 ? 30 : 15,
+    hidden: level < 20 ? 0 : level < 25 ? 1 : 2,
   };
 }
 
@@ -114,6 +110,7 @@ export function unlocksAt(level: number): string[] {
   if (now.mixedColours && !before.mixedColours) news.push('Fire hydrants can each be a different colour');
   if (now.clockStep < before.clockStep) news.push(now.clockStep === 30 ? 'Clocks can show half past' : 'Clocks can show quarter past and quarter to');
   if (now.closeCounts && !before.closeCounts) news.push('Closer choices when counting');
+  if (now.hidden > before.hidden) news.push(now.hidden === 1 ? 'Animals hiding in the picture: find where' : 'Hiding animals show less of themselves');
   if (now.groups > before.groups) news.push('One more kind of thing in each picture');
   if (now.maxCount > before.maxCount) news.push(`Up to ${now.maxCount} of the same thing`);
   if (now.viewSeconds < before.viewSeconds) news.push(`Pictures stay for ${now.viewSeconds} seconds`);
@@ -136,6 +133,7 @@ export function nextBigUnlock(level: number): { level: number; text: string } | 
     if (now.mixedColours && !before.mixedColours) return { level: l, text: 'Hydrants in different colours' };
     if (now.clockStep < before.clockStep) return { level: l, text: now.clockStep === 30 ? 'Clocks at half past' : 'Clocks at quarter past and quarter to' };
     if (now.closeCounts && !before.closeCounts) return { level: l, text: 'Closer choices when counting' };
+    if (now.hidden > before.hidden) return { level: l, text: now.hidden === 1 ? 'Hiding animals' : 'Better-hidden animals' };
   }
   return null;
 }
@@ -188,15 +186,16 @@ export function startingLevel(results: RoundResult[]): number {
 }
 
 /** Your level now: from the last levelled round, or worked out from earlier rounds if there are none. */
-export function ladderStateOf(results: RoundResult[], restartedAt?: string | null): { state: LadderState; fromHistory: boolean } {
+/** `startLevel`: the level a "start again" put you on (1, or any level a tester picked). */
+export function ladderStateOf(results: RoundResult[], restartedAt?: string | null, startLevel = 1): { state: LadderState; fromHistory: boolean } {
   const sorted = [...results].sort((a, b) => a.playedAt.localeCompare(b.playedAt));
   const lastLevelled = (rounds: RoundResult[]) => [...rounds].reverse().find((r) => r.mode === 'levels' && r.ladder);
   if (restartedAt) {
-    // Started again: Level 1, unless rounds have been played since. The best level ever is kept.
+    // Started again: Level 1 (or a tester's chosen level), unless rounds have been played since. The best level ever is kept.
     const since = lastLevelled(sorted.filter((r) => r.playedAt > restartedAt));
     if (since?.ladder) return { state: since.ladder.after, fromHistory: false };
     const before = ladderStateOf(sorted.filter((r) => r.playedAt <= restartedAt)).state;
-    return { state: { ...FIRST_STATE, best: Math.max(1, before.best) }, fromHistory: false };
+    return { state: { ...FIRST_STATE, level: startLevel, best: Math.max(1, before.best) }, fromHistory: false };
   }
   const last = lastLevelled(sorted);
   if (last?.ladder) return { state: last.ladder.after, fromHistory: false };

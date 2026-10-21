@@ -13,17 +13,19 @@ import { colors, layout } from '@/theme';
 
 interface PeekViewProps {
   scene: SceneSpec;
+  /** How long the picture stays (PEEK_SECONDS, or a tester's chosen length). */
+  seconds?: number;
   onDone: () => void;
 }
 
 const FLIP_MS = 320;
 
 /**
- * A Peek: the picture flips in over the question, stays for PEEK_SECONDS with the countdown, then flips
+ * A Peek: the picture flips in over the question, stays for `seconds` with the countdown, then flips
  * away. Laid out like the memorise screen (bar, then the picture), so it's exactly the picture you saw.
  * It holds still (no drifting clouds), and with "reduce motion" on it fades instead of flipping.
  */
-export function PeekView({ scene, onDone }: PeekViewProps) {
+export function PeekView({ scene, seconds = PEEK_SECONDS, onDone }: PeekViewProps) {
   const reduceMotion = useReducedMotion();
   // 0 = edge-on (hidden), 1 = facing you.
   const shown = useSharedValue(0);
@@ -62,7 +64,7 @@ export function PeekView({ scene, onDone }: PeekViewProps) {
             <Text style={styles.label} accessibilityRole="header">
               Peek
             </Text>
-            <Countdown seconds={PEEK_SECONDS} running={running} onComplete={close} onTick={() => feedback('tick')} />
+            <Countdown seconds={seconds} running={running} onComplete={close} onTick={() => feedback('tick')} />
           </View>
           <View style={styles.picture}>
             <SceneView spec={scene} fitToBox />

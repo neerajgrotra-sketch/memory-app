@@ -43,4 +43,4 @@ At that scale a person would be taller than the whole floor band and cover the s
 
 ## Questions it gives
 
-Everything the engine asks: counts, colours, "Where were the cereal boxes?", "What was on the top shelf, on the left?", in / NOT in the picture, compare ("Were there more tins or more jars of honey?"), above / below ("What was above the cartons of milk?"), colour twins, true or false, plus the aisle number and the offer.
+Everything the engine asks: counts, colours, "Where were the cereal boxes?", "What was on the top shelf, on the left?", in / NOT in the picture, compare ("Were there more tins or more jars of honey?"), above / below ("What was on the top shelf, above the cartons of milk?"), colour twins, true or false, plus the aisle number and the offer.

@@ -3,12 +3,13 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { DailyCard } from '@/components/DailyCard';
-import { GameArt } from '@/components/GameArt';
+import { GameThumb } from '@/components/GameArt';
 import { LevelRing } from '@/components/LevelRing';
 import { SoundToggle } from '@/components/SoundToggle';
 import { titleFor } from '@/games/lookRemember/ladder';
+import { PLANNED_GAMES, PlannedGameRow } from '@/games/ComingSoon';
 import { GAMES, SKILLS, SKILL_ORDER, type GameDef } from '@/games/registry';
-import { useGameProgress } from '@/hooks/useGameProgress';
+import { useAllGameProgress, useGameProgress, type GameProgress } from '@/hooks/useGameProgress';
 import { feedback } from '@/feedback';
 import { EXTRA_SECONDS, useProfile } from '@/profile';
 import { myPlaces, placesOff } from '@/games/lookRemember/places';
@@ -26,6 +27,11 @@ export default function GamesScreen() {
   const featured = GAMES[0];
   const progress = useGameProgress(featured.id);
   const played = (progress?.plays ?? 0) > 0;
+  const all = useAllGameProgress(GAMES.map((g) => g.id));
+  // The game played most recently, marked "Continue" on its row.
+  const lastPlayed = GAMES.map((g) => ({ id: g.id, at: all?.[g.id]?.lastPlayedAt ?? null }))
+    .filter((g) => g.at)
+    .sort((a, b) => b.at!.localeCompare(a.at!))[0]?.id;
 
   return (
     <SafeAreaView style={styles.screen} edges={['top', 'left', 'right']}>
@@ -41,49 +47,33 @@ export default function GamesScreen() {
         {/* The daily habit (streak, this week, today's challenge), once you've played a first round. */}
         {played && <DailyCard />}
 
-        {/* Once you've played, a slim strip to carry on at your level. New players start from the game card below. */}
-        {played && progress && (
-          <View style={styles.continue}>
-            <LevelRing ladder={progress.ladder} size={52} />
-            <View style={styles.continueText}>
-              <Text style={styles.kicker}>Continue</Text>
-              <Text style={styles.continueTitle} numberOfLines={1}>
-                {featured.title}
-              </Text>
-              <Text style={styles.continueMeta} numberOfLines={1}>
-                {titleFor(progress.ladder.level)}
-              </Text>
-            </View>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={`Play ${featured.title}, level ${progress.ladder.level}`}
-              onPress={() => playLevels(featured)}
-              style={({ pressed }) => [styles.playPill, pressed && styles.pressed]}
-            >
-              <Text style={styles.playPillText}>Play</Text>
-            </Pressable>
-          </View>
-        )}
         {progress && !played && <Text style={styles.intro}>New here? Tap a game to see how it works, then play.</Text>}
 
         {progress && <MyPlacesNote level={progress.ladder.level} gameId={featured.id} />}
         {profile?.moreTime && <Text style={styles.moreTime}>More time to look is on: every picture stays {EXTRA_SECONDS} seconds longer.</Text>}
 
-        {/* Games grouped by skill. A skill only shows once it has a game. */}
+        {/* Games grouped by skill, one full-width row each, so every game is in view and each carries its own
+            level and Play. Within a skill the most recently played comes first, and the game played last of all
+            is marked "Continue". A skill only shows once it has a game; in tester mode, planned games appear too
+            ("Coming soon"), to preview the hub with more games. */}
         {SKILL_ORDER.map((skill) => {
-          const games = GAMES.filter((g) => g.skill === skill);
-          if (!games.length) return null;
+          const games = GAMES.filter((g) => g.skill === skill).sort((a, b) => (all?.[b.id]?.lastPlayedAt ?? '').localeCompare(all?.[a.id]?.lastPlayedAt ?? ''));
+          const planned = profile?.tester ? PLANNED_GAMES.filter((g) => g.skill === skill) : [];
+          if (!games.length && !planned.length) return null;
           return (
             <View key={skill} style={styles.section}>
               <View style={styles.sectionHead}>
                 <Text style={styles.sectionTitle}>{SKILLS[skill].title}</Text>
                 <Text style={styles.sectionBlurb}>{SKILLS[skill].blurb}</Text>
               </View>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.cards}>
+              <View style={styles.rows}>
                 {games.map((game) => (
-                  <GameCard key={game.id} game={game} />
+                  <GameRow key={game.id} game={game} progress={all?.[game.id] ?? null} last={game.id === lastPlayed} />
                 ))}
-              </ScrollView>
+                {planned.map((game) => (
+                  <PlannedGameRow key={game.id} game={game} />
+                ))}
+              </View>
             </View>
           );
         })}
@@ -94,20 +84,47 @@ export default function GamesScreen() {
   );
 }
 
-function GameCard({ game }: { game: GameDef }) {
-  const progress = useGameProgress(game.id);
+/**
+ * A game's row: its picture, title, your level (ring and title) and Play, which goes straight in at your
+ * level. Tapping anywhere else opens the game's page. A game not played yet says "Try it".
+ */
+function GameRow({ game, progress, last }: { game: GameDef; progress: GameProgress | null; last: boolean }) {
+  const played = (progress?.plays ?? 0) > 0;
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`${game.title}${progress ? `, level ${progress.ladder.level}` : ''}`}
       onPress={() => openGame(game)}
-      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+      style={({ pressed }) => [styles.row, last && styles.rowLast, pressed && styles.pressed]}
     >
-      <GameArt style={styles.cardArt} />
-      <View style={styles.cardBody}>
-        <Text style={styles.cardTitle}>{game.title}</Text>
-        <Text style={styles.cardMeta}>{progress ? `Level ${progress.ladder.level}` : ' '}</Text>
+      <GameThumb style={styles.thumb} />
+      <View style={styles.rowBody}>
+        {last && <Text style={styles.kicker}>Continue</Text>}
+        <Text style={styles.rowTitle} numberOfLines={1}>
+          {game.title}
+        </Text>
+        {progress && played ? (
+          <View style={styles.rowLevel}>
+            <LevelRing ladder={progress.ladder} size={34} />
+            <Text style={styles.rowMeta} numberOfLines={1}>
+              {titleFor(progress.ladder.level)}
+            </Text>
+          </View>
+        ) : (
+          <Text style={styles.rowMeta} numberOfLines={2}>
+            {game.tagline}
+          </Text>
+        )}
       </View>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={played && progress ? `Play ${game.title}, level ${progress.ladder.level}` : `Try ${game.title}`}
+        onPress={() => (played ? playLevels(game) : openGame(game))}
+        hitSlop={6}
+        style={({ pressed }) => [styles.playPill, pressed && styles.pressed]}
+      >
+        <Text style={styles.playPillText}>{played ? 'Play' : 'Try it'}</Text>
+      </Pressable>
     </Pressable>
   );
 }
@@ -135,20 +152,7 @@ const styles = StyleSheet.create({
   header: { flex: 1, gap: 2, paddingHorizontal: 4 },
   brand: { color: colors.accent, fontSize: 34, fontWeight: '900', letterSpacing: -0.5 },
   greeting: { color: colors.textMuted, fontSize: 16 },
-  continue: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: 12,
-  },
-  continueText: { flex: 1, gap: 1 },
   kicker: { color: colors.accent, fontSize: 11, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 1 },
-  continueTitle: { color: colors.text, fontSize: 16, fontWeight: '800' },
-  continueMeta: { color: colors.textMuted, fontSize: 13 },
   playPill: { backgroundColor: colors.accent, borderRadius: radius.pill, paddingHorizontal: 20, minHeight: 44, justifyContent: 'center' },
   playPillText: { color: colors.accentText, fontSize: 16, fontWeight: '800' },
   intro: { color: colors.textMuted, fontSize: 15, lineHeight: 21, paddingHorizontal: 4, marginBottom: -8 },
@@ -160,12 +164,25 @@ const styles = StyleSheet.create({
   sectionHead: { paddingHorizontal: 4, gap: 2 },
   sectionTitle: { color: colors.text, fontSize: 20, fontWeight: '900' },
   sectionBlurb: { color: colors.textMuted, fontSize: 14 },
-  cards: { gap: 12, paddingRight: 16 },
-  card: { width: 220, backgroundColor: colors.surface, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
+  rows: { gap: 10 },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 10,
+    minHeight: 96,
+  },
+  // The game played last: an accent edge, so carrying on is one glance away.
+  rowLast: { borderColor: colors.accent, borderWidth: 1.5 },
   pressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
-  cardArt: { width: '100%' },
-  cardBody: { padding: 12, gap: 2 },
-  cardTitle: { color: colors.text, fontSize: 16, fontWeight: '800' },
-  cardMeta: { color: colors.textMuted, fontSize: 13 },
+  thumb: { width: 76, height: 76, borderRadius: 10 },
+  rowBody: { flex: 1, gap: 4 },
+  rowTitle: { color: colors.text, fontSize: 17, fontWeight: '800' },
+  rowLevel: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  rowMeta: { color: colors.textMuted, fontSize: 13, flexShrink: 1 },
   version: { color: colors.textMuted, fontSize: 12, textAlign: 'center' },
 });
