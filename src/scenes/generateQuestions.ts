@@ -605,6 +605,13 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       const isDir = (g: PlacedGroup) => (dir === 'above' ? zoneIndex(g) < zoneIndex(group) : zoneIndex(g) > zoneIndex(group));
       const near = spec.groups.filter((g) => g !== group && isDir(g) && reaches(g, group.region) && !faraway(g));
       if (near.length !== 1 || !single.includes(near[0]) || !alone(near[0])) continue;
+      // Only the very next band up or down: "on the top shelf, above the milk" skipped an empty middle shelf, where
+      // players looked first. (Bands that hold nothing, like the trees behind the park's pond, don't count.)
+      const bandsBetween = zones.filter((z) => {
+        const i = recipe.zones.indexOf(z);
+        return i > Math.min(zoneIndex(group), zoneIndex(near[0])) && i < Math.max(zoneIndex(group), zoneIndex(near[0]));
+      });
+      if (bandsBetween.length) continue;
       // Two flat bands (the path and the grass): the one lower down is nearer, not "below". "What was on the grass,
       // below the dog?" made no sense.
       if (isFlat(zoneOf(group.zoneId)) && isFlat(zoneOf(near[0].zoneId))) continue;

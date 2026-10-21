@@ -237,13 +237,17 @@ const items: ItemDef[] = [
         <Rect x={0} y={22} width={55} height={63} fill="#f8f9fa" />
         <Path d="M0,22 L9,4 H46 L55,22 Z" fill={C.blue.hex} />
         <G stroke="none">
-          <Path d="M27.5,40 C34,50 36,55 36,59 A8.5,8.5 0 0 1 19,59 C19,55 21,50 27.5,40 Z" fill={C.blue.hex} />
+          {/* "MILK" across the front and cow-print patches: a blue drop read as water. */}
+          <SvgText x={23} y={45} fontSize={14} fontWeight="bold" fontFamily="Arial" fill={C.blue.hex} textAnchor="middle">
+            MILK
+          </SvgText>
+          <Path d="M6,52 C10,49 16,51 15,56 C14,61 7,61 5,57 Z M26,55 C31,52 38,55 36,61 C34,66 26,65 25,60 Z" fill="#212529" />
+          <Path d="M38,50 C41,48 43,51 42,53 C41,55 38,54 38,50 Z" fill="#212529" />
           {/* A cap, the fold of the top, a blue stripe along the bottom and shade down one side. */}
           <Rect x={30} y={8} width={10} height={6} rx={2} fill="#f8f9fa" />
           <Path d="M27.5,4 V22" stroke="#000000" strokeOpacity={0.2} strokeWidth={2} />
           <Rect x={0} y={74} width={55} height={6} fill={C.blue.hex} />
           <Rect x={44} y={22} width={11} height={63} fill="#000000" fillOpacity={0.08} />
-          <Ellipse cx={24} cy={52} rx={2.5} ry={4} fill="#ffffff" fillOpacity={0.6} />
         </G>
       </G>
     ),

@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.2.3 (2026-10-21)
+
+- **Milk looks like milk.** The supermarket's cartons had a blue drop on the front, which read as water. They now say **MILK** with cow-print patches.
+- **Above and below never skip a band.** "What was on the top shelf, above the cartons of milk?" answered the bread two shelves up, while the middle shelf right above the milk was empty there, and that's where players looked. The answer must now be in the very next band up or down. Bands that hold nothing (the trees behind the park's pond, the city's house fronts) don't count as in between.
+
 ## 4.2.2 (2026-10-21)
 
 - **People stand on the park's path.** Things on the ground stood with their feet near the bottom of their band, and on the thin path that's the line where it meets the grass, so people asked about as "on the path" looked to be on the grass. The path now keeps feet well inside it (`feetInset` on a band).
