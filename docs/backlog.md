@@ -42,6 +42,12 @@ Rules learned so far: every answer of a "which" or "what" question must really h
 
 ## Pictures
 
+- **Game pictures that follow your progress** (tester feedback, 22 Oct 2026: the tile and the game page always show the same beach). Today both are one fixed beach picture (`GAME_ART`, `GAME_THUMB` in `src/components/GameArt.tsx`) drawn live by the scene engine, so any of the 15 places can be shown instead. Agreed design:
+  - **Games tab tile:** the place of your last round (from the last result's `recipeId`), so it changes most sessions.
+  - **Game page picture:** your newest place (the last one `RECIPE_UNLOCKS` gave at your level), so it reflects your level.
+  - **Under the level card:** a small postcard of the next place beside "Level 4: A new place: the park"; "All 15 places unlocked" from Level 28. A sample picture, never one you'll be quizzed on.
+  - A new player still sees the beach.
+  - **The work:** one good seed and two crops per place (square for the tile, wide for the page), picked by eye at iPhone SE size, with `leftOut` for anything poking in. The busiest places (supermarket, classroom, train station) may need a tighter crop on one feature to read at tile size. About one release.
 - **Depth in the outdoor places.** Things in the nearest band drawn bigger than those at the back (as in the classroom, about 1.25×): beach, park, farm, campsite, zoo.
 - **Fuller supermarket shelves.** Faint background stock so shelves don't look half empty, without being confused with the things questions ask about.
 - **People with their dogs, prams and kites.** Owners walking dogs, someone pushing a pram, a child holding a kite string.
