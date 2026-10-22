@@ -21,7 +21,7 @@ import { bossAt } from '@/games/lookRemember/boss';
 import { speedCounterOf, speedDue, speedGap, type SpeedCounter } from '@/games/lookRemember/speed';
 import { answeredOf, clearSavedRound, loadSavedRound, slotFor, type SavedRound } from '@/games/lookRemember/savedRound';
 import { loadProgress } from '@/hooks/useGameProgress';
-import { useProfile } from '@/profile';
+import { profileStore, useProfile } from '@/profile';
 import { statsStore } from '@/stats';
 import { useGameSession, type SessionStart, type SpeedRoundSetup } from '@/hooks/useGameSession';
 import { colors, radius } from '@/theme';
@@ -35,7 +35,8 @@ function goBack() {
 export default function PlayScreen() {
   // `resume=1` (the Resume card on Home) goes straight back into the saved round, whatever its mode.
   // `speed=1` (tester mode's Speed Round button) opens with a Super Speed Round.
-  const params = useLocalSearchParams<{ mode?: string; resume?: string; speed?: string }>();
+  // `place=farm` (Explore on the journey map) makes the first picture that place.
+  const params = useLocalSearchParams<{ mode?: string; resume?: string; speed?: string; place?: string }>();
   const asked: PlayMode = isPlayMode(params.mode) ? params.mode : 'levels';
   // Your level and high score come from saved rounds, so wait for them before the first picture.
   const [start, setStart] = useState<(SessionStart & { streak: Streak; speed: SpeedCounter; speedFirst?: boolean }) | null>(null);
@@ -43,7 +44,8 @@ export default function PlayScreen() {
   const [choice, setChoice] = useState<{ saved: SavedRound; begin: (resume?: SavedRound) => void } | null>(null);
   useEffect(() => {
     let live = true;
-    Promise.all([loadProgress('look-remember'), statsStore.listResults(), loadSavedRound(slotFor(asked))]).then(([progress, all, saved]) => {
+    // The saved profile says whether the guided first round has been played.
+    Promise.all([loadProgress('look-remember'), statsStore.listResults(), loadSavedRound(slotFor(asked)), profileStore.load()]).then(([progress, all, saved, stored]) => {
       if (!live) return;
       const begin = (resume?: SavedRound) => {
         const mode = resume?.mode ?? asked;
@@ -57,9 +59,14 @@ export default function PlayScreen() {
           streak: streakOf(all),
           speed: speedCounterOf(progress.results),
           speedFirst: params.speed === '1' && !resume,
+          place: resume ? undefined : params.place,
           resume,
         });
       };
+      // A new player's first Levels round starts with the guided practice round (once; How to play replays it).
+      if (asked === 'levels' && progress.plays === 0 && !saved && !stored?.guided && !params.place && params.speed !== '1') {
+        return router.replace('/guided');
+      }
       if (asked === 'daily') {
         // One Daily Challenge a day; one closed part way through carries on.
         if (dailyResultOn(all)) {
@@ -75,7 +82,7 @@ export default function PlayScreen() {
     return () => {
       live = false;
     };
-  }, [asked, params.resume, params.speed]);
+  }, [asked, params.resume, params.speed, params.place]);
 
   if (choice) {
     const { saved, begin } = choice;
@@ -242,9 +249,10 @@ function Game({ start }: { start: SessionStart & { streak: Streak; speed: SpeedC
       {showLevelUp && outcome?.ladder && (
         <LevelUpScreen
           level={outcome.ladder.after.level}
+          // On to the journey map, where the marker travels to the new level's stop.
           onPlay={() => {
             setCelebrated(levelUpKey);
-            next();
+            router.replace({ pathname: '/journey', params: { arrive: String(outcome.ladder!.after.level) } });
           }}
           onContinue={() => setCelebrated(levelUpKey)}
           onClose={goBack}

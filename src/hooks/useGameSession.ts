@@ -132,6 +132,8 @@ export interface SessionStart {
   peeks: PeekWallet;
   /** 50:50s held when the session starts. */
   fifty?: number;
+  /** The first picture's place (Explore on the journey map), in Levels. */
+  place?: string;
   /** A round saved part way through (see `SavedRound`): the session starts at its next unanswered question. */
   resume?: SavedRound;
 }
@@ -140,7 +142,7 @@ export interface SessionStart {
  * Runs one session of Look & Remember. The first picture is built on first render;
  * remount (e.g. with a `key`) to start over in another mode.
  */
-export function useGameSession({ mode, ladder: startLadder, highScore: startHighScore, peeks: startPeeks, fifty: startFifty = 0, resume }: SessionStart) {
+export function useGameSession({ mode, ladder: startLadder, highScore: startHighScore, peeks: startPeeks, fifty: startFifty = 0, place, resume }: SessionStart) {
   // Pictures are laid out for the space below the countdown bar, down to the bottom safe-area inset.
   // (The picture measures itself too and lays the same contents out again if the space differs.)
   const { width, height } = useWindowDimensions();
@@ -166,9 +168,11 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     const setup = setupFor(mode, startLadder.level);
     // The Daily Challenge: the day's picture (same seed all day), from every place you've reached.
     const daily = mode === 'daily';
+    // Explore on the journey map: the first picture is that place (even one switched off in My places: it was chosen).
+    const visit = mode === 'levels' && place ? place : undefined;
     const firstStage = createStage(setup.knobs, size, undefined, daily ? dailySeed(localDay()) : undefined, {
-      unlocked: tester ? undefined : setup.unlocked,
-      off: daily ? [] : off,
+      unlocked: visit ? [visit] : tester ? undefined : setup.unlocked,
+      off: daily || visit ? [] : off,
     });
     return { stage: firstStage, round: buildRound(setup, 0, firstStage.questions, new Set(), new Set(), extra) };
   });

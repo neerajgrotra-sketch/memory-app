@@ -12,7 +12,7 @@ import { colors, radius } from '@/theme';
 
 interface LevelUpScreenProps {
   level: number;
-  /** Straight on to a new picture at the new level. */
+  /** On along the journey: the map, where the marker travels to the new level's stop. */
   onPlay: () => void;
   /** To the round's results and answers first. */
   onContinue: () => void;
@@ -72,8 +72,8 @@ export function LevelUpScreen({ level, onPlay, onContinue, onClose, onBoss }: Le
       </ScrollView>
       <View style={styles.actions}>
         <Button
-          label={`Play Level ${level}`}
-          // The start sound is played by `onPlay`: a Super Speed Round has its own.
+          label="Continue your journey"
+          // The map plays its own travel sound.
           onPress={onPlay}
         />
         {/* Side by side with a boss to take on, so three buttons leave room for the news on a small phone. */}

@@ -7,6 +7,19 @@ Ideas we've agreed are worth doing but have parked for now, with enough detail t
 - **Real-phone builds.** Android test build (`--profile preview`) now; iPhone TestFlight once there's a personal Apple Developer account (not the Gildan one). See [building.md](building.md).
 - **Tests on every change.** Run the checks automatically on each push, and move the browser play-tests into the repo.
 
+## The journey (step 1 built in 4.13.0)
+
+Agreed with the tester feedback of 22 Oct 2026: every level is a stop on one trip; build it in steps.
+
+- **Step 2, story and travel:** short story lines between stops, and different ways of travelling on the map (a boat to under the sea, a train to the station, a rocket to the Moon); bosses drawn as landmarks.
+- **Step 3, new places, one per release,** each filling a stop that has no place yet (the odd levels), picked from user feedback: a bakery, a fairground, a harbour, a castle, a jungle, a toy shop.
+- **Step 4, collections:** a postcard album of the places visited, and the bosses' badges on the map.
+- **A paid "Unlock the whole journey"** (idea, 22 Oct 2026). A one-off purchase that opens every stop on the map, so a player can tap any stop and play that level in its place, as tester mode already does (4.13.2: every stop open, **Play Level N here**). To decide first:
+  - **What it unlocks:** every stop to visit and play, and all bosses? The climb (3 good rounds a level) should still count, with "your level" kept separate from "stops open", so the free path stays meaningful.
+  - **Price and shape:** one-off rather than a subscription suits a family game. Whether it joins the wider plan (more places, future games; see "A business model" below).
+  - **Building it:** App Store and Google Play in-app purchases (Expo's in-app purchase options or a service such as RevenueCat), restoring purchases on a new phone, and a store-safe screen saying what you get. No pressure tactics for children: never shown mid-round, and never as a "you lost, pay to continue".
+  - **Before then:** accounts or a purchase receipt to remember it; today progress lives only on the phone.
+
 ## Games
 
 - **Pairs (card matching), game #2.** Cards shown face up for a few seconds, then flipped; find the pairs. Card faces are our own item drawings, one place's deck per round (a beach deck, a farm deck), unlocking with Look & Remember's places. Self-adjusting levels: bigger grids (2×3 up to 5×6), less look-first time, lookalike pairs (same thing, different colour) at high levels. Timed rounds give +5 s per match and never end in "you lost"; a relaxed mode has no timer. Build in its own chat and branch (`claude/match-game`); the starter message is in the conversation of 19 Oct 2026.
@@ -47,7 +60,7 @@ Rules learned so far: every answer of a "which" or "what" question must really h
   - **Game page picture:** your newest place (the last one `RECIPE_UNLOCKS` gave at your level), so it reflects your level.
   - **Under the level card:** a small postcard of the next place beside "Level 4: A new place: the park"; "All 15 places unlocked" from Level 28. A sample picture, never one you'll be quizzed on.
   - A new player still sees the beach.
-  - **The work:** one good seed and two crops per place (square for the tile, wide for the page), picked by eye at iPhone SE size, with `leftOut` for anything poking in. The busiest places (supermarket, classroom, train station) may need a tighter crop on one feature to read at tile size. About one release.
+  - **The work:** smaller now: 4.13.0 picked a postcard for every place (`placePostcard` and `placeThumb` in `GameArt.tsx`, checked by `check:journey`), so the tile and page can use those; check the tile and the page's wide crop by eye at iPhone SE size.
 - **Depth in the outdoor places.** Things in the nearest band drawn bigger than those at the back (as in the classroom, about 1.25×): beach, park, farm, campsite, zoo.
 - **Fuller supermarket shelves.** Faint background stock so shelves don't look half empty, without being confused with the things questions ask about.
 - **People with their dogs, prams and kites.** Owners walking dogs, someone pushing a pram, a child holding a kite string.
@@ -57,7 +70,6 @@ Rules learned so far: every answer of a "which" or "what" question must really h
 
 - **Accounts, cloud sync and family profiles** (behind the existing `ProfileStore` and `StatsStore` interfaces; see the README).
 - **Colour-blind mode and a text-size setting.**
-- **Onboarding:** a guided first round.
 - **Reminders** and a weekly progress card.
 - **Crash reporting and analytics**, then tuning difficulty on real data.
 - **A business model:** a generous free tier; a subscription or one-off purchase for more places, unlimited Peeks and future games.

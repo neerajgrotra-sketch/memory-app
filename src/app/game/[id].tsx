@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BossBadge } from '@/components/BossBadge';
 import { Button } from '@/components/Button';
+import { JourneyIcon } from '@/components/JourneyIcon';
 import { GameArt } from '@/components/GameArt';
 import { LevelRing } from '@/components/LevelRing';
 import { PRACTICE_OPTIONS } from '@/game/difficulty';
@@ -104,6 +105,16 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
 
               {/* The main action, right under your level, so it's in view without scrolling. */}
               <Button label={`Play level ${progress.ladder.level}`} onPress={() => play('levels')} />
+              <Button
+                label="Your journey"
+                icon={<JourneyIcon />}
+                variant="secondary"
+                accessibilityHint="The map of your trip: every level's stop and the places you've reached"
+                onPress={() => {
+                  feedback('tick');
+                  router.push('/journey');
+                }}
+              />
 
               <View style={styles.tiles}>
                 <Tile label="High score" value={progress.highScore ? formatPoints(progress.highScore) : '–'} />
@@ -188,6 +199,14 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
               👑 Boss rounds at Levels 10, 20 and 30: a busy picture, a shorter look and harder questions. Get {BOSS_TO_WIN} of 5 right to win the badge.
             </Text>
             <Button label="Got it" onPress={() => setRulesOpen(false)} />
+            <Button
+              label="Play the practice round"
+              variant="secondary"
+              onPress={() => {
+                setRulesOpen(false);
+                router.push({ pathname: '/guided', params: { replay: '1' } });
+              }}
+            />
           </Pressable>
         </Pressable>
       </Modal>

@@ -14,6 +14,8 @@ export interface Profile {
   moreTime: boolean;
   /** The "what should we call you?" card has been answered or skipped, so it never shows again. */
   asked: boolean;
+  /** The guided first round has been played or skipped, so Play goes straight to Level 1. Missing means not yet. */
+  guided?: boolean;
   /** My Places: the places (recipe ids) switched off, so they're never played. Missing means all on. */
   placesOff?: string[];
   /**

@@ -97,6 +97,30 @@ A Peek is a second look at the picture while answering (`src/games/lookRemember/
 - **Won:** a Super Speed Round also wins Peeks (below).
 - `npm run check:peeks` checks the rules.
 
+## The guided first round
+
+A new player's first **Play** in Levels starts with a practice round (`GuidedRound`, the `/guided` screen), once:
+
+1. **How to play** in three lines (look, it goes away, climb the levels), with **Try a practice round** or **Skip, I know how to play**.
+2. **A calm practice picture:** the beach with four kinds of thing, for 20 seconds (twice the usual), with a tip over it for its first 3.5 seconds ("Look closely: what's there, how many and what colour").
+3. **Three coached questions,** one at a time with a tip each: what was there, a colour, and how many (never of something there was just one of). The third offers **Try a Peek**. A wrong answer is explained kindly ("That's fine. In a real round you see the answer, then move on.").
+4. **You're ready!** What real rounds are like (5 questions, a shorter look, 3 good rounds to go up, Peeks, the surprises on the journey), then **Start Level 1**.
+
+Nothing is saved, so it never counts towards a level. Playing or skipping it sets `profile.guided`, so it doesn't come again; **Play the practice round** in How to play replays it.
+
+## The journey
+
+The 30 levels as one trip (`src/games/lookRemember/journey.ts`, `JourneyMap`, `StopIntro`, the `/journey` screen).
+
+- **The stops** (`stopAt`, `JOURNEY`): Level 1 is the start (the beach); every even level from 2 to 28 is a new place, with a line of story ("Out to the countryside, where the animals are up early."); the levels between are a new challenge in the place you're in ("Still at the farm. Look a little closer this time."); Level 30 is the Final Boss. Each stop lists what its level brings (the level-up headlines, without the points line). Levels 10 and 20 carry their boss's badge.
+- **The map:** a winding path up the screen, Level 1 at the bottom, the done part in yellow. Places you've reached show their picture in a round stop; places ahead show their name, but their picture stays a "?" until you get there; the levels between are small numbered stops; the Final Boss is a red badge at the top. A marker (a little glance eye) shows your level.
+- **Arriving:** **Continue your journey** on the level-up screen opens the map with `arrive=N`: the marker hops along the path from the stop before to the new one with a whoosh (`journey-travel`), the new stop's picture appears with sparkles and bells (`journey-arrive`), and the stop pulses with **Tap to explore** until tapped. With "reduce motion" the marker simply appears there.
+- **The stop's card:** the place's postcard flips in and is stamped "Greetings from the farm" (`stamp`), with its story and what it brings. **Explore the farm** plays a round there: `/play?place=farm` makes the first picture that place, even one switched off in My places. A challenge stop offers **Play Level N**; a boss stop you've reached, **Take on the Farm Boss**. A stop ahead keeps its picture a surprise ("Reach Level 12 to find out").
+- **Postcards** (`placePostcard`, `placeThumb` in `GameArt.tsx`): one picture per place, picked by eye, as a 3:2 card and a square centred on the same middle for the map.
+- **Testing:** in tester mode every stop is open, and its card plays that level in its place (**Tester: play Level N here**).
+- **Any time:** **Your journey** on the game page (with a drawn folded-map icon, `JourneyIcon`) opens the map.
+- `npm run check:journey` checks a stop for every level, each place at its unlock level with a story, the kinds of stop, and every postcard inside its picture.
+
 ## Boss rounds
 
 A peak to climb to at Levels 10, 20 and 30 (`src/games/lookRemember/boss.ts`, `BOSSES` in `ladder.ts`, `BossRound`, the `/boss` screen).

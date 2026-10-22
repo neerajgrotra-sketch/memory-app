@@ -7,6 +7,9 @@
 #   speed-prize    a prize won: a fanfare run up into a chord, with sparkles
 #   boss-intro     a boss round: two heavy drum hits (the badge slams down on the second, 0.28 s), then a dark chord
 #   boss-win       a boss beaten: a fanfare into a big held chord, a drum under it, sparkles
+#   journey-travel the journey map: an airy whoosh and a rising glide as the marker moves to the next stop
+#   journey-arrive a new place reached: bright bells running up, with a shimmer
+#   stamp          the postcard's stamp landing: a soft thud and a paper slap
 import numpy as np, subprocess, sys
 SR = 44100
 rng = np.random.default_rng(11)
@@ -154,4 +157,39 @@ for n in (60, 64, 67, 72, 76, 79):
 for _ in range(20):
     place(buf, tone(rng.uniform(2600, 5600), 0.12, 'sine', decay=0.03) * rng.uniform(0.15, 0.35), rng.uniform(0.4, 1.6))
 write('boss-win', buf, -3)
+
+
+def bell(f, seconds=0.9, a=1.0):
+    """A small bell: a sine with two inharmonic partials, fading."""
+    t = t_of(seconds)
+    w = np.sin(2 * np.pi * f * t) + 0.4 * np.sin(2 * np.pi * f * 2.76 * t) * np.exp(-t / 0.15) + 0.2 * np.sin(2 * np.pi * f * 5.4 * t) * np.exp(-t / 0.08)
+    return w * np.minimum(t / 0.003, 1) * np.exp(-t / (seconds * 0.35)) * np.clip((seconds - t) / 0.03, 0, 1) * a
+
+
+# --- journey-travel (1.0 s) ----------------------------------------------------------------------------------------
+buf = np.zeros(int(SR * 1.0))
+n = rng.standard_normal(len(buf))
+tt = t_of(1.0)
+swell = np.sin(np.pi * np.clip(tt / 0.95, 0, 1)) ** 2
+# Low air fading into high air: one smooth sweep (switching bands in steps clicked).
+p = np.clip(tt / 0.95, 0, 1)
+air = bandpass(n, 400, 1500) * (1 - p) + bandpass(n, 1800, 6000) * p
+place(buf, air * swell * 0.6, 0.0)
+glide = tone(NOTE(67) * 2 ** (np.clip(t_of(0.7) / 0.7, 0, 1) * 7 / 12), 0.7, 'sine', decay=0.5, attack=0.08) * 0.35
+place(buf, glide, 0.15)
+write('journey-travel', buf, -9)
+
+# --- journey-arrive (1.4 s) ----------------------------------------------------------------------------------------
+buf = np.zeros(int(SR * 1.4))
+for i, nn in enumerate((76, 80, 83, 88)):
+    place(buf, bell(NOTE(nn), 1.0, 0.8), i * 0.08)
+for _ in range(16):
+    place(buf, tone(rng.uniform(3000, 6000), 0.1, 'sine', decay=0.025) * rng.uniform(0.1, 0.25), rng.uniform(0.3, 1.1))
+write('journey-arrive', buf, -5)
+
+# --- stamp (0.35 s) ------------------------------------------------------------------------------------------------
+st = t_of(0.35)
+thud = np.sin(2 * np.pi * np.cumsum(60 + 80 * np.exp(-st * 30)) / SR) * np.exp(-st / 0.06)
+slap = bandpass(rng.standard_normal(len(st)), 700, 3500) * np.exp(-st / 0.012) * 0.7
+write('stamp', (thud + slap) * np.clip((0.35 - st) / 0.03, 0, 1), -6)
 print('ok')

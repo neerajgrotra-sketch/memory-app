@@ -1,6 +1,6 @@
 {
   "name": "glance",
-  "version": "4.12.1",
+  "version": "4.14.0",
   "main": "expo-router/entry",
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
@@ -44,6 +44,7 @@
     "check:peeks": "esbuild scripts/check-peeks.ts --bundle --platform=node --outfile=node_modules/.cache/check-peeks.js --log-level=error && node node_modules/.cache/check-peeks.js",
     "check:speed": "esbuild scripts/check-speed.ts --bundle --platform=node --outfile=node_modules/.cache/check-speed.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-stub.js --jsx=automatic --log-level=error && node node_modules/.cache/check-speed.js",
     "check:boss": "esbuild scripts/check-boss.ts --bundle --platform=node --outfile=node_modules/.cache/check-boss.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-stub.js --jsx=automatic --log-level=error && node node_modules/.cache/check-boss.js",
+    "check:journey": "esbuild scripts/check-journey.ts --bundle --platform=node --outfile=node_modules/.cache/check-journey.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-stub.js --alias:react-native=./scripts/rn-stub.js --jsx=automatic --define:__DEV__=true --log-level=error && node node_modules/.cache/check-journey.js",
     "gallery": "esbuild scripts/gallery.tsx --bundle --platform=node --outfile=node_modules/.cache/gallery.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-dom.js --alias:react-native=./scripts/rn-stub.js --jsx=automatic --define:__DEV__=true --log-level=error && node node_modules/.cache/gallery.js",
     "lineup": "esbuild scripts/lineup.tsx --bundle --platform=node --outfile=node_modules/.cache/lineup.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-dom.js --alias:react-native=./scripts/rn-stub.js --jsx=automatic --define:__DEV__=true --log-level=error && node node_modules/.cache/lineup.js"
   },

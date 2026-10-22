@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AppState, Pressable, StyleSheet, Text, View } from 'react-native';
+import Animated, { FadeOut } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Countdown } from '@/components/Countdown';
@@ -17,7 +18,13 @@ interface MemoriseStageProps {
   /** Called when the time is up or the player taps "I'm ready", with how many seconds they looked. */
   onDone: (lookedSeconds: number) => void;
   onQuit: () => void;
+  /** A coach's tip over the bottom of the picture for its first few seconds (the guided first round), then gone, so
+   * it never hides what's to be remembered for long. */
+  hint?: string;
 }
+
+/** How long the coach's tip stays over the picture. */
+const HINT_MS = 3500;
 
 /** "I'm ready" ignores taps this soon after the picture appears, so a stray tap can't skip it unseen. */
 const READY_DELAY_MS = 1000;
@@ -27,8 +34,14 @@ const READY_DELAY_MS = 1000;
  * the quit button, so nothing floating in the top-right corner (like Expo Go's tools button) can hide it.
  * The picture fills the rest, down to the bottom safe-area inset.
  */
-export function MemoriseStage({ scene, seconds, onDone, onQuit }: MemoriseStageProps) {
+export function MemoriseStage({ scene, seconds, onDone, onQuit, hint }: MemoriseStageProps) {
   const overlay = useLayoutOverlay();
+  const [showHint, setShowHint] = useState(!!hint);
+  useEffect(() => {
+    if (!hint) return;
+    const t = setTimeout(() => setShowHint(false), HINT_MS);
+    return () => clearTimeout(t);
+  }, [hint]);
   const shownAt = useRef(0);
   const [armed, setArmed] = useState(false);
   const done = useRef(false);
@@ -97,6 +110,11 @@ export function MemoriseStage({ scene, seconds, onDone, onQuit }: MemoriseStageP
       </View>
       <View style={styles.picture}>
         <SceneView spec={scene} fitToBox overlay={overlay} animate />
+        {hint && showHint && (
+          <Animated.View exiting={FadeOut.duration(400)} style={styles.hint} pointerEvents="none">
+            <Text style={styles.hintText}>{hint}</Text>
+          </Animated.View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -135,4 +153,6 @@ const styles = StyleSheet.create({
   devButtonOn: { borderColor: colors.accent, backgroundColor: colors.surfaceRaised },
   devText: { color: colors.text, fontSize: 18 },
   picture: { flex: 1 },
+  hint: { position: 'absolute', left: 16, right: 16, bottom: 16, backgroundColor: 'rgba(15,17,21,0.88)', borderRadius: 16, padding: 14, borderWidth: 1, borderColor: colors.accent },
+  hintText: { color: colors.text, fontSize: 16, lineHeight: 22, fontWeight: '600', textAlign: 'center' },
 });
