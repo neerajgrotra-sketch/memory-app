@@ -174,7 +174,7 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
                 label={next.label}
                 onPress={() => {
                   if (next.done) return onHome();
-                  feedback('start');
+                  // The start sound is played by the next screen: a Super Speed Round has its own.
                   onNextPicture();
                 }}
                 accessibilityHint={next.detail}

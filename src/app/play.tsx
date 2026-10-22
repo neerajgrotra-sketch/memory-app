@@ -11,6 +11,7 @@ import { PeekView } from '@/components/PeekView';
 import { QuitButton } from '@/components/QuitButton';
 import { SoundToggle } from '@/components/SoundToggle';
 import { SpeedRound } from '@/components/SpeedRound';
+import { feedback } from '@/feedback';
 import { QuizStage } from '@/components/QuizStage';
 import { ResultStage } from '@/components/ResultStage';
 import { isPlayMode } from '@/game/difficulty';
@@ -130,8 +131,12 @@ function Game({ start }: { start: SessionStart & { streak: Streak; speed: SpeedC
   /** The next picture, or a Super Speed Round first when one is due. */
   const next = () => {
     const due = start.mode === 'levels' && speedDue(speedCount, ladder.level) ? makeSpeedRound() : null;
+    // The usual start sound, unless the speed round's lightning plays instead.
     if (due) setSpeedRound(due);
-    else nextPicture();
+    else {
+      feedback('start');
+      nextPicture();
+    }
   };
   // A Peek shows the picture again over the question for a few seconds (a tester can change how many).
   const [peeking, setPeeking] = useState(false);

@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.10.1 (2026-10-22)
+
+- **Sounds for the Super Speed Round.** A whoosh and a crackling zap as the lightning bolt lands, thunder under it, and a bright stab as the title rises; four racing notes on **Start**; a tight tick on the last two seconds of every question; a double buzzer when time runs out; and a fanfare with sparkles for a prize (the kind "aww" for 2 or fewer). They're made from scratch by `scripts/sounds/make-speed-sounds.py`, at the same loudness as the other sounds, with vibration to match on phones.
+
 ## 4.10.0 (2026-10-22)
 
 - **Super Speed Round.** A surprise every 4 to 6 Levels rounds, from Level 5, to break up the rhythm. A lightning bolt bursts in on spinning rays, then one line on what to do and what you can win, and it starts when you tap **Start**. A new picture, then 8 quick Yes or No questions, 4 seconds each (6 with "More time to look"), against a draining bar; running out of time counts as wrong. 8 of 8 wins a Peek and a 50:50, 7 a Peek, 6 or more bonus points. It never changes your level or high score. The questions are the picture's own, so every answer is right, each about something different, about half of them Yes.

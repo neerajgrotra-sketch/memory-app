@@ -68,10 +68,8 @@ export function LevelUpScreen({ level, onPlay, onContinue, onClose }: LevelUpScr
       <View style={styles.actions}>
         <Button
           label={`Play Level ${level}`}
-          onPress={() => {
-            feedback('start');
-            onPlay();
-          }}
+          // The start sound is played by `onPlay`: a Super Speed Round has its own.
+          onPress={onPlay}
         />
         <Button label="See my results" variant="secondary" onPress={onContinue} />
       </View>

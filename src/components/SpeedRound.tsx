@@ -82,13 +82,15 @@ function Intro({ onStart }: { onStart: () => void }) {
   const flash = useSharedValue(0);
   const rays = useSharedValue(reduceMotion ? 1 : 0);
   useEffect(() => {
-    const cheer = setTimeout(() => feedback('highScore'), reduceMotion ? 0 : 250);
-    if (reduceMotion) return () => clearTimeout(cheer);
+    // The zap in the sound lands at 0.15 s, as the bolt springs in, and its stab as the title rises. (A timer, so a
+    // remount in development doesn't play it twice.)
+    const sound = setTimeout(() => feedback('speedIntro'), 0);
+    if (reduceMotion) return () => clearTimeout(sound);
     bolt.value = withDelay(150, withSpring(1, { damping: 7, stiffness: 160 }));
     rays.value = withDelay(150, withTiming(1, { duration: 450, easing: Easing.out(Easing.cubic) }));
     spin.value = withRepeat(withTiming(1, { duration: 9000, easing: Easing.linear }), -1, false);
     flash.value = withDelay(200, withSequence(withTiming(0.7, { duration: 90 }), withTiming(0, { duration: 420 })));
-    return () => clearTimeout(cheer);
+    return () => clearTimeout(sound);
   }, [bolt, flash, rays, reduceMotion, spin]);
   const boltStyle = useAnimatedStyle(() => ({ transform: [{ scale: bolt.value }, { rotate: `${(1 - bolt.value) * -25}deg` }] }));
   const raysStyle = useAnimatedStyle(() => ({ opacity: rays.value, transform: [{ scale: 0.4 + 0.6 * rays.value }, { rotate: `${spin.value * 360}deg` }] }));
@@ -144,7 +146,7 @@ function Intro({ onStart }: { onStart: () => void }) {
         <Button
           label="Start"
           onPress={() => {
-            feedback('start');
+            feedback('speedGo');
             onStart();
           }}
         />
@@ -162,11 +164,15 @@ function Quiz({ setup, seconds, onDone }: { setup: SpeedRoundSetup; seconds: num
   const [results, setResults] = useState<boolean[]>([]);
   const [shown, setShown] = useState<Shown>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  /** The ticks on the last two seconds. */
+  const ticks = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const stopTicks = () => ticks.current.forEach(clearTimeout);
   const drain = useSharedValue(1);
   const question = setup.questions[index];
 
   const record = (right: boolean, show: Shown) => {
     clearTimeout(timer.current);
+    stopTicks();
     setShown(show);
     const next = [...results, right];
     setResults(next);
@@ -183,11 +189,15 @@ function Quiz({ setup, seconds, onDone }: { setup: SpeedRoundSetup; seconds: num
   useEffect(() => {
     drain.value = 1;
     drain.value = withTiming(0, { duration: seconds * 1000, easing: Easing.linear });
+    ticks.current = [2, 1].map((left) => setTimeout(() => feedback('speedTick'), (seconds - left) * 1000));
     timer.current = setTimeout(() => {
-      feedback('wrong');
+      feedback('speedTimeout');
       record(false, { kind: 'timeout' });
     }, seconds * 1000);
-    return () => clearTimeout(timer.current);
+    return () => {
+      clearTimeout(timer.current);
+      stopTicks();
+    };
     // A new clock for each question.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index]);
@@ -268,7 +278,9 @@ function Result({ prize, onContinue }: { prize: SpeedPrize; onContinue: () => vo
   const pop = useSharedValue(reduceMotion ? 1 : 0.5);
   useEffect(() => {
     if (!reduceMotion) pop.value = withSpring(1, { damping: 8, stiffness: 150 });
-    feedback(prize.right === SPEED_QUESTIONS ? 'roundPerfect' : prize.right >= 6 ? 'roundGood' : 'roundMiss');
+    // A fanfare for a prize, the kind "aww" for 2 or fewer, and nothing in between.
+    if (prize.right >= 6) feedback('speedPrize');
+    else if (prize.right <= 2) feedback('roundMiss');
   }, [pop, prize.right, reduceMotion]);
   const popStyle = useAnimatedStyle(() => ({ transform: [{ scale: pop.value }] }));
   const won = [
