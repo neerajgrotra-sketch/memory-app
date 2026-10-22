@@ -10,6 +10,7 @@
 | `npm run check:peeks` | Checks the Peek rules (earning, the cap of 3, spending, the wallet rebuilt from saved rounds, half points for a peeked answer) and prints how often Peeks come at a few levels |
 | `npm run check:speed` | Checks the Super Speed Round: 8 quick questions from 1,500 pictures at Levels 5–30, each answer true to the picture, about half Yes, none giving another away; when it comes (4 to 6 rounds from Level 5); the prizes; and 50:50s won, spent, capped and the answers they take away |
 | `npm run check:boss` | Checks the boss rounds: each harder than its level (more kinds of thing, less time per thing), 150 pictures of each on three iPhones against every scene rule, always a round of 5, announced by its level, and badges counted from saved rounds |
+| `npm run check:journey` | Checks the journey: a stop for every level, each place at the level it unlocks with a line of story, challenges between, the Final Boss last, and every place's postcard picked and inside its picture |
 | `npm run check:scenes` | Checks the level rules and points, then generates 61,800 scenes and checks every rule (below) |
 | `npm run gallery` | Renders pictures to `gallery.html` for reviewing by eye |
 | `RECIPE=farm npm run lineup` | Draws a recipe's things side by side at their real sizes (`lineup.html`), to check sizes and shapes against each other |

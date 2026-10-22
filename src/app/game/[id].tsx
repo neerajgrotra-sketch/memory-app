@@ -104,6 +104,15 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
 
               {/* The main action, right under your level, so it's in view without scrolling. */}
               <Button label={`Play level ${progress.ladder.level}`} onPress={() => play('levels')} />
+              <Button
+                label="🗺  Your journey"
+                variant="secondary"
+                accessibilityHint="The map of your trip: every level's stop and the places you've reached"
+                onPress={() => {
+                  feedback('tick');
+                  router.push('/journey');
+                }}
+              />
 
               <View style={styles.tiles}>
                 <Tile label="High score" value={progress.highScore ? formatPoints(progress.highScore) : '–'} />

@@ -13,9 +13,9 @@ Checks: `npm run typecheck`, `npm run lint` and `npm run check:scenes` (the leve
 
 Every change bumps the version (shown on the Games tab). See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
 
-## Status (4.12.1)
+## Status (4.13.0)
 
-- **Works:** the Look & Remember game with 30 levels, 15 places, points, the Daily Challenge and streak, Peeks, a surprise Super Speed Round and 50:50s, boss rounds with badges at Levels 10, 20 and 30, sounds and vibration. Played and tested in the browser (Expo web), with every automated check passing.
+- **Works:** the Look & Remember game with 30 levels, 15 places, points, the Daily Challenge and streak, Peeks, a surprise Super Speed Round and 50:50s, boss rounds with badges at Levels 10, 20 and 30, a journey map of the 30 levels, sounds and vibration. Played and tested in the browser (Expo web), with every automated check passing.
 - **Ready, not yet run:** builds for real phones with EAS: TestFlight for iPhone, an APK for Android ([docs/building.md](docs/building.md)).
 - **Not yet done:** testing on real phones, crash reporting and analytics, accounts with cloud sync, family profiles, a second game, a professional sound set (the current sounds are placeholders; background music is parked), a colour-blind mode, and a privacy policy and store listing.
 - **Branches:** `claude/glance-memory-game-sxcej5` is the main line of work (4.0.0 merged the `claude/glance-games-hub` beta branch into it); `main` is the release line, updated by pull request. New work goes on a short-lived branch per change, not a long-running beta.
@@ -99,6 +99,7 @@ scripts/
   check-peeks.ts       npm run check:peeks: earning, holding and spending Peeks
   check-speed.ts       npm run check:speed: the Super Speed Round's questions, timing and prizes, and 50:50s
   check-boss.ts        npm run check:boss: boss rounds harder than their levels, valid pictures on every phone, badges
+  check-journey.ts     npm run check:journey: a stop for every level, places with stories and postcards
   gallery.tsx          npm run gallery: pictures to gallery.html for reviewing by eye
   lineup.tsx           npm run lineup: a recipe's things side by side at their real sizes
   recipe-reference.ts  npm run docs:recipes: regenerates docs/recipes/reference.md and question examples

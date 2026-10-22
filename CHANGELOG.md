@@ -10,6 +10,16 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.13.0 (2026-10-22)
+
+- **The journey map.** The 30 levels are now one trip, shown as a winding path up the screen: a new place at every even level, a new challenge in between, the Final Boss at the top. A place ahead shows its name, but its picture stays a "?" until you reach it.
+  - After a level-up, **Continue your journey** opens the map: a little marker hops along the path to the new stop with a whoosh, and the stop appears with sparkles and bells, then pulses: **Tap to explore**.
+  - Each stop has its own card: the place's postcard flips in and is stamped "Greetings from the farm", with a line of the trip's story ("Out to the countryside, where the animals are up early.") and what the level brings.
+  - **Explore the farm** plays a round there straight away. Until now a new place could take several rounds to come up, since pictures are picked from every place you've reached.
+  - **Your journey** on the game page opens the map any time, and a boss stop you've reached offers its boss round.
+- A postcard for every place, picked by eye, and three new sounds (travel, arrive, the stamp).
+- `npm run check:journey` checks every stop and postcard.
+
 ## 4.12.1 (2026-10-22)
 
 - **Tester mode: a play button for each kind of round.** The game page's new **Tester: play** card has **Normal round**, **Speed Round** (starts with a Super Speed Round) and **Boss 10**, **Boss 20** and **Boss 30**, so each can be tried straight away without waiting for it to come up.
