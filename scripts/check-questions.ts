@@ -28,7 +28,17 @@ for (const recipe of RECIPES) {
       const rugLabel = recipe.rug?.label;
       const groundZone = recipe.zones.find((z) => z.surface === 'ground');
       const onRugOk = (o: string) => recipe.items.some((i) => !i.avoidRug && (cap(i.plural) === o || `${cap(i.article)} ${i.singular}` === o));
-      if (q.family === 'what-here' && rugLabel && q.prompt.includes(rugLabel.toLowerCase())) {
+      if (q.template === 'anything') {
+        // "Was there anything on the pond?": "No, nothing" is always offered, and every "Yes, a …" is something that
+        // could be there (on the rug: something allowed on it).
+        if (!q.options.includes('No, nothing')) { bad++; console.log('BAD anything: no "No, nothing"', recipe.id, q.prompt); }
+        const onCarpet = !!rugLabel && q.prompt.includes(rugLabel.toLowerCase());
+        const zone = recipe.zones.find((z) => q.prompt.toLowerCase().includes(z.label.toLowerCase()));
+        for (const o of q.options.filter((x) => x !== 'No, nothing')) {
+          const thing = cap(o.replace(/^Yes, /, ''));
+          if (onCarpet ? !onRugOk(thing) : !zone || !phrase.get(thing)?.includes(zone.id)) { bad++; if (bad < 6) console.log('BAD anything', recipe.id, q.prompt, '→', o); }
+        }
+      } else if (q.family === 'what-here' && rugLabel && q.prompt.includes(rugLabel.toLowerCase())) {
         // "A cat and a cushion": each part must be something that can be on the rug.
         for (const o of q.options) for (const part of o.split(' and ').map(cap)) if (!onRugOk(part)) { bad++; if (bad < 6) console.log('BAD on the carpet', recipe.id, '→', o); }
       } else if (q.family === 'what-here') {

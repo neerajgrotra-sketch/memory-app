@@ -79,7 +79,7 @@ Detail `clock`: 11:30.
 
 Detail `smoke`: 2.
 
-### Questions (36)
+### Questions (37)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
@@ -97,25 +97,26 @@ Detail `smoke`: 2.
 | position | where | Where was the fire hydrant? | **✓ Between the street lamps** · To the right of the street lamps · To the left of the street lamps | hydrant |
 | count | count | How many bicycles were there? | **✓ 1** · 2 · 4 · 3 | bicycle |
 | colour | colour | What colour was the bicycle? | **✓ Pink** · Red · Yellow · Black | bicycle |
-| object | what-here | Which of these was in the sky? | **✓ A hot-air balloon** · A bird · A plane | in-sky |
-| object | what-here | Which of these was on the pavement? | **✓ A bicycle** · A dog · A rubbish bin · A tree | in-pavement |
-| object | what-here | What was on the road? | **✓ Vans** · Scooters · Cars | band-road |
-| number | detail | What number was on the blue house? | **✓ 306** · 342 · 312 · 304 | house-306 |
+| object | what-here | Was there anything on the road? | **✓ Yes, vans** · No, nothing · Yes, a scooter · Yes, a bus | band-road |
+| object | what-here | Which of these was in the sky? | **✓ A helicopter** · A bird · A plane | in-sky |
+| object | what-here | Which of these was on the pavement? | **✓ A fire hydrant** · A dog · A bench · A street clock | in-pavement |
+| object | what-here | What was on the road? | **✓ Vans** · Cars · Scooters | band-road |
+| number | detail | What number was on the blue house? | **✓ 306** · 312 · 342 · 360 | house-306 |
 | colour | detail | What colour was house number 306? | **✓ Blue** · Yellow · Purple · Orange | house-306 |
-| number | detail | What number was on the yellow house? | **✓ 312** · 342 · 306 · 314 | house-312 |
-| colour | detail | What colour was house number 312? | **✓ Yellow** · Purple · Blue · Orange | house-312 |
-| number | detail | What number was on the purple house? | **✓ 342** · 306 · 312 · 340 | house-342 |
-| colour | detail | What colour was house number 342? | **✓ Purple** · Blue · Yellow · Green | house-342 |
-| object | story | Which house had smoke coming out of its chimney? | **✓ The purple house** · The yellow house · The blue house · None of them | chimney-smoke |
-| object | seen | Which of these was in the picture? | **✓ Helicopter** · Bird · Rubbish bin · Plane | helicopter |
-| object | seen | Which of these was NOT in the picture? | **✓ Flag** · Bicycle · Satellite dish · Street lamp | flag |
-| count | compare | Were there more satellite dishes or more bicycles? | Satellite dishes · Bicycles · **✓ The same number** | compare-dish-bicycle |
-| count | compare | Were there more vans or more bicycles? | **✓ Vans** · Bicycles · The same number | compare-van-bicycle |
-| count | altogether | How many vans and street lamps were there altogether? | **✓ 4** · 3 · 5 · 2 | altogether-van-lamp-post |
-| count | difference | How many more street lamps than bicycles were there? | **✓ 1** · 2 · 3 · 4 | difference-lamp-post-bicycle |
-| colour | two-step | Only one kind of thing was on the road. What colour were they? | **✓ Green** · Yellow · Red · Blue | van |
-| colour | twins | What else was the same colour as the hot-air balloon? | **✓ The fire hydrant** · The vans · The bicycle · The helicopter | balloon |
-| colour | twins | What else was the same colour as the fire hydrant? | **✓ The hot-air balloon** · The bicycle · The helicopter · The vans | hydrant |
+| number | detail | What number was on the yellow house? | **✓ 312** · 342 · 306 · 310 | house-312 |
+| colour | detail | What colour was house number 312? | **✓ Yellow** · Blue · Purple · Green | house-312 |
+| number | detail | What number was on the purple house? | **✓ 342** · 306 · 312 · 432 | house-342 |
+| colour | detail | What colour was house number 342? | **✓ Purple** · Blue · Yellow · Orange | house-342 |
+| object | story | Which house had smoke coming out of its chimney? | **✓ The purple house** · None of them · The blue house · The yellow house | chimney-smoke |
+| object | seen | Which of these was in the picture? | **✓ Satellite dish** · Market stall · Scooter · Bird | dish |
+| object | seen | Which of these was NOT in the picture? | **✓ Market stall** · Satellite dish · Van · Hot-air balloon | stall |
+| count | compare | Were there more hot-air balloons or more bicycles? | Hot-air balloons · Bicycles · **✓ The same number** | compare-balloon-bicycle |
+| count | compare | Were there more vans or more satellite dishes? | **✓ Vans** · Satellite dishes · The same number | compare-van-dish |
+| count | altogether | How many vans and satellite dishes were there altogether? | **✓ 3** · 2 · 4 · 5 | altogether-van-dish |
+| count | difference | How many more street lamps than fire hydrants were there? | **✓ 1** · 2 · 3 · 4 | difference-lamp-post-hydrant |
+| colour | two-step | Only one kind of thing was on the road. What colour were they? | **✓ Green** · White · Red · Blue | van |
+| colour | twins | What else was the same colour as the hot-air balloon? | **✓ The fire hydrant** · The bicycle · The vans · The helicopter | balloon |
+| colour | twins | What else was the same colour as the fire hydrant? | **✓ The hot-air balloon** · The vans · The bicycle · The helicopter | hydrant |
 | count | true-false | True or false? There was one hot-air balloon. | **✓ True** · False | balloon |
 | colour | true-false | True or false? The hot-air balloon was red. | **✓ True** · False | balloon |
 | colour | true-false | True or false? The bicycle was pink. | **✓ True** · False | bicycle |
@@ -140,7 +141,7 @@ Detail `clock`: 7:30.
 
 Detail `tv`: football.
 
-### Questions (29)
+### Questions (30)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
@@ -158,21 +159,22 @@ Detail `tv`: football.
 | position | where | Where were the cushions? | **✓ On the carpet** · On the floor · On the windowsill · On the sofa | cushion |
 | position | where | Where was the box of crayons? | **✓ On the floor** · On the carpet · On the windowsill · On the sofa | crayons |
 | object | what-here | What was on the carpet? | **✓ Cushions** · Cushions and a cat · A box of crayons · A dog | rug-cushion |
+| object | what-here | Was there anything on the carpet? | **✓ Yes, cushions** · No, nothing · Yes, a teddy bear · Yes, a cat | rug-cushion |
 | object | what-here | Which of these was on the wall? | **✓ A window** · A picture frame · A mirror | in-wall |
-| object | what-here | Which of these was on the floor? | **✓ A bookshelf** · A pile of books · A spilled cup · A floor lamp | in-floor |
+| object | what-here | Which of these was on the floor? | **✓ A box of crayons** · A teddy bear · A spilled cup · A cat | in-floor |
 | number | detail | What time was on the clock? | **✓ 7:30** · 6:30 · 4:30 · 8:30 | clock-time |
-| object | story | What was on the television? | **✓ A football match** · Fish swimming · Nothing, it was off · A cartoon | tv-show |
-| object | seen | Which of these was in the picture? | **✓ Bookshelf** · Teddy bear · Picture frame · Dog | bookshelf |
-| object | seen | Which of these was NOT in the picture? | **✓ Mirror** · Cushion · Television · Toy car | mirror |
+| object | story | What was on the television? | **✓ A football match** · Fish swimming · A cartoon · Nothing, it was off | tv-show |
+| object | seen | Which of these was in the picture? | **✓ Cushion** · Dog · Potted plant · Table lamp | cushion |
+| object | seen | Which of these was NOT in the picture? | **✓ Dog** · Toy car · Cushion · Window | dog |
+| count | compare | Were there more bookshelves or more toy cars? | Bookshelves · Toy cars · **✓ The same number** | compare-bookshelf-toy-car |
 | count | compare | Were there more toy cars or more cushions? | Toy cars · **✓ Cushions** · The same number | compare-toy-car-cushion |
-| count | compare | Were there more bookshelves or more cushions? | Bookshelves · **✓ Cushions** · The same number | compare-bookshelf-cushion |
 | count | altogether | How many toy cars and cushions were there altogether? | **✓ 3** · 2 · 4 · 1 | altogether-toy-car-cushion |
-| count | difference | How many more cushions than bookshelves were there? | **✓ 1** · 2 · 3 · 4 | difference-cushion-bookshelf |
-| position | relation | What was on the wall, above the bookshelf? | **✓ A clock** · A window · A mirror · A picture frame | bookshelf |
-| position | relation | What was on the floor, below the clock? | **✓ A bookshelf** · A teddy bear · An armchair · A sofa | wall-clock |
-| count | true-false | True or false? There were two bookshelves. | True · **✓ False** | bookshelf |
-| colour | true-false | True or false? The cushions were blue. | True · **✓ False** | cushion |
-| count | true-false | True or false? There was one cushion. | True · **✓ False** | cushion |
+| count | difference | How many more cushions than toy cars were there? | **✓ 1** · 2 · 3 · 4 | difference-cushion-toy-car |
+| position | relation | What was on the wall, above the bookshelf? | **✓ A clock** · A picture frame · A mirror · A window | bookshelf |
+| position | relation | What was on the floor, below the clock? | **✓ A bookshelf** · A television · A cushion · A teddy bear | wall-clock |
+| colour | true-false | True or false? The cushions were red. | **✓ True** · False | cushion |
+| count | true-false | True or false? There was one bookshelf. | **✓ True** · False | bookshelf |
+| count | true-false | True or false? There were two toy cars. | True · **✓ False** | toy-car |
 
 ## In the park
 
@@ -194,7 +196,7 @@ Detail `boat`: 13.
 
 Detail `clock`: 7:30.
 
-### Questions (29)
+### Questions (30)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
@@ -210,23 +212,24 @@ Detail `clock`: 7:30.
 | position | where | Where were the people? | **✓ On the path** · On the grass · On the slide · In the fountain | person |
 | count | count | How many birds were there? | **✓ 4** · 1 · 7 · 6 | bird |
 | position | where | Where were the birds? | **✓ To the left of the kites** · To the right of the kites | bird |
-| object | what-here | Which of these was in the sky? | **✓ A kite** · The sun · A plane · A hot-air balloon | in-sky |
-| object | what-here | Which of these was on the grass? | **✓ A swing set** · A dog · A tree · A bench | in-grass |
+| object | what-here | Was there anything on the path? | **✓ Yes, people** · No, nothing · Yes, an ice-cream cart · Yes, a dog | band-path |
+| object | what-here | Which of these was in the sky? | **✓ A bird** · The sun · A plane · A hot-air balloon | in-sky |
+| object | what-here | Which of these was on the grass? | **✓ A park clock** · A dog · A tree · A bench | in-grass |
 | object | what-here | What was on the pond? | **✓ A fountain** · A swan · A rowing boat | band-pond |
 | object | what-here | What was on the path? | **✓ People** · Bicycles · Dogs | band-path |
-| number | detail | What time was on the park clock? | **✓ 7:30** · 4:30 · 6:30 · 8:30 | clock-time |
-| object | seen | Which of these was in the picture? | **✓ Person** · Bicycle · Sun · Ice-cream cart | person |
-| object | seen | Which of these was NOT in the picture? | **✓ Rowing boat** · Kite · Person · Bird | boat |
+| number | detail | What time was on the park clock? | **✓ 7:30** · 8:30 · 6:30 · 4:30 | clock-time |
+| object | seen | Which of these was in the picture? | **✓ Park clock** · Ice-cream cart · Plane · Sun | park-clock |
+| object | seen | Which of these was NOT in the picture? | **✓ Bicycle** · Person · Swing set · Bird | bicycle |
+| count | compare | Were there more picnic blankets or more people? | Picnic blankets · **✓ People** · The same number | compare-picnic-person |
 | count | compare | Were there more picnic blankets or more kites? | Picnic blankets · **✓ Kites** · The same number | compare-picnic-kite |
-| count | compare | Were there more kites or more birds? | Kites · **✓ Birds** · The same number | compare-kite-bird |
 | count | altogether | How many kites and birds were there altogether? | **✓ 6** · 5 · 7 · 8 | altogether-kite-bird |
-| count | difference | How many more people than picnic blankets were there? | **✓ 1** · 2 · 3 · 4 | difference-person-picnic |
+| count | difference | How many more birds than kites were there? | **✓ 2** · 1 · 3 · 4 | difference-bird-kite |
 | count | sharing | If the birds were split into two equal groups, how many would be in each group? | **✓ 2** · 1 · 3 · 4 | bird |
-| count | most | Which was there the most of? | **✓ Birds** · Kites · People · Picnic blankets | most-bird |
-| count | most | Which was there just one of? | **✓ A picnic blanket** · A person · A bird · A kite | only-picnic |
+| count | most | Which was there the most of? | **✓ Birds** · People · Picnic blankets · Kites | most-bird |
+| count | most | Which was there just one of? | **✓ A picnic blanket** · A bird · A person · A kite | only-picnic |
+| count | true-false | True or false? There was one person. | True · **✓ False** | person |
+| colour | true-false | True or false? The picnic blanket was blue. | True · **✓ False** | picnic |
 | count | true-false | True or false? There were three kites. | True · **✓ False** | kite |
-| colour | true-false | True or false? The kites were red. | True · **✓ False** | kite |
-| count | true-false | True or false? There were two picnic blankets. | True · **✓ False** | picnic |
 
 ## In the kitchen
 
@@ -252,7 +255,7 @@ Detail `steam`: no.
 
 Detail `toast`: yes.
 
-### Questions (25)
+### Questions (27)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
@@ -266,21 +269,23 @@ Detail `toast`: yes.
 | count | count | How many pet bowls were there? | **✓ 1** · 3 · 2 · 4 | pet-bowl |
 | colour | colour | What colour was the pet bowl? | **✓ Green** · Yellow · Blue · Red | pet-bowl |
 | position | where | Where was the pet bowl? | **✓ To the left of the recycling box** · To the right of the recycling box · Between the mop and bucket, and the recycling box · To the right of the mop and bucket | pet-bowl |
-| object | what-here | Which of these was on the wall? | **✓ A window** · An oven glove · A utensil rail · A frying pan | in-wall |
+| object | what-here | Was there anything on the shelf? | **✓ Yes, a teapot** · No, nothing · Yes, a cookie jar · Yes, a jar of pasta | band-shelf |
+| object | what-here | Was there anything on the worktop? | **✓ Yes, a coffee machine** · No, nothing · Yes, a food mixer · Yes, a saucepan | band-counter |
+| object | what-here | Which of these was on the wall? | **✓ A window** · An oven glove · A frying pan · A utensil rail | in-wall |
 | object | what-here | Which of these was on the floor? | **✓ A recycling box** · A pedal bin · A basket of vegetables · A step stool | in-floor |
-| object | what-here | What was on the shelf? | **✓ A teapot** · A cookie jar · A pot of herbs · A cookbook | band-shelf |
-| object | what-here | What was on the worktop? | **✓ A coffee machine** · A teapot · A microwave · A saucepan | band-counter |
-| object | seen | Which of these was in the picture? | **✓ Pet bowl** · Kettle · Frying pan · Fruit bowl | pet-bowl |
-| object | seen | Which of these was NOT in the picture? | **✓ Basket of vegetables** · Mop and bucket · Window · Pet bowl | veg-basket |
-| colour | two-step | Only one kind of thing was on the shelf. What colour was it? | **✓ Yellow** · Green · Pink · Red | teapot |
-| position | relation | What was on the shelf, above the window? | **✓ A teapot** · A plate · A jar of pasta · A pot of herbs | window |
-| position | relation | What was on the worktop, above the recycling box? | **✓ A coffee machine** · A teapot · A cookie jar · A chopping board | recycling |
-| position | relation | What was on the floor, below the coffee machine? | **✓ A recycling box** · A pedal bin · A step stool · A basket of vegetables | coffee-machine |
-| colour | twins | What else was the same colour as the bucket? | **✓ The teapot** · The pet bowl · The stripes on the tea towel · The cookbook | bucket |
-| colour | twins | What else was the same colour as the teapot? | **✓ The bucket** · The stripes on the tea towel · The pet bowl · The saucepan | teapot |
+| object | what-here | What was on the shelf? | **✓ A teapot** · A cookie jar · A jar of pasta · A cookbook | band-shelf |
+| object | what-here | What was on the worktop? | **✓ A coffee machine** · A microwave · A teapot · A chopping board | band-counter |
+| object | seen | Which of these was in the picture? | **✓ Mop and bucket** · Food mixer · Oven glove · Frying pan | bucket |
+| object | seen | Which of these was NOT in the picture? | **✓ Fruit bowl** · Coffee machine · Teapot · Recycling box | fruit-bowl |
+| colour | two-step | Only one kind of thing was on the shelf. What colour was it? | **✓ Yellow** · Green · Red · Blue | teapot |
+| position | relation | What was on the shelf, above the window? | **✓ A teapot** · A jar of pasta · A cookie jar · A pot of herbs | window |
+| position | relation | What was on the worktop, above the recycling box? | **✓ A coffee machine** · A teapot · A toaster · A food mixer | recycling |
+| position | relation | What was on the floor, below the coffee machine? | **✓ A recycling box** · A mop and bucket · A pedal bin · A pet bowl | coffee-machine |
+| colour | twins | What else was the same colour as the bucket? | **✓ The teapot** · The pet bowl · The stripes on the tea towel · The oven glove | bucket |
+| colour | twins | What else was the same colour as the teapot? | **✓ The bucket** · The pet bowl · The stripes on the tea towel · The cookbook | teapot |
+| count | true-false | True or false? There was one pet bowl. | **✓ True** · False | pet-bowl |
 | colour | true-false | True or false? The bucket was yellow. | **✓ True** · False | bucket |
-| colour | true-false | True or false? The pet bowl was yellow. | True · **✓ False** | pet-bowl |
-| colour | true-false | True or false? The teapot was pink. | True · **✓ False** | teapot |
+| colour | true-false | True or false? The teapot was green. | True · **✓ False** | teapot |
 
 ## On the farm
 
@@ -302,7 +307,7 @@ Detail `barnSide`: right.
 
 Detail `eggs`: 3.
 
-### Questions (29)
+### Questions (30)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
@@ -322,19 +327,20 @@ Detail `eggs`: 3.
 | position | where | Where was the nest of eggs? | **✓ To the right of the chicken** · To the left of the chicken · To the left of the sheep | nest |
 | count | count | How many crows were there? | **✓ 1** · 3 · 2 · 4 | crow |
 | position | where | Where was the crow? | **✓ To the right of the hot-air balloon** · To the left of the hot-air balloon | crow |
-| object | what-here | Which of these was in the farmyard? | **✓ A cow** · A pig · A hay bale · A wheelbarrow | in-yard |
-| object | what-here | What was in the field? | **✓ Scarecrows** · Hay bales · Pumpkins | band-field |
-| count | story | How many eggs were in the nest? | **✓ 3** · 2 · 1 · 4 | nest-eggs |
-| colour | detail | What colour was the barn? | **✓ Green** · Red · Yellow · Blue | barn-colour |
-| object | seen | Which of these was in the picture? | **✓ Crow** · Wheelbarrow · Milk churn · Tractor | crow |
-| object | seen | Which of these was NOT in the picture? | **✓ Farmer** · Sheep · Crow · Nest of eggs | farmer |
+| object | what-here | Was there anything in the field? | **✓ Yes, scarecrows** · No, nothing · Yes, a pumpkin · Yes, a tractor | band-field |
+| object | what-here | Which of these was in the farmyard? | **✓ A cow** · A goat · A farmer · A hay bale | in-yard |
+| object | what-here | What was in the field? | **✓ Scarecrows** · Pumpkins · Hay bales | band-field |
+| count | story | How many eggs were in the nest? | **✓ 3** · 1 · 4 · 2 | nest-eggs |
+| colour | detail | What colour was the barn? | **✓ Green** · Red · Blue · Yellow | barn-colour |
+| object | seen | Which of these was in the picture? | **✓ Scarecrow** · Goat · Wheelbarrow · Horse | scarecrow |
+| object | seen | Which of these was NOT in the picture? | **✓ Sun** · Chicken · Crow · Hot-air balloon | sun |
+| count | compare | Were there more cows or more scarecrows? | Cows · Scarecrows · **✓ The same number** | compare-cow-scarecrow |
 | count | compare | Were there more cows or more hot-air balloons? | **✓ Cows** · Hot-air balloons · The same number | compare-cow-balloon |
-| count | compare | Were there more hot-air balloons or more scarecrows? | Hot-air balloons · **✓ Scarecrows** · The same number | compare-balloon-scarecrow |
-| count | altogether | How many cows and hot-air balloons were there altogether? | **✓ 3** · 4 · 2 · 5 | altogether-cow-balloon |
-| count | difference | How many more sheep than chickens were there? | **✓ 1** · 2 · 3 · 4 | difference-sheep-chicken |
+| count | altogether | How many scarecrows and crows were there altogether? | **✓ 3** · 4 · 2 · 5 | altogether-scarecrow-crow |
+| count | difference | How many more scarecrows than chickens were there? | **✓ 1** · 2 · 3 · 4 | difference-scarecrow-chicken |
+| colour | true-false | True or false? The hot-air balloon was green. | True · **✓ False** | balloon |
+| count | true-false | True or false? There were two chickens. | True · **✓ False** | chicken |
 | count | true-false | True or false? There were two sheep. | **✓ True** · False | sheep |
-| count | true-false | True or false? There were two scarecrows. | **✓ True** · False | scarecrow |
-| colour | true-false | True or false? The chicken was brown. | True · **✓ False** | chicken |
 
 ## Under the sea
 
@@ -414,7 +420,7 @@ Detail `spill`: Juice.
 
 Detail `aisleSide`: left.
 
-### Questions (30)
+### Questions (32)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
@@ -429,25 +435,27 @@ Detail `aisleSide`: left.
 | count | count | How many boxes of eggs were there? | **✓ 1** · 2 · 3 · 4 | eggs |
 | count | count | How many toilet rolls were there? | **✓ 2** · 5 · 3 · 1 | toilet-rolls |
 | position | where | Where were the toilet rolls? | **✓ To the left of the bottle of juice** · To the right of the bottle of juice | toilet-rolls |
+| object | what-here | Was there anything on the middle shelf? | **✓ Yes, a box of eggs** · No, nothing · Yes, a tin of beans · Yes, a carton of milk | band-middle |
+| object | what-here | Was there anything on the bottom shelf? | **✓ Yes, a bottle of water** · No, nothing · Yes, a tin of beans · Yes, a carton of milk | band-bottom |
 | object | what-here | Which of these was on the top shelf? | **✓ A bottle of juice** · A loaf of bread · A cereal box | in-top |
 | object | what-here | Which of these was on the floor? | **✓ A crate of apples** · A crate of oranges · A shopping basket · A wet floor sign | in-floor |
-| object | what-here | What was on the middle shelf? | **✓ A box of eggs** · A bottle of juice · A jar of honey · A tin of beans | band-middle |
-| object | what-here | What was on the bottom shelf? | **✓ A bottle of water** · A carton of milk · A tin of beans · A loaf of bread | band-bottom |
-| number | detail | What was the aisle number? | **✓ 8** · 10 · 6 · 7 | aisle-number |
-| object | detail | What was on special offer? | **✓ Bread** · Bananas · Cheese · Milk | offer |
-| object | detail | What did the offer sign say? | **✓ Half price** · 3 for 2 · 10% off · Buy one, get one free | deal |
+| object | what-here | What was on the middle shelf? | **✓ A box of eggs** · A jar of honey · A bottle of juice · A tin of beans | band-middle |
+| object | what-here | What was on the bottom shelf? | **✓ A bottle of water** · A carton of milk · A loaf of bread · A box of eggs | band-bottom |
+| number | detail | What was the aisle number? | **✓ 8** · 7 · 18 · 9 | aisle-number |
+| object | detail | What was on special offer? | **✓ Bread** · Apples · Cheese · Milk | offer |
+| object | detail | What did the offer sign say? | **✓ Half price** · 20% off · 10% off · Buy one, get one free | deal |
 | object | detail | What had spilled on the floor? | **✓ Juice** · Water · Milk · Honey | spill |
-| object | seen | Which of these was in the picture? | **✓ Box of eggs** · Loaf of bread · Crate of oranges · Tin of beans | eggs |
-| object | seen | Which of these was NOT in the picture? | **✓ Crate of oranges** · Crate of apples · Spill · Bottle of water | oranges |
-| count | compare | Were there more boxes of eggs or more toilet rolls? | Boxes of eggs · **✓ Toilet rolls** · The same number | compare-eggs-toilet-rolls |
-| count | compare | Were there more bottles of water or more toilet rolls? | Bottles of water · **✓ Toilet rolls** · The same number | compare-water-toilet-rolls |
-| count | altogether | How many shopping bags and toilet rolls were there altogether? | **✓ 3** · 4 · 2 · 1 | altogether-shopping-bag-toilet-rolls |
+| object | seen | Which of these was in the picture? | **✓ Bottle of water** · Wet floor sign · Jar of honey · Watermelon | water |
+| object | seen | Which of these was NOT in the picture? | **✓ Carton of milk** · Shopping bag · Spill · Crate of apples | milk |
+| count | compare | Were there more shopping bags or more boxes of eggs? | Shopping bags · Boxes of eggs · **✓ The same number** | compare-shopping-bag-eggs |
+| count | compare | Were there more shopping bags or more bottles of juice? | Shopping bags · Bottles of juice · **✓ The same number** | compare-shopping-bag-juice |
+| count | altogether | How many boxes of eggs and toilet rolls were there altogether? | **✓ 3** · 2 · 4 · 1 | altogether-eggs-toilet-rolls |
 | count | difference | How many more toilet rolls than bottles of juice were there? | **✓ 1** · 2 · 3 · 4 | difference-toilet-rolls-juice |
-| count | most | Which was there the most of? | **✓ Toilet rolls** · Bottles of water · Bottles of juice · Boxes of eggs | most-toilet-rolls |
-| position | relation | What was on the top shelf, above the box of eggs? | **✓ Toilet rolls** · Loaves of bread · Bottles of water · Cereal boxes | eggs |
-| count | true-false | True or false? There were two shopping bags. | True · **✓ False** | shopping-bag |
-| count | true-false | True or false? There were two bottles of juice. | True · **✓ False** | juice |
-| object | true-false | True or false? There was a watermelon in the picture. | True · **✓ False** | watermelon |
+| count | most | Which was there the most of? | **✓ Toilet rolls** · Boxes of eggs · Bottles of juice · Shopping bags | most-toilet-rolls |
+| position | relation | What was on the top shelf, above the box of eggs? | **✓ Toilet rolls** · Loaves of bread · Bottles of juice · Cereal boxes | eggs |
+| count | true-false | True or false? There was one bottle of water. | **✓ True** · False | water |
+| count | true-false | True or false? There were two boxes of eggs. | True · **✓ False** | eggs |
+| colour | true-false | True or false? The bottle of juice was orange. | True · **✓ False** | juice |
 
 ## At the train station
 

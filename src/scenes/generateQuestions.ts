@@ -262,7 +262,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   const rug = recipe.rug;
   const rugZone = rug ? recipe.zones.find((z) => z.surface === 'ground')?.id : undefined;
 
-  const FAMILY: Record<string, QuestionFamily> = { colours: 'colour', missing: 'seen', beside: 'where' };
+  const FAMILY: Record<string, QuestionFamily> = { colours: 'colour', missing: 'seen', beside: 'where', anything: 'what-here' };
   const add = (template: string, group: PlacedGroup | null, q: Omit<Question, 'id' | 'sceneId' | 'answerIndex'>, answerIndex = 0) =>
     questions.push({
       family: FAMILY[template] ?? (template as QuestionFamily),
@@ -421,6 +421,44 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         prompt: `What was ${lower(rug.label)}?`,
         options: withDistractors(answer, wrong, [], rng),
       });
+    }
+  }
+
+  // "Was there anything on the pond?" (or on the carpet): asked when a band (or the rug) is empty, or holds one kind
+  // of thing. "No, nothing" is the answer when it's empty and a wrong answer when it isn't, so it's never a giveaway;
+  // the other answers are things that could have been there. Not where a sign or a door is drawn in the band (it could
+  // count as "anything"), nor when something is hiding in the picture (a peeking crab).
+  if (!spec.details?.alsoSeen?.length) {
+    const NOTHING = 'No, nothing';
+    const yes = (item: ItemDef, plural: boolean) => `Yes, ${lower(nounPhrase(item, plural))}`;
+    const anything = (where: string, zoneId: string, here: PlacedGroup[], subject: string) => {
+      if (here.length > 1) return;
+      const could = recipe.items.filter(
+        (i) => !here.some((g) => g.kind === i.kind) && i.zones.includes(zoneId) && !(rug && zoneId === rugZone && i.avoidRug),
+      );
+      if (could.length < 3) return;
+      const answer = here.length ? yes(itemOf(here[0].kind), here[0].count > 1) : NOTHING;
+      add('anything', null, {
+        type: 'object',
+        subject,
+        prompt: `Was there anything ${lower(where)}?`,
+        // "No, nothing" is always one of the four, right or wrong: without it this is just "What was on the pond?".
+        options: [answer, ...(here.length ? [NOTHING] : []), ...rng.shuffle(could).map((i) => yes(i, false))].slice(0, 4),
+      });
+    };
+    const signIn = (z: ZoneDef) => (recipe.keepClear ?? []).some((k) => k.y0 < z.bottom && k.y1 > z.top);
+    for (const z of zones) {
+      if (z.faraway || signIn(z)) continue;
+      if (rug && z.id === rugZone) {
+        const onIt = spec.groups.filter((g) => g.zoneId === rugZone && g.onRug !== 'none');
+        // Only when nothing is half on, half off.
+        if (onIt.every((g) => g.onRug === 'all')) anything(rug.label, z.id, onIt, onIt.length ? `rug-${onIt.map((g) => g.kind).join('-')}` : 'rug-empty');
+        continue;
+      }
+      const here = spec.groups.filter((g) => g.zoneId === z.id);
+      // An empty sky still has clouds or stars in it, which could be "something": only asked when a thing is there.
+      if (!here.length && z.surface === 'air') continue;
+      anything(z.label, z.id, here, `band-${z.id}`);
     }
   }
 

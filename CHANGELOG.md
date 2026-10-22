@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.6.1 (2026-10-22)
+
+- **"Was there anything on the carpet?"** A tester's idea: with "Yes, a teddy bear", "Yes, a toy car", "Yes, a ball" or "No, nothing" as answers. Asked when the carpet is empty or has one kind of thing on it, and the same for every place's bands: "Was there anything on the pond?", "…on the bottom shelf?", "…on the pitches?". "No, nothing" is always offered, right when it's empty and wrong when it isn't, so it never gives the answer away. Not asked of a band with a sign drawn in it (it could count as "anything"), an empty sky (clouds and stars could too), or when something is hiding in the picture.
+
 ## 4.6.0 (2026-10-22)
 
 - **What was happening? A new kind of question, from Level 1.** Pictures now have things going on, different every time, and questions about them:
