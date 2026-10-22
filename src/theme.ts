@@ -9,6 +9,8 @@ export const colors = {
   accentText: '#1a1300',
   correct: '#2ec27e',
   wrong: '#e5484d',
+  /** The Super Speed Round and its prizes (white text reads on it). */
+  speed: '#6d4aff',
 };
 
 /** Chart colours per level (validated for colour-blind separation on the dark surface). */

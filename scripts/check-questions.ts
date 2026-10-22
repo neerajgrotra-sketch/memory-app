@@ -22,6 +22,9 @@ for (const recipe of RECIPES) {
     const scene = generateScene(recipe, LEVELS[lvl], s * 7919, { width: 393, height: 687 });
     const qs = generateQuestions(scene, recipe, LEVELS[lvl]);
     pictures++; total += qs.length; minPool = Math.min(minPool, qs.length);
+    // Every question has its own id: a round, Play again and the speed round tell questions apart by it.
+    const ids = qs.map((q) => q.id);
+    for (const id of ids.filter((id, k) => ids.indexOf(id) !== k)) { bad++; if (bad < 6) console.log('BAD two questions with the id', id); }
     for (const q of qs) {
       optCounts[q.options.length] = (optCounts[q.options.length] ?? 0) + 1;
       // The rug ("On the carpet") is part of the ground band; only things that may go on it are offered for it.

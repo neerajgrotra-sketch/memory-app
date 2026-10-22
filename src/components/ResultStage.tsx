@@ -66,7 +66,9 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
           <Chip label={`${score} × ${outcome.points.perAnswer}`} value={outcome.points.answers + (outcome.points.peeked ?? 0)} />
           {outcome.points.streak > 0 && <Chip label="In a row" value={outcome.points.streak} />}
           {outcome.points.ready > 0 && <Chip label="Ready early" value={outcome.points.ready} />}
-          {!!outcome.points.peeked && <Chip label="👀 Peek" value={-outcome.points.peeked} />}
+          {!!outcome.points.peeked && (
+            <Chip label={outcome.peeked.length ? (outcome.fiftied.length ? '👀 Peek + 50:50' : '👀 Peek') : '50:50'} value={-outcome.points.peeked} />
+          )}
           {!!outcome.points.daily && <Chip label="Daily ×2" value={outcome.points.daily} />}
         </View>
         {outcome.peeksEarned > 0 && (
@@ -108,6 +110,7 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
             const correct = chosen === question.answerIndex;
             const answer = question.options[question.answerIndex];
             const wasPeeked = outcome.peeked.includes(i);
+            const wasFiftied = outcome.fiftied.includes(i);
             return (
               <View
                 key={question.id}
@@ -115,7 +118,7 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
                 accessible
                 accessibilityLabel={
                   correct
-                    ? `${wasPeeked ? 'Peeked. ' : ''}${question.prompt} Right: ${answer}.`
+                    ? `${wasPeeked ? 'Peeked. ' : ''}${wasFiftied ? '50:50 used. ' : ''}${question.prompt} Right: ${answer}.`
                     : `${question.prompt} Wrong. You said ${chosen === null ? 'nothing' : question.options[chosen]}. The answer was ${answer}.`
                 }
                 accessibilityHint={`The options were ${question.options.join(', ')}.`}
@@ -127,6 +130,7 @@ export function ResultStage({ scene, title, questions, answers, score, mode, out
                 <View style={styles.reviewText}>
                   <Text style={styles.reviewPrompt}>
                     {wasPeeked && <Text style={styles.peekedTag}>👀 Peeked · </Text>}
+                    {wasFiftied && <Text style={styles.peekedTag}>50:50 · </Text>}
                     {question.prompt}
                   </Text>
                   {/* Every option, so you can see what you chose between: the answer in green, your wrong pick in red. */}

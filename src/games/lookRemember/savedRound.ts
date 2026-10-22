@@ -26,6 +26,8 @@ export interface SavedRound {
   round: Round;
   answers: Answers;
   peeked: number[];
+  /** The question a 50:50 was used on (rounds saved before 50:50s have none). */
+  fiftied?: number[];
   /** Seconds looked at the picture (for points). */
   looked: number;
   sessionId: string;

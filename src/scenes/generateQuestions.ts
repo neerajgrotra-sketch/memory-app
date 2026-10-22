@@ -801,7 +801,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   }
   for (const s of rng.shuffle(statements).slice(0, 3)) {
     questions.push({
-      id: `${spec.id}-true-false-${s.subject}`,
+      id: `${spec.id}-true-false-${s.type}-${s.subject}`,
       sceneId: spec.id,
       type: s.type,
       family: 'true-false',

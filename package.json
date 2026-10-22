@@ -1,6 +1,6 @@
 {
   "name": "glance",
-  "version": "4.9.1",
+  "version": "4.10.0",
   "main": "expo-router/entry",
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
@@ -42,6 +42,7 @@
     "check:daily": "esbuild scripts/check-daily.ts --bundle --platform=node --outfile=node_modules/.cache/check-daily.js --log-level=error && TZ=Europe/London node node_modules/.cache/check-daily.js && TZ=America/Los_Angeles node node_modules/.cache/check-daily.js",
     "check:levels": "esbuild scripts/check-levels.ts --bundle --platform=node --outfile=node_modules/.cache/check-levels.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-stub.js --jsx=automatic --log-level=error && node node_modules/.cache/check-levels.js",
     "check:peeks": "esbuild scripts/check-peeks.ts --bundle --platform=node --outfile=node_modules/.cache/check-peeks.js --log-level=error && node node_modules/.cache/check-peeks.js",
+    "check:speed": "esbuild scripts/check-speed.ts --bundle --platform=node --outfile=node_modules/.cache/check-speed.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-stub.js --jsx=automatic --log-level=error && node node_modules/.cache/check-speed.js",
     "gallery": "esbuild scripts/gallery.tsx --bundle --platform=node --outfile=node_modules/.cache/gallery.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-dom.js --alias:react-native=./scripts/rn-stub.js --jsx=automatic --define:__DEV__=true --log-level=error && node node_modules/.cache/gallery.js",
     "lineup": "esbuild scripts/lineup.tsx --bundle --platform=node --outfile=node_modules/.cache/lineup.js --alias:react-native-reanimated=./scripts/reanimated-stub.js --alias:react-native-svg=./scripts/svg-dom.js --alias:react-native=./scripts/rn-stub.js --jsx=automatic --define:__DEV__=true --log-level=error && node node_modules/.cache/lineup.js"
   },

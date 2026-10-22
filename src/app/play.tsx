@@ -10,16 +10,18 @@ import { MemoriseStage } from '@/components/MemoriseStage';
 import { PeekView } from '@/components/PeekView';
 import { QuitButton } from '@/components/QuitButton';
 import { SoundToggle } from '@/components/SoundToggle';
+import { SpeedRound } from '@/components/SpeedRound';
 import { QuizStage } from '@/components/QuizStage';
 import { ResultStage } from '@/components/ResultStage';
 import { isPlayMode } from '@/game/difficulty';
 import { dailyResultOn, streakOf, type Streak } from '@/games/lookRemember/daily';
 import { peekSecondsFor } from '@/games/lookRemember/peeks';
+import { speedCounterOf, speedDue, speedGap, type SpeedCounter } from '@/games/lookRemember/speed';
 import { answeredOf, clearSavedRound, loadSavedRound, slotFor, type SavedRound } from '@/games/lookRemember/savedRound';
 import { loadProgress } from '@/hooks/useGameProgress';
 import { useProfile } from '@/profile';
 import { statsStore } from '@/stats';
-import { useGameSession, type SessionStart } from '@/hooks/useGameSession';
+import { useGameSession, type SessionStart, type SpeedRoundSetup } from '@/hooks/useGameSession';
 import { colors, radius } from '@/theme';
 import type { PlayMode } from '@/types/game';
 
@@ -33,7 +35,7 @@ export default function PlayScreen() {
   const params = useLocalSearchParams<{ mode?: string; resume?: string }>();
   const asked: PlayMode = isPlayMode(params.mode) ? params.mode : 'levels';
   // Your level and high score come from saved rounds, so wait for them before the first picture.
-  const [start, setStart] = useState<(SessionStart & { streak: Streak }) | null>(null);
+  const [start, setStart] = useState<(SessionStart & { streak: Streak; speed: SpeedCounter }) | null>(null);
   // A Levels or Practice round in progress when another one is started: resume it or start a new one?
   const [choice, setChoice] = useState<{ saved: SavedRound; begin: (resume?: SavedRound) => void } | null>(null);
   useEffect(() => {
@@ -43,7 +45,16 @@ export default function PlayScreen() {
       const begin = (resume?: SavedRound) => {
         const mode = resume?.mode ?? asked;
         setChoice(null);
-        setStart({ mode, ladder: progress.ladder, highScore: progress.highScore, peeks: progress.peeks, streak: streakOf(all), resume });
+        setStart({
+          mode,
+          ladder: progress.ladder,
+          highScore: progress.highScore,
+          peeks: progress.peeks,
+          fifty: progress.fifty,
+          streak: streakOf(all),
+          speed: speedCounterOf(progress.results),
+          resume,
+        });
       };
       if (asked === 'daily') {
         // One Daily Challenge a day; one closed part way through carries on.
@@ -87,9 +98,41 @@ export default function PlayScreen() {
   return <Game key={start.mode} start={start} />;
 }
 
-function Game({ start }: { start: SessionStart & { streak: Streak } }) {
-  const { stage, round, phase, answers, score, outcome, ladder, peeksLeft, peeked, unlimitedPeeks, peek, finishMemorising, answer, playAgain, nextPicture } =
-    useGameSession(start);
+function Game({ start }: { start: SessionStart & { streak: Streak; speed: SpeedCounter } }) {
+  const {
+    stage,
+    round,
+    phase,
+    answers,
+    score,
+    outcome,
+    ladder,
+    peeksLeft,
+    peeked,
+    unlimitedPeeks,
+    peek,
+    levelsRounds,
+    fiftyLeft,
+    fiftied,
+    applyFifty,
+    finishSpeed,
+    makeSpeedRound,
+    finishMemorising,
+    answer,
+    playAgain,
+    nextPicture,
+  } = useGameSession(start);
+  // The Super Speed Round: a surprise every 4 to 6 Levels rounds, before the next picture.
+  // Counted from the start of the session, or from this session's last speed round (`levelsRounds` then).
+  const [speedFrom, setSpeedFrom] = useState({ ...start.speed, at: 0 });
+  const speedCount = { since: speedFrom.since + levelsRounds - speedFrom.at, gap: speedFrom.gap };
+  const [speedRound, setSpeedRound] = useState<SpeedRoundSetup | null>(null);
+  /** The next picture, or a Super Speed Round first when one is due. */
+  const next = () => {
+    const due = start.mode === 'levels' && speedDue(speedCount, ladder.level) ? makeSpeedRound() : null;
+    if (due) setSpeedRound(due);
+    else nextPicture();
+  };
   // A Peek shows the picture again over the question for a few seconds (a tester can change how many).
   const [peeking, setPeeking] = useState(false);
   const { profile } = useProfile();
@@ -103,6 +146,26 @@ function Game({ start }: { start: SessionStart & { streak: Streak } }) {
   // Leaving asks first when there's something to come back to: the questions, or today's Daily picture.
   const [leaving, setLeaving] = useState(false);
   const quit = () => (phase === 'quiz' || start.mode === 'daily' ? setLeaving(true) : goBack());
+
+  if (speedRound) {
+    return (
+      <View style={styles.container}>
+        <SpeedRound
+          setup={speedRound}
+          moreTime={profile?.moreTime === true}
+          onFinish={(right, looked) => {
+            const prize = finishSpeed(speedRound, right, looked);
+            setSpeedFrom({ since: 0, gap: speedGap(prize.resultId), at: levelsRounds });
+            return prize;
+          }}
+          onContinue={() => {
+            setSpeedRound(null);
+            nextPicture();
+          }}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -130,6 +193,7 @@ function Game({ start }: { start: SessionStart & { streak: Streak } }) {
                     },
                   }
             }
+            fifty={start.mode === 'daily' ? undefined : { left: fiftyLeft, used: fiftied, onFifty: applyFifty }}
           />
         </SafeAreaView>
       )}
@@ -147,7 +211,7 @@ function Game({ start }: { start: SessionStart & { streak: Streak } }) {
             nextLevel={ladder.level}
             streak={streak}
             onPlayAgain={playAgain}
-            onNextPicture={nextPicture}
+            onNextPicture={next}
             onHome={goBack}
           />
         </SafeAreaView>
@@ -158,7 +222,7 @@ function Game({ start }: { start: SessionStart & { streak: Streak } }) {
           level={outcome.ladder.after.level}
           onPlay={() => {
             setCelebrated(levelUpKey);
-            nextPicture();
+            next();
           }}
           onContinue={() => setCelebrated(levelUpKey)}
           onClose={goBack}

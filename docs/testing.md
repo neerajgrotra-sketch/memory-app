@@ -8,6 +8,7 @@
 | `npm run check:levels` | Plays rounds and 10-round sessions at every level: something new on every level, no level easier than the one before, no jump in hard questions, no kind of question before its level, no wording asked round after round |
 | `npm run check:daily` | Checks the streak and Daily Challenge rules (days in a row, midnight, daylight saving, the week strip), in two time zones |
 | `npm run check:peeks` | Checks the Peek rules (earning, the cap of 3, spending, the wallet rebuilt from saved rounds, half points for a peeked answer) and prints how often Peeks come at a few levels |
+| `npm run check:speed` | Checks the Super Speed Round: 8 quick questions from 1,500 pictures at Levels 5–30, each answer true to the picture, about half Yes, none giving another away; when it comes (4 to 6 rounds from Level 5); the prizes; and 50:50s won, spent, capped and the answers they take away |
 | `npm run check:scenes` | Checks the level rules and points, then generates 61,800 scenes and checks every rule (below) |
 | `npm run gallery` | Renders pictures to `gallery.html` for reviewing by eye |
 | `RECIPE=farm npm run lineup` | Draws a recipe's things side by side at their real sizes (`lineup.html`), to check sizes and shapes against each other |

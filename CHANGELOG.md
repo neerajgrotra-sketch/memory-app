@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.10.0 (2026-10-22)
+
+- **Super Speed Round.** A surprise every 4 to 6 Levels rounds, from Level 5, to break up the rhythm. A lightning bolt bursts in on spinning rays, then one line on what to do and what you can win, and it starts when you tap **Start**. A new picture, then 8 quick Yes or No questions, 4 seconds each (6 with "More time to look"), against a draining bar; running out of time counts as wrong. 8 of 8 wins a Peek and a 50:50, 7 a Peek, 6 or more bonus points. It never changes your level or high score. The questions are the picture's own, so every answer is right, each about something different, about half of them Yes.
+- **50:50**, a new lifeline won in the speed round: it takes away two wrong answers. One a round, next to the Peek, hold up to 2. Like a Peek, the answer earns half points and the round counts as usual.
+- Fixed: two true-or-false questions about the same thing (how many kites and what colour) shared an id, so asking one could count as having asked the other. `check:questions` now checks every id is different.
+- `npm run check:speed` checks the speed round on 1,500 pictures, its timing and prizes, and the 50:50.
+
 ## 4.9.1 (2026-10-22)
 
 - **The sunbather is easy to see.** On a striped towel, someone lying on it was hard to make out on a phone. A towel with someone on it is now plain (no stripes), the sunbather has a dark outline, and their swimsuit is whichever of navy, yellow and white stands out most from the towel's colour. Checked on all six towel colours at iPhone SE size.

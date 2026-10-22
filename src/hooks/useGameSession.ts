@@ -14,7 +14,8 @@ import {
   type LadderState,
 } from '@/games/lookRemember/ladder';
 import { DAILY_MULTIPLIER, dailySeed, localDay } from '@/games/lookRemember/daily';
-import { MAX_PEEKS, earnPeeks, peekSecondsFor, spendPeek, type PeekWallet } from '@/games/lookRemember/peeks';
+import { MAX_FIFTY, MAX_PEEKS, earnPeeks, fiftyHidden, peekSecondsFor, spendPeek, winPeeks, type PeekWallet } from '@/games/lookRemember/peeks';
+import { SPEED_QUESTIONS, speedPrize, speedQuestions, type SpeedPrize, type SpeedQuestion } from '@/games/lookRemember/speed';
 import { placesOff } from '@/games/lookRemember/places';
 import { clearSavedRound, saveRound, slotFor, type SavedRound } from '@/games/lookRemember/savedRound';
 import { pointsFor, type PointsBreakdown } from '@/games/lookRemember/points';
@@ -53,6 +54,16 @@ export interface RoundOutcome {
   peeksEarned: number;
   /** The questions peeked at (at most one, except with a tester's unlimited Peeks). */
   peeked: number[];
+  /** The question a 50:50 was used on. */
+  fiftied: number[];
+}
+
+/** A Super Speed Round's picture and questions (see games/lookRemember/speed). */
+export interface SpeedRoundSetup {
+  stage: Stage;
+  questions: SpeedQuestion[];
+  level: number;
+  viewSeconds: number;
 }
 
 interface Setup {
@@ -119,6 +130,8 @@ export interface SessionStart {
   highScore: number;
   /** Peeks held when the session starts. */
   peeks: PeekWallet;
+  /** 50:50s held when the session starts. */
+  fifty?: number;
   /** A round saved part way through (see `SavedRound`): the session starts at its next unanswered question. */
   resume?: SavedRound;
 }
@@ -127,7 +140,7 @@ export interface SessionStart {
  * Runs one session of Look & Remember. The first picture is built on first render;
  * remount (e.g. with a `key`) to start over in another mode.
  */
-export function useGameSession({ mode, ladder: startLadder, highScore: startHighScore, peeks: startPeeks, resume }: SessionStart) {
+export function useGameSession({ mode, ladder: startLadder, highScore: startHighScore, peeks: startPeeks, fifty: startFifty = 0, resume }: SessionStart) {
   // Pictures are laid out for the space below the countdown bar, down to the bottom safe-area inset.
   // (The picture measures itself too and lays the same contents out again if the space differs.)
   const { width, height } = useWindowDimensions();
@@ -169,6 +182,10 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
   const [wallet, setWallet] = useState<PeekWallet>(() => (resume?.peeked.length && !unlimitedPeeks ? spendPeek(startPeeks) : startPeeks));
   /** The questions peeked at this round (one peek per round, except with a tester's unlimited Peeks). */
   const [peeked, setPeeked] = useState<number[]>(resume?.peeked ?? []);
+  // 50:50s, spent like Peeks: one per round, recorded when the round ends.
+  const [fiftyLeft, setFiftyLeft] = useState(() => Math.max(0, startFifty - (resume?.fiftied?.length ? 1 : 0)));
+  /** The question a 50:50 was used on this round, if any. */
+  const [fiftied, setFiftied] = useState<number[]>(resume?.fiftied ?? []);
 
   /** Question ids already asked about the current picture. */
   const seenIds = useRef(new Set<string>(resume?.seenIds ?? []));
@@ -176,6 +193,8 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
   /** The wordings of the last round finished, which the next round avoids where it can. */
   const lastTemplates = useRef(new Set<string>());
   const sessionId = useRef(resume?.sessionId ?? makeId());
+  /** Levels rounds this session that count (no replays): the Super Speed Round comes every few of them. */
+  const [levelsRounds, setLevelsRounds] = useState(0);
 
   /** Builds a brand-new picture for round `index`, in a different setting from the last one. */
   const startStage = useCallback(
@@ -189,6 +208,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       setAnswers(emptyAnswers(nextRound.questions.length));
       setOutcome(null);
       setPeeked([]);
+      setFiftied([]);
       setPhase('memorise');
     },
     [size, mode, extra, off, tester],
@@ -206,7 +226,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     (final: Answers) => {
       const correct = round.questions.map((q, i) => final[i] === q.answerIndex);
       const score = correct.filter(Boolean).length;
-      const base = pointsFor({ correct, level: round.level, viewSeconds: round.viewSeconds, lookedSeconds: looked.current, peeked });
+      const base = pointsFor({ correct, level: round.level, viewSeconds: round.viewSeconds, lookedSeconds: looked.current, peeked: [...peeked, ...fiftied] });
       // The Daily Challenge is worth double.
       const points = mode === 'daily' ? { ...base, daily: base.total * (DAILY_MULTIPLIER - 1), total: base.total * DAILY_MULTIPLIER } : base;
       // Seeing a picture twice makes it easier, so a replay never counts towards your level or high score;
@@ -220,7 +240,10 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       const after = mode === 'levels' && counts ? applyRound(ladder, score, total) : undefined;
       const earned = earnPeeks(wallet, points.total);
       setWallet(earned.wallet);
-      if (after) setLadder(after);
+      if (after) {
+        setLadder(after);
+        setLevelsRounds((n) => n + 1);
+      }
       setOutcome({
         points,
         newHighScore,
@@ -229,6 +252,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
         ladder: after ? { before: ladder, after } : undefined,
         peeksEarned: earned.earned,
         peeked,
+        fiftied,
       });
       const result: RoundResult = {
         id: makeId(),
@@ -243,6 +267,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
         // A tester's unlimited peek isn't recorded, so it never comes off the real Peeks.
         peeked: (peeked.length > 0 && !unlimitedPeeks) || undefined,
         peekSeconds: peeked.length > 0 ? peekSecondsFor(profile) : undefined,
+        fifty: fiftied.length > 0 || undefined,
         recipeId: stage.scene.recipeId,
         sceneId: stage.scene.id,
         score,
@@ -253,7 +278,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       };
       statsStore.addResult(result).catch(() => {});
     },
-    [ladder, mode, round, stage, peeked, wallet, unlimitedPeeks, profile],
+    [ladder, mode, round, stage, peeked, fiftied, wallet, unlimitedPeeks, profile],
   );
 
   /** Records the answer to question `questionIndex` (questions can be answered in any order after skipping). */
@@ -288,6 +313,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     setAnswers(emptyAnswers(nextRound.questions.length));
     setOutcome(null);
     setPeeked([]);
+    setFiftied([]);
     setPhase('memorise');
   }, [extra, finishRound, ladder.level, mode, round.level, stage]);
 
@@ -308,6 +334,65 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     [canPeek, unlimitedPeeks],
   );
 
+  /** One 50:50 per round, on a question with three or more options, never in the Daily Challenge. */
+  const canFifty = phase === 'quiz' && mode !== 'daily' && fiftyLeft > 0 && fiftied.length === 0;
+  const applyFifty = useCallback(
+    (questionIndex: number) => {
+      const q = round.questions[questionIndex];
+      if (!canFifty || !q || !fiftyHidden(q).length) return;
+      setFiftied([questionIndex]);
+      setFiftyLeft((n) => Math.max(0, n - 1));
+    },
+    [canFifty, round],
+  );
+
+  /**
+   * Scores and saves a Super Speed Round, and hands over its prizes. It never moves your level or sets a high score; its
+   * points count towards Peeks as usual.
+   */
+  const finishSpeed = useCallback(
+    (setup: SpeedRoundSetup, right: number, lookedSeconds: number): SpeedPrize & { resultId: string } => {
+      const prize = speedPrize(right, setup.level, { peeks: wallet.peeks >= MAX_PEEKS, fifty: fiftyLeft >= MAX_FIFTY });
+      setWallet((w) => winPeeks(earnPeeks(w, prize.points).wallet, prize.peeks));
+      setFiftyLeft((n) => Math.min(MAX_FIFTY, n + prize.fifty));
+      const result: RoundResult = {
+        id: makeId(),
+        sessionId: sessionId.current,
+        gameId: 'look-remember',
+        playedAt: new Date().toISOString(),
+        mode: 'levels',
+        level: bandOf(setup.level),
+        speed: true,
+        points: prize.points,
+        bonus: prize.peeks || prize.fifty ? { peeks: prize.peeks || undefined, fifty: prize.fifty || undefined } : undefined,
+        recipeId: setup.stage.scene.recipeId,
+        sceneId: setup.stage.scene.id,
+        score: right,
+        total: SPEED_QUESTIONS,
+        viewSeconds: setup.viewSeconds,
+        lookedSeconds,
+        byType: {},
+      };
+      statsStore.addResult(result).catch(() => {});
+      return { ...prize, resultId: result.id };
+    },
+    [fiftyLeft, wallet.peeks],
+  );
+
+  /**
+   * A Super Speed Round's own picture, at your level, in another place from the one just played. Tries a few pictures
+   * for one with eight quick questions; null if none had (a rare, small picture), and the round is skipped.
+   */
+  const makeSpeedRound = useCallback((): SpeedRoundSetup | null => {
+    const setup = setupFor('levels', ladder.level);
+    for (let attempt = 0; attempt < 4; attempt++) {
+      const next = createStage(setup.knobs, size, stage.scene.recipeId, undefined, { unlocked: tester ? undefined : setup.unlocked, off });
+      const questions = speedQuestions(next.questions, next.scene.seed);
+      if (questions.length === 8) return { stage: next, questions, level: ladder.level, viewSeconds: setup.knobs.viewSeconds + extra };
+    }
+    return null;
+  }, [extra, ladder.level, off, size, stage, tester]);
+
   // Keeps the round in progress saved, so it can be resumed after the app is closed (see `SavedRound`): the
   // questions after every answer, and the Daily Challenge from the moment its picture shows. A finished round,
   // or a Levels picture still being looked at, leaves nothing to resume.
@@ -325,16 +410,41 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       round,
       answers,
       peeked,
+      fiftied,
       looked: looked.current,
       sessionId: sessionId.current,
       seenIds: [...seenIds.current],
     });
-  }, [mode, phase, stage, round, answers, peeked]);
+  }, [mode, phase, stage, round, answers, peeked, fiftied]);
 
   const score = answers.filter((choice, i) => choice === round.questions[i]?.answerIndex).length;
 
   // What the Peek button shows: a full count for a tester's unlimited Peeks.
   const peeksLeft = unlimitedPeeks ? MAX_PEEKS : wallet.peeks;
 
-  return { stage, round, phase, answers, score, outcome, ladder, wallet, peeksLeft, peeked, canPeek, unlimitedPeeks, peek, finishMemorising, answer, playAgain, nextPicture };
+  return {
+    stage,
+    round,
+    phase,
+    answers,
+    score,
+    outcome,
+    ladder,
+    wallet,
+    peeksLeft,
+    peeked,
+    canPeek,
+    unlimitedPeeks,
+    peek,
+    levelsRounds,
+    fiftyLeft,
+    fiftied,
+    applyFifty,
+    finishSpeed,
+    makeSpeedRound,
+    finishMemorising,
+    answer,
+    playAgain,
+    nextPicture,
+  };
 }

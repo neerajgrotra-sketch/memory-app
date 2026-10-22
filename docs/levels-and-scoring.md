@@ -94,7 +94,28 @@ A Peek is a second look at the picture while answering (`src/games/lookRemember/
 - **Nothing extra stored:** the wallet is rebuilt from saved rounds (each round's points and `peeked`), so "Delete all progress" empties it. A peek used in a round you quit isn't saved, so it comes back. "Start again from Level 1" keeps your Peeks.
 - **Never sold.** For a family brain-training game, peeks stay earned only.
 - **Testing:** Tester mode (tap the version in Profile 7 times) has an **Unlimited Peeks** switch (`profile.testPeeks`): peek on any question, any number of times (**Peek · ∞**). Those peeks aren't recorded, so they never come off your earned Peeks. Its **Peek time** setting (1 to 5 seconds, `profile.peekSeconds`, read through `peekSecondsFor` in `peeks.ts`) changes how long a Peek shows the picture, to find the best length; each peeked round saves the length used (`peekSeconds`). Each right answer after a peek still earns half points, and the round counts for your level as usual.
+- **Won:** a Super Speed Round also wins Peeks (below).
 - `npm run check:peeks` checks the rules.
+
+## Super Speed Round
+
+A surprise bonus round (`src/games/lookRemember/speed.ts`, `SpeedRound`), to break up the rhythm of round after round.
+
+- **When:** in Levels, from Level 5, after every 4 to 6 rounds (`speedCounterOf`, `speedDue`). Replays and Practice rounds don't count, and it never comes in the Daily Challenge or Practice. The gap is picked from the last speed round's id (`speedGap`), so it changes each time but stays the same if you close the app and come back. It comes when you tap the button for the next picture, before that picture.
+- **The intro:** a lightning bolt springs in on spinning rays with a flash (just the picture with "reduce motion" on), then "Super Speed Round", one line on what to do and what you can win. Nothing starts until you tap **Start**.
+- **The round:** a new picture of its own (a different place from the last), looked at as usual, then 8 Yes or No questions with 4 seconds each (6 with "More time to look"), against a draining bar. Running out of time counts as wrong. After each answer it says "Right!" or "No, it was Yes" for half a second and moves on: no skipping, no Peeks.
+- **The questions** (`speedQuestions`) are the picture's own questions, so each answer is always right: the kinds that are quick to read (what was there, how many, what colour, true or false, details and "what was happening?"), never "Which of these…" or "more boats or more kites?". A question with options becomes the question and one guess, either its answer or one of its wrong options ("How many birds were there? 3?"); a true-or-false one is just the statement ("The bus was yellow."). Each is about something different (failing that, never the same thing asked the same way twice, so one can't give another away) and about half are Yes. Pictures that don't give 8 (about 1 in 50) are passed over for another; after four tries the round is skipped.
+- **Prizes** (`speedPrize`): 8 of 8 wins a Peek and a 50:50, 7 of 8 a Peek, and 6 or more bonus points (two answers' worth). A Peek or 50:50 you have no room for becomes bonus points instead. Each right answer earns half an answer's points.
+- **Never counts against you:** the round is saved (`speed: true`, with `bonus` for prizes) but never moves your level or counts for the high score, perfect rounds or the Progress tab. Its points count towards Peeks as usual.
+- `npm run check:speed` checks the questions on 1,500 pictures, the timing, the prizes and 50:50s.
+
+## 50:50
+
+A second lifeline, won in a Super Speed Round: it takes away two wrong answers (one when there are three).
+
+- **Using:** **50:50 · n** on the question screen, next to the Peek, once you hold one (it takes the place of the question-type chip). One per round, not on a question with two answers, never in the Daily Challenge. The answers it takes away are picked from the question's id (`fiftyHidden`), so a resumed round shows the same ones.
+- **The cost:** like a Peek, a right answer after a 50:50 earns half its points ("50:50 −95" on the result screen, which marks the question "50:50"); the round counts for your level as usual.
+- **Holding:** at most 2 (`MAX_FIFTY`). Worked out again from saved rounds like Peeks (`fiftyOf`: a round's `fifty` spends one, a speed round's `bonus.fifty` wins one).
 
 ## Bands
 
