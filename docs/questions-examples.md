@@ -444,7 +444,7 @@ Detail `aisleSide`: left.
 | number | detail | What was the aisle number? | **✓ 8** · 7 · 18 · 9 | aisle-number |
 | object | detail | What was on special offer? | **✓ Bread** · Apples · Cheese · Milk | offer |
 | object | detail | What did the offer sign say? | **✓ Half price** · 20% off · 10% off · Buy one, get one free | deal |
-| object | detail | What had spilled on the floor? | **✓ Juice** · Water · Milk · Honey | spill |
+| object | story | What had spilled on the floor? | **✓ Juice** · Water · Milk · Honey | spill |
 | object | seen | Which of these was in the picture? | **✓ Bottle of water** · Wet floor sign · Jar of honey · Watermelon | water |
 | object | seen | Which of these was NOT in the picture? | **✓ Carton of milk** · Shopping bag · Spill · Crate of apples | milk |
 | count | compare | Were there more shopping bags or more boxes of eggs? | Shopping bags · Boxes of eggs · **✓ The same number** | compare-shopping-bag-eggs |
@@ -466,57 +466,55 @@ Scene `train-station-c29hz`, colour scheme `day`.
 | Thing | Count | Colour | Band | Side |
 | --- | --- | --- | --- | --- |
 | freight wagon | 1 | Blue | On the track | centre |
-| railway signal | 1 | Green | On the track | right |
-| vending machine | 1 | Red | On the platform | right |
-| luggage trolleys | 2 | Red | On the platform | centre |
-| passengers | 2 | Green | On the platform | left |
-| hanging baskets | 2 | Red | Hanging from the roof | spread (not asked) |
-| bench | 1 | Brown | On the platform | left |
+| ticket machine | 1 | fixed | On the platform | left |
+| newspaper stand | 1 | fixed | On the platform | centre |
+| hanging baskets | 2 | Pink | Hanging from the roof | spread (not asked) |
+| dog | 1 | Brown | On the platform | right |
+| coffee cart | 1 | Red | On the platform | right |
+| bench | 1 | Blue | On the platform | left |
 
-Detail `departs`: 7:30.
+Detail `departs`: 11:00.
 
-Detail `platform`: 5.
+Detail `platform`: 1.
 
-Detail `destination`: Lakeside.
+Detail `destination`: Hilltop.
 
-Detail `clock`: 4:00.
+Detail `clock`: 12:30.
 
-### Questions (32)
+Detail `faces`: 000.
+
+### Questions (28)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
 | colour | colour | What colour was the freight wagon? | **✓ Blue** · Orange · Brown · Grey | wagon |
-| position | where | Where was the freight wagon? | **✓ To the left of the railway signal** · To the right of the railway signal | wagon |
-| colour | colour | What colour was the signal light? | **✓ Green** · Red · Yellow · Purple | signal |
-| colour | colour | What colour was the vending machine? | **✓ Red** · Blue · Green · Brown | vending |
-| position | where | Where was the vending machine? | **✓ To the right of the luggage trolleys** · Between the passengers and the luggage trolleys · Between the bench and the luggage trolleys · To the left of the luggage trolleys | vending |
-| count | count | How many luggage trolleys were there? | **✓ 2** · 1 · 4 · 3 | luggage |
-| colour | colour | What colour were the big suitcases on the luggage trolleys? | **✓ Red** · Yellow · Purple · Blue | luggage |
-| position | where | Where were the luggage trolleys? | **✓ Between the bench and the vending machine** · To the right of the vending machine · To the left of the bench · To the left of the passengers | luggage |
-| count | count | How many passengers were there? | **✓ 2** · 3 · 4 · 1 | person |
-| colour | colour | What colour were the passengers’ shirts? | **✓ Green** · Purple · Pink · Blue | person |
-| position | where | Where were the passengers? | **✓ To the left of the vending machine** · Between the luggage trolleys and the vending machine · To the right of the vending machine · To the right of the luggage trolleys | person |
+| position | where | Where was the ticket machine? | **✓ To the left of the coffee cart** · To the right of the coffee cart · Between the newspaper stand and the coffee cart · To the right of the dog | ticket-machine |
+| position | where | Where was the newspaper stand? | **✓ Between the ticket machine and the coffee cart** · To the left of the ticket machine · To the right of the coffee cart · To the left of the bench | newspapers |
 | count | count | How many hanging baskets were there? | **✓ 2** · 4 · 3 · 1 | flower-basket |
-| colour | colour | What colour were the flowers in the hanging baskets? | **✓ Red** · White · Pink · Yellow | flower-basket |
-| count | count | How many benches were there? | **✓ 1** · 2 · 4 · 3 | bench |
-| colour | colour | What colour was the bench? | **✓ Brown** · Red · Green · Blue | bench |
-| position | where | Where was the bench? | **✓ To the left of the luggage trolleys** · To the right of the luggage trolleys · Between the luggage trolleys and the vending machine · To the right of the vending machine | bench |
-| object | what-here | Which of these was on the platform? | **✓ A passenger** · A newspaper stand · A dog · A coffee cart | in-platform |
-| number | detail | What time was the next train? | **✓ 7:30** · 7:03 · 7:40 · 6:30 | departs |
-| number | detail | Which platform was the next train leaving from? | **✓ Platform 5** · Platform 4 · Platform 3 · Platform 6 | platform |
-| object | detail | Where was the next train going? | **✓ Lakeside** · Hilltop · Riverside · Airport | destination |
-| object | seen | Which of these was in the picture? | **✓ Vending machine** · Station clock · Hanging lamp · Coffee cart | vending |
-| object | seen | Which of these was NOT in the picture? | **✓ Newspaper stand** · Passenger · Bench · Freight wagon | newspapers |
-| count | compare | Were there more luggage trolleys or more passengers? | Luggage trolleys · Passengers · **✓ The same number** | compare-luggage-person |
-| count | compare | Were there more passengers or more benches? | **✓ Passengers** · Benches · The same number | compare-person-bench |
-| count | altogether | How many luggage trolleys and benches were there altogether? | **✓ 3** · 2 · 4 · 1 | altogether-luggage-bench |
-| count | difference | How many more passengers than benches were there? | **✓ 1** · 2 · 3 · 4 | difference-person-bench |
-| count | most | Which was there just one of? | **✓ A bench** · A luggage trolley · A passenger · A hanging basket | only-bench |
-| colour | twins | What else was the same colour as the signal light? | **✓ The passengers’ shirts** · The freight wagon · The big suitcases on the luggage trolleys · The vending machine | signal |
-| colour | twins | What else was the same colour as the passengers’ shirts? | **✓ The signal light** · The vending machine · The big suitcases on the luggage trolleys · The bench | person |
-| colour | true-false | True or false? The bench was green. | True · **✓ False** | bench |
-| count | true-false | True or false? There was one bench. | **✓ True** · False | bench |
-| count | true-false | True or false? There were two passengers. | **✓ True** · False | person |
+| colour | colour | What colour were the flowers in the hanging baskets? | **✓ Pink** · Yellow · Red · Purple | flower-basket |
+| count | count | How many dogs were there? | **✓ 1** · 2 · 3 · 4 | dog |
+| colour | colour | What colour was the dog? | **✓ Brown** · Black · White · Yellow | dog |
+| position | where | Where was the dog? | **✓ To the right of the ticket machine** · To the left of the ticket machine · Between the ticket machine and the newspaper stand · Between the bench and the newspaper stand | dog |
+| colour | colour | What colour was the coffee cart? | **✓ Red** · Green · Blue · Black | coffee-cart |
+| position | where | Where was the coffee cart? | **✓ To the right of the newspaper stand** · Between the bench and the newspaper stand · Between the ticket machine and the newspaper stand · To the left of the newspaper stand | coffee-cart |
+| count | count | How many benches were there? | **✓ 1** · 3 · 4 · 2 | bench |
+| colour | colour | What colour was the bench? | **✓ Blue** · Green · Red · Brown | bench |
+| position | where | Where was the bench? | **✓ To the left of the newspaper stand** · To the right of the newspaper stand · Between the newspaper stand and the coffee cart · Between the newspaper stand and the dog | bench |
+| object | what-here | Which of these was on the platform? | **✓ A dog** · A vending machine · A luggage trolley · A passenger | in-platform |
+| object | what-here | What was on the track? | **✓ A freight wagon** · A railway signal · A train | band-track |
+| number | detail | What time was the next train? | **✓ 11:00** · 11:10 · 12:00 · 10:00 | departs |
+| number | detail | Which platform was the next train leaving from? | **✓ Platform 1** · Platform 11 · Platform 2 · Platform 3 | platform |
+| object | detail | Where was the next train going? | **✓ Hilltop** · Riverside · Seaside · Lakeside | destination |
+| object | seen | Which of these was in the picture? | **✓ Freight wagon** · Vending machine · Station clock · Passenger | wagon |
+| object | seen | Which of these was NOT in the picture? | **✓ Train** · Coffee cart · Hanging basket · Ticket machine | train |
+| count | compare | Were there more dogs or more benches? | Dogs · Benches · **✓ The same number** | compare-dog-bench |
+| count | compare | Were there more hanging baskets or more benches? | **✓ Hanging baskets** · Benches · The same number | compare-flower-basket-bench |
+| count | altogether | How many hanging baskets and dogs were there altogether? | **✓ 3** · 2 · 4 · 5 | altogether-flower-basket-dog |
+| count | difference | How many more hanging baskets than dogs were there? | **✓ 1** · 2 · 3 · 4 | difference-flower-basket-dog |
+| colour | two-step | Only one kind of thing was on the track. What colour was it? | **✓ Blue** · Green · Grey · Orange | wagon |
+| count | true-false | True or false? There were two dogs. | True · **✓ False** | dog |
+| count | true-false | True or false? There were two hanging baskets. | **✓ True** · False | flower-basket |
+| object | true-false | True or false? There was a station clock in the picture. | True · **✓ False** | station-clock |
 
 ## At the zoo
 
@@ -655,52 +653,52 @@ Scene `classroom-c29hz`, colour scheme `wood`.
 
 | Thing | Count | Colour | Band | Side |
 | --- | --- | --- | --- | --- |
-| bookcase | 1 | fixed | At the front of the class | left |
-| teacher | 1 | Pink | At the front of the class | right |
+| teacher | 1 | Red | At the front of the class | left |
+| fish tank | 1 | fixed | At the back of the class | right |
 | pupils | 2 | Purple | At the back of the class | spread (not asked) |
 | window | 1 | Orange | On the wall | left |
 | world map | 1 | fixed | On the wall | right |
-| beanbag | 1 | Blue | At the back of the class | centre |
-| piano | 1 | Brown | At the front of the class | centre |
+| globe | 1 | fixed | At the front of the class | centre |
+| potted plant | 1 | Blue | At the back of the class | centre |
 
 Detail `clock`: 7:30.
 
-Detail `day`: Wednesday.
+Detail `day`: Friday.
 
-Detail `sum`: 8 ÷ 4.
+Detail `sum`: 4 − 1.
 
-### Questions (28)
+Detail `tankFish`: 3.
+
+### Questions (26)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| position | where | Where was the bookcase? | **✓ To the left of the teacher** · To the right of the teacher | bookcase |
-| colour | colour | What colour was the teacher’s jumper? | **✓ Pink** · Orange · Blue · Green | teacher |
-| position | where | Where was the teacher? | **✓ To the right of the bookcase** · To the left of the bookcase | teacher |
+| colour | colour | What colour was the teacher’s jumper? | **✓ Red** · Blue · Green · Pink | teacher |
+| position | where | Where was the fish tank? | **✓ To the right of the potted plant** · To the left of the potted plant · To the left of the pupils · Between the pupils | fish-tank |
 | count | count | How many pupils were there? | **✓ 2** · 1 · 4 · 5 | pupil |
 | colour | colour | What colour were the pupils’ jumpers? | **✓ Purple** · Blue · Green · Yellow | pupil |
-| colour | colour | What colour were the curtains? | **✓ Orange** · Purple · Yellow · Green | window |
-| position | where | Where was the window? | **✓ On the wall on the left, above the bookcase** · On the wall on the right, above the teacher · On the wall in the middle, above the teacher · On the wall on the left, above the teacher | window |
-| object | what-here | What was on the wall on the left, above the bookcase? | **✓ A window** · A noticeboard · A clock · A world map | window |
-| position | where | Where was the world map? | **✓ On the wall on the right, above the teacher** · On the wall on the left, above the bookcase · On the wall on the right, above the bookcase · On the wall in the middle, above the bookcase | map |
-| object | what-here | What was on the wall on the right, above the teacher? | **✓ A world map** · A poster · A noticeboard · A clock | map |
-| count | count | How many beanbags were there? | **✓ 1** · 2 · 4 · 3 | beanbag |
-| colour | colour | What colour was the beanbag? | **✓ Blue** · Orange · Purple · Green | beanbag |
-| position | where | Where was the beanbag? | **✓ Between the pupils** · To the right of the pupils · To the left of the pupils | beanbag |
-| colour | colour | What colour was the piano? | **✓ Brown** · Black · Green · Red | piano |
-| object | what-here | Which of these was on the wall? | **✓ A world map** · A noticeboard · A poster · A clock | in-wall |
-| object | what-here | Which of these was at the back of the class? | **✓ A beanbag** · An easel · A computer · A potted plant | in-back |
-| object | detail | What day was written on the board? | **✓ Wednesday** · Tuesday · Monday · Friday | board-day |
-| number | detail | What sum was on the board? | **✓ 8 ÷ 4** · 8 × 4 · 12 ÷ 4 · 8 − 4 | board-sum |
-| object | seen | Which of these was in the picture? | **✓ Teacher** · Globe · Computer · Potted plant | teacher |
-| object | seen | Which of these was NOT in the picture? | **✓ Potted plant** · Bookcase · Pupil · Beanbag | plant |
-| count | compare | Were there more pupils or more beanbags? | **✓ Pupils** · Beanbags · The same number | compare-pupil-beanbag |
-| count | altogether | How many pupils and beanbags were there altogether? | **✓ 3** · 2 · 4 · 5 | altogether-pupil-beanbag |
-| count | difference | How many more pupils than beanbags were there? | **✓ 1** · 2 · 3 · 4 | difference-pupil-beanbag |
-| position | relation | What was on the wall, above the bookcase? | **✓ A window** · A clock · A poster · A noticeboard | bookcase |
-| position | relation | What was on the wall, above the teacher? | **✓ A world map** · A clock · A poster · A window | teacher |
-| colour | true-false | True or false? The piano was black. | True · **✓ False** | piano |
-| colour | true-false | True or false? The curtains were purple. | True · **✓ False** | window |
-| colour | true-false | True or false? The teacher’s jumper was orange. | True · **✓ False** | teacher |
+| colour | colour | What colour were the curtains? | **✓ Orange** · Blue · Yellow · Purple | window |
+| position | where | Where was the window? | **✓ On the wall on the left, above the teacher** · On the wall in the middle, above the bookcase · On the wall on the left, above the bookcase · On the wall on the right, above the bookcase | window |
+| object | what-here | What was on the wall on the left, above the teacher? | **✓ A window** · A poster · A world map · A noticeboard | window |
+| position | where | Where was the world map? | **✓ To the right of the window** · To the left of the window | map |
+| count | count | How many potted plants were there? | **✓ 1** · 2 · 4 · 3 | plant |
+| colour | colour | What colour was the plant pot? | **✓ Blue** · Yellow · White · Pink | plant |
+| position | where | Where was the potted plant? | **✓ To the left of the fish tank** · To the right of the fish tank | plant |
+| object | what-here | Which of these was on the wall? | **✓ A window** · A clock · A noticeboard · A poster | in-wall |
+| object | what-here | Which of these was at the front of the class? | **✓ A globe** · A piano · A bookcase | in-front |
+| object | what-here | Which of these was at the back of the class? | **✓ A pupil** · A beanbag · An easel · A computer | in-back |
+| count | story | How many fish were in the fish tank? | **✓ 3** · 5 · 2 · 1 | tank-fish |
+| object | detail | What day was written on the board? | **✓ Friday** · Tuesday · Monday · Thursday | board-day |
+| number | detail | What sum was on the board? | **✓ 4 − 1** · 3 − 1 · 4 − 2 · 4 + 1 | board-sum |
+| object | seen | Which of these was in the picture? | **✓ World map** · Computer · Bookcase · Poster | map |
+| object | seen | Which of these was NOT in the picture? | **✓ Easel** · Window · World map · Fish tank | easel |
+| count | compare | Were there more pupils or more potted plants? | **✓ Pupils** · Potted plants · The same number | compare-pupil-plant |
+| count | altogether | How many pupils and potted plants were there altogether? | **✓ 3** · 2 · 4 · 1 | altogether-pupil-plant |
+| count | difference | How many more pupils than potted plants were there? | **✓ 1** · 2 · 3 · 4 | difference-pupil-plant |
+| position | relation | What was on the wall, above the teacher? | **✓ A window** · A clock · A world map · A noticeboard | teacher |
+| object | true-false | True or false? There was a computer in the picture. | True · **✓ False** | computer |
+| colour | true-false | True or false? The pupils’ jumpers were green. | True · **✓ False** | pupil |
+| colour | true-false | True or false? The teacher’s jumper was red. | **✓ True** · False | teacher |
 
 ## At the campsite at night
 
@@ -764,12 +762,12 @@ Scene `airport-c29hz`, colour scheme `day`.
 
 | Thing | Count | Colour | Band | Side |
 | --- | --- | --- | --- | --- |
-| coffee kiosk | 1 | Blue | In the departure lounge | left |
-| luggage trolleys | 2 | Red | In the departure lounge | centre |
-| pilot | 1 | fixed | In the departure lounge | right |
+| row of seats | 1 | Orange | In the departure lounge | right |
+| potted plants | 2 | Purple | In the departure lounge | centre |
+| flight attendant | 1 | Green | In the departure lounge | left |
 | control tower | 1 | fixed | Out on the airfield | centre |
 | helicopter | 1 | Orange | In the sky | right |
-| baggage train | 1 | fixed | Out on the airfield | left |
+| fuel truck | 1 | fixed | Out on the airfield | left |
 | birds | 2 | fixed | In the sky | centre |
 
 Detail `city`: Athens.
@@ -778,37 +776,42 @@ Detail `gate`: C15.
 
 Detail `flight`: GL 789.
 
-### Questions (27)
+Detail `kiosk`: open.
+
+### Questions (30)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| colour | colour | What colour was the awning on the coffee kiosk? | **✓ Blue** · Orange · Green · Purple | coffee-kiosk |
-| position | where | Where was the coffee kiosk? | **✓ To the left of the pilot** · To the right of the pilot · Between the luggage trolleys and the pilot · To the right of the luggage trolleys | coffee-kiosk |
-| count | count | How many luggage trolleys were there? | **✓ 2** · 4 · 1 · 3 | trolley |
-| colour | colour | What colour were the big suitcases on the trolleys? | **✓ Red** · Green · Blue · Yellow | trolley |
-| position | where | Where were the luggage trolleys? | **✓ Between the coffee kiosk and the pilot** · To the right of the pilot · To the left of the coffee kiosk | trolley |
-| count | count | How many pilots were there? | **✓ 1** · 2 · 4 · 3 | pilot |
-| position | where | Where was the pilot? | **✓ To the right of the luggage trolleys** · To the left of the luggage trolleys · Between the coffee kiosk and the luggage trolleys · To the left of the coffee kiosk | pilot |
-| position | where | Where was the control tower? | **✓ To the right of the baggage train** · To the left of the baggage train | control-tower |
-| colour | colour | What colour was the helicopter? | **✓ Orange** · Yellow · White · Black | helicopter |
+| colour | colour | What colour was the row of seats? | **✓ Orange** · Blue · Grey · Green | seats |
+| position | where | Where was the row of seats? | **✓ To the right of the flight attendant** · To the left of the flight attendant · Between the flight attendant and the potted plants · To the left of the potted plants | seats |
+| count | count | How many potted plants were there? | **✓ 2** · 1 · 4 · 5 | plant |
+| colour | colour | What colour were the plant pots? | **✓ Purple** · Yellow · Blue · White | plant |
+| position | where | Where were the potted plants? | **✓ Between the flight attendant and the row of seats** · To the left of the flight attendant · To the right of the row of seats | plant |
+| count | count | How many flight attendants were there? | **✓ 1** · 2 · 3 · 4 | flight-attendant |
+| colour | colour | What colour was the flight attendant’s uniform? | **✓ Green** · Blue · Red · Purple | flight-attendant |
+| position | where | Where was the flight attendant? | **✓ To the left of the row of seats** · To the right of the row of seats · Between the potted plants and the row of seats · To the right of the potted plants | flight-attendant |
+| position | where | Where was the control tower? | **✓ To the right of the fuel truck** · To the left of the fuel truck | control-tower |
+| colour | colour | What colour was the helicopter? | **✓ Orange** · White · Yellow · Green | helicopter |
 | position | where | Where was the helicopter? | **✓ To the right of the birds** · To the left of the birds | helicopter |
-| position | where | Where was the baggage train? | **✓ To the left of the control tower** · To the right of the control tower | baggage-train |
-| count | count | How many birds were there? | **✓ 2** · 3 · 4 · 1 | bird |
+| position | where | Where was the fuel truck? | **✓ To the left of the control tower** · To the right of the control tower | fuel-truck |
+| count | count | How many birds were there? | **✓ 2** · 5 · 4 · 3 | bird |
 | position | where | Where were the birds? | **✓ To the left of the helicopter** · To the right of the helicopter | bird |
-| object | what-here | Which of these was in the departure lounge? | **✓ A pilot** · A flight attendant · A traveller · A row of seats | in-lounge |
-| object | detail | Where was the flight on the screen going? | **✓ Athens** · Lisbon · Oslo · Rome | flight-city |
-| number | detail | Which gate was the flight leaving from? | **✓ C15** · C25 · C16 · C14 | flight-gate |
-| number | detail | What was the flight number? | **✓ GL 789** · GL 799 · GL 790 · GL 879 | flight-number |
-| object | seen | Which of these was in the picture? | **✓ Baggage train** · Parked plane · Potted plant · Plane | baggage-train |
-| object | seen | Which of these was NOT in the picture? | **✓ Information desk** · Helicopter · Luggage trolley · Baggage train | info-desk |
-| count | compare | Were there more pilots or more birds? | Pilots · **✓ Birds** · The same number | compare-pilot-bird |
-| count | compare | Were there more luggage trolleys or more pilots? | **✓ Luggage trolleys** · Pilots · The same number | compare-trolley-pilot |
-| count | altogether | How many luggage trolleys and birds were there altogether? | **✓ 4** · 3 · 5 · 6 | altogether-trolley-bird |
-| count | difference | How many more birds than pilots were there? | **✓ 1** · 2 · 3 · 4 | difference-bird-pilot |
-| count | most | Which was there just one of? | **✓ A pilot** · A bird · A luggage trolley · A potted plant | only-pilot |
-| count | true-false | True or false? There were three luggage trolleys. | True · **✓ False** | trolley |
-| colour | true-false | True or false? The awning on the coffee kiosk was red. | True · **✓ False** | coffee-kiosk |
-| object | true-false | True or false? There was a fuel truck in the picture. | True · **✓ False** | fuel-truck |
+| object | what-here | Which of these was in the departure lounge? | **✓ A potted plant** · A coffee kiosk · A traveller · A luggage trolley | in-lounge |
+| object | detail | Where was the flight on the screen going? | **✓ Athens** · Rome · Madrid · Paris | flight-city |
+| number | detail | Which gate was the flight leaving from? | **✓ C15** · D15 · C14 · C16 | flight-gate |
+| number | detail | What was the flight number? | **✓ GL 789** · GL 799 · GL 879 · GL 788 | flight-number |
+| object | seen | Which of these was in the picture? | **✓ Fuel truck** · Information desk · Luggage trolley · Plane | fuel-truck |
+| object | seen | Which of these was NOT in the picture? | **✓ Coffee kiosk** · Row of seats · Flight attendant · Helicopter | coffee-kiosk |
+| count | compare | Were there more flight attendants or more birds? | Flight attendants · **✓ Birds** · The same number | compare-flight-attendant-bird |
+| count | compare | Were there more potted plants or more flight attendants? | **✓ Potted plants** · Flight attendants · The same number | compare-plant-flight-attendant |
+| count | altogether | How many flight attendants and birds were there altogether? | **✓ 3** · 4 · 2 · 1 | altogether-flight-attendant-bird |
+| count | difference | How many more birds than flight attendants were there? | **✓ 1** · 2 · 3 · 4 | difference-bird-flight-attendant |
+| count | most | Which was there just one of? | **✓ A flight attendant** · A potted plant · A bird · A luggage trolley | only-flight-attendant |
+| colour | twins | What else was the same colour as the row of seats? | **✓ The helicopter** · The plant pots · The flight attendant’s uniform · The stripe on the parked plane | seats |
+| colour | twins | What else was the same colour as the helicopter? | **✓ The row of seats** · The flight attendant’s uniform · The plant pots · The stripe on the parked plane | helicopter |
+| colour | true-false | True or false? The row of seats was blue. | True · **✓ False** | seats |
+| count | true-false | True or false? There was one potted plant. | True · **✓ False** | plant |
+| count | true-false | True or false? There were two birds. | **✓ True** · False | bird |
 
 ## On the Moon
 
@@ -818,42 +821,47 @@ Scene `space-c29hz`, colour scheme `grey`.
 
 | Thing | Count | Colour | Band | Side |
 | --- | --- | --- | --- | --- |
-| habitat pod | 1 | Red | Near the hills | centre |
-| moon buggy | 1 | Blue | Close by | left |
-| astronauts | 2 | Green | Close by | right |
-| rocket | 1 | Orange | Out in space | left |
-| space station | 1 | fixed | Out in space | centre |
-| satellites | 2 | fixed | Out in space | right |
-| robot | 1 | fixed | Close by | centre |
+| lunar lander | 1 | fixed | Near the hills | left |
+| solar panel | 1 | fixed | Near the hills | right |
+| astronauts | 2 | Blue | Close by | centre |
+| rocket | 1 | Red | Out in space | left |
+| space station | 1 | fixed | Out in space | right |
+| satellites | 2 | fixed | Out in space | centre |
+| boulder | 1 | fixed | Close by | right |
 
 Detail `mission`: Eagle.
 
 Detail `base`: 27.
 
-### Questions (23)
+Detail `engine`: off.
+
+### Questions (26)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| colour | colour | What colour was the stripe on the habitat pod? | **✓ Red** · Green · Blue · Grey | habitat |
-| colour | colour | What colour was the moon buggy’s seat? | **✓ Blue** · Red · Yellow · Brown | rover |
-| position | where | Where was the moon buggy? | **✓ To the left of the astronauts** · To the right of the astronauts · Between the robot and the astronauts · To the right of the robot | rover |
-| count | count | How many astronauts were there? | **✓ 2** · 3 · 1 · 4 | astronaut |
-| colour | colour | What colour were the astronauts’ backpacks? | **✓ Green** · Yellow · Purple · Blue | astronaut |
-| position | where | Where were the astronauts? | **✓ To the right of the robot** · To the left of the robot | astronaut |
-| colour | colour | What colour were the rocket’s fins? | **✓ Orange** · Green · Blue · White | rocket |
-| position | where | Where was the rocket? | **✓ To the left of the satellites** · To the right of the satellites · Between the space station and the satellites · To the right of the space station | rocket |
-| position | where | Where was the space station? | **✓ Between the rocket and the satellites** · To the left of the rocket · To the right of the satellites | space-station |
-| count | count | How many satellites were there? | **✓ 2** · 3 · 4 · 5 | satellite |
-| position | where | Where were the satellites? | **✓ To the right of the space station** · To the left of the space station · Between the rocket and the space station · To the left of the rocket | satellite |
-| position | where | Where was the robot? | **✓ To the left of the astronauts** · To the right of the astronauts | robot |
-| object | what-here | Which of these was close by? | **✓ A moon buggy** · A boulder · A crater | in-front |
-| object | what-here | What was near the hills? | **✓ A habitat pod** · A solar panel · A flag · A lunar lander | band-back |
-| object | detail | What was the mission called on the sign? | **✓ Eagle** · Phoenix · Orion · Artemis | mission |
-| number | detail | What number was the moon base on the sign? | **✓ 27** · 28 · 72 · 37 | base-number |
-| object | seen | Which of these was in the picture? | **✓ Rocket** · Radio dish · Comet · Flag | rocket |
-| object | seen | Which of these was NOT in the picture? | **✓ Solar panel** · Rocket · Satellite · Habitat pod | solar-panel |
-| count | compare | Were there more astronauts or more satellites? | Astronauts · Satellites · **✓ The same number** | compare-astronaut-satellite |
-| count | altogether | How many astronauts and satellites were there altogether? | **✓ 4** · 5 · 3 · 2 | altogether-astronaut-satellite |
-| colour | true-false | True or false? The astronauts’ backpacks were green. | **✓ True** · False | astronaut |
-| object | true-false | True or false? The Earth was in the picture. | True · **✓ False** | earth |
-| count | true-false | True or false? There were two satellites. | **✓ True** · False | satellite |
+| position | where | Where was the lunar lander? | **✓ To the left of the solar panel** · To the right of the solar panel | lander |
+| count | count | How many solar panels were there? | **✓ 1** · 2 · 4 · 3 | solar-panel |
+| count | count | How many astronauts were there? | **✓ 2** · 4 · 3 · 5 | astronaut |
+| colour | colour | What colour were the astronauts’ backpacks? | **✓ Blue** · Red · Green · Yellow | astronaut |
+| position | where | Where were the astronauts? | **✓ To the left of the boulder** · To the right of the boulder | astronaut |
+| colour | colour | What colour were the rocket’s fins? | **✓ Red** · Green · Blue · Yellow | rocket |
+| position | where | Where was the rocket? | **✓ To the left of the space station** · Between the satellites and the space station · To the right of the space station · To the right of the satellites | rocket |
+| position | where | Where was the space station? | **✓ To the right of the satellites** · To the left of the satellites · Between the rocket and the satellites · To the left of the rocket | space-station |
+| count | count | How many satellites were there? | **✓ 2** · 3 · 5 · 1 | satellite |
+| position | where | Where were the satellites? | **✓ Between the rocket and the space station** · To the right of the space station · To the left of the rocket | satellite |
+| count | count | How many boulders were there? | **✓ 1** · 2 · 3 · 4 | moon-rock |
+| position | where | Where was the boulder? | **✓ To the right of the astronauts** · To the left of the astronauts | moon-rock |
+| object | what-here | Which of these was near the hills? | **✓ A lunar lander** · A radio dish · A habitat pod · A flag | in-back |
+| object | what-here | Which of these was close by? | **✓ A boulder** · A crater · A moon buggy · A robot | in-front |
+| object | story | Was there fire coming out of the rocket? | **✓ No** · Yes | rocket-fire |
+| object | detail | What was the mission called on the sign? | **✓ Eagle** · Orion · Artemis · Falcon | mission |
+| number | detail | What number was the moon base on the sign? | **✓ 27** · 25 · 29 · 26 | base-number |
+| object | seen | Which of these was in the picture? | **✓ Boulder** · Moon buggy · Radio dish · Comet | moon-rock |
+| object | seen | Which of these was NOT in the picture? | **✓ Earth** · Satellite · Lunar lander · Astronaut | earth |
+| count | compare | Were there more solar panels or more astronauts? | Solar panels · **✓ Astronauts** · The same number | compare-solar-panel-astronaut |
+| count | compare | Were there more solar panels or more boulders? | Solar panels · Boulders · **✓ The same number** | compare-solar-panel-moon-rock |
+| count | altogether | How many astronauts and satellites were there altogether? | **✓ 4** · 3 · 5 · 6 | altogether-astronaut-satellite |
+| count | difference | How many more satellites than boulders were there? | **✓ 1** · 2 · 3 · 4 | difference-satellite-moon-rock |
+| colour | true-false | True or false? The rocket’s fins were red. | **✓ True** · False | rocket |
+| colour | true-false | True or false? The astronauts’ backpacks were blue. | **✓ True** · False | astronaut |
+| count | true-false | True or false? There were two solar panels. | True · **✓ False** | solar-panel |

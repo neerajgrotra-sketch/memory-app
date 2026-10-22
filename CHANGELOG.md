@@ -10,6 +10,17 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.7.0 (2026-10-22)
+
+- **More "what was happening?" questions, in six more places:**
+  - **Space:** "Was there fire coming out of the rocket?" (engines firing or coasting) and "What was the astronaut holding?" (a camera, a torch or nothing).
+  - **Snowy mountain:** "What was the snowman wearing on its head?" A top hat, a woolly hat or a bucket.
+  - **Classroom:** "How many fish were in the fish tank?" (1 to 4).
+  - **Airport:** "Was the coffee kiosk open or closed?" (its shutter pulled down).
+  - **Train station:** "How many people were looking out of the train’s windows?" (none to three).
+  - **Supermarket:** "What was in the shopping basket?" Apples (green ones in a red basket, so they show), a loaf of bread, or nothing. The spill now counts as one of these too.
+- Every place now has at least one question about what was happening.
+
 ## 4.6.1 (2026-10-22)
 
 - **"Was there anything on the carpet?"** A tester's idea: with "Yes, a teddy bear", "Yes, a toy car", "Yes, a ball" or "No, nothing" as answers. Asked when the carpet is empty or has one kind of thing on it, and the same for every place's bands: "Was there anything on the pond?", "…on the bottom shelf?", "…on the pitches?". "No, nothing" is always offered, right when it's empty and wrong when it isn't, so it never gives the answer away. Not asked of a band with a sign drawn in it (it could count as "anything"), an empty sky (clouds and stars could too), or when something is hiding in the picture.

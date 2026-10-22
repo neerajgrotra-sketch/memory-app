@@ -389,13 +389,30 @@ const items: ItemDef[] = [
     tone: '#7d8b99',
     colours: COATS,
     colourPrompt: (plural) => (plural ? 'What colour were the snowmen’s scarves?' : 'What colour was the snowman’s scarf?'),
-    draw: (colour) => (
+    // A top hat, a woolly hat or a bucket on its head: chosen per picture for a snowman on its own (see `fitDetails`).
+    draw: (colour, details) => (
       <G transform="translate(0 12)">
         <Circle cx={45} cy={104} r={36} fill="#ffffff" />
         <Circle cx={45} cy={50} r={26} fill="#ffffff" />
         <Path d="M22,64 Q45,74 68,64 L66,74 Q45,82 24,74 Z M56,72 L64,96 L54,96 L50,74" fill={colour} />
-        <Rect x={28} y={10} width={34} height={6} rx={2} fill="#212529" />
-        <Rect x={33} y={-10} width={24} height={22} rx={2} fill="#212529" />
+        {details?.values?.snowmanHat === 'woolly' ? (
+          <G>
+            <Path d="M25,16 Q25,-6 45,-6 Q65,-6 65,16 Z" fill="#e63946" />
+            <Rect x={24} y={10} width={42} height={7} rx={3} fill="#f8f9fa" />
+            <Circle cx={45} cy={-9} r={6} fill="#f8f9fa" />
+          </G>
+        ) : details?.values?.snowmanHat === 'bucket' ? (
+          <G>
+            <Path d="M28,16 L34,-8 H56 L62,16 Z" fill="#adb5bd" />
+            <Rect x={26} y={13} width={38} height={5} rx={2} fill="#868e96" />
+            <Path d="M34,-6 Q45,-18 56,-6" fill="none" stroke="#495057" strokeWidth={2} />
+          </G>
+        ) : (
+          <G>
+            <Rect x={28} y={10} width={34} height={6} rx={2} fill="#212529" />
+            <Rect x={33} y={-10} width={24} height={22} rx={2} fill="#212529" />
+          </G>
+        )}
         <G stroke="none">
           <Circle cx={37} cy={44} r={3} fill="#212529" />
           <Circle cx={53} cy={44} r={3} fill="#212529" />
@@ -403,7 +420,7 @@ const items: ItemDef[] = [
           <Circle cx={45} cy={94} r={3.5} fill="#212529" />
           <Circle cx={45} cy={110} r={3.5} fill="#212529" />
           {/* A band on the hat, stick arms, rosy cheeks, a stitched smile and shade on the snowballs. */}
-          <Rect x={33} y={4} width={24} height={5} fill={colour} />
+          {(details?.values?.snowmanHat ?? 'tophat') === 'tophat' && <Rect x={33} y={4} width={24} height={5} fill={colour} />}
           <Path d="M20,52 L2,40 M8,44 L4,36 M70,52 L88,40 M82,44 L86,36" stroke="#6b4423" strokeWidth={3.5} strokeLinecap="round" />
           <Circle cx={33} cy={52} r={3} fill="#ff8fab" fillOpacity={0.5} />
           <Circle cx={57} cy={52} r={3} fill="#ff8fab" fillOpacity={0.5} />
@@ -578,7 +595,29 @@ function details(random: Rng, { hidden = 0 }: DetailKnobs): SceneDetails {
  * peeking out. "Where was the bear hiding?" asks about it, first in the round. Nothing hides on easier levels,
  * or when there's nowhere to hide.
  */
+/** What a snowman can wear on its head, and how answers name it. */
+const SNOWMAN_HATS: Record<string, string> = { tophat: 'A top hat', woolly: 'A woolly hat', bucket: 'A bucket' };
+
+/** Once things are placed: a lone snowman's hat, then the animal hiding (harder levels). */
 function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  if (groups.find((g) => g.kind === 'snowman')?.count !== 1) return hideAnimal(d, groups, random);
+  const hat = random.pick(Object.keys(SNOWMAN_HATS));
+  const answer = SNOWMAN_HATS[hat];
+  return hideAnimal(
+    {
+      ...d,
+      values: { ...d.values, snowmanHat: hat },
+      facts: [
+        ...(d.facts ?? []),
+        { id: 'snowman-hat', family: 'story', type: 'object', prompt: 'What was the snowman wearing on its head?', answer, wrong: Object.values(SNOWMAN_HATS).filter((n) => n !== answer), needs: 'snowman' },
+      ],
+    },
+    groups,
+    random,
+  );
+}
+
+function hideAnimal(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
   if (!d.values?.peek) return d;
   const spots = groups.filter((g) => HIDING_SPOTS[g.kind] && g.count === 1).map((g) => g.kind);
   if (!spots.length) return d;

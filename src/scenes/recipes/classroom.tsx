@@ -515,21 +515,25 @@ const items: ItemDef[] = [
     maxCount: 1,
     countable: false,
     tone: '#6b4423',
-    draw: () => (
+    // 1 to 4 fish, chosen per picture: "How many fish were in the fish tank?".
+    draw: (_colour, details) => (
       <G>
         <Rect x={10} y={80} width={110} height={60} rx={3} fill="#6b4423" />
         <Rect x={0} y={4} width={130} height={76} rx={4} fill="#a5d8ff" stroke="#495057" strokeWidth={4} />
         <G stroke="none">
           <Rect x={4} y={66} width={122} height={12} fill="#e9c46a" />
           <Path d="M26,66 Q22,46 30,30 M36,66 Q42,50 36,36" fill="none" stroke="#2b9348" strokeWidth={4} />
-          <Path d="M64,34 Q76,24 88,34 Q76,44 64,34 Z M88,34 L98,26 V42 Z" fill="#f77f00" />
-          <Path d="M84,54 Q94,46 104,54 Q94,62 84,54 Z M84,54 L76,48 V60 Z" fill="#ffd60a" />
-          {/* Eyes on the fish, bubbles rising, pebbles, a lid with a light, glare and cupboard doors. */}
-          <Circle cx={70} cy={33} r={1.8} fill="#212529" />
-          <Circle cx={98} cy={53} r={1.8} fill="#212529" />
-          <Circle cx={110} cy={40} r={3} fill="#ffffff" fillOpacity={0.8} />
-          <Circle cx={114} cy={28} r={2.5} fill="#ffffff" fillOpacity={0.8} />
-          <Circle cx={110} cy={18} r={2} fill="#ffffff" fillOpacity={0.8} />
+          {/* The fish, each well apart so they can be counted, facing this way and that. */}
+          {TANK_FISH.slice(0, Math.max(1, Math.min(4, Number(details?.values?.tankFish ?? 2)))).map(([x, y, fill, dir]) => (
+            <G key={`${x}-${y}`} transform={`translate(${x} ${y}) scale(${dir} 1)`}>
+              <Path d="M-12,0 Q0,-10 12,0 Q0,10 -12,0 Z M-12,0 L-20,-7 V7 Z" fill={fill} stroke="#7a3e00" strokeWidth={1.2} />
+              <Circle cx={6} cy={-1} r={1.8} fill="#212529" />
+            </G>
+          ))}
+          {/* Bubbles rising, pebbles, a lid with a light, glare and cupboard doors. */}
+          <Circle cx={120} cy={40} r={3} fill="#ffffff" fillOpacity={0.8} />
+          <Circle cx={123} cy={28} r={2.5} fill="#ffffff" fillOpacity={0.8} />
+          <Circle cx={120} cy={18} r={2} fill="#ffffff" fillOpacity={0.8} />
           {[14, 30, 50, 70, 90, 110].map((x) => (
             <Ellipse key={x} cx={x} cy={72} rx={5} ry={3} fill="#c9a227" />
           ))}
@@ -613,15 +617,25 @@ function sumLookalikes(a: number, op: Op, b: number): string[] {
 }
 
 /** The time on the clock, and the day and sum the teacher wrote on the board, chosen per picture. */
+/** Where the fish in the tank swim, in order for 1 to 4: [x, y, colour, 1 facing right or -1 facing left]. */
+const TANK_FISH: [number, number, string, number][] = [
+  [72, 30, '#f77f00', 1],
+  [100, 54, '#ffd60a', -1],
+  [52, 52, '#ff6b9a', 1],
+  [104, 24, '#4dabf7', -1],
+];
+
 function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
   const time = randomTime(random, clockStep);
+  const tankFish = random.int(1, 4);
   const { close, other } = timeLookalikes(time, clockStep);
   const day = random.pick(DAYS);
   const { a, op, b } = randomSum(random);
   const sum = `${a} ${op} ${b}`;
   return {
-    values: { clock: time, day, sum },
+    values: { clock: time, day, sum, tankFish: String(tankFish) },
     facts: [
+      { id: 'tank-fish', family: 'story', type: 'count', prompt: 'How many fish were in the fish tank?', answer: String(tankFish), wrong: ['1', '2', '3', '4', '5'].filter((n) => n !== String(tankFish)), needs: 'fish-tank' },
       { id: 'clock-time', type: 'number', prompt: 'What time was on the clock?', answer: time, wrong: close, fallback: other, needs: 'wall-clock', everyLevel: true, spotlight: true },
       { id: 'board-day', type: 'object', prompt: 'What day was written on the board?', answer: day, wrong: DAYS.filter((d) => d !== day) },
       { id: 'board-sum', type: 'number', prompt: 'What sum was on the board?', answer: sum, wrong: sumLookalikes(a, op, b) },

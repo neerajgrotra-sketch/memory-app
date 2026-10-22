@@ -4,7 +4,7 @@ import { Circle, Ellipse, G, Path, Rect, Text as SvgText } from 'react-native-sv
 import { C } from '../colours';
 import { lineMarks } from '../marks';
 import type { Rng } from '../random';
-import type { ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import type { ItemDef, Mark, PlacedGroup, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
 import { speckles } from '../texture';
 
 /**
@@ -344,8 +344,23 @@ const items: ItemDef[] = [
     zones: FLOOR,
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.yellow],
-    draw: (colour) => (
+    // A basket on its own may have apples or a loaf of bread in it (see `fitDetails`).
+    draw: (colour, details) => (
       <G>
+        {details?.values?.basket === 'apples' && (
+          // Red apples, or green ones in a red basket, piled up above the rim so they show.
+          <G fill={colour === C.red.hex ? '#8ac926' : '#e63946'} stroke={colour === C.red.hex ? '#4f7a12' : '#9b1c26'} strokeWidth={2}>
+            <Circle cx={30} cy={16} r={9} />
+            <Circle cx={60} cy={16} r={9} />
+            <Circle cx={45} cy={11} r={9} />
+          </G>
+        )}
+        {details?.values?.basket === 'bread' && (
+          <G>
+            <Ellipse cx={45} cy={16} rx={20} ry={9} fill="#c98b4a" stroke="#8a5a2b" strokeWidth={2} />
+            <Path d="M34,13 l4,-4 M44,12 l4,-4 M54,13 l4,-4" stroke="#8a5a2b" strokeWidth={2} strokeLinecap="round" />
+          </G>
+        )}
         <Path d="M22,24 Q22,2 45,2 Q68,2 68,24" fill="none" stroke={colour} strokeWidth={7} />
         <Path d="M4,22 H86 L77,63 H13 Z" fill={colour} />
         <G fill="#ffffff" fillOpacity={0.5} stroke="none">
@@ -607,6 +622,24 @@ function puddle(fill: string, edge: string) {
   );
 }
 
+/** What can be in a shopping basket on its own, and how answers name it. */
+const BASKET_CONTENTS: Record<string, string> = { apples: 'Apples', bread: 'A loaf of bread', '': 'Nothing, it was empty' };
+
+/** Once things are placed: what's in a shopping basket, when there's one. */
+function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  if (groups.find((g) => g.kind === 'basket')?.count !== 1) return d;
+  const basket = random.pick(Object.keys(BASKET_CONTENTS));
+  const answer = BASKET_CONTENTS[basket];
+  return {
+    ...d,
+    values: { ...d.values, basket },
+    facts: [
+      ...(d.facts ?? []),
+      { id: 'basket', family: 'story', type: 'object', prompt: 'What was in the shopping basket?', answer, wrong: Object.values(BASKET_CONTENTS).filter((n) => n !== answer), needs: 'basket' },
+    ],
+  };
+}
+
 /** What can be spilled on the floor (see the `spill` item). */
 const SPILLS: { name: string; draw: () => ReactElement }[] = [
   {
@@ -742,6 +775,7 @@ function details(random: Rng): SceneDetails {
       { id: 'deal', type: 'object', prompt: 'What did the offer sign say?', answer: deal.name, wrong: DEALS.filter((x) => x !== deal).map((x) => x.name) },
       {
         id: 'spill',
+        family: 'story',
         type: 'object',
         prompt: 'What had spilled on the floor?',
         answer: spill.name,
@@ -921,6 +955,7 @@ export const supermarket: Recipe = {
   ],
   items,
   details,
+  fitDetails,
   // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
   light: [
     // The ceiling, darker towards the shelves.

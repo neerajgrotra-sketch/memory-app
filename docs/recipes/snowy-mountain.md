@@ -21,6 +21,8 @@ White and yellow can't be seen on snow, so coats, jackets and scarves come in re
 
 ## Things (16)
 
+- **What's happening:** a snowman on its own wears a top hat, a woolly hat or a bucket ("What was the snowman wearing on its head?").
+
 - **Sky:** the sun, birds, a plane, cable cars on one cable running right across the sky (spread apart, never mirrored so the cables stay parallel; cabin colour asked).
 - **Ski slope:** skiers and snowboarders (jacket colour asked), a ski racer with a bib number, slalom flags (red or blue, spread apart), pine trees (tall, at the back of the slope, spread apart).
 - **By the lodge:** people in winter coats, dogs, snowmen (scarf colour asked), sledges, a ski rack, a hot chocolate stand (roof colour asked), a snowmobile.

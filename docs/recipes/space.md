@@ -23,6 +23,8 @@ Black sky, grey dust. White spacesuits would vanish on the dust, so astronauts a
 
 ## Things (15)
 
+- **What's happening:** the rocket's engines are firing or not ("Was there fire coming out of the rocket?"); one astronaut on their own may hold a camera or a torch.
+
 - **Out in space:** the Earth, satellites, a rocket (fins colour asked, never mirrored), a space station, a comet.
 - **Near the hills:** a lunar lander (extra wide), a habitat pod (extra wide, stripe colour asked), solar panels (spread apart), a radio dish, a flag (held out by a bar at the top, because there's no wind on the Moon).
 - **Close by:** astronauts (backpack colour asked), a moon buggy (extra wide, seat colour asked), boulders, a little six-wheeled explorer robot, craters.

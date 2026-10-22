@@ -140,6 +140,12 @@ Things drawn differently per picture, about what was going on rather than readin
 | Zoo | "Was the elephant spraying water?" (trunk raised, a shower over its back) · "How many balloons was the balloon seller holding?" | Yes · No / 2 to 5 |
 | Kitchen | "Was the kettle steaming?" · "Was there toast in the toaster?" · "What was in the fruit bowl?" | Yes · No |
 | Under the sea | "What was the diver holding?" (one diver) · "What was in the treasure chest?" | A torch · A net · A camera · Nothing |
+| Space | "Was there fire coming out of the rocket?" · "What was the astronaut holding?" (one astronaut; not a flag or a rock, which are things of their own there) | Yes · No / A camera · A torch · Nothing |
+| Snowy mountain | "What was the snowman wearing on its head?" (one snowman) | A top hat · A woolly hat · A bucket |
+| Classroom | "How many fish were in the fish tank?" | 1 to 4 |
+| Train station | "How many people were looking out of the train’s windows?" (a passenger in each window or not) | None · 1 · 2 · 3 |
+| Airport | "Was the coffee kiosk open or closed?" (shut: its shutter down) | Open · Closed |
+| Supermarket | "What was in the shopping basket?" (one basket; green apples in a red basket) · "What had spilled on the floor?" | Apples · A loaf of bread · Nothing, it was empty |
 | Living room | the TV, the lamps on or off, the pets' toys, where the cat was, and: | |
 | Living room | "What was in the picture frame?" (one frame; a second frame shows another picture, so no question) | Hills and a lake · A sailing boat · Flowers in a vase · A house and a tree |
 | City street | "Which house had smoke coming out of its chimney?" (each house has a chimney; smoke from one, or now and then none) | The yellow / pink / … house (the street's own colours) · None of them |

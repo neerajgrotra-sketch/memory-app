@@ -427,7 +427,7 @@ Per-picture details: "What was the aisle number?"; "What was on special offer?";
 
 Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
 
-Per-picture details: "What time was the next train?" on every level; "Which platform was the next train leaving from?"; "Where was the next train going?"; "What time was on the station clock?" (when there's a station-clock) on every level.
+Per-picture details: "How many people were looking out of the train’s windows?" (when there's a train); "What time was the next train?" on every level; "Which platform was the next train leaving from?"; "Where was the next train going?"; "What time was on the station clock?" (when there's a station-clock) on every level.
 
 ### Colour schemes
 
@@ -556,7 +556,7 @@ Per-picture details: "Which animal was the danger sign about?"; "What number was
 
 Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
 
-Per-picture details: "What time was on the clock?" (when there's a wall-clock) on every level; "What day was written on the board?"; "What sum was on the board?".
+Per-picture details: "How many fish were in the fish tank?" (when there's a fish-tank); "What time was on the clock?" (when there's a wall-clock) on every level; "What day was written on the board?"; "What sum was on the board?".
 
 ### Colour schemes
 
@@ -640,7 +640,7 @@ Per-picture details: "What shape was the moon?" (when there's a moon); "What num
 
 Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
 
-Per-picture details: "Where was the flight on the screen going?"; "Which gate was the flight leaving from?"; "What was the flight number?".
+Per-picture details: "Was the coffee kiosk open or closed?" (when there's a coffee-kiosk); "Where was the flight on the screen going?"; "Which gate was the flight leaving from?"; "What was the flight number?".
 
 ### Colour schemes
 
@@ -682,7 +682,7 @@ Per-picture details: "Where was the flight on the screen going?"; "Which gate wa
 
 Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
 
-Per-picture details: "What was the mission called on the sign?"; "What number was the moon base on the sign?".
+Per-picture details: "Was there fire coming out of the rocket?" (when there's a rocket); "What was the mission called on the sign?"; "What number was the moon base on the sign?".
 
 ### Colour schemes
 
