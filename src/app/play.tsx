@@ -17,6 +17,7 @@ import { ResultStage } from '@/components/ResultStage';
 import { isPlayMode } from '@/game/difficulty';
 import { dailyResultOn, streakOf, type Streak } from '@/games/lookRemember/daily';
 import { peekSecondsFor } from '@/games/lookRemember/peeks';
+import { bossAt } from '@/games/lookRemember/boss';
 import { speedCounterOf, speedDue, speedGap, type SpeedCounter } from '@/games/lookRemember/speed';
 import { answeredOf, clearSavedRound, loadSavedRound, slotFor, type SavedRound } from '@/games/lookRemember/savedRound';
 import { loadProgress } from '@/hooks/useGameProgress';
@@ -245,6 +246,14 @@ function Game({ start }: { start: SessionStart & { streak: Streak; speed: SpeedC
           }}
           onContinue={() => setCelebrated(levelUpKey)}
           onClose={goBack}
+          onBoss={
+            bossAt(outcome.ladder.after.level)
+              ? () => {
+                  feedback('start');
+                  router.push({ pathname: '/boss', params: { level: String(outcome.ladder!.after.level) } });
+                }
+              : undefined
+          }
         />
       )}
 

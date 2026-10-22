@@ -183,7 +183,7 @@ export function summarize(
   { chartRounds = 20, sessionCount = 10 } = {},
 ): StatsSummary {
   // Super Speed Rounds (8 quick Yes / No questions, a bonus) aren't part of your scores, accuracy or levels.
-  const results = allResults.filter((r) => !r.speed).sort((a, b) => a.playedAt.localeCompare(b.playedAt));
+  const results = allResults.filter((r) => !r.speed && !r.boss).sort((a, b) => a.playedAt.localeCompare(b.playedAt));
 
   const levels = LEVEL_ORDER.map((level): LevelSummary => {
     const own = results.filter((r) => r.level === level);

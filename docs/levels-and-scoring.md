@@ -46,23 +46,23 @@ Every level brings one named new thing, shown on the level-up screen (`unlocksAt
 | 2 | The living room · up to 4 of one kind · 9 s to look · "Where was it?" questions | 17 | 9 kinds of thing · clocks at quarter past and to |
 | 3 | Questions about details: clocks, signs, what was on TV | 18 | The zoo · fewer colour questions |
 | 4 | The park · more on how many and where | 19 | Hiding animals show less of themselves |
-| 5 | 6 kinds of thing · two-step questions ("Only one kind of thing was on the pond. What colour was it?") | 20 | The snowy mountain · fewer "what was there" questions |
+| 5 | 6 kinds of thing · two-step questions ("Only one kind of thing was on the pond. What colour was it?") | 20 | The snowy mountain · fewer "what was there" questions · the Mountain Boss |
 | 6 | The city street, with house numbers and colours | 21 | 5 s to look |
 | 7 | Clocks at half past | 22 | The classroom |
 | 8 | The kitchen · more on numbers and times · 8 s | 23 | Mostly harder questions: how many, where and numbers |
 | 9 | 7 kinds of thing · above and below questions | 24 | The campsite at night |
-| 10 | The farm · up to 5 of one kind | 25 | 4 s to look |
+| 10 | The farm · up to 5 of one kind · the Farm Boss | 25 | 4 s to look |
 | 11 | Closer choices when counting · sums: "How many … and … altogether?" | 26 | The airport |
 | 12 | Under the sea · 7 s | 27 | Sums: "How many more … than …?" |
 | 13 | Animals hiding in the picture | 28 | The Moon, out in space |
 | 14 | The supermarket · 8 kinds of thing | 29 | Sharing (division): "If the … were split into two equal groups, how many in each?" |
-| 15 | Things in mixed colours (fish, sheep, plates, juice, hydrants) | 30 | *(kept for a final round)* |
+| 15 | Things in mixed colours (fish, sheep, plates, juice, hydrants) | 30 | The Final Boss |
 
 - **Kinds of question** come in one by one (`FAMILY_FROM`, as `LevelConfig.families`): what was there, not there, colour, same colour, true or false, how many / more or fewer / the most, and what was happening (story questions: the kettle steaming, the person's hat) from Level 1; where from 2; details from 3; two-step from 5; above and below from 9; altogether from 11; how many more from 27; sharing from 29. Practice asks everything.
 - **The question mix** (`preferredTypes`) moves in steps, at 4, 8 and 18, then "what was there" questions fade out in two: at most one a round from 20 (`typeCaps`), no longer preferred from 23. The share of hard questions (where, above / below, details) climbs from 0% to about 50% by at most about 7 points a level (one step at 23 used to be 15).
 - **Time and fullness:** look time 10 s, then 9 (2), 8 (8), 7 (12), 6 (16), 5 (21), 4 (25); kinds of thing 5, then 6 (5), 7 (9), 8 (14), 9 (17); most of one kind 3, then 4 (2), 5 (10), 6 (16). The seconds of looking per thing fall from 1.3 to 0.35 and never rise from one level to the next.
 - **No repeats in a row:** a round avoids the wordings (`Question.template`) of the round before ("How many … were there?" twice running), even over a less preferred question.
-- Level 30 (`LEVELS_TO_FILL`) is kept for the final round still to come.
+- Level 30 brings the final boss (below), so every level from 2 to 30 now brings something new (`LEVELS_TO_FILL` is empty).
 
 `npm run check:levels` keeps this true: something new on every level, no level easier than the one before (looking time per thing), no jump of more than 10 points in hard questions, no kind of question before its level, and 10-round sessions where no wording is asked much more than its share. The scene checker plays levels 1, 3, 4, 6, 8, 10, 13, 15, 17 and 30 on three phones with the places each has reached, and checks that no level asks for more than Hard.
 
@@ -96,6 +96,24 @@ A Peek is a second look at the picture while answering (`src/games/lookRemember/
 - **Testing:** Tester mode (tap the version in Profile 7 times) has an **Unlimited Peeks** switch (`profile.testPeeks`): peek on any question, any number of times (**Peek · ∞**). Those peeks aren't recorded, so they never come off your earned Peeks. Its **Peek time** setting (1 to 5 seconds, `profile.peekSeconds`, read through `peekSecondsFor` in `peeks.ts`) changes how long a Peek shows the picture, to find the best length; each peeked round saves the length used (`peekSeconds`). Each right answer after a peek still earns half points, and the round counts for your level as usual.
 - **Won:** a Super Speed Round also wins Peeks (below).
 - `npm run check:peeks` checks the rules.
+
+## Boss rounds
+
+A peak to climb to at Levels 10, 20 and 30 (`src/games/lookRemember/boss.ts`, `BOSSES` in `ladder.ts`, `BossRound`, the `/boss` screen).
+
+| Boss | Place | Kinds of thing | Look | The level itself |
+| --- | --- | --- | --- | --- |
+| Farm Boss (Level 10) | the Busy Farm | 9 | 7 s | 7 kinds, 8 s |
+| Mountain Boss (Level 20) | the Busy Mountain | 11 | 5 s | 9 kinds, 6 s |
+| Final Boss (Level 30) | the Busy Airport | 11 | 4 s | 9 kinds, 4 s |
+
+- **The picture** (`bossKnobs`): the level's settings with two more kinds of thing, up to one more of each, a second less to look (never under 4 s, plus "More time to look") and harder questions first (how many, where, numbers; at most one "what was there"). The looking time per thing is about that of the level ten above. (Two seconds less made the Level 20 boss harder than Level 30.) The Moon would be the final place, but it fits only one more kind of thing, so the final boss is the airport, which fits two.
+- **Beating it:** 4 of 5 right wins the badge, and the first win also brings a Peek (when there's room). No Peeks or 50:50s in a boss round, and points are doubled.
+- **When:** once you've reached its level (your best level, so dropping back keeps it open), from the **Boss rounds** card on the game page (gold once beaten, red to take on, grey with "Reach Level N"), and from the level-up screen's **Boss round** button. Try again as often as you like, with a new picture each time.
+- **The intro:** the badge drops and slams down with a drum hit, the screen shakes with a red flash (still with "reduce motion"), then the rules: how many kinds of thing against the usual, the look against the usual, and what wins. **Take it on** or **Not now**.
+- **Never counts against you:** saved with `boss` (its level), but never moves your level or counts for the high score, perfect rounds, the Progress tab or the speed round's count. Its points count towards Peeks. Leaving part way through saves nothing.
+- **Sounds:** `boss-intro` (drums and a dark chord) and `boss-win` (a fanfare); the gentle "aww" when the boss wins.
+- **Testing:** in tester mode every boss is open. `npm run check:boss` checks each boss is harder than its level, its pictures pass every scene rule on three iPhones and always give a round of 5, its level announces it, and badges are counted right.
 
 ## Super Speed Round
 

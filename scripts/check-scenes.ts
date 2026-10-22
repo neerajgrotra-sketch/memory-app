@@ -13,18 +13,14 @@ import { generateScene, relayoutScene } from '@/scenes/generateScene';
 import { RECIPES } from '@/scenes/recipes';
 import { facade } from '@/scenes/recipes/city';
 import { gapBetween } from '@/scenes/layout';
-import { TIERS, type SceneSize } from '@/scenes/types';
+import { TIERS } from '@/scenes/types';
 import { validateScene } from '@/scenes/validateScene';
+
+import { PHONES } from './check-scenes-phones';
 
 const SCENES_PER_CASE = Number(process.env.SCENES ?? 200);
 const MIN_QUESTIONS = 12;
 
-/** The picture area (below the 72 pt header, inside the safe area) on three iPhones. */
-export const PHONES: { name: string; size: SceneSize }[] = [
-  { name: 'iPhone SE 375×667', size: { width: 375, height: 667 - 20 - 72 } },
-  { name: 'iPhone 15 393×852', size: { width: 393, height: 852 - 59 - 34 - 72 } },
-  { name: 'iPhone Pro Max 430×932', size: { width: 430, height: 932 - 59 - 34 - 72 } },
-];
 
 let failed = false;
 const fail = (msg: string) => {

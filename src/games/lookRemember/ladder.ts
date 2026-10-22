@@ -123,7 +123,18 @@ export function knobsForLevel(rawLevel: number): LevelConfig {
 }
 
 /** Levels that bring nothing new yet: kept for the new kinds of question and round still to come. */
-export const LEVELS_TO_FILL = [30];
+export const LEVELS_TO_FILL: number[] = [];
+
+/**
+ * Boss rounds (see boss.ts): one at each of these levels, in a busy picture of one place, with a badge for beating it.
+ * Level 30's is the final boss, the top of the climb.
+ */
+export const BOSSES: { level: number; recipeId: string; name: string; badge: string }[] = [
+  { level: 10, recipeId: 'farm', name: 'the Busy Farm', badge: 'Farm Boss' },
+  { level: 20, recipeId: 'snowy-mountain', name: 'the Busy Mountain', badge: 'Mountain Boss' },
+  // The Moon would be the last place, but it fits only one more kind of thing; the airport fits two.
+  { level: 30, recipeId: 'airport', name: 'the Busy Airport', badge: 'Final Boss' },
+];
 
 /** The level each place first appears at. */
 export const RECIPE_UNLOCKS: { recipeId: string; level: number; name: string }[] = [
@@ -170,6 +181,7 @@ export function unlocksAt(level: number): string[] {
   const now = knobsForLevel(level);
   const news: string[] = [];
   for (const r of RECIPE_UNLOCKS) if (r.level === level) news.push(`A new place: ${r.name}`);
+  for (const b of BOSSES) if (b.level === level) news.push(`A boss round: beat ${b.name} to win the ${b.badge} badge`);
   if (streetHouses(level) && !streetHouses(level - 1)) news.push('House numbers and colours to remember in the street');
   if (now.mixedColours && !before.mixedColours) news.push('Fish, sheep, plates and more can each be a different colour');
   if (now.clockStep < before.clockStep) news.push(now.clockStep === 30 ? 'Clocks can show half past' : 'Clocks can show quarter past and quarter to');
@@ -197,6 +209,8 @@ export function nextBigUnlock(level: number): { level: number; text: string } | 
     const now = knobsForLevel(l);
     const place = RECIPE_UNLOCKS.find((r) => r.level === l);
     if (place) return { level: l, text: `A new place: ${place.name}` };
+    const boss = BOSSES.find((b) => b.level === l);
+    if (boss) return { level: l, text: `A boss round: ${boss.name}` };
     const family = newFamilies(before, now)[0];
     if (family) return { level: l, text: FAMILY_NEWS[family]!.replace(/^New questions( about)?: /, '').replace(/^./, (c) => c.toUpperCase()) };
 

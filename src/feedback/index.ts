@@ -21,7 +21,9 @@ export type Moment =
   | 'speedGo'
   | 'speedTick'
   | 'speedTimeout'
-  | 'speedPrize';
+  | 'speedPrize'
+  | 'bossIntro'
+  | 'bossWin';
 
 const SOUNDS: Record<Moment, number> = {
   start: require('../../assets/sounds/start.mp3'),
@@ -38,6 +40,8 @@ const SOUNDS: Record<Moment, number> = {
   speedTick: require('../../assets/sounds/speed-tick.mp3'),
   speedTimeout: require('../../assets/sounds/speed-timeout.mp3'),
   speedPrize: require('../../assets/sounds/speed-prize.mp3'),
+  bossIntro: require('../../assets/sounds/boss-intro.mp3'),
+  bossWin: require('../../assets/sounds/boss-win.mp3'),
 };
 
 /** Kept quiet so they sit under the game, never over it. */
@@ -58,6 +62,8 @@ const VOLUME: Record<Moment, number> = {
   speedTick: 0.6,
   speedTimeout: 0.5,
   speedPrize: 0.7,
+  bossIntro: 0.8,
+  bossWin: 0.75,
 };
 
 /** No vibration for the countdown ticks: a buzz every second would be too much. */
@@ -76,6 +82,8 @@ const HAPTICS: Record<Moment, (() => Promise<void>) | null> = {
   speedTick: null,
   speedTimeout: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning),
   speedPrize: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
+  bossIntro: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
+  bossWin: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
 };
 
 const prefs = { sound: true, haptics: true };

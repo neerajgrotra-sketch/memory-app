@@ -10,6 +10,16 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.11.0 (2026-10-22)
+
+- **Boss rounds at Levels 10, 20 and 30.** A peak to climb to at each milestone: the Busy Farm (Farm Boss), the Busy Mountain (Mountain Boss) and the Busy Airport (the Final Boss). Each is a busy picture with two more kinds of thing than its level, a second less to look and harder questions (how many, where, numbers), about as hard as the level ten above. Get 4 of 5 right to win its badge; the first win also brings a Peek. Double points, no Peeks or 50:50s, and it never changes your level.
+  - The badge slams down with a drum hit and the screen shakes, then the rules show against the usual ("9 kinds of thing to remember (usually 7)"). **Take it on** or **Not now**.
+  - Take a boss on from the new **Boss rounds** card on the game page (gold once beaten, red to take on, grey until you reach its level), or from the level-up screen's **Boss round** button. Try again as often as you like, with a new picture each time.
+  - Its own sounds: drums and a dark chord for the intro, a fanfare for the win.
+- **Every level now brings something new:** Level 30, kept empty until now, brings the Final Boss.
+- **The level-up screen fits an iPhone SE:** with four headlines and three buttons, the buttons covered the news. The ring is smaller on short phones, the news scrolls, and the two smaller buttons sit side by side.
+- `npm run check:boss` checks each boss on 450 pictures across three iPhones.
+
 ## 4.10.3 (2026-10-22)
 
 - **"Not now" for the Super Speed Round.** Its intro now has a **Not now** button under Start, to skip it and go straight on to the next picture. The next one then comes 4 to 6 rounds later, as after playing one, so it doesn't keep coming back. A skipped one isn't counted as a round played.

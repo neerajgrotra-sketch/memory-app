@@ -35,6 +35,11 @@ export interface RoundResult {
    * level, high score, perfect rounds or accuracy.
    */
   speed?: boolean;
+  /**
+   * A boss round (see games/lookRemember/boss): the boss's level. 4 of 5 beats it. Never counted for level, high score,
+   * perfect rounds or accuracy.
+   */
+  boss?: number;
   /** A Super Speed Round turned down with "Not now": saved only so the next one comes a few rounds later. */
   skipped?: boolean;
   /** Prizes this round won: Peeks and 50:50s. */

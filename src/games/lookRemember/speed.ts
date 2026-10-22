@@ -88,7 +88,7 @@ export function speedCounterOf(results: RoundResult[]): SpeedCounter {
   sorted.forEach((r, i) => {
     if (r.speed) last = i;
   });
-  const since = sorted.slice(last + 1).filter((r) => r.mode === 'levels' && !r.replay && !r.speed).length;
+  const since = sorted.slice(last + 1).filter((r) => r.mode === 'levels' && !r.replay && !r.speed && !r.boss).length;
   return { since, gap: speedGap(last >= 0 ? sorted[last].id : 'first') };
 }
 

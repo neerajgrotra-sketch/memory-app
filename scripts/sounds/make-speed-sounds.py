@@ -1,10 +1,12 @@
-# The Super Speed Round's sounds, made from scratch (no samples): python3 scripts/sounds/make-speed-sounds.py assets/sounds
+# The Super Speed Round's and boss rounds' sounds, made from scratch (no samples): python3 scripts/sounds/make-speed-sounds.py assets/sounds
 #   speed-intro    the lightning: a quick whoosh, a crackling zap as the bolt lands (0.15 s), thunder under it,
 #                  then a bright stab as the title comes up (0.5 s)
 #   speed-go       Start: a racing run of four notes up
 #   speed-tick     the last two seconds of each question: a tight, urgent clock tick
 #   speed-timeout  too slow: a short double buzzer
 #   speed-prize    a prize won: a fanfare run up into a chord, with sparkles
+#   boss-intro     a boss round: two heavy drum hits (the badge slams down on the second, 0.28 s), then a dark chord
+#   boss-win       a boss beaten: a fanfare into a big held chord, a drum under it, sparkles
 import numpy as np, subprocess, sys
 SR = 44100
 rng = np.random.default_rng(11)
@@ -117,4 +119,39 @@ for _ in range(14):
     f = rng.uniform(2600, 5200)
     place(buf, tone(f, 0.12, 'sine', decay=0.03) * rng.uniform(0.15, 0.35), rng.uniform(0.3, 1.05))
 write('speed-prize', buf, -5)
+
+
+def drum(seconds=0.6, f0=110, f1=45):
+    """A big low drum: a falling sine with a click of noise on the hit."""
+    t = t_of(seconds)
+    f = f1 + (f0 - f1) * np.exp(-t * 18)
+    body = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t / 0.22)
+    hit = bandpass(rng.standard_normal(len(t)), 1500, 6000) * np.exp(-t / 0.01) * 0.5
+    env_tail = np.clip((seconds - t) / 0.05, 0, 1)
+    return (body + hit) * env_tail
+
+
+# --- boss-intro (1.7 s) --------------------------------------------------------------------------------------------
+buf = np.zeros(int(SR * 1.7))
+place(buf, drum() * 1.0, 0.0)
+place(buf, drum(0.8, 120, 40) * 1.3, 0.28)
+# A cymbal swell into the second hit.
+sw = t_of(0.3)
+place(buf, bandpass(rng.standard_normal(len(sw)), 4000, 12000) * (sw / 0.3) ** 2 * 0.25, 0.0)
+# The dark chord: A minor, low, swelling in slowly, with a held low A under it.
+for n, a in ((45, 0.5), (57, 0.3), (60, 0.25), (64, 0.25), (69, 0.15)):
+    note = tone(NOTE(n), 1.15, 'saw', decay=0.9, attack=0.12) * a
+    place(buf, lowpass(np.pad(note, (0, 2000)), 1800)[:len(note)], 0.5)
+write('boss-intro', buf, -3)
+
+# --- boss-win (2.0 s) ----------------------------------------------------------------------------------------------
+buf = np.zeros(int(SR * 2.0))
+for i, n in enumerate((67, 72, 76, 79)):
+    place(buf, tone(NOTE(n), 0.14, 'square', decay=0.09) * 0.7, i * 0.09)
+place(buf, drum(0.9, 100, 50) * 0.8, 0.36)
+for n in (60, 64, 67, 72, 76, 79):
+    place(buf, tone(NOTE(n), 1.5, 'saw', decay=0.6, attack=0.01) * 0.18, 0.36)
+for _ in range(20):
+    place(buf, tone(rng.uniform(2600, 5600), 0.12, 'sine', decay=0.03) * rng.uniform(0.15, 0.35), rng.uniform(0.4, 1.6))
+write('boss-win', buf, -3)
 print('ok')

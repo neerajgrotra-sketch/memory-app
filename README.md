@@ -13,9 +13,9 @@ Checks: `npm run typecheck`, `npm run lint` and `npm run check:scenes` (the leve
 
 Every change bumps the version (shown on the Games tab). See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
 
-## Status (4.10.3)
+## Status (4.11.0)
 
-- **Works:** the Look & Remember game with 30 levels, 15 places, points, the Daily Challenge and streak, Peeks, a surprise Super Speed Round and 50:50s, sounds and vibration. Played and tested in the browser (Expo web), with every automated check passing.
+- **Works:** the Look & Remember game with 30 levels, 15 places, points, the Daily Challenge and streak, Peeks, a surprise Super Speed Round and 50:50s, boss rounds with badges at Levels 10, 20 and 30, sounds and vibration. Played and tested in the browser (Expo web), with every automated check passing.
 - **Ready, not yet run:** builds for real phones with EAS: TestFlight for iPhone, an APK for Android ([docs/building.md](docs/building.md)).
 - **Not yet done:** testing on real phones, crash reporting and analytics, accounts with cloud sync, family profiles, a second game, a professional sound set (the current sounds are placeholders; background music is parked), a colour-blind mode, and a privacy policy and store listing.
 - **Branches:** `claude/glance-memory-game-sxcej5` is the main line of work (4.0.0 merged the `claude/glance-games-hub` beta branch into it); `main` is the release line, updated by pull request. New work goes on a short-lived branch per change, not a long-running beta.
@@ -41,7 +41,7 @@ Closing the app part way through (or leaving with ✕, which asks first) keeps t
 
 4. **Result**: your points with how they were earned, how the round moved your level, and every question with all its options (the right answer in green, your wrong pick in red). Tap the picture to see it full size. The main button plays a new picture at your level (**Try again**, **Keep going** or **Play Level N**). After a weaker round, and always in Practice, **Same picture again** replays the picture with different questions as practice: it never moves your level or sets a high score.
 
-**Levels** run from 1 to 30. 3 good rounds (4 or 5 right) take you up a level; 2 very poor rounds in a row (0 or 1 right) take you back one. Your best level never goes down. Every level brings one named new thing: a new place on the even levels (living room at 2, park at 4, city street at 6, kitchen at 8, farm at 10, under the sea at 12, supermarket at 14, train station at 16, zoo at 18, snowy mountain at 20, classroom at 22, night campsite at 24, airport at 26, the Moon at 28), and on the odd ones a new kind of question (details at 3, above and below at 9), a twist (half-past clocks at 7, closer counting at 11, hiding animals at 13, mixed colours at 15) or a step in time or fullness. Sums and sharing come at 11, 27 and 29; Level 30 is kept for a final round still to come. Players from before levels start at a level worked out from their earlier rounds.
+**Levels** run from 1 to 30. 3 good rounds (4 or 5 right) take you up a level; 2 very poor rounds in a row (0 or 1 right) take you back one. Your best level never goes down. Every level brings one named new thing: a new place on the even levels (living room at 2, park at 4, city street at 6, kitchen at 8, farm at 10, under the sea at 12, supermarket at 14, train station at 16, zoo at 18, snowy mountain at 20, classroom at 22, night campsite at 24, airport at 26, the Moon at 28), and on the odd ones a new kind of question (details at 3, above and below at 9), a twist (half-past clocks at 7, closer counting at 11, hiding animals at 13, mixed colours at 15) or a step in time or fullness. Sums and sharing come at 11, 27 and 29. Levels 10, 20 and 30 each bring a boss round, with Level 30's the final boss. Players from before levels start at a level worked out from their earlier rounds.
 
 **Points**: each right answer scores 100 at Level 1, plus 10 per level. Right answers in a row add a bonus (+20, +40, +60…), and so does tapping **I'm ready** early (5 points per spare second per right answer). Slow answers never cost points.
 
@@ -98,6 +98,7 @@ scripts/
   check-daily.ts       npm run check:daily: streak and Daily Challenge rules, in two time zones
   check-peeks.ts       npm run check:peeks: earning, holding and spending Peeks
   check-speed.ts       npm run check:speed: the Super Speed Round's questions, timing and prizes, and 50:50s
+  check-boss.ts        npm run check:boss: boss rounds harder than their levels, valid pictures on every phone, badges
   gallery.tsx          npm run gallery: pictures to gallery.html for reviewing by eye
   lineup.tsx           npm run lineup: a recipe's things side by side at their real sizes
   recipe-reference.ts  npm run docs:recipes: regenerates docs/recipes/reference.md and question examples
