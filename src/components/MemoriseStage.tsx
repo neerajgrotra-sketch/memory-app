@@ -21,6 +21,8 @@ interface MemoriseStageProps {
   /** A coach's tip over the bottom of the picture for its first few seconds (the guided first round), then gone, so
    * it never hides what's to be remembered for long. */
   hint?: string;
+  /** Holds the countdown (a "leave?" question showing over the picture). */
+  paused?: boolean;
 }
 
 /** How long the coach's tip stays over the picture. */
@@ -34,7 +36,7 @@ const READY_DELAY_MS = 1000;
  * the quit button, so nothing floating in the top-right corner (like Expo Go's tools button) can hide it.
  * The picture fills the rest, down to the bottom safe-area inset.
  */
-export function MemoriseStage({ scene, seconds, onDone, onQuit, hint }: MemoriseStageProps) {
+export function MemoriseStage({ scene, seconds, onDone, onQuit, hint, paused = false }: MemoriseStageProps) {
   const overlay = useLayoutOverlay();
   const [showHint, setShowHint] = useState(!!hint);
   useEffect(() => {
@@ -94,7 +96,7 @@ export function MemoriseStage({ scene, seconds, onDone, onQuit, hint }: Memorise
           </Pressable>
         )}
         {/* While the layout overlay is on, or the app is in the background, the timer waits. */}
-        <Countdown seconds={seconds} running={!overlay && active} onComplete={() => finish(seconds)} onTick={onTick} />
+        <Countdown seconds={seconds} running={!overlay && active && !paused} onComplete={() => finish(seconds)} onTick={onTick} />
         <SoundToggle />
         {/* Ready before the time is up: a deliberate button, never a tap on the picture itself. */}
         <Pressable

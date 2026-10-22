@@ -5,8 +5,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AnswerOption, type OptionStatus } from '@/components/AnswerOption';
 import { Button } from '@/components/Button';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { MemoriseStage } from '@/components/MemoriseStage';
 import { PeekView } from '@/components/PeekView';
+import { QuitButton } from '@/components/QuitButton';
 import { feedback } from '@/feedback';
 import { toRoundQuestion } from '@/game/selectQuestions';
 import { knobsForLevel } from '@/games/lookRemember/ladder';
@@ -54,6 +56,8 @@ interface GuidedRoundProps {
   onDone: () => void;
   /** "Skip, I know how to play". */
   onSkip: () => void;
+  /** ✕ during the practice, after "Leave?": back where you came from. The practice isn't done, so it's offered again. */
+  onLeave: () => void;
   /** The button on the last card: "Start Level 1", or "Back to the game" when replayed. */
   doneLabel: string;
 }
@@ -63,7 +67,7 @@ interface GuidedRoundProps {
  * 20 seconds with a tip, three coached questions (what was there, a colour, how many, with a Peek to try), then what
  * real rounds are like. Nothing is saved: it never counts towards a level.
  */
-export function GuidedRound({ size, onDone, onSkip, doneLabel }: GuidedRoundProps) {
+export function GuidedRound({ size, onDone, onSkip, onLeave, doneLabel }: GuidedRoundProps) {
   const [step, setStep] = useState<Step>('intro');
   const makeStage = (attempt: number) =>
     createStage({ ...knobsForLevel(1), groups: PRACTICE_KINDS, viewSeconds: PRACTICE_SECONDS }, size, undefined, PRACTICE_SEEDS[attempt % PRACTICE_SEEDS.length], {
@@ -78,6 +82,22 @@ export function GuidedRound({ size, onDone, onSkip, doneLabel }: GuidedRoundProp
   const [right, setRight] = useState(0);
   const [peeking, setPeeking] = useState(false);
   const [peeked, setPeeked] = useState(false);
+  // ✕ asks first: leaving mid-practice once went straight to Level 1, which confused testers.
+  const [leaving, setLeaving] = useState(false);
+  const leaveDialog = (
+    <ConfirmDialog
+      visible={leaving}
+      title="Leave the practice?"
+      message="You can practise next time you play, or skip it then."
+      cancelLabel="Keep practising"
+      confirmLabel="Leave"
+      onCancel={() => setLeaving(false)}
+      onConfirm={() => {
+        setLeaving(false);
+        onLeave();
+      }}
+    />
+  );
 
   if (step === 'intro') {
     return (
@@ -116,13 +136,18 @@ export function GuidedRound({ size, onDone, onSkip, doneLabel }: GuidedRoundProp
 
   if (step === 'look') {
     return (
-      <MemoriseStage
-        scene={stage.scene}
-        seconds={PRACTICE_SECONDS}
-        hint={`Look closely: what’s there, how many and what colour. You have ${PRACTICE_SECONDS} seconds, or tap I’m ready.`}
-        onDone={() => setStep('quiz')}
-        onQuit={onSkip}
-      />
+      <View style={styles.screen}>
+        <MemoriseStage
+          key={stage.scene.id}
+          scene={stage.scene}
+          seconds={PRACTICE_SECONDS}
+          hint={`Look closely: what’s there, how many and what colour. You have ${PRACTICE_SECONDS} seconds, or tap I’m ready.`}
+          onDone={() => setStep('quiz')}
+          onQuit={() => setLeaving(true)}
+          paused={leaving}
+        />
+        {leaveDialog}
+      </View>
     );
   }
 
@@ -153,7 +178,10 @@ export function GuidedRound({ size, onDone, onSkip, doneLabel }: GuidedRoundProp
         <SafeAreaView style={styles.screen}>
           <ScrollView contentContainerStyle={styles.quiz}>
             <View style={styles.quizHeader}>
-              <Text style={styles.practiceTag}>Practice</Text>
+              <View style={styles.quizHeaderLeft}>
+                <QuitButton onPress={() => setLeaving(true)} />
+                <Text style={styles.practiceTag}>Practice</Text>
+              </View>
               <Text style={styles.progress}>
                 Question {index + 1} of {questions.length}
               </Text>
@@ -192,6 +220,7 @@ export function GuidedRound({ size, onDone, onSkip, doneLabel }: GuidedRoundProp
           <View style={styles.actions}>{answered && <Button label={index + 1 < questions.length ? 'Next question' : 'Finish practice'} onPress={next} />}</View>
         </SafeAreaView>
         {peeking && <PeekView scene={stage.scene} onDone={() => setPeeking(false)} />}
+        {leaveDialog}
       </View>
     );
   }
@@ -286,6 +315,7 @@ const styles = StyleSheet.create({
   actions: { paddingHorizontal: 24, paddingTop: 8, paddingBottom: 24, gap: 12, width: '100%', maxWidth: 520, alignSelf: 'center', minHeight: 84 },
   quiz: { flexGrow: 1, width: '100%', maxWidth: 520, alignSelf: 'center', padding: 24, gap: 16 },
   quizHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  quizHeaderLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   practiceTag: { color: colors.accentText, backgroundColor: colors.accent, borderRadius: radius.pill, paddingHorizontal: 12, paddingVertical: 4, fontSize: 13, fontWeight: '900', overflow: 'hidden', textTransform: 'uppercase', letterSpacing: 1 },
   progress: { color: colors.textMuted, fontSize: 15, fontWeight: '600' },
   quizBody: { flexGrow: 1, justifyContent: 'center', gap: 16 },

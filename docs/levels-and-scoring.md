@@ -107,6 +107,8 @@ A new player's first **Play** in Levels starts with a practice round (`GuidedRou
 4. **2 or 3 right: You're ready!** What real rounds are like (5 questions, a shorter look, 3 good rounds to go up, Peeks, the surprises on the journey), then **Start Level 1**.
    **0 or 1 right: Let's practise once more** (tester feedback: "You're ready!" after 0 of 3 rang false). A tip that helps ("say what you see in your head: two kites, one boat, something red…") and **Practise again** with a new practice picture (four beaches, `PRACTICE_SEEDS`), so it's practice, not remembering the last answers. **Start Level 1 anyway** is always there: practice is never forced.
 
+**✕ during the practice** (the picture or the questions) asks **Leave the practice?**, with the countdown held: **Keep practising**, or **Leave** to go back where you came from. Leaving doesn't count as done, so the practice is offered again next time. (Until 4.14.2 the ✕ on the picture skipped straight to Level 1, which confused testers.)
+
 Nothing is saved, so it never counts towards a level. Playing or skipping it sets `profile.guided`, so it doesn't come again; **Play the practice round** in How to play replays it.
 
 ## The journey
