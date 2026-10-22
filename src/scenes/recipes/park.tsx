@@ -5,7 +5,7 @@ import { C } from '../colours';
 import { balloon, bird, cloudShape, dog, kite, person, plane, sun, tree } from '../items/common';
 import { lineMarks, scatterMarks } from '../marks';
 import type { Rng } from '../random';
-import type { DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import type { DetailFact, DetailKnobs, ItemDef, Mark, PlacedGroup, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
 import { glints, speckles, strokes } from '../texture';
 
 /**
@@ -167,7 +167,8 @@ const items: ItemDef[] = [
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.orange, C.purple],
     colourPrompt: (plural) => (plural ? 'What colour were the bicycles?' : 'What colour was the bicycle?'),
-    draw: (colour) => (
+    // Ridden or parked on its stand, chosen per bicycle once placed (see `fitDetails`): "Was anyone riding it?".
+    draw: (colour, details, _copy, index = 0) => (
       <G>
         <G fill="none" stroke="#343a40" strokeWidth={6}>
           <Circle cx={25} cy={94} r={22} />
@@ -181,13 +182,20 @@ const items: ItemDef[] = [
         <Circle cx={58} cy={94} r={7} fill="none" stroke="#495057" strokeWidth={3} />
         <Path d="M25,94 L48,62 H86 L95,94 M48,62 L58,94 L25,94 M58,94 L86,62" fill="none" stroke={colour} strokeWidth={7} strokeLinejoin="round" />
         <Path d="M86,62 L84,46 H94" fill="none" stroke="#343a40" strokeWidth={5} strokeLinecap="round" />
-        {/* The rider: body leaning forward, hands on the handlebar, a foot on the pedal, in a helmet. */}
-        <Path d="M52,56 L62,94" fill="none" stroke="#343a40" strokeWidth={8} strokeLinecap="round" />
-        <Path d="M52,56 L62,20" fill="none" stroke="#457b9d" strokeWidth={16} strokeLinecap="round" />
-        <Path d="M62,26 L86,46" fill="none" stroke="#457b9d" strokeWidth={7} strokeLinecap="round" />
-        <Circle cx={66} cy={10} r={10} fill="#e0ac69" />
-        <Path d="M55,8 Q60,-4 72,-1 Q78,2 77,9 Z" fill="#ffd60a" stroke="none" />
-        <Circle cx={71} cy={11} r={1.4} fill="#2b2b2b" stroke="none" />
+        {details?.values?.riders?.[index] === '0' ? (
+          // Parked: up on its kickstand, nobody on it.
+          <Path d="M58,94 L48,116" fill="none" stroke="#343a40" strokeWidth={4} strokeLinecap="round" />
+        ) : (
+          <G>
+            {/* The rider: body leaning forward, hands on the handlebar, a foot on the pedal, in a helmet. */}
+            <Path d="M52,56 L62,94" fill="none" stroke="#343a40" strokeWidth={8} strokeLinecap="round" />
+            <Path d="M52,56 L62,20" fill="none" stroke="#457b9d" strokeWidth={16} strokeLinecap="round" />
+            <Path d="M62,26 L86,46" fill="none" stroke="#457b9d" strokeWidth={7} strokeLinecap="round" />
+            <Circle cx={66} cy={10} r={10} fill="#e0ac69" />
+            <Path d="M55,8 Q60,-4 72,-1 Q78,2 77,9 Z" fill="#ffd60a" stroke="none" />
+            <Circle cx={71} cy={11} r={1.4} fill="#2b2b2b" stroke="none" />
+          </G>
+        )}
         <Rect x={40} y={54} width={18} height={6} rx={3} fill="#343a40" />
       </G>
     ),
@@ -447,6 +455,26 @@ function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
   };
 }
 
+/** Once the bicycles are placed: who's riding one (one per copy, left to right: "1" ridden, "0" parked). */
+function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  const bikes = groups.find((g) => g.kind === 'bicycle')?.count ?? 0;
+  if (!bikes) return d;
+  const riders = Array.from({ length: bikes }, () => (random.next() < 0.5 ? '1' : '0')).join('');
+  const ridden = [...riders].filter((r) => r === '1').length;
+  const fact: DetailFact =
+    bikes === 1
+      ? { id: 'bike-rider', type: 'object', prompt: 'Was anyone riding the bicycle?', answer: ridden ? 'Yes' : 'No', wrong: [ridden ? 'No' : 'Yes'], needs: 'bicycle' }
+      : {
+          id: 'bike-rider',
+          type: 'count',
+          prompt: 'How many of the bicycles had someone riding them?',
+          answer: ['None of them', 'One of them', 'Both of them'][ridden],
+          wrong: ['None of them', 'One of them', 'Both of them'].filter((_, i) => i !== ridden),
+          needs: 'bicycle',
+        };
+  return { ...d, values: { ...d.values, riders }, facts: [...(d.facts ?? []), fact] };
+}
+
 type Palette = Record<'sky' | 'bushes' | 'bushesDark' | 'pond' | 'ripple' | 'grass' | 'tuft' | 'path' | 'edge', string>;
 
 function backdrop(height: number, p: Palette) {
@@ -556,6 +584,7 @@ export const park: Recipe = {
   ],
   items,
   details,
+  fitDetails,
   // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
   light: [
     // Haze near the trees.

@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { Circle, Ellipse, G, Path, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
@@ -36,16 +37,14 @@ const items: ItemDef[] = [
     spread: true,
     colours: [C.red, C.blue, C.yellow, C.green, C.black, C.white, C.purple],
     colourPrompt: (plural) => (plural ? 'What colour were the picture frames?' : 'What colour was the picture frame?'),
-    draw: (colour) => (
+    // What's in the picture is chosen per picture (`FRAME_PICTURES`, see `fitDetails`): a second frame shows another.
+    draw: (colour, details, _copy, index = 0) => (
       <G>
         <Rect x={0} y={0} width={110} height={90} fill={colour} />
         <G stroke="none">
-          {/* A pale mount, then the picture: hills, a lake and the sun, behind glass. */}
+          {/* A pale mount, then the picture, behind glass. */}
           <Rect x={9} y={9} width={92} height={72} fill="#f8f4ea" />
-          <Rect x={16} y={16} width={78} height={58} fill="#cfe9ff" />
-          <Path d="M16,74 V58 Q34,40 52,56 Q68,44 94,58 V74 Z" fill="#74c69d" />
-          <Path d="M16,74 V66 Q50,60 94,68 V74 Z" fill="#5aa9e6" />
-          <Circle cx={76} cy={30} r={7} fill="#ffd93b" />
+          {(FRAME_PICTURES[(index === 1 ? details?.values?.frame2 : details?.values?.frame) ?? 'hills'] ?? FRAME_PICTURES.hills).draw()}
           <Path d="M20,20 L44,20 L24,44 L20,44 Z" fill="#ffffff" fillOpacity={0.4} />
           <Path d="M0,0 H110 L104,6 H6 Z" fill="#ffffff" fillOpacity={0.3} />
           <Path d="M0,90 H110 L104,84 H6 Z" fill="#000000" fillOpacity={0.15} />
@@ -902,6 +901,65 @@ function hidingPet(spot: string, details?: SceneDetails) {
   );
 }
 
+/** What a picture frame can show, drawn in its 78 × 58 window at (16, 16), and how answers name it. */
+const FRAME_PICTURES: Record<string, { name: string; draw: () => ReactElement }> = {
+  hills: {
+    name: 'Hills and a lake',
+    draw: () => (
+      <G>
+        <Rect x={16} y={16} width={78} height={58} fill="#cfe9ff" />
+        <Path d="M16,74 V58 Q34,40 52,56 Q68,44 94,58 V74 Z" fill="#74c69d" />
+        <Path d="M16,74 V66 Q50,60 94,68 V74 Z" fill="#5aa9e6" />
+        <Circle cx={76} cy={30} r={7} fill="#ffd93b" />
+      </G>
+    ),
+  },
+  boat: {
+    name: 'A sailing boat',
+    draw: () => (
+      <G>
+        <Rect x={16} y={16} width={78} height={58} fill="#cfe9ff" />
+        <Rect x={16} y={56} width={78} height={18} fill="#3d8bd4" />
+        <Path d="M34,58 H76 L70,66 H40 Z" fill="#9c4f24" />
+        <Path d="M55,24 V56" stroke="#5c3a1a" strokeWidth={2} />
+        <Path d="M57,26 L74,54 H57 Z" fill="#ffffff" />
+        <Path d="M53,30 L40,54 H53 Z" fill="#e63946" />
+      </G>
+    ),
+  },
+  flowers: {
+    name: 'Flowers in a vase',
+    draw: () => (
+      <G>
+        <Rect x={16} y={16} width={78} height={58} fill="#f3e3cf" />
+        <Path d="M55,48 V32 M55,48 L44,30 M55,48 L66,30" stroke="#2b9348" strokeWidth={2.5} />
+        {[
+          [55, 28, '#e63946'],
+          [43, 27, '#ffd60a'],
+          [67, 27, '#9d4edd'],
+        ].map(([cx, cy, fill]) => (
+          <Circle key={String(cx)} cx={cx as number} cy={cy as number} r={6} fill={fill as string} />
+        ))}
+        <Path d="M46,48 H64 L61,70 H49 Z" fill="#1d70d6" />
+      </G>
+    ),
+  },
+  house: {
+    name: 'A house and a tree',
+    draw: () => (
+      <G>
+        <Rect x={16} y={16} width={78} height={58} fill="#cfe9ff" />
+        <Rect x={16} y={62} width={78} height={12} fill="#74c69d" />
+        <Rect x={28} y={42} width={28} height={22} fill="#f4a261" />
+        <Path d="M25,43 L42,28 L59,43 Z" fill="#9c2f2f" />
+        <Rect x={38} y={52} width={8} height={12} fill="#6b4226" />
+        <Rect x={74} y={46} width={4} height={18} fill="#6b4226" />
+        <Circle cx={76} cy={40} r={10} fill="#2b9348" />
+      </G>
+    ),
+  },
+};
+
 /**
  * Where a cat can be curled up on a seat: its top-left corner and size in the seat's own units, so it's the same
  * size as the cats on the floor, sitting on the seat cushion in front of the back. And how the answer says it.
@@ -968,6 +1026,24 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
       const answer = WHICH_OF_TWO[values[key]];
       facts.push({ id: `${kind}-on`, type: 'position', prompt: `Which ${name} was on?`, answer, wrong: Object.values(WHICH_OF_TWO).filter((a) => a !== answer), needs: kind });
     }
+  }
+
+  // What was in the picture frame: asked with one frame; a second frame shows something else, so "the picture
+  // frame" would not say which.
+  const frames = count('frame');
+  if (frames) {
+    const [first, second] = random.shuffle(Object.keys(FRAME_PICTURES));
+    values.frame = first;
+    if (frames === 2) values.frame2 = second;
+    else
+      facts.push({
+        id: 'frame-picture',
+        type: 'object',
+        prompt: 'What was in the picture frame?',
+        answer: FRAME_PICTURES[first].name,
+        wrong: Object.values(FRAME_PICTURES).map((p) => p.name).filter((n) => n !== FRAME_PICTURES[first].name),
+        needs: 'frame',
+      });
   }
 
   // From Level 14, with one bookshelf: 1 to 5 books on each shelf, and how many on one of them.

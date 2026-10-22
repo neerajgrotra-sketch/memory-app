@@ -504,6 +504,10 @@ type Palette = Record<string, string>;
 /** One building front per third of the picture. */
 const FACADES = [0, 1, 2];
 
+/** Each house's chimney on the roofline (fractions of the picture), and the space its smoke rises into. */
+const chimney = (i: number) => ({ x0: i / 3 + 0.235, x1: i / 3 + 0.27, y0: ROOF - 0.035, y1: ROOF });
+const smokeSpace = (i: number) => ({ x0: i / 3 + 0.22, x1: i / 3 + 0.32, y0: ROOF - 0.16, y1: ROOF });
+
 /**
  * Every building front, in fractions of the picture, worked out from the roof and pavement lines so
  * the parts never overlap: two upper-floor windows, and on the ground floor a door to one side
@@ -582,11 +586,24 @@ function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
   // The street clock's time: asked on every level whenever the clock is in the picture.
   const time = randomTime(random, clockStep);
   const { close, other } = timeLookalikes(time, clockStep);
+  // Smoke from one house's chimney, or now and then from none (so "None of them" is a real answer too).
+  const smoke = random.next() < 0.2 ? -1 : random.int(0, 2);
+  const houseName = (i: number) => `The ${houses[i].colour.name.toLowerCase()} house`;
+  const smokeAnswer = smoke < 0 ? 'None of them' : houseName(smoke);
   return {
     houses,
     palette: Object.fromEntries(houses.map((h, i) => [`facade${i}`, h.colour.hex])),
-    values: { clock: time },
-    facts: [{ id: 'clock-time', type: 'number', prompt: 'What time was on the street clock?', answer: time, wrong: close, fallback: other, needs: 'clock', everyLevel: true, spotlight: true }],
+    values: { clock: time, smoke: String(smoke) },
+    facts: [
+      { id: 'clock-time', type: 'number', prompt: 'What time was on the street clock?', answer: time, wrong: close, fallback: other, needs: 'clock', everyLevel: true, spotlight: true },
+      {
+        id: 'chimney-smoke',
+        type: 'object',
+        prompt: 'Which house had smoke coming out of its chimney?',
+        answer: smokeAnswer,
+        wrong: [...FACADES.map(houseName), 'None of them'].filter((a) => a !== smokeAnswer),
+      },
+    ],
   };
 }
 
@@ -613,6 +630,31 @@ function backdrop(height: number, palette: Palette, details?: SceneDetails) {
       </G>
       <Rect x={-900} y={roof} width={2700} height={10} fill="#000000" fillOpacity={0.18} />
       <Rect x={-900} y={roof + 10} width={2700} height={5} fill="#ffffff" fillOpacity={0.25} />
+      {/* A chimney on each house in the picture, and smoke rising from one of them (or none). */}
+      {FACADES.map((i) => {
+        const c = r(chimney(i));
+        const smoking = details?.values?.smoke === String(i);
+        return (
+          <G key={`chimney${i}`}>
+            <Rect {...c} fill="#a5543b" stroke="#5c2c1d" strokeWidth={3} />
+            <Rect x={c.x - 4} y={c.y - 6} width={c.width + 8} height={8} rx={2} fill="#6c3a29" stroke="#3d1f14" strokeWidth={2} />
+            <Path d={`M${c.x + 3},${c.y + c.height * 0.45} H${c.x + c.width - 3}`} stroke="#5c2c1d" strokeOpacity={0.6} strokeWidth={2} />
+            {smoking && (
+              // Grey, not white, and in one rising plume, so it can't be taken for a cloud.
+              <G fill="#9097a0" stroke="#5f666e" strokeWidth={2.5}>
+                {[
+                  [0.5, 0.12, 12],
+                  [0.95, 0.36, 16],
+                  [1.5, 0.62, 20],
+                  [2.1, 0.9, 23],
+                ].map(([dx, up, rad]) => (
+                  <Circle key={up} cx={c.x + c.width * dx} cy={c.y - 10 - up * (0.1 * height)} r={rad} />
+                ))}
+              </G>
+            )}
+          </G>
+        );
+      })}
       {buildings.map((i) => (
         <Rect key={i} x={i * 300 - 2} y={roof} width={4} height={ground - roof} fill="#000000" fillOpacity={0.18} />
       ))}
@@ -689,7 +731,12 @@ function marks(height: number, boxes: Box[], random: () => number): Mark[] {
   for (const x of [40, 280, 520, 760]) {
     out.push(...markIfClear({ x0: x, y0: dashY - 4, x1: x + 100, y1: dashY + 4 }, boxes, 0.35, <Rect key={`r${x}`} x={x} y={dashY - 4} width={100} height={8} fill="#f8f9fa" fillOpacity={0.35} />));
   }
-  out.push(...scatterMarks({ x0: -100, y0: height * 0.02, x1: 1000, y1: roof * 0.6 }, 150, 66, 3, boxes, random, 0.95, (x, y) => cloudShape(x, y, 150 / 170), true));
+  // Clouds keep clear of the chimney smoke too.
+  const smoke = FACADES.map((i) => {
+    const s = smokeSpace(i);
+    return { x0: s.x0 * 900, y0: s.y0 * height, x1: s.x1 * 900 + 30, y1: s.y1 * height };
+  });
+  out.push(...scatterMarks({ x0: -100, y0: height * 0.02, x1: 1000, y1: roof * 0.6 }, 150, 66, 3, [...boxes, ...smoke], random, 0.95, (x, y) => cloudShape(x, y, 150 / 170), true));
   return out;
 }
 
@@ -708,11 +755,14 @@ export const city: Recipe = {
     { id: 'road', label: 'On the road', surface: 'ground', top: KERB, bottom: 1, rows: 1, oneWay: true, maxGroups: 2 },
   ],
   items,
-  // Nothing covers a door or the number above it.
-  keepClear: FACADES.map((i) => {
-    const f = facade(i);
-    return { x0: f.plaque.x0, y0: f.plaque.y0, x1: f.plaque.x1, y1: f.door.y1 };
-  }),
+  // Nothing covers a door or the number above it, or a chimney and the smoke above it.
+  keepClear: [
+    ...FACADES.map((i) => {
+      const f = facade(i);
+      return { x0: f.plaque.x0, y0: f.plaque.y0, x1: f.plaque.x1, y1: f.door.y1 };
+    }),
+    ...FACADES.map(smokeSpace),
+  ],
   details,
   // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
   light: [

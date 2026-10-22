@@ -25,7 +25,15 @@ export type QuestionFamily =
   | 'relation'
   | 'twins'
   | 'true-false'
-  | 'detail';
+  | 'detail'
+  /** "Only one kind of thing was on the pond. What colour was it?": find it by where it was, then remember its colour. */
+  | 'two-step'
+  /** Sums on what you saw: "How many … and … altogether?" */
+  | 'altogether'
+  /** "How many more … than …?" */
+  | 'difference'
+  /** Division: "If the … were split into 2 equal groups, how many would be in each?" */
+  | 'sharing';
 
 /** A question about a picture, before it is prepared for a round. */
 export interface Question {

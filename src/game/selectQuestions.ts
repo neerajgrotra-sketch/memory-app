@@ -24,7 +24,21 @@ interface SelectOptions {
  * The variety rule: at most this many of one kind of question in a round, so every round of five mixes
  * at least three kinds. "Where" and "what colour" are the most common in any picture, so one each.
  */
-const FAMILY_CAP: Partial<Record<QuestionFamily, number>> = { count: 1, where: 1, colour: 1, 'what-here': 1, seen: 1, compare: 1, most: 1, relation: 1, twins: 1 };
+const FAMILY_CAP: Partial<Record<QuestionFamily, number>> = {
+  count: 1,
+  where: 1,
+  colour: 1,
+  'what-here': 1,
+  seen: 1,
+  compare: 1,
+  most: 1,
+  relation: 1,
+  twins: 1,
+  'two-step': 1,
+  altogether: 1,
+  difference: 1,
+  sharing: 1,
+};
 const DEFAULT_CAP = 2;
 /** And at most two of one type, so "how many", "more or fewer" and "the most of" don't fill a round together. */
 const TYPE_CAP = 2;

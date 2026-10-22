@@ -88,6 +88,10 @@ These make you remember two things at once, or the whole picture, instead of one
 | **Above / below:** "What was in the sky, above the pumpkins?" | exactly one thing is in a higher (lower) band **in the same third**, and both it and the thing asked about are the only things in that third of their own band (in a deep band like the living room floor, an armchair at the back stands above crayons at the front, so "on the wall, above the crayons" would skip it); the question names that band, so "above the pumpkins" can't be read as the barn on the hill (plain "What was above the bench?" for the few bands whose names read oddly there: "Close by", "At the front", "Near the hills") | "Hot-air balloons" | things that can be in that band, from the picture or not in it, in the same singular or plural form; something that can't be there only to make up three choices, since it would give the answer away. Only the very next band up or down, never skipping one ("on the top shelf, above the milk" skipped an empty middle shelf, where players looked first). Never between two flat bands (the path and the grass, the sand and the sea at the beach): there the one lower down is nearer, not below, so "What was on the grass, below the dog?" made no sense. Bands are flat by default when they're ground, unless things stand flush on a line (shelves, roofs, the worktop); `flat` marks water that lies flat. Never into a band marked `inFront` (the supermarket floor stands in front of the shelves, so "What was on the floor, below the tins?" made no sense). |
 | **In a band:** "Which of these was in the departure lounge?" | a band with two or more kinds | one of them | things that could be in that band but aren't in the picture at all, so exactly one choice is right |
 | **Band:** "What was on the pond?" | only one kind of thing is in that whole band (not a rug's band, which has "What was on the carpet?") | "A swan" | things that can be in that band |
+| **Two steps** (from Level 5): "Only one kind of thing was on the pond. What colour was it?" | one kind is the only thing in its band, all one colour, coloured as a whole (not a shirt or a sail), and nothing is hiding in the picture (a peeking crab could be "the thing" too) | "Yellow" | its other colours, then any colour. Same subject as "What colour were the boats?", so a round never asks both |
+| **Altogether** (from Level 11): "How many kites and hot-air balloons were there altogether?" | two countable things adding up to 12 or fewer | the sum | the nearest numbers |
+| **How many more** (from Level 27): "How many more crows than pumpkins were there?" | two countable things with different counts | the difference (1 or more) | the nearest numbers |
+| **Sharing** (division, from Level 29): "If the fish were split into two equal groups, how many would be in each group?" | a countable thing whose count shares out exactly into 2 or 3 groups of 2 or more (4 or 6) | the share | the nearest numbers. The question never says how many there were: you remember it first |
 | **Colour twins:** "What else was the same colour as the kites?" | exactly one other thing has the same colour | "The hot-air balloons" | things of other colours, then things not in the picture |
 | **True or false:** "True or false? There were three kites." | up to 3 per picture, about counts, colours or things not in the picture | True or False (about half are false) | the other one, always True first |
 
@@ -121,6 +125,17 @@ Optional fields:
 - `everyLevel`: asked from Level 1, not just from Level 8
 - `spotlight`: asked first in a round when it can be
 - `fallback`: more wrong answers when `wrong` runs short.
+
+### Things that change from picture to picture (4.5.0)
+
+Drawn differently per picture and asked as detail facts, from Level 3:
+
+| Place | Question | Answers |
+| --- | --- | --- |
+| Living room | "What was in the picture frame?" (one frame; a second frame shows another picture, so no question) | Hills and a lake · A sailing boat · Flowers in a vase · A house and a tree |
+| City street | "Which house had smoke coming out of its chimney?" (each house has a chimney; smoke from one, or now and then none) | The yellow / pink / … house (the street's own colours) · None of them |
+| Night campsite | "Was the campfire burning, or just smoking?" | Burning · Just smoking |
+| Park | "Was anyone riding the bicycle?" (one bicycle) / "How many of the bicycles had someone riding them?" (two) | Yes · No / None of them · One of them · Both of them |
 
 ### Clocks (living room, city, park, kitchen)
 

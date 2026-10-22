@@ -16,7 +16,7 @@ Code: `src/scenes/recipes/livingRoom.tsx`. Exact sizes, counts and colours: [ref
 
   | Thing | `hangAt` | Notes |
   | --- | --- | --- |
-  | Picture frames | 0.34 | up to 2, one per stretch of wall |
+  | Picture frames | 0.34 | up to 2, one per stretch of wall; each shows hills and a lake, a sailing boat, flowers in a vase or a house and a tree ("What was in the picture frame?", asked with one frame) |
   | Mirror | 0.36 | |
   | Window | 0.36 | only one, since two would end up one above the other |
   | Clock | 0.52 | above everything else |

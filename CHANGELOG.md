@@ -10,6 +10,16 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.5.0 (2026-10-22)
+
+- **Maths on what you saw.** Count two things, then work it out: "How many kites and hot-air balloons were there altogether?" (from Level 11), "How many more crows than pumpkins were there?" (27), and sharing, a division: "If the fish were split into two equal groups, how many would be in each group?" (29). The question never says how many there were: you have to remember first.
+- **Two-step questions** (from Level 5): "Only one kind of thing was on the pond. What colour was it?" Find the thing by where it was, then remember its colour.
+- **The picture in the frame.** The living room's picture frame now shows one of four pictures: hills and a lake, a sailing boat, flowers in a vase, or a house and a tree. "What was in the picture frame?"
+- **Chimney smoke.** Every house in the city street has a chimney, and grey smoke rises from one of them (or now and then none): "Which house had smoke coming out of its chimney?"
+- **Is the campfire burning?** At the campsite the fire is either alight or burnt down to smoking embers: "Was the campfire burning, or just smoking?"
+- **Riders.** A bicycle in the park is ridden or parked on its stand: "Was anyone riding the bicycle?", or with two, "How many of the bicycles had someone riding them?"
+- **Every level from 1 to 29 now brings something new;** only Level 30 is kept, for a final round.
+
 ## 4.4.0 (2026-10-21)
 
 - **Something new on every level.** Ten levels used to bring only more points. Now every level has a headline on the level-up screen: a new place on the even levels, and on the odd ones a new kind of question, a twist or a step in time or fullness. Features already in the game were moved to fill the gaps: questions about details at 3 (was 8), half-past clocks at 7 (8), closer counting at 11 (14), hiding animals at 13 (20) and less of them at 19 (25), mixed colours at 15 (12), quarter-past clocks at 17 (18). Levels 27, 29 and 30 are kept for the new questions and rounds coming next. Full table in [docs/levels-and-scoring.md](docs/levels-and-scoring.md#what-each-level-changes).

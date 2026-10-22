@@ -75,14 +75,18 @@ const FAMILY_FROM: [QuestionFamily, number][] = [
   ['most', 1],
   ['detail', 3],
   ['where', 4],
+  ['two-step', 5],
   ['relation', 9],
+  ['altogether', 11],
+  ['difference', 27],
+  ['sharing', 29],
 ];
 
 /**
  * What a level asks of you. Every level brings one named new thing (shown on the level-up screen, `unlocksAt`): a
  * place on the even levels, and on the odd ones a kind of question, a twist (clocks, hiding animals, mixed colours)
- * or a step in time or fullness. The changes are spread out so none bunch up and no level is a sudden jump; Levels 27,
- * 29 and 30 are kept for new kinds of question and round still to come. `check:levels` checks it stays that way.
+ * or a step in time or fullness. The changes are spread out so none bunch up and no level is a sudden jump; Level 30
+ * is kept for a final round still to come. `check:levels` checks it stays that way.
  */
 export function knobsForLevel(rawLevel: number): LevelConfig {
   const level = clampLevel(rawLevel);
@@ -111,7 +115,7 @@ export function knobsForLevel(rawLevel: number): LevelConfig {
 }
 
 /** Levels that bring nothing new yet: kept for the new kinds of question and round still to come. */
-export const LEVELS_TO_FILL = [27, 29, 30];
+export const LEVELS_TO_FILL = [30];
 
 /** The level each place first appears at. */
 export const RECIPE_UNLOCKS: { recipeId: string; level: number; name: string }[] = [
@@ -143,6 +147,10 @@ const FAMILY_NEWS: Partial<Record<QuestionFamily, string>> = {
   detail: 'New questions about details: clocks, signs, what was on TV',
   where: 'New questions: where was it?',
   relation: 'New questions: what was above or below something',
+  'two-step': 'New questions in two steps: find the thing by where it was, then say its colour',
+  altogether: 'Sums: how many of two things altogether?',
+  difference: 'Sums: how many more of one thing than another?',
+  sharing: 'Sharing: split them into equal groups, how many in each?',
 };
 const newFamilies = (before: LevelConfig, now: LevelConfig) =>
   (now.families ?? []).filter((f) => !(before.families ?? []).includes(f) && FAMILY_NEWS[f]);

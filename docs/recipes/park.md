@@ -23,7 +23,7 @@ Everything is sized against the shared person (1.7 m tall, so 1 m ≈ 0.115 of t
 
 - **Sky:** the sun, birds, kites, hot-air balloons, a plane (all shared).
 - **Pond:** a rowing boat with someone rowing (extra wide, one at most, with a **number** on its side), swans, a stone fountain (one).
-- **Path:** bicycles with riders (frame colour asked), an ice-cream cart (umbrella colour asked; it can also stand on the grass), people and dogs.
+- **Path:** bicycles, each ridden or parked on its stand (frame colour asked; "Was anyone riding the bicycle?"), an ice-cream cart (umbrella colour asked; it can also stand on the grass), people and dogs.
 - **Grass:** benches (against the back, spread apart), picnic blankets with a basket, flower beds (flower colour asked), a swing set, a slide (red, blue or orange), the **park clock** on a tall post, trees (tall, spread apart; they rise over the path behind them), people and dogs.
 
 ## Detail facts

@@ -26,29 +26,29 @@ See [Levels and scoring](../levels-and-scoring.md).
 | Level | Title | Places | Kinds | Most | View time | House numbers | Mixed colours | Close counts | Asked first | Points per answer |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | Fresh Eyes | beach | 5 | 3 | 10 s |  |  |  | object, colour | 100 |
-| 2 | Fresh Eyes | beach, living-room | 5 | 3 | 10 s |  |  |  | object, colour | 110 |
-| 3 | Fresh Eyes | beach, living-room | 5 | 3 | 10 s |  |  |  | object, colour | 120 |
-| 4 | Fresh Eyes | beach, living-room, park | 5 | 4 | 9 s |  |  |  | object, colour | 130 |
-| 5 | Sharp Eyes | beach, living-room, park | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 140 |
-| 6 | Sharp Eyes | beach, living-room, park, city | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 150 |
-| 7 | Sharp Eyes | beach, living-room, park, city | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 160 |
+| 2 | Fresh Eyes | beach, living-room | 5 | 4 | 9 s |  |  |  | object, colour | 110 |
+| 3 | Fresh Eyes | beach, living-room | 5 | 4 | 9 s | yes |  |  | object, colour | 120 |
+| 4 | Fresh Eyes | beach, living-room, park | 5 | 4 | 9 s | yes |  |  | object, count, colour, position | 130 |
+| 5 | Sharp Eyes | beach, living-room, park | 6 | 4 | 9 s | yes |  |  | object, count, colour, position | 140 |
+| 6 | Sharp Eyes | beach, living-room, park, city | 6 | 4 | 9 s | yes |  |  | object, count, colour, position | 150 |
+| 7 | Sharp Eyes | beach, living-room, park, city | 6 | 4 | 9 s | yes |  |  | object, count, colour, position | 160 |
 | 8 | Sharp Eyes | beach, living-room, park, city, kitchen | 6 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 170 |
 | 9 | Sharp Eyes | beach, living-room, park, city, kitchen | 7 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 180 |
 | 10 | Keen Observer | beach, living-room, park, city, kitchen, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 190 |
-| 11 | Keen Observer | beach, living-room, park, city, kitchen, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 200 |
-| 12 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea | 7 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 210 |
-| 13 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea | 8 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 220 |
-| 14 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 230 |
+| 11 | Keen Observer | beach, living-room, park, city, kitchen, farm | 7 | 5 | 8 s | yes |  | yes | object, count, colour, position, number | 200 |
+| 12 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea | 7 | 5 | 7 s | yes |  | yes | object, count, colour, position, number | 210 |
+| 13 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea | 7 | 5 | 7 s | yes |  | yes | object, count, colour, position, number | 220 |
+| 14 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 8 | 5 | 7 s | yes |  | yes | object, count, colour, position, number | 230 |
 | 15 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 240 |
 | 16 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
 | 17 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
-| 18 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
-| 19 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
-| 20 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
-| 21 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
-| 22 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
+| 18 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 6 s | yes | yes | yes | object, count, position, number | 270 |
+| 19 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 6 s | yes | yes | yes | object, count, position, number | 280 |
+| 20 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 6 s | yes | yes | yes | object, count, position, number | 290 |
+| 21 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 5 s | yes | yes | yes | object, count, position, number | 300 |
+| 22 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 5 s | yes | yes | yes | object, count, position, number | 310 |
 | 23 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
-| 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
+| 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 330 |
 | 25 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
 | 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
 | 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
@@ -109,9 +109,9 @@ Per-picture details: .
 | On the pavement (`pavement`) | 53% – 75% | ground | 2 | – |
 | On the road (`road`) | 75% – 100% | ground | 1 | at most 2 kinds; everything faces one way |
 
-Keep-clear areas (nothing may cover them): 3 (building doors and their house numbers).
+Keep-clear areas (nothing may cover them): 6 (building doors and their house numbers).
 
-Per-picture details: three houses with different named colours and rising house numbers; "What time was on the street clock?" (when there's a clock) on every level.
+Per-picture details: three houses with different named colours and rising house numbers; "What time was on the street clock?" (when there's a clock) on every level; "Which house had smoke coming out of its chimney?".
 
 ### Colour schemes
 
@@ -597,7 +597,7 @@ Per-picture details: "What time was on the clock?" (when there's a wall-clock) o
 
 Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
 
-Per-picture details: "What shape was the moon?" (when there's a moon); "What number was on the pitch sign?".
+Per-picture details: "What shape was the moon?" (when there's a moon); "What number was on the pitch sign?"; "Was the campfire burning, or just smoking?" (when there's a campfire).
 
 ### Colour schemes
 

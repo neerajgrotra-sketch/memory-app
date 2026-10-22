@@ -11,7 +11,7 @@ Code: `src/scenes/recipes/nightCampsite.tsx`. Exact sizes, counts and colours: [
 | On the pitches | 38–60% | `ground`, 1 row; tents are picked first (`usual`) |
 | At the front | 68–100% | `ground`, 2 rows; the campfire is picked first (`usual`) |
 
-The pitch number post stands between the tents and the fire (`keepClear`). The bands are called "On the pitches" and "At the front", never after a thing in them: "Around the campfire" gave "Where was the campfire? Around the campfire".
+The campfire is burning or burnt down to smoking embers, per picture ("Was the campfire burning, or just smoking?"). The pitch number post stands between the tents and the fire (`keepClear`). The bands are called "On the pitches" and "At the front", never after a thing in them: "Around the campfire" gave "Where was the campfire? Around the campfire".
 
 ## Scale
 

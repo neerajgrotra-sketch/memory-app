@@ -328,27 +328,8 @@ const items: ItemDef[] = [
     // The heart of a campsite at night: nearly always there.
     usual: true,
     tone: '#f77f00',
-    draw: () => (
-      <G>
-        <Ellipse cx={60} cy={104} rx={56} ry={14} fill="#868e96" />
-        <Path d="M20,108 L100,92 M20,92 L100,108" stroke="#6b4423" strokeWidth={10} strokeLinecap="round" />
-        <Path d="M60,4 Q92,44 84,74 Q80,98 60,100 Q40,98 36,74 Q28,44 60,4 Z" fill="#f77f00" />
-        <Path d="M60,40 Q76,62 72,80 Q68,96 60,96 Q52,96 48,80 Q44,62 60,40 Z" fill="#ffd60a" stroke="none" />
-        <G stroke="none">
-          {/* Stones round the ring, side flames, a white-hot heart, sparks rising and glowing embers. */}
-          {[10, 26, 44, 62, 80, 98, 110].map((x, i) => (
-            <Ellipse key={x} cx={x} cy={104 + (i % 2 ? 6 : 4)} rx={8} ry={5} fill="#adb5bd" />
-          ))}
-          <Path d="M36,74 Q24,56 32,40 Q40,58 44,70 Z M84,74 Q96,56 88,40 Q80,58 76,70 Z" fill="#e85d04" />
-          <Ellipse cx={60} cy={84} rx={6} ry={9} fill="#fff8e1" />
-          <Circle cx={40} cy={22} r={2.5} fill="#ffd60a" />
-          <Circle cx={82} cy={14} r={2} fill="#ffd60a" />
-          <Circle cx={72} cy={0} r={1.8} fill="#ffd60a" />
-          <Circle cx={46} cy={100} r={3} fill="#ff6b00" />
-          <Circle cx={74} cy={100} r={3} fill="#ff6b00" />
-        </G>
-      </G>
-    ),
+    // Burning, or burnt down to smoking embers: chosen per picture (see `details`), for "Was the campfire burning?".
+    draw: (_colour, details) => (details?.values?.fire === 'smoking' ? smokingFire() : burningFire()),
   },
   { ...person, zones: BY_FIRE, maxCount: 3, colours: BRIGHT, colourPrompt: (plural) => (plural ? 'What colour were the people’s jumpers?' : 'What colour was the person’s jumper?') },
   { ...dog, zones: BY_FIRE, maxCount: 1, colours: [C.brown, C.white] },
@@ -487,15 +468,81 @@ function pitchLookalikes(n: number): string[] {
   return [...new Set([...swapped, ...near].filter((x) => x !== n).map(String))];
 }
 
-/** The moon's shape and the pitch number, chosen per picture. */
+/** The campfire alight, flames leaping from the logs. */
+function burningFire() {
+  return (
+    <G>
+      <Ellipse cx={60} cy={104} rx={56} ry={14} fill="#868e96" />
+      <Path d="M20,108 L100,92 M20,92 L100,108" stroke="#6b4423" strokeWidth={10} strokeLinecap="round" />
+      <Path d="M60,4 Q92,44 84,74 Q80,98 60,100 Q40,98 36,74 Q28,44 60,4 Z" fill="#f77f00" />
+      <Path d="M60,40 Q76,62 72,80 Q68,96 60,96 Q52,96 48,80 Q44,62 60,40 Z" fill="#ffd60a" stroke="none" />
+      <G stroke="none">
+        {/* Stones round the ring, side flames, a white-hot heart, sparks rising and glowing embers. */}
+        {[10, 26, 44, 62, 80, 98, 110].map((x, i) => (
+          <Ellipse key={x} cx={x} cy={104 + (i % 2 ? 6 : 4)} rx={8} ry={5} fill="#adb5bd" />
+        ))}
+        <Path d="M36,74 Q24,56 32,40 Q40,58 44,70 Z M84,74 Q96,56 88,40 Q80,58 76,70 Z" fill="#e85d04" />
+        <Ellipse cx={60} cy={84} rx={6} ry={9} fill="#fff8e1" />
+        <Circle cx={40} cy={22} r={2.5} fill="#ffd60a" />
+        <Circle cx={82} cy={14} r={2} fill="#ffd60a" />
+        <Circle cx={72} cy={0} r={1.8} fill="#ffd60a" />
+        <Circle cx={46} cy={100} r={3} fill="#ff6b00" />
+        <Circle cx={74} cy={100} r={3} fill="#ff6b00" />
+      </G>
+    </G>
+  );
+}
+
+/** The campfire burnt down: the same ring and logs, glowing embers and smoke curling up, no flames. */
+function smokingFire() {
+  return (
+    <G>
+      <Ellipse cx={60} cy={104} rx={56} ry={14} fill="#868e96" />
+      <Path d="M20,108 L100,92 M20,92 L100,108" stroke="#4a2f17" strokeWidth={10} strokeLinecap="round" />
+      <G stroke="none">
+        {[10, 26, 44, 62, 80, 98, 110].map((x, i) => (
+          <Ellipse key={x} cx={x} cy={104 + (i % 2 ? 6 : 4)} rx={8} ry={5} fill="#adb5bd" />
+        ))}
+        {/* Embers glowing in the ash. */}
+        {[
+          [48, 98, 3.5],
+          [60, 95, 4],
+          [72, 99, 3.5],
+          [55, 102, 2.5],
+          [66, 103, 2.5],
+        ].map(([cx, cy, r]) => (
+          <Circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={r} fill="#ff6b00" />
+        ))}
+      </G>
+      {/* Grey smoke curling up from the embers in a few puffs. */}
+      <G fill="#ced4da" fillOpacity={0.9} stroke="#868e96" strokeWidth={2}>
+        <Circle cx={58} cy={80} r={9} />
+        <Circle cx={64} cy={60} r={12} />
+        <Circle cx={56} cy={38} r={14} />
+        <Circle cx={66} cy={16} r={13} />
+      </G>
+    </G>
+  );
+}
+
+/** The moon's shape, the pitch number and whether the campfire is burning, chosen per picture. */
 function details(random: Rng): SceneDetails {
   const moon = random.pick(MOONS);
   const pitch = random.int(1, 49);
+  const fire = random.next() < 0.5 ? 'burning' : 'smoking';
   return {
-    values: { moon, pitch: String(pitch) },
+    values: { moon, pitch: String(pitch), fire },
     facts: [
       { id: 'moon-shape', type: 'object', prompt: 'What shape was the moon?', answer: moon, wrong: MOONS.filter((m) => m !== moon), needs: 'moon' },
       { id: 'pitch', type: 'number', prompt: 'What number was on the pitch sign?', answer: String(pitch), wrong: pitchLookalikes(pitch) },
+      {
+        id: 'campfire',
+        type: 'object',
+        prompt: 'Was the campfire burning, or just smoking?',
+        answer: fire === 'burning' ? 'Burning' : 'Just smoking',
+        wrong: [fire === 'burning' ? 'Just smoking' : 'Burning'],
+        needs: 'campfire',
+      },
     ],
   };
 }

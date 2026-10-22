@@ -560,6 +560,68 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     );
   }
 
+  // The question names where the answer was ("in the sky", "on the wall"): "above the pumpkins" alone made players
+  // think of the barn on the hill. A few band names read oddly there ("What was close by, above the bench?"), so
+  // those questions stay plain.
+  const PLAIN_BANDS = new Set(['Close by', 'At the front', 'Near the hills']);
+
+  // Sums on what you saw: count two things, then add, take away or share. One pair each, chosen at random.
+  // "How many cats and dogs were there altogether?": up to 12, so it stays a quick sum.
+  const sumPair = rng.shuffle(combinations(countable, 2)).find(([a, b]) => a.count + b.count <= 12);
+  if (sumPair) {
+    const [a, b] = sumPair;
+    add('altogether', null, {
+      type: 'count',
+      subject: `altogether-${a.kind}-${b.kind}`,
+      prompt: `How many ${itemOf(a.kind).plural} and ${itemOf(b.kind).plural} were there altogether?`,
+      options: countOptions(a.count + b.count, true, rng),
+    });
+  }
+  // "How many more ducks than boats were there?": only when there were more, never "none more".
+  const diffPair = rng.shuffle(combinations(countable, 2)).find(([a, b]) => a.count !== b.count);
+  if (diffPair) {
+    const [more, fewer] = diffPair[0].count > diffPair[1].count ? diffPair : [diffPair[1], diffPair[0]];
+    add('difference', null, {
+      type: 'count',
+      subject: `difference-${more.kind}-${fewer.kind}`,
+      prompt: `How many more ${itemOf(more.kind).plural} than ${itemOf(fewer.kind).plural} were there?`,
+      options: countOptions(more.count - fewer.count, true, rng),
+    });
+  }
+  // Division, "If the 6 apples were split into 2 equal groups…", without saying how many there were: you have to
+  // remember 6 first. Only counts that share out exactly.
+  const shares = countable.flatMap((g) => [2, 3].filter((k) => g.count >= 2 * k && g.count % k === 0).map((k) => ({ g, k })));
+  if (shares.length) {
+    const { g, k } = rng.pick(shares);
+    add('sharing', g, {
+      type: 'count',
+      subject: g.kind,
+      prompt: `If the ${itemOf(g.kind).plural} were split into ${NUMBER_WORDS[k]} equal groups, how many would be in each group?`,
+      options: countOptions(g.count / k, true, rng),
+    });
+  }
+
+  // Two steps: "Only one kind of thing was on the pond. What colour was it?" Find it by where it was, then remember its colour. Only where
+  // it was the one thing in its band, all one colour, and nothing else could be "the thing" there (a peeking crab).
+  if (!spec.details?.alsoSeen?.length) {
+    for (const z of zones) {
+      const inBand = spec.groups.filter((g) => g.zoneId === z.id);
+      if (inBand.length !== 1 || PLAIN_BANDS.has(z.label)) continue;
+      const [g] = inBand;
+      const item = itemOf(g.kind);
+      if (!g.colour || !item.colours || item.colourPrompt || g.colours?.length) continue;
+      const plural = g.count > 1;
+      add('two-step', g, {
+        type: 'colour',
+        // The same subject as "What colour were the boats?", so a round never asks both.
+        subject: item.kind,
+        // Says what's special about the band first: "the thing on the pavement" read oddly when it was a dog.
+        prompt: `Only one kind of thing was ${z.label[0].toLowerCase()}${z.label.slice(1)}.\nWhat colour ${plural ? 'were they' : 'was it'}?`,
+        options: withColourDistractors(g.colour.name, item.colours.map((c) => c.name), ALL_COLOURS.map((c) => c.name), rng),
+      });
+    }
+  }
+
   // "Which was there the most of?": a clear winner, at least two ahead of nothing.
   const byCount = [...countable].sort((a, b) => b.count - a.count);
   if (byCount.length >= 4 && byCount[0].count > byCount[1].count) {
@@ -593,10 +655,6 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
 
   // "What was in the sky, above the pumpkins?": the only thing above (or below) it, in the same third and another band.
   const single = spec.groups.filter((g) => !(itemOf(g.kind).spread && g.count > 1) && !isWide(g) && !faraway(g));
-  // The question names where the answer was ("in the sky", "on the wall"): "above the pumpkins" alone made players
-  // think of the barn on the hill. A few band names read oddly there ("What was close by, above the bench?"), so
-  // those questions stay plain.
-  const PLAIN_BANDS = new Set(['Close by', 'At the front', 'Near the hills']);
   const where = (zoneId: string) => {
     const label = zoneOf(zoneId).label;
     return PLAIN_BANDS.has(label) ? '' : `${label[0].toLowerCase()}${label.slice(1)}, `;
