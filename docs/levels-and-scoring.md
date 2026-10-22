@@ -104,7 +104,8 @@ A new player's first **Play** in Levels starts with a practice round (`GuidedRou
 1. **How to play** in three lines (look, it goes away, climb the levels), with **Try a practice round** or **Skip, I know how to play**.
 2. **A calm practice picture:** the beach with four kinds of thing, for 20 seconds (twice the usual), with a tip over it for its first 3.5 seconds ("Look closely: what's there, how many and what colour").
 3. **Three coached questions,** one at a time with a tip each: what was there, a colour, and how many (never of something there was just one of). The third offers **Try a Peek**. A wrong answer is explained kindly ("That's fine. In a real round you see the answer, then move on.").
-4. **You're ready!** What real rounds are like (5 questions, a shorter look, 3 good rounds to go up, Peeks, the surprises on the journey), then **Start Level 1**.
+4. **2 or 3 right: You're ready!** What real rounds are like (5 questions, a shorter look, 3 good rounds to go up, Peeks, the surprises on the journey), then **Start Level 1**.
+   **0 or 1 right: Let's practise once more** (tester feedback: "You're ready!" after 0 of 3 rang false). A tip that helps ("say what you see in your head: two kites, one boat, something red…") and **Practise again** with a new practice picture (four beaches, `PRACTICE_SEEDS`), so it's practice, not remembering the last answers. **Start Level 1 anyway** is always there: practice is never forced.
 
 Nothing is saved, so it never counts towards a level. Playing or skipping it sets `profile.guided`, so it doesn't come again; **Play the practice round** in How to play replays it.
 

@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.14.1 (2026-10-22)
+
+- **Practice again after a low practice score** (tester feedback: "You're ready!" after 0 of 3 rang false). With 0 or 1 of 3 right, the guided round now says **Let's practise once more**, gives a tip that helps ("say what you see in your head"), and offers **Practise again** with a new practice picture. **Start Level 1 anyway** is always there, so nobody is held back. 2 or 3 right still says **You're ready!**, and only then plays the good-round chime.
+
 ## 4.14.0 (2026-10-22)
 
 - **A guided first round.** A new player's first Play now starts with a short practice round instead of going straight into a timed picture:

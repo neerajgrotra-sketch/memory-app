@@ -14,8 +14,10 @@ import { createStage, type Stage } from '@/scenes/createStage';
 import { colors, radius } from '@/theme';
 import type { Question, RoundQuestion } from '@/types/game';
 
-/** The practice picture: a calm beach with four kinds of thing (a sailboat, kites, dolphins, beach balls). */
-const PRACTICE_SEED = 777;
+/** The practice pictures: calm beaches with four kinds of thing, a new one for each try (picked to give a good count). */
+const PRACTICE_SEEDS = [777, 404, 1717, 31];
+/** Right answers out of 3 that say "You're ready!"; fewer suggest one more practice (never forced). */
+const READY_AT = 2;
 /** Twice the usual look, and fewer things, for a first go. */
 const PRACTICE_SECONDS = 20;
 const PRACTICE_KINDS = 4;
@@ -63,8 +65,14 @@ interface GuidedRoundProps {
  */
 export function GuidedRound({ size, onDone, onSkip, doneLabel }: GuidedRoundProps) {
   const [step, setStep] = useState<Step>('intro');
-  const [stage] = useState(() => createStage({ ...knobsForLevel(1), groups: PRACTICE_KINDS, viewSeconds: PRACTICE_SECONDS }, size, undefined, PRACTICE_SEED, { unlocked: ['beach'], off: [] }));
-  const [questions] = useState(() => practiceQuestions(stage));
+  const makeStage = (attempt: number) =>
+    createStage({ ...knobsForLevel(1), groups: PRACTICE_KINDS, viewSeconds: PRACTICE_SECONDS }, size, undefined, PRACTICE_SEEDS[attempt % PRACTICE_SEEDS.length], {
+      unlocked: ['beach'],
+      off: [],
+    });
+  const [attempt, setAttempt] = useState(0);
+  const [stage, setStage] = useState(() => makeStage(0));
+  const [questions, setQuestions] = useState(() => practiceQuestions(stage));
   const [index, setIndex] = useState(0);
   const [chosen, setChosen] = useState<number | null>(null);
   const [right, setRight] = useState(0);
@@ -135,7 +143,8 @@ export function GuidedRound({ size, onDone, onSkip, doneLabel }: GuidedRoundProp
       setChosen(null);
       if (index + 1 < questions.length) setIndex(index + 1);
       else {
-        feedback('roundGood');
+        // The good-round chime only for a good practice: a low score gets no sound, as in real rounds.
+        if (right >= READY_AT) feedback('roundGood');
         setStep('ready');
       }
     };
@@ -184,6 +193,49 @@ export function GuidedRound({ size, onDone, onSkip, doneLabel }: GuidedRoundProp
         </SafeAreaView>
         {peeking && <PeekView scene={stage.scene} onDone={() => setPeeking(false)} />}
       </View>
+    );
+  }
+
+  // A low score: one more practice with a new picture and a tip, never forced ("…anyway" still goes on).
+  if (right < READY_AT) {
+    const again = () => {
+      const next = attempt + 1;
+      const nextStage = makeStage(next);
+      setAttempt(next);
+      setStage(nextStage);
+      setQuestions(practiceQuestions(nextStage));
+      setIndex(0);
+      setRight(0);
+      setPeeked(false);
+      feedback('start');
+      setStep('look');
+    };
+    return (
+      <SafeAreaView style={styles.screen}>
+        <ScrollView contentContainerStyle={styles.center}>
+          <Text style={styles.kicker}>
+            {right} of {questions.length} right · practice makes perfect
+          </Text>
+          <Text style={styles.title}>Let’s practise once more</Text>
+          <Text style={styles.note}>Memory gets better with a little practice. Here’s a new picture, at the same slow pace.</Text>
+          <View style={styles.tip}>
+            <Text style={styles.tipText}>
+              💡 As you look, say what you see in your head: “two kites, one boat, something red…”. Saying it helps counts and colours stick.
+            </Text>
+          </View>
+        </ScrollView>
+        <View style={styles.actions}>
+          <Button label="Practise again" onPress={again} />
+          <Button
+            label={doneLabel === 'Start Level 1' ? 'Start Level 1 anyway' : doneLabel}
+            variant="secondary"
+            onPress={() => {
+              feedback('start');
+              onDone();
+            }}
+          />
+        </View>
+      </SafeAreaView>
     );
   }
 
