@@ -10,6 +10,13 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.8.0 (2026-10-22)
+
+- **Someone playing the piano.** In the classroom, about half the time a pupil sits at the piano, seen from behind like the class: "Was anyone playing the piano?" or "What colour was the piano player’s jumper?".
+- **A rider on the snowmobile:** "Was anyone riding the snowmobile?"
+- **A dog sled** on the snowy mountain, a new thing: 2 to 4 dogs pulling it, its driver on the back. "How many dogs were pulling the sled?" It's drawn extra wide, by the lodge near the front, so the dogs can be counted on a phone (out on the slope they were too small).
+- **No arguable counts.** When a picture draws an extra one of something (the pupil at the piano, the sled dogs, the snowmobile rider), "How many…?" and "What colour…?" aren't asked about that kind of thing (`uncounted`): "How many dogs were there?" with two dogs and a sled team would have no clear answer.
+
 ## 4.7.0 (2026-10-22)
 
 - **More "what was happening?" questions, in six more places:**

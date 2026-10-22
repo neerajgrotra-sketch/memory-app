@@ -25,7 +25,7 @@ A closer view than the outdoor places: about 4.5 m across at the front of the cl
 
 ## Things (15)
 
-- **What's happening:** 1 to 4 fish swim in the fish tank ("How many fish were in the fish tank?").
+- **What's happening:** 1 to 4 fish swim in the fish tank ("How many fish were in the fish tank?"); about half the time a pupil sits playing the piano, in a jumper of their own colour ("Was anyone playing the piano?"). Then pupils aren't counted or asked the colour of: the player is a pupil too.
 
 - **Wall:** a clock (real time, never mirrored), a space poster (background colour asked), a world map (never mirrored, so the continents are the right way round), a noticeboard, a window with curtains (curtain colour asked).
 - **Front of the class:** the teacher at their desk (jumper colour asked), a globe, a bookcase (tall), a piano (black or brown).

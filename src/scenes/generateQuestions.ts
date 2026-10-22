@@ -129,6 +129,8 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   const itemOf = (kind: string) => recipe.items.find((i) => i.kind === kind)!;
   const zoneOf = (id: string) => recipe.zones.find((z) => z.id === id)!;
   const present = spec.groups.map((g) => itemOf(g.kind));
+  /** Kinds not to count or ask the colour of here (`SceneDetails.uncounted`). */
+  const uncounted = new Set(spec.details?.uncounted ?? []);
   const absent = recipe.items.filter((i) => !spec.groups.some((g) => g.kind === i.kind) && !spec.details?.alsoSeen?.includes(i.kind));
   const questions: Question[] = [];
   /** Every side a group is on: one, or each side a spread group has a copy on. */
@@ -279,7 +281,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     const plural = group.count > 1;
 
     // Only things that can appear more than once: "How many mirrors?" would always be 1, a giveaway.
-    if (canBeSeveral(item)) {
+    if (canBeSeveral(item) && !uncounted.has(item.kind)) {
       add('count', group, {
         type: 'count',
         subject: item.kind,
@@ -288,7 +290,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       });
     }
 
-    if (group.colour && item.colours) {
+    if (group.colour && item.colours && !uncounted.has(item.kind)) {
       add('colour', group, {
         type: 'colour',
         subject: item.kind,
@@ -306,7 +308,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     const spread = item.spread === true && group.count > 1;
 
     // Copies in different colours (fire hydrants on Hard): which colours were they?
-    if (group.colours && item.colours) {
+    if (group.colours && item.colours && !uncounted.has(item.kind)) {
       const answer = colourList(group.colours.map((c) => c.name));
       const names = item.colours.map((c) => c.name);
       const n = new Set(group.colours.map((c) => c.name)).size;
@@ -577,7 +579,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   // ---- Questions that link two things, or the whole picture ----------------------------------------
 
   /** Groups that can be counted (never the sun or the sofa). */
-  const countable = spec.groups.filter((g) => canBeSeveral(itemOf(g.kind)));
+  const countable = spec.groups.filter((g) => canBeSeveral(itemOf(g.kind)) && !uncounted.has(g.kind));
 
   // "Were there more kites or birds?": two things to remember and weigh up. Sometimes it's a tie.
   const pairs = rng.shuffle(combinations(countable, 2)).slice(0, 2);
@@ -647,7 +649,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       if (inBand.length !== 1 || PLAIN_BANDS.has(z.label)) continue;
       const [g] = inBand;
       const item = itemOf(g.kind);
-      if (!g.colour || !item.colours || item.colourPrompt || g.colours?.length) continue;
+      if (!g.colour || !item.colours || item.colourPrompt || g.colours?.length || uncounted.has(g.kind)) continue;
       const plural = g.count > 1;
       add('two-step', g, {
         type: 'colour',
@@ -750,7 +752,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   ]);
   const fixedColours = new Set(spec.groups.map((g) => itemOf(g.kind)).filter((i) => !i.colours && i.tone).map((i) => nearestColour(i.tone!)));
   const mixedColours = new Set(spec.groups.flatMap((g) => (g.colours ?? []).map((c) => c.name)));
-  const coloured = spec.groups.filter((g) => g.colour && itemOf(g.kind).colours);
+  const coloured = spec.groups.filter((g) => g.colour && itemOf(g.kind).colours && !uncounted.has(g.kind));
   for (const group of coloured) {
     const name = group.colour!.name;
     if (backdropColours.has(name) || fixedColours.has(name) || mixedColours.has(name)) continue;

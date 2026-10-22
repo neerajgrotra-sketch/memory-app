@@ -5,7 +5,7 @@ import { ClockFace, randomTime, timeLookalikes } from '../clock';
 import { HAIR, SKINS, person, plantPot } from '../items/common';
 import { lineMarks } from '../marks';
 import type { Rng } from '../random';
-import type { DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import type { DetailFact, DetailKnobs, ItemDef, Mark, PlacedGroup, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
 import { speckles } from '../texture';
 
 /**
@@ -394,7 +394,8 @@ const items: ItemDef[] = [
     maxCount: 1,
     countable: false,
     colours: [C.black, C.brown],
-    draw: (colour) => (
+    // Sometimes a pupil sits playing it, seen from behind (see `fitDetails`): "Was anyone playing the piano?".
+    draw: (colour, details) => (
       <G>
         <Rect x={0} y={0} width={170} height={70} rx={4} fill={colour} />
         <Rect x={0} y={66} width={170} height={20} fill="#f8f9fa" />
@@ -417,6 +418,16 @@ const items: ItemDef[] = [
           <Rect x={120} y={10} width={40} height={50} rx={3} fill="#ffffff" fillOpacity={0.08} />
           <Path d="M6,6 H164" stroke="#ffffff" strokeOpacity={0.25} strokeWidth={3} strokeLinecap="round" />
         </G>
+        {details?.values?.pianist && (
+          // A pupil on a stool at the keys, from behind: dark hair, the jumper, arms out to the keys.
+          <G>
+            <Rect x={70} y={116} width={30} height={14} rx={3} fill="#6b4423" />
+            <Path d="M66,80 L54,74 M104,80 L116,74" stroke={details.values.pianist} strokeWidth={9} strokeLinecap="round" />
+            <Rect x={63} y={70} width={44} height={48} rx={14} fill={details.values.pianist} />
+            <Circle cx={85} cy={58} r={15} fill="#e0ac69" />
+            <Path d="M70,58 Q70,40 85,40 Q100,40 100,58 Q100,66 85,66 Q70,66 70,58 Z" fill="#3d2b1f" />
+          </G>
+        )}
       </G>
     ),
   },
@@ -625,6 +636,27 @@ const TANK_FISH: [number, number, string, number][] = [
   [104, 24, '#4dabf7', -1],
 ];
 
+/**
+ * Once things are placed: about half the time a pupil sits playing the piano, in a jumper of their own colour, with
+ * "Was anyone playing the piano?" or "What colour was the piano player's jumper?" (one, so neither gives the other
+ * away). The player is a pupil too, so pupils aren't counted or asked the colour of then (`uncounted`).
+ */
+function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  if (!groups.some((g) => g.kind === 'piano')) return d;
+  const playing = random.next() < 0.5;
+  const jumper = random.pick(JUMPERS);
+  const fact: DetailFact =
+    playing && random.next() < 0.5
+      ? { id: 'pianist', family: 'story', type: 'colour', prompt: 'What colour was the piano player’s jumper?', answer: jumper.name, wrong: JUMPERS.filter((c) => c !== jumper).map((c) => c.name) }
+      : { id: 'pianist', family: 'story', type: 'object', prompt: 'Was anyone playing the piano?', answer: playing ? 'Yes' : 'No', wrong: [playing ? 'No' : 'Yes'] };
+  return {
+    ...d,
+    values: { ...d.values, ...(playing ? { pianist: jumper.hex } : {}) },
+    facts: [...(d.facts ?? []), fact],
+    uncounted: playing ? [...(d.uncounted ?? []), 'pupil'] : d.uncounted,
+  };
+}
+
 function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
   const time = randomTime(random, clockStep);
   const tankFish = random.int(1, 4);
@@ -719,6 +751,7 @@ export const classroom: Recipe = {
   items,
   keepClear: [BOARD],
   details,
+  fitDetails,
   // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
   light: [
     // Light from the ceiling on the wall.

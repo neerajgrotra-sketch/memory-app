@@ -256,6 +256,11 @@ export interface SceneDetails {
   /** Other per-picture choices the backdrop draws from (e.g. which side the barn is on). */
   values?: Record<string, string>;
   /**
+   * Kinds of thing with an extra one drawn somewhere else in the picture (a pupil playing the piano, dogs pulling a
+   * sled): "How many…?" and "What colour…?" aren't asked about them, since the extra one would make either arguable.
+   */
+  uncounted?: string[];
+  /**
    * Kinds of thing that show in the picture without being one of its groups (a crab hiding under the beach towel),
    * so no question offers them as "not in the picture".
    */

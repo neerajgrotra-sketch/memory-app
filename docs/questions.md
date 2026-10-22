@@ -129,7 +129,7 @@ Optional fields:
 
 ### What was happening: story questions (4.5.0, 4.6.0)
 
-Things drawn differently per picture, about what was going on rather than reading a number or a sign. They're facts with `family: 'story'`: asked from **Level 1** (reading clocks, numbers and signs waits for Level 3), at most one a round, and a round picks one whenever the picture has it, just after a spotlight question (they're the fun part of a picture, and rare). Two-choice ones (Yes / No, On / Off) are allowed, like true or false. Every answer really happens, "Nothing" and "None of them" included.
+Things drawn differently per picture, about what was going on rather than reading a number or a sign. When the picture draws an extra one of something somewhere (a pupil at the piano, dogs pulling the sled, a rider on the snowmobile), that kind goes in `SceneDetails.uncounted`: "How many…?" and "What colour…?" aren't asked about it, since the extra one would make them arguable. They're facts with `family: 'story'`: asked from **Level 1** (reading clocks, numbers and signs waits for Level 3), at most one a round, and a round picks one whenever the picture has it, just after a spotlight question (they're the fun part of a picture, and rare). Two-choice ones (Yes / No, On / Off) are allowed, like true or false. Every answer really happens, "Nothing" and "None of them" included.
 
 | Place | Question | Answers |
 | --- | --- | --- |
@@ -141,7 +141,8 @@ Things drawn differently per picture, about what was going on rather than readin
 | Kitchen | "Was the kettle steaming?" · "Was there toast in the toaster?" · "What was in the fruit bowl?" | Yes · No |
 | Under the sea | "What was the diver holding?" (one diver) · "What was in the treasure chest?" | A torch · A net · A camera · Nothing |
 | Space | "Was there fire coming out of the rocket?" · "What was the astronaut holding?" (one astronaut; not a flag or a rock, which are things of their own there) | Yes · No / A camera · A torch · Nothing |
-| Snowy mountain | "What was the snowman wearing on its head?" (one snowman) | A top hat · A woolly hat · A bucket |
+| Snowy mountain | "What was the snowman wearing on its head?" (one snowman) · "Was anyone riding the snowmobile?" · "How many dogs were pulling the sled?" (a dog sled, extra wide so the dogs can be counted) | A top hat · A woolly hat · A bucket / Yes · No / 2 to 4 |
+| Classroom | "Was anyone playing the piano?" or "What colour was the piano player’s jumper?" (one of the two, so neither gives the other away) | Yes · No / the jumper colours |
 | Classroom | "How many fish were in the fish tank?" | 1 to 4 |
 | Train station | "How many people were looking out of the train’s windows?" (a passenger in each window or not) | None · 1 · 2 · 3 |
 | Airport | "Was the coffee kiosk open or closed?" (shut: its shutter down) | Open · Closed |

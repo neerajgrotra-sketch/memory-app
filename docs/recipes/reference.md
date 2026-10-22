@@ -522,7 +522,7 @@ Per-picture details: "Which animal was the danger sign about?"; "What number was
 | sunny | sky `#7cc4f0`, peaksFar `#9bb3c9`, peaks `#7d97b0`, snow `#e8eff5`, snowShade `#cfdbe6`, fence `#8a5a2b`, base `#e1e9f0`, track `#9fb3c6` |
 | dusk | sky `#b49ad6`, peaksFar `#a68fb8`, peaks `#8a76a3`, snow `#ece4f0`, snowShade `#d6cbe0`, fence `#6b4423`, base `#e4dceb`, track `#ad9fc0` |
 
-### Things (16)
+### Things (17)
 
 | Thing | Band | Size | Most | Colours | Habits |
 | --- | --- | --- | --- | --- | --- |
@@ -539,6 +539,7 @@ Per-picture details: "Which animal was the danger sign about?"; "What number was
 | dog | lodge | medium 14% | 2 | Brown, Black, White | – |
 | snowman | lodge | small 12% | 2 | Red, Blue, Green, Orange, Purple, Pink | – |
 | sledge | lodge | medium 15% | 2 | Red, Blue, Green, Orange | – |
+| dog sled | lodge | xl 42% | 1 | fixed (`#6c757d`) | may span columns; one only, not counted |
 | ski rack | lodge | medium 17% | 1 | fixed (`#6b4423`) | one only, not counted |
 | hot chocolate stand | lodge | large 23% | 1 | Red, Green, Blue, Brown | one only, not counted |
 | snowmobile | lodge | large 27% | 1 | Red, Blue, Green, Orange, Black | one only, not counted |
