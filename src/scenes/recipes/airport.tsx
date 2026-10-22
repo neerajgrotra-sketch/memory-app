@@ -391,7 +391,8 @@ const items: ItemDef[] = [
     countable: false,
     colours: [C.red, C.green, C.blue, C.orange, C.purple],
     colourPrompt: () => 'What colour was the awning on the coffee kiosk?',
-    draw: (colour) => (
+    // Open, or shut with its shutter down, chosen per picture: "Was the coffee kiosk open or closed?".
+    draw: (colour, details) => (
       <G>
         <Rect x={10} y={60} width={150} height={90} rx={4} fill="#8b5a2b" />
         <Rect x={20} y={70} width={130} height={14} fill="#f8f9fa" stroke="none" />
@@ -413,6 +414,14 @@ const items: ItemDef[] = [
           <Path d="M26,96 l2,-8 h8 l2,8 Z M42,96 l2,-8 h8 l2,8 Z" fill="#f8f9fa" />
           <Path d="M14,134 H156" stroke="#000000" strokeOpacity={0.2} strokeWidth={2.5} />
         </G>
+        {details?.values?.kiosk === 'closed' && (
+          // The metal shutter pulled down over the whole front, with its slats and a handle.
+          <G>
+            <Rect x={12} y={60} width={146} height={88} rx={2} fill="#adb5bd" stroke="#495057" strokeWidth={3} />
+            <Path d={Array.from({ length: 8 }, (_, k) => `M14,${70 + k * 10} H156`).join(' ')} stroke="#868e96" strokeWidth={2} />
+            <Rect x={74} y={136} width={22} height={6} rx={3} fill="#495057" />
+          </G>
+        )}
       </G>
     ),
   },
@@ -477,9 +486,11 @@ function details(random: Rng): SceneDetails {
   const city = random.pick(CITIES);
   const gate = `${random.pick(['A', 'B', 'C', 'D'])}${random.int(2, 28)}`;
   const flight = `GL ${random.int(121, 879)}`;
+  const kiosk = random.next() < 0.5 ? 'open' : 'closed';
   return {
-    values: { city, gate, flight },
+    values: { city, gate, flight, kiosk },
     facts: [
+      { id: 'kiosk-open', family: 'story', type: 'object', prompt: 'Was the coffee kiosk open or closed?', answer: kiosk === 'open' ? 'Open' : 'Closed', wrong: [kiosk === 'open' ? 'Closed' : 'Open'], needs: 'coffee-kiosk' },
       { id: 'flight-city', type: 'object', prompt: 'Where was the flight on the screen going?', answer: city, wrong: CITIES.filter((c) => c !== city) },
       { id: 'flight-gate', type: 'number', prompt: 'Which gate was the flight leaving from?', answer: gate, wrong: gateLookalikes(gate) },
       { id: 'flight-number', type: 'number', prompt: 'What was the flight number?', answer: flight, wrong: flightLookalikes(flight) },

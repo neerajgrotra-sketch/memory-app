@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { AppState, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Countdown } from '@/components/Countdown';
@@ -32,11 +32,27 @@ export function MemoriseStage({ scene, seconds, onDone, onQuit }: MemoriseStageP
   const shownAt = useRef(0);
   const [armed, setArmed] = useState(false);
   const done = useRef(false);
+  // The countdown waits while the app is in the background (a phone call), so no looking time is lost.
+  const [active, setActive] = useState(AppState.currentState !== 'background' && AppState.currentState !== 'inactive');
+  const pausedAt = useRef<number | null>(null);
 
   useEffect(() => {
     shownAt.current = Date.now();
     const t = setTimeout(() => setArmed(true), READY_DELAY_MS);
-    return () => clearTimeout(t);
+    const sub = AppState.addEventListener('change', (state) => {
+      const now = state === 'active';
+      if (!now && pausedAt.current === null) pausedAt.current = Date.now();
+      // Time away doesn't count as looking.
+      if (now && pausedAt.current !== null) {
+        shownAt.current += Date.now() - pausedAt.current;
+        pausedAt.current = null;
+      }
+      setActive(now);
+    });
+    return () => {
+      clearTimeout(t);
+      sub.remove();
+    };
   }, []);
 
   /** The same tick as each number of the countdown appears. */
@@ -64,8 +80,8 @@ export function MemoriseStage({ scene, seconds, onDone, onQuit }: MemoriseStageP
             <Text style={styles.devText}>▦</Text>
           </Pressable>
         )}
-        {/* While the layout overlay is on, the timer waits so the layout can be checked. */}
-        <Countdown seconds={seconds} running={!overlay} onComplete={() => finish(seconds)} onTick={onTick} />
+        {/* While the layout overlay is on, or the app is in the background, the timer waits. */}
+        <Countdown seconds={seconds} running={!overlay && active} onComplete={() => finish(seconds)} onTick={onTick} />
         <SoundToggle />
         {/* Ready before the time is up: a deliberate button, never a tap on the picture itself. */}
         <Pressable

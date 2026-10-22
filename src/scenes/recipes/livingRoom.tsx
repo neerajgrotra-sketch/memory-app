@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { Circle, Ellipse, G, Path, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
@@ -36,16 +37,14 @@ const items: ItemDef[] = [
     spread: true,
     colours: [C.red, C.blue, C.yellow, C.green, C.black, C.white, C.purple],
     colourPrompt: (plural) => (plural ? 'What colour were the picture frames?' : 'What colour was the picture frame?'),
-    draw: (colour) => (
+    // What's in the picture is chosen per picture (`FRAME_PICTURES`, see `fitDetails`): a second frame shows another.
+    draw: (colour, details, _copy, index = 0) => (
       <G>
         <Rect x={0} y={0} width={110} height={90} fill={colour} />
         <G stroke="none">
-          {/* A pale mount, then the picture: hills, a lake and the sun, behind glass. */}
+          {/* A pale mount, then the picture, behind glass. */}
           <Rect x={9} y={9} width={92} height={72} fill="#f8f4ea" />
-          <Rect x={16} y={16} width={78} height={58} fill="#cfe9ff" />
-          <Path d="M16,74 V58 Q34,40 52,56 Q68,44 94,58 V74 Z" fill="#74c69d" />
-          <Path d="M16,74 V66 Q50,60 94,68 V74 Z" fill="#5aa9e6" />
-          <Circle cx={76} cy={30} r={7} fill="#ffd93b" />
+          {(FRAME_PICTURES[(index === 1 ? details?.values?.frame2 : details?.values?.frame) ?? 'hills'] ?? FRAME_PICTURES.hills).draw()}
           <Path d="M20,20 L44,20 L24,44 L20,44 Z" fill="#ffffff" fillOpacity={0.4} />
           <Path d="M0,0 H110 L104,6 H6 Z" fill="#ffffff" fillOpacity={0.3} />
           <Path d="M0,90 H110 L104,84 H6 Z" fill="#000000" fillOpacity={0.15} />
@@ -115,7 +114,8 @@ const items: ItemDef[] = [
     // One window: two would end up one above the other on a single wall.
     maxCount: 1,
     tone: '#5aa9e6',
-    draw: () => (
+    // Curtains drawn back at the sides, or closed across the glass, chosen per picture: "Were the curtains open?".
+    draw: (_colour, details) => (
       <G>
         <Rect x={0} y={0} width={150} height={175} fill="#ffffff" />
         <G fill="#5aa9e6" stroke="none">
@@ -132,6 +132,20 @@ const items: ItemDef[] = [
           <Path d="M16,30 L34,14 M86,30 L104,14" stroke="#ffffff" strokeOpacity={0.55} strokeWidth={4} strokeLinecap="round" />
           <Rect x={-6} y={168} width={162} height={7} rx={2} fill="#e9ecef" />
         </G>
+        {details?.values?.curtains === 'closed' ? (
+          // Two curtains drawn across, meeting in the middle, with folds.
+          <G>
+            <Path d="M0,0 H76 V168 H0 Z M74,0 H150 V168 H74 Z" fill="#b5838d" stroke="#6d4c55" strokeWidth={2.5} />
+            <Path d="M18,4 V166 M38,4 V166 M58,4 V166 M92,4 V166 M112,4 V166 M132,4 V166" stroke="#6d4c55" strokeOpacity={0.45} strokeWidth={3} />
+          </G>
+        ) : (
+          // Drawn back, bunched at each side.
+          <G>
+            <Path d="M0,0 H18 Q12,90 22,168 H0 Z M150,0 H132 Q138,90 128,168 H150 Z" fill="#b5838d" stroke="#6d4c55" strokeWidth={2.5} />
+            <Path d="M8,4 V164 M142,4 V164" stroke="#6d4c55" strokeOpacity={0.45} strokeWidth={3} />
+          </G>
+        )}
+        <Rect x={-4} y={-6} width={158} height={6} rx={3} fill="#6d4c55" />
       </G>
     ),
   },
@@ -382,10 +396,20 @@ const items: ItemDef[] = [
           {/* Tabby stripes, pink ears, green eyes, a nose and whiskers. */}
           <Path d="M40,40 Q44,48 40,56 M52,40 Q56,48 52,58 M64,44 Q66,50 64,58" fill="none" stroke="#000000" strokeOpacity={0.18} strokeWidth={4} strokeLinecap="round" />
           <Path d="M11,18 L11,6 L19,14 Z M33,18 L33,6 L25,14 Z" fill="#ffadc6" />
-          <Ellipse cx={15} cy={30} rx={3.5} ry={4} fill="#8ac926" />
-          <Ellipse cx={29} cy={30} rx={3.5} ry={4} fill="#8ac926" />
-          <Ellipse cx={15} cy={30} rx={1.3} ry={3} fill="#111" />
-          <Ellipse cx={29} cy={30} rx={1.3} ry={3} fill="#111" />
+          {details?.values?.catAsleep === 'yes' ? (
+            // Asleep: eyes shut, and "z"s floating up.
+            <G>
+              <Path d="M11,30 Q15,34 19,30 M25,30 Q29,34 33,30" fill="none" stroke="#111" strokeWidth={2} strokeLinecap="round" />
+              <Path d="M44,8 H52 L44,16 H52 M56,0 H62 L56,6 H62" fill="none" stroke="#1d70d6" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
+            </G>
+          ) : (
+            <G>
+              <Ellipse cx={15} cy={30} rx={3.5} ry={4} fill="#8ac926" />
+              <Ellipse cx={29} cy={30} rx={3.5} ry={4} fill="#8ac926" />
+              <Ellipse cx={15} cy={30} rx={1.3} ry={3} fill="#111" />
+              <Ellipse cx={29} cy={30} rx={1.3} ry={3} fill="#111" />
+            </G>
+          )}
           <Path d="M20,37 H24 L22,40 Z" fill="#e5737a" />
           <Path d="M18,40 L2,37 M18,42 L3,44 M26,40 L42,37 M26,42 L41,44" stroke="#495057" strokeOpacity={0.6} strokeWidth={1.2} />
         </G>
@@ -902,6 +926,65 @@ function hidingPet(spot: string, details?: SceneDetails) {
   );
 }
 
+/** What a picture frame can show, drawn in its 78 × 58 window at (16, 16), and how answers name it. */
+const FRAME_PICTURES: Record<string, { name: string; draw: () => ReactElement }> = {
+  hills: {
+    name: 'Hills and a lake',
+    draw: () => (
+      <G>
+        <Rect x={16} y={16} width={78} height={58} fill="#cfe9ff" />
+        <Path d="M16,74 V58 Q34,40 52,56 Q68,44 94,58 V74 Z" fill="#74c69d" />
+        <Path d="M16,74 V66 Q50,60 94,68 V74 Z" fill="#5aa9e6" />
+        <Circle cx={76} cy={30} r={7} fill="#ffd93b" />
+      </G>
+    ),
+  },
+  boat: {
+    name: 'A sailing boat',
+    draw: () => (
+      <G>
+        <Rect x={16} y={16} width={78} height={58} fill="#cfe9ff" />
+        <Rect x={16} y={56} width={78} height={18} fill="#3d8bd4" />
+        <Path d="M34,58 H76 L70,66 H40 Z" fill="#9c4f24" />
+        <Path d="M55,24 V56" stroke="#5c3a1a" strokeWidth={2} />
+        <Path d="M57,26 L74,54 H57 Z" fill="#ffffff" />
+        <Path d="M53,30 L40,54 H53 Z" fill="#e63946" />
+      </G>
+    ),
+  },
+  flowers: {
+    name: 'Flowers in a vase',
+    draw: () => (
+      <G>
+        <Rect x={16} y={16} width={78} height={58} fill="#f3e3cf" />
+        <Path d="M55,48 V32 M55,48 L44,30 M55,48 L66,30" stroke="#2b9348" strokeWidth={2.5} />
+        {[
+          [55, 28, '#e63946'],
+          [43, 27, '#ffd60a'],
+          [67, 27, '#9d4edd'],
+        ].map(([cx, cy, fill]) => (
+          <Circle key={String(cx)} cx={cx as number} cy={cy as number} r={6} fill={fill as string} />
+        ))}
+        <Path d="M46,48 H64 L61,70 H49 Z" fill="#1d70d6" />
+      </G>
+    ),
+  },
+  house: {
+    name: 'A house and a tree',
+    draw: () => (
+      <G>
+        <Rect x={16} y={16} width={78} height={58} fill="#cfe9ff" />
+        <Rect x={16} y={62} width={78} height={12} fill="#74c69d" />
+        <Rect x={28} y={42} width={28} height={22} fill="#f4a261" />
+        <Path d="M25,43 L42,28 L59,43 Z" fill="#9c2f2f" />
+        <Rect x={38} y={52} width={8} height={12} fill="#6b4226" />
+        <Rect x={74} y={46} width={4} height={18} fill="#6b4226" />
+        <Circle cx={76} cy={40} r={10} fill="#2b9348" />
+      </G>
+    ),
+  },
+};
+
 /**
  * Where a cat can be curled up on a seat: its top-left corner and size in the seat's own units, so it's the same
  * size as the cats on the floor, sitting on the seat cushion in front of the back. And how the answer says it.
@@ -932,7 +1015,7 @@ function details(random: Rng, { clockStep, hidden = 0, closeCounts = false }: De
     values: { clock: time, tv, ...(hidden ? { peek: String(hidden) } : {}), ...(closeCounts ? { countShelves: '1' } : {}) },
     facts: [
       { id: 'clock-time', type: 'number', prompt: 'What time was on the clock?', answer: time, wrong: close, fallback: other, needs: 'wall-clock', everyLevel: true, spotlight: true },
-      { id: 'tv-show', type: 'object', prompt: 'What was on the television?', answer: TV_SHOWS[tv], wrong: Object.values(TV_SHOWS).filter((s) => s !== TV_SHOWS[tv]), needs: 'tv' },
+      { id: 'tv-show', family: 'story', type: 'object', prompt: 'What was on the television?', answer: TV_SHOWS[tv], wrong: Object.values(TV_SHOWS).filter((s) => s !== TV_SHOWS[tv]), needs: 'tv' },
     ],
   };
 }
@@ -961,13 +1044,31 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
     if (lamps === 1) {
       values[key] = random.next() < 0.5 ? 'on' : 'off';
       const answer = values[key] === 'on' ? 'On' : 'Off';
-      facts.push({ id: `${kind}-on`, type: 'object', prompt: `Was the ${name} on or off?`, answer, wrong: [answer === 'On' ? 'Off' : 'On'], needs: kind });
+      facts.push({ id: `${kind}-on`, family: 'story', type: 'object', prompt: `Was the ${name} on or off?`, answer, wrong: [answer === 'On' ? 'Off' : 'On'], needs: kind });
     } else if (lamps === 2) {
       const r = random.next();
       values[key] = r < 0.35 ? 'left' : r < 0.7 ? 'right' : r < 0.85 ? 'both' : 'none';
       const answer = WHICH_OF_TWO[values[key]];
-      facts.push({ id: `${kind}-on`, type: 'position', prompt: `Which ${name} was on?`, answer, wrong: Object.values(WHICH_OF_TWO).filter((a) => a !== answer), needs: kind });
+      facts.push({ id: `${kind}-on`, family: 'story', type: 'position', prompt: `Which ${name} was on?`, answer, wrong: Object.values(WHICH_OF_TWO).filter((a) => a !== answer), needs: kind });
     }
+  }
+
+  // What was in the picture frame: asked with one frame; a second frame shows something else, so "the picture
+  // frame" would not say which.
+  const frames = count('frame');
+  if (frames) {
+    const [first, second] = random.shuffle(Object.keys(FRAME_PICTURES));
+    values.frame = first;
+    if (frames === 2) values.frame2 = second;
+    else
+      facts.push({
+        id: 'frame-picture', family: 'story',
+        type: 'object',
+        prompt: 'What was in the picture frame?',
+        answer: FRAME_PICTURES[first].name,
+        wrong: Object.values(FRAME_PICTURES).map((p) => p.name).filter((n) => n !== FRAME_PICTURES[first].name),
+        needs: 'frame',
+      });
   }
 
   // From Level 14, with one bookshelf: 1 to 5 books on each shelf, and how many on one of them.
@@ -988,14 +1089,28 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
   }
 
   // One cat or one dog: what it was playing with. (With several, "the cat" wouldn't say which.)
+  // One cat on its own: asleep (then no toy) or awake.
+  if (one('cat')) {
+    const asleep = random.next() < 0.4;
+    values.catAsleep = asleep ? 'yes' : 'no';
+    facts.push({ id: 'cat-asleep', family: 'story', type: 'object', prompt: 'Was the cat asleep or awake?', answer: asleep ? 'Asleep' : 'Awake', wrong: [asleep ? 'Awake' : 'Asleep'], needs: 'cat' });
+  }
+
+  // Curtains open or closed, when there's a window.
+  if (one('window')) {
+    values.curtains = random.next() < 0.5 ? 'open' : 'closed';
+    const answer = values.curtains === 'open' ? 'Open' : 'Closed';
+    facts.push({ id: 'curtains', family: 'story', type: 'object', prompt: 'Were the curtains open or closed?', answer, wrong: [answer === 'Open' ? 'Closed' : 'Open'], needs: 'window' });
+  }
+
   for (const animal of ['cat', 'dog'] as const) {
-    if (!one(animal)) continue;
+    if (!one(animal) || (animal === 'cat' && values.catAsleep === 'yes')) continue;
     const toys = PET_TOYS[animal];
     const toy = random.pick(Object.keys(toys));
     values[`${animal}Toy`] = toy;
     const other = PET_TOYS[animal === 'cat' ? 'dog' : 'cat'];
     facts.push({
-      id: `${animal}-toy`,
+      id: `${animal}-toy`, family: 'story',
       type: 'object',
       prompt: `What was the ${animal} playing with?`,
       answer: toys[toy],
@@ -1040,7 +1155,7 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
       values.catColour = random.pick(items.find((i) => i.kind === 'cat')!.colours!).hex;
       alsoSeen.push('cat');
       facts.push({
-        id: 'cat-seat',
+        id: 'cat-seat', family: 'story',
         type: 'position',
         prompt: 'Where was the cat?',
         answer,

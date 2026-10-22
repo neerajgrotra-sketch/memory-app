@@ -162,8 +162,13 @@ function verticalSpot(ctx: Context, item: ItemDef, zone: ZoneDef, top: number, b
   if (zone.flush) return bottom - bh;
   // At the front edge (a fire hydrant at the kerb).
   if (item.frontRow) return bottom - bh - (rowH - bh) * AT_FRONT * rng.next();
-  // On the ground: towards the bottom of the row. In the air or on a wall: anywhere in it.
-  return top + (rowH - bh) * (zone.surface === 'ground' ? 1 - 0.35 * rng.next() : rng.next());
+  // On the ground: towards the bottom of the row (but clear of the band's bottom edge by `feetInset`). In the air or
+  // on a wall: anywhere in it.
+  if (zone.surface !== 'ground') return top + (rowH - bh) * rng.next();
+  // The lowest the feet may go: the row's bottom, or higher to stay `feetInset` clear of the band's edge (as far as
+  // the thing still fits in the row).
+  const lowestFeet = Math.max(top + bh, Math.min(bottom, band.bottom - (zone.feetInset ?? 0) * (band.bottom - band.top)));
+  return top + (lowestFeet - bh - top) * (1 - 0.35 * rng.next());
 }
 
 /**

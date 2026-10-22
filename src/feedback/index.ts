@@ -16,7 +16,14 @@ export type Moment =
   | 'highScore'
   | 'roundPerfect'
   | 'roundGood'
-  | 'roundMiss';
+  | 'roundMiss'
+  | 'speedIntro'
+  | 'speedGo'
+  | 'speedTick'
+  | 'speedTimeout'
+  | 'speedPrize'
+  | 'bossIntro'
+  | 'bossWin';
 
 const SOUNDS: Record<Moment, number> = {
   start: require('../../assets/sounds/start.mp3'),
@@ -28,6 +35,13 @@ const SOUNDS: Record<Moment, number> = {
   roundPerfect: require('../../assets/sounds/round-perfect.mp3'),
   roundGood: require('../../assets/sounds/round-good.mp3'),
   roundMiss: require('../../assets/sounds/round-miss.mp3'),
+  speedIntro: require('../../assets/sounds/speed-intro.mp3'),
+  speedGo: require('../../assets/sounds/speed-go.mp3'),
+  speedTick: require('../../assets/sounds/speed-tick.mp3'),
+  speedTimeout: require('../../assets/sounds/speed-timeout.mp3'),
+  speedPrize: require('../../assets/sounds/speed-prize.mp3'),
+  bossIntro: require('../../assets/sounds/boss-intro.mp3'),
+  bossWin: require('../../assets/sounds/boss-win.mp3'),
 };
 
 /** Kept quiet so they sit under the game, never over it. */
@@ -42,6 +56,14 @@ const VOLUME: Record<Moment, number> = {
   roundPerfect: 0.6,
   roundGood: 0.6,
   roundMiss: 0.35,
+  speedIntro: 0.75,
+  speedGo: 0.6,
+  // Only on the last two seconds of a question, so a little louder than the countdown's tick.
+  speedTick: 0.6,
+  speedTimeout: 0.5,
+  speedPrize: 0.7,
+  bossIntro: 0.8,
+  bossWin: 0.75,
 };
 
 /** No vibration for the countdown ticks: a buzz every second would be too much. */
@@ -55,6 +77,13 @@ const HAPTICS: Record<Moment, (() => Promise<void>) | null> = {
   roundPerfect: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
   roundGood: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
   roundMiss: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft),
+  speedIntro: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
+  speedGo: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium),
+  speedTick: null,
+  speedTimeout: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning),
+  speedPrize: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
+  bossIntro: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
+  bossWin: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
 };
 
 const prefs = { sound: true, haptics: true };

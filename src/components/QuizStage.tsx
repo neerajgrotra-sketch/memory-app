@@ -5,6 +5,7 @@ import Animated, { FadeIn, FadeInRight } from 'react-native-reanimated';
 import { AnswerOption, type OptionStatus } from '@/components/AnswerOption';
 import { Button } from '@/components/Button';
 import { feedback as playFeedback } from '@/feedback';
+import { fiftyHidden } from '@/games/lookRemember/peeks';
 import { nextUnanswered, unansweredCount, type Answers } from '@/game/quizNavigation';
 import { colors, radius } from '@/theme';
 import type { QuestionType, RoundQuestion } from '@/types/game';
@@ -41,14 +42,22 @@ interface QuizStageProps {
     unlimited?: boolean;
     onPeek: (questionIndex: number) => void;
   };
+  /** 50:50s, won in a Super Speed Round: shown only while you hold one or have used one this round. */
+  fifty?: {
+    left: number;
+    /** The question it was used on this round. */
+    used: number[];
+    onFifty: (questionIndex: number) => void;
+  };
 }
 
 /**
  * Questions can be skipped and come back round once the end is reached; the dots show every
  * question (answered, skipped, current) and jump to any unanswered one.
  */
-export function QuizStage({ questions, answers, onAnswer, peek }: QuizStageProps) {
-  const [current, setCurrent] = useState(0);
+export function QuizStage({ questions, answers, onAnswer, peek, fifty }: QuizStageProps) {
+  // A resumed round starts at its first unanswered question.
+  const [current, setCurrent] = useState(() => Math.max(0, answers.indexOf(null)));
   const [skipped, setSkipped] = useState<ReadonlySet<number>>(new Set());
   const [selected, setSelected] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<Feedback>('choosing');
@@ -60,6 +69,9 @@ export function QuizStage({ questions, answers, onAnswer, peek }: QuizStageProps
   if (!question) return null;
 
   const left = unansweredCount(answers);
+  // The wrong options a 50:50 took away from this question.
+  const hidden = fifty?.used.includes(current) ? fiftyHidden(question) : [];
+  const showFifty = fifty && (fifty.left > 0 || fifty.used.length > 0);
   const canSkip = feedback === 'choosing' && left > 1;
 
   /** Moves to another question. Leaving one unanswered (Skip or a dot) marks it as skipped. */
@@ -122,7 +134,12 @@ export function QuizStage({ questions, answers, onAnswer, peek }: QuizStageProps
           </Text>
           <View style={styles.headerRight}>
             {peek && <PeekButton {...peek} current={current} choosing={feedback === 'choosing'} />}
-            <Text style={styles.chip}>{TYPE_LABELS[question.type]}</Text>
+            {showFifty ? (
+              <FiftyButton {...fifty} current={current} choosing={feedback === 'choosing'} possible={fiftyHidden(question).length > 0} />
+            ) : (
+              // No room for the type as well as two lifelines on a small phone.
+              <Text style={styles.chip}>{TYPE_LABELS[question.type]}</Text>
+            )}
           </View>
         </View>
 
@@ -158,7 +175,8 @@ export function QuizStage({ questions, answers, onAnswer, peek }: QuizStageProps
           {skipped.has(current) && <Text style={styles.skippedNote}>You skipped this one</Text>}
           <Text style={styles.prompt}>{question.prompt}</Text>
           <View style={styles.options}>
-            {question.options.map((option, index) => (
+            {question.options.map((option, index) =>
+              hidden.includes(index) ? null : (
               <AnswerOption
                 key={option}
                 label={option}
@@ -167,7 +185,8 @@ export function QuizStage({ questions, answers, onAnswer, peek }: QuizStageProps
                 onPress={() => choose(index)}
                 onShakeEnd={() => setFeedback('revealed')}
               />
-            ))}
+              ),
+            )}
           </View>
         </Animated.View>
       </ScrollView>
@@ -211,6 +230,28 @@ function PeekButton({ left, used, unlimited, onPeek, current, choosing }: NonNul
   );
 }
 
+/** Takes away two wrong answers (one when there are three): one per round, half points for that answer. */
+function FiftyButton({ left, used, onFifty, current, choosing, possible }: NonNullable<QuizStageProps['fifty']> & { current: number; choosing: boolean; possible: boolean }) {
+  const spent = used.length > 0;
+  const enabled = !spent && left > 0 && choosing && possible;
+  const label = spent ? '50:50 used' : `50:50 · ${left}`;
+  const hint = spent ? 'One 50:50 per round' : !possible ? 'Not on a question with two answers' : 'Takes away two wrong answers. Half points for this question.';
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityHint={hint}
+      accessibilityState={{ disabled: !enabled }}
+      disabled={!enabled}
+      onPress={() => onFifty(current)}
+      hitSlop={8}
+      style={({ pressed }) => [styles.peek, styles.fifty, !enabled && styles.peekOff, pressed && styles.peekPressed]}
+    >
+      <Text style={[styles.peekText, styles.fiftyText, !enabled && styles.peekTextOff]}>{label}</Text>
+    </Pressable>
+  );
+}
+
 const DOT = 30;
 
 const styles = StyleSheet.create({
@@ -228,6 +269,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   peekOff: { backgroundColor: colors.surface },
+  fifty: { backgroundColor: colors.speed },
+  fiftyText: { color: colors.text },
   peekPressed: { opacity: 0.7 },
   peekText: { color: colors.accentText, fontSize: 13, fontWeight: '800' },
   peekTextOff: { color: colors.textMuted },

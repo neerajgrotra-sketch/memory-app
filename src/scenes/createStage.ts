@@ -46,7 +46,8 @@ export function createStage(
   // A scene that can't produce enough questions is quietly replaced with another.
   for (let attempt = 0; ; attempt++) {
     const scene = generateScene(recipe, knobs, seed + attempt, size);
-    const questions = generateQuestions(scene, recipe, knobs);
+    // A level asks only the kinds of question it has reached (`LevelConfig.families`).
+    const questions = generateQuestions(scene, recipe, knobs).filter((q) => !knobs.families || !q.family || knobs.families.includes(q.family));
     if (questions.length >= MIN_QUESTIONS || attempt >= 10) {
       return { scene, title: getRecipe(scene.recipeId).title, questions };
     }

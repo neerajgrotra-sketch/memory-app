@@ -389,13 +389,30 @@ const items: ItemDef[] = [
     tone: '#7d8b99',
     colours: COATS,
     colourPrompt: (plural) => (plural ? 'What colour were the snowmen’s scarves?' : 'What colour was the snowman’s scarf?'),
-    draw: (colour) => (
+    // A top hat, a woolly hat or a bucket on its head: chosen per picture for a snowman on its own (see `fitDetails`).
+    draw: (colour, details) => (
       <G transform="translate(0 12)">
         <Circle cx={45} cy={104} r={36} fill="#ffffff" />
         <Circle cx={45} cy={50} r={26} fill="#ffffff" />
         <Path d="M22,64 Q45,74 68,64 L66,74 Q45,82 24,74 Z M56,72 L64,96 L54,96 L50,74" fill={colour} />
-        <Rect x={28} y={10} width={34} height={6} rx={2} fill="#212529" />
-        <Rect x={33} y={-10} width={24} height={22} rx={2} fill="#212529" />
+        {details?.values?.snowmanHat === 'woolly' ? (
+          <G>
+            <Path d="M25,16 Q25,-6 45,-6 Q65,-6 65,16 Z" fill="#e63946" />
+            <Rect x={24} y={10} width={42} height={7} rx={3} fill="#f8f9fa" />
+            <Circle cx={45} cy={-9} r={6} fill="#f8f9fa" />
+          </G>
+        ) : details?.values?.snowmanHat === 'bucket' ? (
+          <G>
+            <Path d="M28,16 L34,-8 H56 L62,16 Z" fill="#adb5bd" />
+            <Rect x={26} y={13} width={38} height={5} rx={2} fill="#868e96" />
+            <Path d="M34,-6 Q45,-18 56,-6" fill="none" stroke="#495057" strokeWidth={2} />
+          </G>
+        ) : (
+          <G>
+            <Rect x={28} y={10} width={34} height={6} rx={2} fill="#212529" />
+            <Rect x={33} y={-10} width={24} height={22} rx={2} fill="#212529" />
+          </G>
+        )}
         <G stroke="none">
           <Circle cx={37} cy={44} r={3} fill="#212529" />
           <Circle cx={53} cy={44} r={3} fill="#212529" />
@@ -403,7 +420,7 @@ const items: ItemDef[] = [
           <Circle cx={45} cy={94} r={3.5} fill="#212529" />
           <Circle cx={45} cy={110} r={3.5} fill="#212529" />
           {/* A band on the hat, stick arms, rosy cheeks, a stitched smile and shade on the snowballs. */}
-          <Rect x={33} y={4} width={24} height={5} fill={colour} />
+          {(details?.values?.snowmanHat ?? 'tophat') === 'tophat' && <Rect x={33} y={4} width={24} height={5} fill={colour} />}
           <Path d="M20,52 L2,40 M8,44 L4,36 M70,52 L88,40 M82,44 L86,36" stroke="#6b4423" strokeWidth={3.5} strokeLinecap="round" />
           <Circle cx={33} cy={52} r={3} fill="#ff8fab" fillOpacity={0.5} />
           <Circle cx={57} cy={52} r={3} fill="#ff8fab" fillOpacity={0.5} />
@@ -441,6 +458,57 @@ const items: ItemDef[] = [
         </G>
       </G>
     ),
+  },
+  {
+    // A sled pulled by 2 to 4 dogs, its driver standing on the back: "How many dogs were pulling the sled?". The dogs
+    // are dogs too, so dogs aren't counted when it's there (`uncounted`, see `fitDetails`).
+    kind: 'dog-sled',
+    singular: 'dog sled',
+    plural: 'dog sleds',
+    article: 'a',
+    w: 260,
+    h: 92,
+    // Extra wide, like a bus, so each dog is big enough to count on a phone.
+    tier: 'xl',
+    wide: true,
+    size: 0.42,
+    // By the lodge, near the front: out on the slope it's drawn far away, too small to count the dogs.
+    zones: AT_LODGE,
+    maxCount: 1,
+    countable: false,
+    tone: '#6c757d',
+    draw: (_colour, details) => {
+      const dogs = Math.max(2, Math.min(4, Number(details?.values?.sledDogs ?? 3)));
+      return (
+        <G>
+          {/* The line the dogs pull on, then the sled and its driver. */}
+          <Path d={`M60,62 H${88 + dogs * 42}`} stroke="#343a40" strokeWidth={2.5} />
+          <Path d="M2,86 H68 Q80,86 80,74" fill="none" stroke="#5c3a1a" strokeWidth={5} strokeLinecap="round" />
+          <Rect x={8} y={56} width={58} height={22} rx={4} fill="#8b5a2b" stroke="#5c3a1a" strokeWidth={2.5} />
+          <Path d="M12,62 H62 M12,70 H62" stroke="#5c3a1a" strokeOpacity={0.5} strokeWidth={2} />
+          <Path d="M14,84 V60 M28,84 V60" stroke="#212529" strokeWidth={6} strokeLinecap="round" />
+          <Rect x={9} y={22} width={24} height={36} rx={8} fill="#e63946" stroke="#8f1d26" strokeWidth={2} />
+          <Path d="M30,32 L46,40" stroke="#e63946" strokeWidth={7} strokeLinecap="round" />
+          <Circle cx={21} cy={13} r={9} fill="#e0ac69" />
+          <Path d="M12,12 Q12,0 21,0 Q30,0 30,12 Z" fill="#1d70d6" />
+          {Array.from({ length: dogs }, (_, i) => {
+            const x = 86 + i * 42;
+            return (
+              <G key={x}>
+                <Path d={`M${x + 6},${68} V${86} M${x + 12},${68} V${86} M${x + 26},${68} V${86} M${x + 32},${68} V${86}`} stroke="#495057" strokeWidth={3.5} strokeLinecap="round" />
+                <Path d={`M${x + 2},${58} Q${x - 8},${46} ${x + 2},${44}`} fill="none" stroke="#6c757d" strokeWidth={4} strokeLinecap="round" />
+                <Ellipse cx={x + 18} cy={62} rx={17} ry={9} fill="#6c757d" stroke="#343a40" strokeWidth={2} />
+                <Ellipse cx={x + 18} cy={66} rx={11} ry={4} fill="#f1f3f5" />
+                <Circle cx={x + 36} cy={52} r={8} fill="#6c757d" stroke="#343a40" strokeWidth={2} />
+                <Path d={`M${x + 31},${46} L${x + 33},${38} L${x + 37},${45} Z M${x + 37},${45} L${x + 40},${38} L${x + 42},${46} Z`} fill="#495057" />
+                <Ellipse cx={x + 39} cy={55} rx={4} ry={3} fill="#f1f3f5" />
+                <Circle cx={x + 38} cy={50} r={1.4} fill="#111" />
+              </G>
+            );
+          })}
+        </G>
+      );
+    },
   },
   {
     kind: 'ski-rack',
@@ -535,6 +603,15 @@ const items: ItemDef[] = [
         <Path d="M30,62 Q40,30 80,30 L120,30 Q150,30 168,62 Z" fill={colour} />
         <Path d="M120,30 L130,12 L142,30" fill="#cfe9f7" />
         <Rect x={46} y={22} width={50} height={12} rx={5} fill="#212529" />
+        {details?.values?.snowRider === 'yes' && (
+          // A rider leaning forward on the seat, hands on the handlebar, in a helmet.
+          <G>
+            <Path d="M64,26 L88,6" stroke="#1d3557" strokeWidth={16} strokeLinecap="round" />
+            <Path d="M88,12 L122,24" stroke="#1d3557" strokeWidth={7} strokeLinecap="round" />
+            <Circle cx={96} cy={0} r={10} fill="#e63946" />
+            <Path d="M98,-2 H106" stroke="#212529" strokeWidth={4} strokeLinecap="round" />
+          </G>
+        )}
         <G stroke="none">
           {/* A glint on the windscreen, a headlight, a racing stripe, seat stitching and treads on the track. */}
           <Path d="M126,28 L130,18 L132,28 Z" fill="#ffffff" fillOpacity={0.7} />
@@ -578,7 +655,48 @@ function details(random: Rng, { hidden = 0 }: DetailKnobs): SceneDetails {
  * peeking out. "Where was the bear hiding?" asks about it, first in the round. Nothing hides on easier levels,
  * or when there's nowhere to hide.
  */
-function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+/** What a snowman can wear on its head, and how answers name it. */
+const SNOWMAN_HATS: Record<string, string> = { tophat: 'A top hat', woolly: 'A woolly hat', bucket: 'A bucket' };
+
+/**
+ * Once things are placed: a rider on the snowmobile or not (then people aren't counted: the rider is one too), the
+ * dogs pulling the sled (then dogs aren't counted), a lone snowman's hat, then the animal hiding (harder levels).
+ */
+function fitDetails(d0: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  const values = { ...d0.values };
+  const facts = [...(d0.facts ?? [])];
+  const uncounted = [...(d0.uncounted ?? [])];
+  if (groups.some((g) => g.kind === 'snowmobile')) {
+    const riding = random.next() < 0.5;
+    values.snowRider = riding ? 'yes' : 'no';
+    if (riding) uncounted.push('person');
+    facts.push({ id: 'snow-rider', family: 'story', type: 'object', prompt: 'Was anyone riding the snowmobile?', answer: riding ? 'Yes' : 'No', wrong: [riding ? 'No' : 'Yes'], needs: 'snowmobile' });
+  }
+  if (groups.some((g) => g.kind === 'dog-sled')) {
+    const dogs = random.int(2, 4);
+    values.sledDogs = String(dogs);
+    uncounted.push('dog');
+    facts.push({ id: 'sled-dogs', family: 'story', type: 'count', prompt: 'How many dogs were pulling the sled?', answer: String(dogs), wrong: ['1', '2', '3', '4', '5'].filter((n) => n !== String(dogs)), needs: 'dog-sled' });
+  }
+  const d = { ...d0, values, facts, uncounted };
+  if (groups.find((g) => g.kind === 'snowman')?.count !== 1) return hideAnimal(d, groups, random);
+  const hat = random.pick(Object.keys(SNOWMAN_HATS));
+  const answer = SNOWMAN_HATS[hat];
+  return hideAnimal(
+    {
+      ...d,
+      values: { ...d.values, snowmanHat: hat },
+      facts: [
+        ...(d.facts ?? []),
+        { id: 'snowman-hat', family: 'story', type: 'object', prompt: 'What was the snowman wearing on its head?', answer, wrong: Object.values(SNOWMAN_HATS).filter((n) => n !== answer), needs: 'snowman' },
+      ],
+    },
+    groups,
+    random,
+  );
+}
+
+function hideAnimal(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
   if (!d.values?.peek) return d;
   const spots = groups.filter((g) => HIDING_SPOTS[g.kind] && g.count === 1).map((g) => g.kind);
   if (!spots.length) return d;

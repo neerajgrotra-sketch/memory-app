@@ -25,7 +25,17 @@ export type QuestionFamily =
   | 'relation'
   | 'twins'
   | 'true-false'
-  | 'detail';
+  | 'detail'
+  /** What was happening in the picture: "Was the kettle steaming?", "What was the person holding?" */
+  | 'story'
+  /** "Only one kind of thing was on the pond. What colour was it?": find it by where it was, then remember its colour. */
+  | 'two-step'
+  /** Sums on what you saw: "How many … and … altogether?" */
+  | 'altogether'
+  /** "How many more … than …?" */
+  | 'difference'
+  /** Division: "If the … were split into 2 equal groups, how many would be in each?" */
+  | 'sharing';
 
 /** A question about a picture, before it is prepared for a round. */
 export interface Question {
@@ -41,6 +51,11 @@ export interface Question {
   /** What the question is about; a round avoids asking about the same thing twice. */
   subject?: string;
   family?: QuestionFamily;
+  /**
+   * The question's wording, whatever it's about ("colour" for every "What colour was the …?", "fact:clock-time"):
+   * a round avoids the wordings of the round before, so a session doesn't keep asking the same sentence.
+   */
+  template?: string;
   /** Asked first when it's in the picture (the time on a clock: rare, so always worth asking). */
   spotlight?: boolean;
   /** Keep the options in this order (True before False; "The same number" last). */
@@ -51,6 +66,8 @@ export interface Question {
 export interface RoundQuestion {
   id: string;
   type: QuestionType;
+  /** See `Question.template`. */
+  template?: string;
   prompt: string;
   options: string[];
   answerIndex: number;

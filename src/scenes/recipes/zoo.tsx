@@ -107,34 +107,60 @@ const items: ItemDef[] = [
     ...animal,
     maxCount: 1,
     tone: '#9aa5ae',
-    draw: () => (
-      <G>
-        <G fill="#9aa5ae">
-          <Rect x={30} y={120} width={28} height={70} rx={8} />
-          <Rect x={66} y={124} width={28} height={66} rx={8} />
-          <Rect x={124} y={124} width={28} height={66} rx={8} />
-          <Rect x={156} y={120} width={28} height={70} rx={8} />
-          <Ellipse cx={104} cy={100} rx={92} ry={60} />
-          <Path d="M184,80 Q218,90 210,140 Q206,170 196,180" fill="none" stroke="#9aa5ae" strokeWidth={20} strokeLinecap="round" />
-          <Circle cx={180} cy={70} r={36} />
-          <Path d="M150,40 Q120,56 128,100 Q150,116 168,92 Z" fill="#8a949c" />
+    // Trunk down, or raised and spraying water over its back, chosen per picture: "Was the elephant spraying water?".
+    draw: (_colour, details) => {
+      const spraying = details?.values?.spray === 'yes';
+      return (
+        <G>
+          <G fill="#9aa5ae">
+            <Rect x={30} y={120} width={28} height={70} rx={8} />
+            <Rect x={66} y={124} width={28} height={66} rx={8} />
+            <Rect x={124} y={124} width={28} height={66} rx={8} />
+            <Rect x={156} y={120} width={28} height={70} rx={8} />
+            <Ellipse cx={104} cy={100} rx={92} ry={60} />
+            {spraying ? (
+              <Path d="M192,82 Q226,62 208,16" fill="none" stroke="#9aa5ae" strokeWidth={20} strokeLinecap="round" />
+            ) : (
+              <Path d="M184,80 Q218,90 210,140 Q206,170 196,180" fill="none" stroke="#9aa5ae" strokeWidth={20} strokeLinecap="round" />
+            )}
+            <Circle cx={180} cy={70} r={36} />
+            <Path d="M150,40 Q120,56 128,100 Q150,116 168,92 Z" fill="#8a949c" />
+          </G>
+          <Path d="M190,96 Q206,104 214,96" fill="none" stroke="#f8f9fa" strokeWidth={6} strokeLinecap="round" />
+          <Circle cx={190} cy={62} r={3} fill="#111" stroke="none" />
+          <Path d="M12,96 Q2,110 8,124" fill="none" stroke="#9aa5ae" strokeWidth={5} strokeLinecap="round" />
+          <G stroke="none">
+            {/* Toenails, wrinkles on the trunk and legs, a pink inner ear, a tail tuft and light along the back. */}
+            {[36, 46, 72, 82, 130, 140, 162, 172].map((x) => (
+              <Ellipse key={x} cx={x} cy={186} rx={4} ry={3} fill="#e9ecef" />
+            ))}
+            {!spraying && <Path d="M196,110 h12 M198,124 h11 M197,138 h10 M194,152 h9" stroke="#6c757d" strokeOpacity={0.6} strokeWidth={2.5} strokeLinecap="round" />}
+            <Path d="M34,150 h20 M70,154 h20 M128,154 h20 M160,150 h20" stroke="#6c757d" strokeOpacity={0.45} strokeWidth={2} strokeLinecap="round" />
+            <Path d="M148,52 Q130,64 134,94 Q148,102 160,88 Z" fill="#c9a0a6" fillOpacity={0.5} />
+            <Ellipse cx={8} cy={128} rx={4} ry={6} fill="#495057" />
+            <Path d="M40,52 Q100,36 160,50" fill="none" stroke="#ffffff" strokeOpacity={0.3} strokeWidth={5} strokeLinecap="round" />
+          </G>
+          {spraying && (
+            // A shower of water arching from the trunk back over the elephant.
+            <G>
+              <Path d="M206,10 Q150,0 92,30" fill="none" stroke="#4dabf7" strokeWidth={7} strokeLinecap="round" />
+              <Path d="M204,16 Q160,4 120,36" fill="none" stroke="#a5d8ff" strokeWidth={4} strokeLinecap="round" />
+              <G fill="#4dabf7" stroke="#1971c2" strokeWidth={1.5}>
+                {[
+                  [86, 40],
+                  [100, 46],
+                  [76, 50],
+                  [114, 44],
+                  [92, 54],
+                ].map(([cx, cy]) => (
+                  <Circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={4} />
+                ))}
+              </G>
+            </G>
+          )}
         </G>
-        <Path d="M190,96 Q206,104 214,96" fill="none" stroke="#f8f9fa" strokeWidth={6} strokeLinecap="round" />
-        <Circle cx={190} cy={62} r={3} fill="#111" stroke="none" />
-        <Path d="M12,96 Q2,110 8,124" fill="none" stroke="#9aa5ae" strokeWidth={5} strokeLinecap="round" />
-        <G stroke="none">
-          {/* Toenails, wrinkles on the trunk and legs, a pink inner ear, a tail tuft and light along the back. */}
-          {[36, 46, 72, 82, 130, 140, 162, 172].map((x) => (
-            <Ellipse key={x} cx={x} cy={186} rx={4} ry={3} fill="#e9ecef" />
-          ))}
-          <Path d="M196,110 h12 M198,124 h11 M197,138 h10 M194,152 h9" stroke="#6c757d" strokeOpacity={0.6} strokeWidth={2.5} strokeLinecap="round" />
-          <Path d="M34,150 h20 M70,154 h20 M128,154 h20 M160,150 h20" stroke="#6c757d" strokeOpacity={0.45} strokeWidth={2} strokeLinecap="round" />
-          <Path d="M148,52 Q130,64 134,94 Q148,102 160,88 Z" fill="#c9a0a6" fillOpacity={0.5} />
-          <Ellipse cx={8} cy={128} rx={4} ry={6} fill="#495057" />
-          <Path d="M40,52 Q100,36 160,50" fill="none" stroke="#ffffff" strokeOpacity={0.3} strokeWidth={5} strokeLinecap="round" />
-        </G>
-      </G>
-    ),
+      );
+    },
   },
   {
     kind: 'zebra',
@@ -507,25 +533,27 @@ const items: ItemDef[] = [
     countable: false,
     colours: [C.red, C.blue, C.yellow, C.green, C.pink, C.purple],
     colourPrompt: () => 'What colour were the balloon seller’s balloons?',
-    // A person holding a bunch of party balloons; the balloons are the colour asked about.
-    draw: (colour, details, copy) => (
-      <G>
-        <Path d="M66,96 L40,46 M66,96 L64,40 M66,96 L86,48" fill="none" stroke="#495057" strokeWidth={2} />
-        <G fill={colour}>
-          <Ellipse cx={38} cy={30} rx={16} ry={20} />
-          <Ellipse cx={64} cy={22} rx={16} ry={20} />
-          <Ellipse cx={84} cy={36} rx={14} ry={18} />
+    // A person holding a bunch of party balloons; the balloons are the colour asked about. How many (2 to 5) is
+    // chosen per picture: "How many balloons was the balloon seller holding?".
+    draw: (colour, details, copy) => {
+      const n = Math.max(2, Math.min(5, Number(details?.values?.balloons ?? 3)));
+      const bunch = SELLER_BALLOONS.slice(0, n);
+      return (
+        <G>
+          <Path d={bunch.map(([x, y, , ry]) => `M66,96 L${x},${y + ry}`).join(' ')} fill="none" stroke="#495057" strokeWidth={2} />
+          {bunch.map(([x, y, rx, ry]) => (
+            <G key={`${x}-${y}`}>
+              <Ellipse cx={x} cy={y} rx={rx} ry={ry} fill={colour} />
+              {/* A shine and a knot on each balloon. */}
+              <Ellipse cx={x - 6} cy={y - 8} rx={4} ry={6} fill="#ffffff" fillOpacity={0.5} stroke="none" transform={`rotate(-20 ${x - 6} ${y - 8})`} />
+              <Path d={`M${x},${y + ry} l-3,4 h6 Z`} fill={colour} stroke="none" />
+            </G>
+          ))}
+          {/* Without the person's own hat or things in hand from another place's details. */}
+          <G transform="translate(6 85)">{person.draw('#f8f9fa', undefined, copy)}</G>
         </G>
-        <G stroke="none">
-          {/* A shine and a knot on each balloon. */}
-          <Ellipse cx={32} cy={22} rx={4} ry={6} fill="#ffffff" fillOpacity={0.5} transform="rotate(-20 32 22)" />
-          <Ellipse cx={58} cy={14} rx={4} ry={6} fill="#ffffff" fillOpacity={0.5} transform="rotate(-20 58 14)" />
-          <Ellipse cx={79} cy={29} rx={3.5} ry={5} fill="#ffffff" fillOpacity={0.5} transform="rotate(-20 79 29)" />
-          <Path d="M38,50 l-3,4 h6 Z M64,42 l-3,4 h6 Z M84,54 l-3,4 h6 Z" fill={colour} />
-        </G>
-        <G transform="translate(6 85)">{person.draw('#f8f9fa', details, copy)}</G>
-      </G>
-    ),
+      );
+    },
   },
   {
     kind: 'signpost',
@@ -594,17 +622,32 @@ function fits(item: ItemDef, zoneId: string, col: number, d?: SceneDetails): boo
 }
 
 /** The feeding-time sign (a time and which animals) and the enclosures' habitats, chosen per picture. */
+/** Where the balloon seller's balloons are, in order, for bunches of 2 to 5: [x, y, rx, ry]. Each stands apart to count. */
+const SELLER_BALLOONS: [number, number, number, number][] = [
+  [38, 30, 15, 19],
+  [66, 22, 15, 19],
+  [84, 52, 12, 15],
+  [16, 54, 12, 15],
+  [52, 58, 12, 15],
+];
+
 function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
   // Grassland and a sandy paddock every time (most animals live there), and a third that's often rocks or ice.
   const habitats = random.shuffle<Habitat>(['grass', 'sand', random.pick<Habitat>(['rocks', 'ice', 'rocks', 'ice', 'grass', 'sand'])]);
   // A printed time on a sign: on the clock-face steps (whole hours, half past, quarters).
   const time = randomTime(random, clockStep);
   const { close, other } = digitalLookalikes(time);
+  const spray = random.next() < 0.5 ? 'yes' : 'no';
+  const balloons = random.int(2, 5);
   return {
     palette: Object.fromEntries(habitats.map((h, i) => [`enc${i}`, HABITATS[h]])),
-    values: { feeding: time, ...Object.fromEntries(habitats.map((h, i) => [`habitat${i}`, h])) },
+    values: { feeding: time, spray, balloons: String(balloons), ...Object.fromEntries(habitats.map((h, i) => [`habitat${i}`, h])) },
     // Which animals are fed is chosen once they're placed (see `fitDetails`).
-    facts: [{ id: 'feeding-time', type: 'number', prompt: 'What time was feeding time?', answer: time, wrong: close, fallback: other, everyLevel: true }],
+    facts: [
+      { id: 'feeding-time', type: 'number', prompt: 'What time was feeding time?', answer: time, wrong: close, fallback: other, everyLevel: true },
+      { id: 'elephant-spray', family: 'story', type: 'object', prompt: 'Was the elephant spraying water?', answer: spray === 'yes' ? 'Yes' : 'No', wrong: [spray === 'yes' ? 'No' : 'Yes'], needs: 'elephant' },
+      { id: 'seller-balloons', family: 'story', type: 'count', prompt: 'How many balloons was the balloon seller holding?', answer: String(balloons), wrong: ['2', '3', '4', '5', '6'].filter((n) => n !== String(balloons)), needs: 'balloon-seller' },
+    ],
   };
 }
 

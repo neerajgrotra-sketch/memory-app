@@ -85,9 +85,14 @@ These make you remember two things at once, or the whole picture, instead of one
 | **Compare:** "Were there more kites or more birds?" | two countable things (up to 2 pairs per picture) | the one with more, or **The same number** | always the three options in that order (`fixedOrder`) |
 | **Most:** "Which was there the most of?" | 4+ countable things, one clearly the most | its plural, "Kites" | the other countable things in the picture |
 | **Just one:** "Which was there just one of?" | exactly one countable thing was on its own, and 2+ had several | "A palm tree" | things with several copies, then countable things not in the picture. Never another single thing (the sun, the sofa), which would also be "just one". |
-| **Above / below:** "What was in the sky, above the pumpkins?" | exactly one thing is in a higher (lower) band **in the same third**, and both it and the thing asked about are the only things in that third of their own band (in a deep band like the living room floor, an armchair at the back stands above crayons at the front, so "on the wall, above the crayons" would skip it); the question names that band, so "above the pumpkins" can't be read as the barn on the hill (plain "What was above the bench?" for the few bands whose names read oddly there: "Close by", "At the front", "Near the hills") | "Hot-air balloons" | things that can be in that band, from the picture or not in it, in the same singular or plural form; something that can't be there only to make up three choices, since it would give the answer away. Never between two flat bands (the path and the grass, the sand and the sea at the beach): there the one lower down is nearer, not below, so "What was on the grass, below the dog?" made no sense. Bands are flat by default when they're ground, unless things stand flush on a line (shelves, roofs, the worktop); `flat` marks water that lies flat. |
+| **Above / below:** "What was in the sky, above the pumpkins?" | exactly one thing is in a higher (lower) band **in the same third**, and both it and the thing asked about are the only things in that third of their own band (in a deep band like the living room floor, an armchair at the back stands above crayons at the front, so "on the wall, above the crayons" would skip it); the question names that band, so "above the pumpkins" can't be read as the barn on the hill (plain "What was above the bench?" for the few bands whose names read oddly there: "Close by", "At the front", "Near the hills") | "Hot-air balloons" | things that can be in that band, from the picture or not in it, in the same singular or plural form; something that can't be there only to make up three choices, since it would give the answer away. Only the very next band up or down, never skipping one ("on the top shelf, above the milk" skipped an empty middle shelf, where players looked first). Never between two flat bands (the path and the grass, the sand and the sea at the beach): there the one lower down is nearer, not below, so "What was on the grass, below the dog?" made no sense. Bands are flat by default when they're ground, unless things stand flush on a line (shelves, roofs, the worktop); `flat` marks water that lies flat. Never into a band marked `inFront` (the supermarket floor stands in front of the shelves, so "What was on the floor, below the tins?" made no sense). |
 | **In a band:** "Which of these was in the departure lounge?" | a band with two or more kinds | one of them | things that could be in that band but aren't in the picture at all, so exactly one choice is right |
+| **Anything there?** "Was there anything on the carpet?" / "…on the pond?" / "…on the bottom shelf?" | a band (or the rug) holds one kind of thing, or nothing; not a band with a sign or door drawn in it (`keepClear`), not an empty sky (clouds and stars could count), not when something is hiding in the picture | "Yes, a teddy bear" or "No, nothing" | "No, nothing" is always one of the four, right when it's empty and wrong when it isn't, so it's never a giveaway; the rest are "Yes, a …" with things that could be there (on the rug, things allowed on it). Same subject as "What was on the pond?", so a round asks one |
 | **Band:** "What was on the pond?" | only one kind of thing is in that whole band (not a rug's band, which has "What was on the carpet?") | "A swan" | things that can be in that band |
+| **Two steps** (from Level 5): "Only one kind of thing was on the pond. What colour was it?" | one kind is the only thing in its band, all one colour, coloured as a whole (not a shirt or a sail), and nothing is hiding in the picture (a peeking crab could be "the thing" too) | "Yellow" | its other colours, then any colour. Same subject as "What colour were the boats?", so a round never asks both |
+| **Altogether** (from Level 11): "How many kites and hot-air balloons were there altogether?" | two countable things adding up to 12 or fewer | the sum | the nearest numbers |
+| **How many more** (from Level 27): "How many more crows than pumpkins were there?" | two countable things with different counts | the difference (1 or more) | the nearest numbers |
+| **Sharing** (division, from Level 29): "If the fish were split into two equal groups, how many would be in each group?" | a countable thing whose count shares out exactly into 2 or 3 groups of 2 or more (4 or 6) | the share | the nearest numbers. The question never says how many there were: you remember it first |
 | **Colour twins:** "What else was the same colour as the kites?" | exactly one other thing has the same colour | "The hot-air balloons" | things of other colours, then things not in the picture |
 | **True or false:** "True or false? There were three kites." | up to 3 per picture, about counts, colours or things not in the picture | True or False (about half are false) | the other one, always True first |
 
@@ -121,6 +126,32 @@ Optional fields:
 - `everyLevel`: asked from Level 1, not just from Level 8
 - `spotlight`: asked first in a round when it can be
 - `fallback`: more wrong answers when `wrong` runs short.
+
+### What was happening: story questions (4.5.0, 4.6.0)
+
+Things drawn differently per picture, about what was going on rather than reading a number or a sign. When the picture draws an extra one of something somewhere (a pupil at the piano, dogs pulling the sled, a rider on the snowmobile), that kind goes in `SceneDetails.uncounted`: "How many…?" and "What colour…?" aren't asked about it, since the extra one would make them arguable. They're facts with `family: 'story'`: asked from **Level 1** (reading clocks, numbers and signs waits for Level 3), at most one a round, and a round picks one whenever the picture has it, just after a spotlight question (they're the fun part of a picture, and rare). Two-choice ones (Yes / No, On / Off) are allowed, like true or false. Every answer really happens, "Nothing" and "None of them" included.
+
+| Place | Question | Answers |
+| --- | --- | --- |
+| Beach, park, city (one person in the picture) | "What was the person wearing on their head?" / "What was the person holding?" (`peopleStory`; both about the person, like their shirt's colour, so a round asks one) | A sun hat · A cap · A woolly hat · Nothing / A balloon · An ice cream · A shopping bag · Nothing (each place its own few) |
+| Beach | "Was the beach umbrella open or closed?" (one umbrella); "Which palm tree had coconuts on the sand by it?"; "Was there a flag on the sandcastle?" (one sandcastle); "Was anyone lying on the beach towel?" (one towel with no crab under it; the towel is drawn plain, without its stripes, and the sunbather outlined, in whichever swimsuit colour stands out most from the towel; then people aren't counted, and the person's hat and things in hand aren't asked) | Open · Closed / Yes · No |
+| Park | "What was the dog carrying?" (one dog, in its mouth) | A ball · A stick · A frisbee · Nothing |
+| Farm | "How many eggs were in the nest?" (a hen's nest, a thing of its own, drawn bigger than life to count) | 1 to 5 |
+| Zoo | "Was the elephant spraying water?" (trunk raised, a shower over its back) · "How many balloons was the balloon seller holding?" | Yes · No / 2 to 5 |
+| Kitchen | "Was the kettle steaming?" · "Was there toast in the toaster?" · "What was in the fruit bowl?" | Yes · No |
+| Under the sea | "What was the diver holding?" (one diver) · "What was in the treasure chest?" | A torch · A net · A camera · Nothing |
+| Space | "Was there fire coming out of the rocket?" · "What was the astronaut holding?" (one astronaut; not a flag or a rock, which are things of their own there) | Yes · No / A camera · A torch · Nothing |
+| Snowy mountain | "What was the snowman wearing on its head?" (one snowman) · "Was anyone riding the snowmobile?" · "How many dogs were pulling the sled?" (a dog sled, extra wide so the dogs can be counted) | A top hat · A woolly hat · A bucket / Yes · No / 2 to 4 |
+| Classroom | "Was anyone playing the piano?" or "What colour was the piano player’s jumper?" (one of the two, so neither gives the other away) | Yes · No / the jumper colours |
+| Classroom | "How many fish were in the fish tank?" | 1 to 4 |
+| Train station | "How many people were looking out of the train’s windows?" (a passenger in each window or not) | None · 1 · 2 · 3 |
+| Airport | "Was the coffee kiosk open or closed?" (shut: its shutter down) | Open · Closed |
+| Supermarket | "What was in the shopping basket?" (one basket; green apples in a red basket) · "What had spilled on the floor?" | Apples · A loaf of bread · Nothing, it was empty |
+| Living room | the TV, the lamps on or off, the pets' toys, where the cat was, "Was the cat asleep or awake?" (one cat; a sleeping cat has no toy), "Were the curtains open or closed?", and: | |
+| Living room | "What was in the picture frame?" (one frame; a second frame shows another picture, so no question) | Hills and a lake · A sailing boat · Flowers in a vase · A house and a tree |
+| City street | "Which house had smoke coming out of its chimney?" (each house has a chimney; smoke from one, or now and then none) | The yellow / pink / … house (the street's own colours) · None of them |
+| Night campsite | "Was the campfire burning, or just smoking?" | Burning · Just smoking |
+| Park | "Was anyone riding the bicycle?" (one bicycle) / "How many of the bicycles had someone riding them?" (two) | Yes · No / None of them · One of them · Both of them |
 
 ### Clocks (living room, city, park, kitchen)
 
@@ -175,6 +206,20 @@ When the picture has a clock (the living room's wall clock, the city's street cl
 ## 7. Determinism, ids and types
 
 - **Same picture, same questions.** Wording and wrong options come from `createRng(seed ^ 0x9e3779b9)`. Only the round's selection and the option order use `Math.random`.
+- **Other wordings** (`WORDINGS` and `reworded` in `generateQuestions.ts`): the commonest questions have two to four ways of asking, so a session doesn't keep repeating one sentence. Each question picks its way from its id, so it always reads the same (a resumed round, Same picture again). Every way keeps the words the checks look for (the band's name, "NOT").
+
+  | Usual | Also |
+  | --- | --- |
+  | Where was the bicycle? | Where did you see the bicycle? · Where in the picture was the bicycle? · Can you remember where the bicycle was? |
+  | Which of these was in the picture? | Which of these did you see? · One of these was in the picture. Which one? |
+  | Which of these was NOT in the picture? | Which of these did you NOT see? · One of these was NOT in the picture. Which one? |
+  | Which of these was in the sky? | Which of these did you see in the sky? |
+  | What was on the pond? | What did you see on the pond? · Can you remember what was on the pond? |
+  | What colour was the kite? | The kite was what colour? · Think back: what colour was the kite? |
+  | How many kites were there? | How many kites did you see? · Count the kites: how many were there? |
+  | What time was on the clock? | What time did the clock show? · What time did the clock say? |
+
+  In 10-round sessions, the share of questions worded like one asked earlier fell from 30% to 20% (4.12.0).
 - **Question id:** `<scene id>-<template>-<kind>`. Templates are `count`, `colour`, `colours`, `where`, `what-here`, `seen`, `missing`, `compare`, `most`, `above`, `below`, `twins` and `true-false`. Houses use `<scene id>-house-number-<n>` and `<scene id>-house-colour-<n>`; detail facts `<scene id>-fact-<id>`.
 - **Options:** two to four. Every wrong option must be believable: things that could really be in that band, places the thing could really be. When there aren't three believable ones, a question has three options; with fewer than three in all it isn't asked (true or false has its own two; compare always has three).
 - **Question types** (`QuestionType` in `src/types/game.ts`), shown on the quiz chip and tracked on the progress screen:

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withDelay, withSpring, withTiming } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -18,10 +18,12 @@ interface LevelUpScreenProps {
   onContinue: () => void;
   /** Leave the game (the new level is already saved). */
   onClose: () => void;
+  /** A boss level: take on its boss round. */
+  onBoss?: () => void;
 }
 
 /** Shown after a round that took you up a level: the new level, its title if it's a milestone, and what's new. */
-export function LevelUpScreen({ level, onPlay, onContinue, onClose }: LevelUpScreenProps) {
+export function LevelUpScreen({ level, onPlay, onContinue, onClose, onBoss }: LevelUpScreenProps) {
   const pop = useSharedValue(0.6);
   const fade = useSharedValue(0);
   useEffect(() => {
@@ -40,6 +42,9 @@ export function LevelUpScreen({ level, onPlay, onContinue, onClose }: LevelUpScr
   const ringStyle = useAnimatedStyle(() => ({ transform: [{ scale: pop.value }] }));
   const textStyle = useAnimatedStyle(() => ({ opacity: fade.value }));
 
+  // A smaller ring on a short phone (iPhone SE), so the news and the buttons fit; the news scrolls if it still doesn't.
+  const { height } = useWindowDimensions();
+  const ringSize = height < 740 ? 110 : 150;
   const milestone = level % 5 === 0 || level === 1;
   const news = unlocksAt(level);
 
@@ -48,10 +53,10 @@ export function LevelUpScreen({ level, onPlay, onContinue, onClose }: LevelUpScr
       <View style={styles.close}>
         <QuitButton onPress={onClose} label="Close, your new level is saved" />
       </View>
-      <View style={styles.center}>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.center}>
         <Text style={styles.kicker}>Level up!</Text>
         <Animated.View style={ringStyle}>
-          <LevelUpRing level={level} size={150} />
+          <LevelUpRing level={level} size={ringSize} />
         </Animated.View>
         <Animated.View style={[styles.textBlock, textStyle]}>
           <Text style={styles.title}>{milestone ? `You’re now: ${titleFor(level)}` : `Welcome to Level ${level}`}</Text>
@@ -64,16 +69,24 @@ export function LevelUpScreen({ level, onPlay, onContinue, onClose }: LevelUpScr
             ))}
           </View>
         </Animated.View>
-      </View>
+      </ScrollView>
       <View style={styles.actions}>
         <Button
           label={`Play Level ${level}`}
-          onPress={() => {
-            feedback('start');
-            onPlay();
-          }}
+          // The start sound is played by `onPlay`: a Super Speed Round has its own.
+          onPress={onPlay}
         />
-        <Button label="See my results" variant="secondary" onPress={onContinue} />
+        {/* Side by side with a boss to take on, so three buttons leave room for the news on a small phone. */}
+        <View style={styles.secondary}>
+          {onBoss && (
+            <View style={styles.half}>
+              <Button label="Boss round" variant="secondary" onPress={onBoss} accessibilityHint="Take on this level’s boss" />
+            </View>
+          )}
+          <View style={styles.half}>
+            <Button label={onBoss ? 'My results' : 'See my results'} variant="secondary" onPress={onContinue} />
+          </View>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -82,12 +95,15 @@ export function LevelUpScreen({ level, onPlay, onContinue, onClose }: LevelUpScr
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
   close: { paddingHorizontal: 16, paddingTop: 16, alignItems: 'flex-start' },
-  center: { flex: 1, width: '100%', maxWidth: 520, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', padding: 24, gap: 20 },
+  scroll: { flex: 1 },
+  secondary: { flexDirection: 'row', gap: 12 },
+  half: { flex: 1 },
+  center: { flexGrow: 1, width: '100%', maxWidth: 520, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', padding: 24, gap: 20 },
   kicker: { color: colors.accent, fontSize: 18, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 2 },
   textBlock: { alignItems: 'center', gap: 20, alignSelf: 'stretch' },
   title: { color: colors.text, fontSize: 26, fontWeight: '900', textAlign: 'center' },
   news: { alignSelf: 'stretch', backgroundColor: colors.surface, borderRadius: radius.md, padding: 16, gap: 8 },
   newsTitle: { color: colors.textMuted, fontSize: 13, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1 },
   newsLine: { color: colors.text, fontSize: 16, lineHeight: 22 },
-  actions: { padding: 24, gap: 12, width: '100%', maxWidth: 520, alignSelf: 'center' },
+  actions: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 24, gap: 12, width: '100%', maxWidth: 520, alignSelf: 'center' },
 });

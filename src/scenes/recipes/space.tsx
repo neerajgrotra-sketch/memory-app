@@ -1,9 +1,10 @@
+import type { ReactElement } from 'react';
 import { Circle, Ellipse, G, Path, Polygon, Rect, Text as SvgText } from 'react-native-svg';
 
 import { C } from '../colours';
 import { lineMarks } from '../marks';
 import type { Rng } from '../random';
-import type { ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import type { ItemDef, Mark, PlacedGroup, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
 import { speckles } from '../texture';
 
 /**
@@ -113,14 +114,19 @@ const items: ItemDef[] = [
     noFlip: true,
     colours: [C.red, C.blue, C.orange, C.green],
     colourPrompt: () => 'What colour were the rocket’s fins?',
-    draw: (colour) => (
+    // Engines firing or coasting, chosen per picture: "Was there fire coming out of the rocket?".
+    draw: (colour, details) => (
       <G>
         <Path d="M35,4 Q58,30 56,96 H14 Q12,30 35,4 Z" fill="#f8f9fa" />
         <Circle cx={35} cy={50} r={10} fill="#4dabf7" />
         <Path d="M14,74 L2,110 H18 Z M56,74 L68,110 H52 Z" fill={colour} />
         <Path d="M35,4 Q46,16 50,28 H20 Q24,16 35,4 Z" fill={colour} />
-        <Path d="M22,98 Q35,150 48,98 Z" fill="#ffd60a" stroke="none" />
-        <Path d="M28,98 Q35,130 42,98 Z" fill="#f77f00" stroke="none" />
+        {details?.values?.engine !== 'off' && (
+          <G>
+            <Path d="M22,98 Q35,150 48,98 Z" fill="#ffd60a" stroke="none" />
+            <Path d="M28,98 Q35,130 42,98 Z" fill="#f77f00" stroke="none" />
+          </G>
+        )}
         <G stroke="none">
           {/* A rim and a shine on the porthole, panel lines and a shine down the body. */}
           <Circle cx={35} cy={50} r={10} fill="none" stroke="#adb5bd" strokeWidth={2.5} />
@@ -389,7 +395,8 @@ const items: ItemDef[] = [
     tone: '#495057',
     colours: BRIGHT,
     colourPrompt: (plural) => (plural ? 'What colour were the astronauts’ backpacks?' : 'What colour was the astronaut’s backpack?'),
-    draw: (colour) => (
+    // An astronaut on their own may hold a camera or a torch in the glove on the right (see `fitDetails`).
+    draw: (colour, details) => (
       <G>
         <Rect x={6} y={36} width={24} height={52} rx={6} fill={colour} />
         <Rect x={26} y={80} width={14} height={48} rx={6} fill="#f8f9fa" />
@@ -411,6 +418,7 @@ const items: ItemDef[] = [
           <Path d="M26,98 H40 M44,98 H58 M24,70 H64" stroke="#ced4da" strokeWidth={2} />
           <Circle cx={44} cy={38} r={5} fill="none" stroke="#ced4da" strokeWidth={2} />
         </G>
+        {ASTRONAUT_HOLDS[details?.values?.astronautHolds ?? '']?.draw()}
       </G>
     ),
   },
@@ -566,12 +574,52 @@ function baseLookalikes(n: number): string[] {
 }
 
 /** The mission name and base number on the sign, chosen per picture. */
+/** What an astronaut can hold in the glove at about (67, 82). (Not a flag or a rock: those are things of their own here.) */
+const ASTRONAUT_HOLDS: Record<string, { name: string; draw: () => ReactElement }> = {
+  camera: {
+    name: 'A camera',
+    draw: () => (
+      <G>
+        <Rect x={60} y={66} width={20} height={15} rx={3} fill="#343a40" stroke="#111" strokeWidth={1.5} />
+        <Circle cx={70} cy={73.5} r={4.5} fill="#74c0fc" stroke="#111" strokeWidth={1.5} />
+      </G>
+    ),
+  },
+  torch: {
+    name: 'A torch',
+    draw: () => (
+      <G>
+        <Path d="M74,60 L80,44 V76 Z" fill="#fff3bf" fillOpacity={0.9} stroke="none" />
+        <Path d="M64,82 L74,62" stroke="#343a40" strokeWidth={7} strokeLinecap="round" />
+        <Circle cx={74} cy={61} r={4.5} fill="#ffd60a" stroke="#b08a00" strokeWidth={1.5} />
+      </G>
+    ),
+  },
+};
+
+/** Once things are placed: with one astronaut, what they're holding (or nothing). */
+function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  if (groups.find((g) => g.kind === 'astronaut')?.count !== 1) return d;
+  const holds = random.next() < 0.25 ? '' : random.pick(Object.keys(ASTRONAUT_HOLDS));
+  const answer = holds ? ASTRONAUT_HOLDS[holds].name : 'Nothing';
+  return {
+    ...d,
+    values: { ...d.values, astronautHolds: holds },
+    facts: [
+      ...(d.facts ?? []),
+      { id: 'astronaut-holds', family: 'story', type: 'object', prompt: 'What was the astronaut holding?', answer, wrong: [...Object.values(ASTRONAUT_HOLDS).map((h) => h.name), 'Nothing'].filter((n) => n !== answer), needs: 'astronaut' },
+    ],
+  };
+}
+
 function details(random: Rng): SceneDetails {
   const mission = random.pick(MISSIONS);
   const base = random.int(1, 49);
+  const engine = random.next() < 0.5 ? 'on' : 'off';
   return {
-    values: { mission, base: String(base) },
+    values: { mission, base: String(base), engine },
     facts: [
+      { id: 'rocket-fire', family: 'story', type: 'object', prompt: 'Was there fire coming out of the rocket?', answer: engine === 'on' ? 'Yes' : 'No', wrong: [engine === 'on' ? 'No' : 'Yes'], needs: 'rocket' },
       { id: 'mission', type: 'object', prompt: 'What was the mission called on the sign?', answer: mission, wrong: MISSIONS.filter((m) => m !== mission) },
       { id: 'base-number', type: 'number', prompt: 'What number was the moon base on the sign?', answer: String(base), wrong: baseLookalikes(base) },
     ],
@@ -666,6 +714,7 @@ export const space: Recipe = {
   items,
   keepClear: [SIGN],
   details,
+  fitDetails,
   // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
   light: [
     // Sunlight on the dust, a little brighter towards us.

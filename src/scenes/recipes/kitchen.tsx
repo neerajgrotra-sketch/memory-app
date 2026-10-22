@@ -469,8 +469,16 @@ const items: ItemDef[] = [
     maxCount: 1,
     countable: false,
     colours: [C.red, C.blue, C.white, C.green, C.yellow],
-    draw: (colour) => (
+    // Steaming from its spout or not, chosen per picture: "Was the kettle steaming?".
+    draw: (colour, details) => (
       <G>
+        {details?.values?.steam === 'yes' && (
+          <G fill="#f1f3f5" stroke="#868e96" strokeWidth={2}>
+            <Circle cx={8} cy={16} r={7} />
+            <Circle cx={18} cy={7} r={8} />
+            <Circle cx={6} cy={4} r={5} />
+          </G>
+        )}
         <Path d="M64,30 Q90,30 86,58 Q84,74 66,76" fill="none" stroke={colour} strokeWidth={9} strokeLinecap="round" />
         <Path d="M16,36 L2,24" stroke={colour} strokeWidth={9} strokeLinecap="round" />
         <Path d="M14,30 Q14,14 38,14 Q62,14 62,30 L68,94 H8 Z" fill={colour} />
@@ -499,13 +507,18 @@ const items: ItemDef[] = [
     maxCount: 1,
     countable: false,
     colours: [C.red, C.blue, C.yellow, C.green, C.white],
-    draw: (colour) => (
+    // Two slices popped up, or empty with the lever up, chosen per picture: "Was there toast in the toaster?".
+    draw: (colour, details) => (
       <G>
-        <G fill="#d4a373" stroke="#8a5a2b" strokeWidth={3}>
-          <Rect x={26} y={0} width={24} height={26} rx={6} />
-          <Rect x={60} y={4} width={24} height={22} rx={6} />
-        </G>
-        <Path d="M30,6 H46 M64,10 H80" stroke="#a9744a" strokeWidth={2} />
+        {details?.values?.toast !== 'no' && (
+          <G>
+            <G fill="#d4a373" stroke="#8a5a2b" strokeWidth={3}>
+              <Rect x={26} y={0} width={24} height={26} rx={6} />
+              <Rect x={60} y={4} width={24} height={22} rx={6} />
+            </G>
+            <Path d="M30,6 H46 M64,10 H80" stroke="#a9744a" strokeWidth={2} />
+          </G>
+        )}
         <Rect x={4} y={18} width={102} height={62} rx={18} fill={colour} />
         <G stroke="none">
           {/* The slots, a dial and the shine of the metal. */}
@@ -839,11 +852,15 @@ function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
   const time = randomDigitalTime(random, clockStep);
   const { close, other } = digitalLookalikes(time);
   const fruit = random.pick(FRUIT);
+  const steam = random.next() < 0.5 ? 'yes' : 'no';
+  const toast = random.next() < 0.5 ? 'yes' : 'no';
   return {
-    values: { microwave: time, fruit },
+    values: { microwave: time, fruit, steam, toast },
     facts: [
+      { id: 'kettle-steam', family: 'story', type: 'object', prompt: 'Was the kettle steaming?', answer: steam === 'yes' ? 'Yes' : 'No', wrong: [steam === 'yes' ? 'No' : 'Yes'], needs: 'kettle' },
+      { id: 'toast', family: 'story', type: 'object', prompt: 'Was there toast in the toaster?', answer: toast === 'yes' ? 'Yes' : 'No', wrong: [toast === 'yes' ? 'No' : 'Yes'], needs: 'toaster' },
       { id: 'microwave-time', type: 'number', prompt: 'What time was on the microwave?', answer: time, wrong: close, fallback: other, needs: 'microwave', everyLevel: true, spotlight: true },
-      { id: 'fruit', type: 'object', prompt: 'What was in the fruit bowl?', answer: fruit, wrong: FRUIT.filter((f) => f !== fruit), needs: 'fruit-bowl' },
+      { id: 'fruit', family: 'story', type: 'object', prompt: 'What was in the fruit bowl?', answer: fruit, wrong: FRUIT.filter((f) => f !== fruit), needs: 'fruit-bowl' },
     ],
   };
 }

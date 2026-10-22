@@ -48,6 +48,16 @@ export interface ZoneDef {
    * line (shelves, roofs, the worktop); set it for water that lies flat (the sea at the beach).
    */
   flat?: boolean;
+  /**
+   * The band stands in front of the bands above it, not under them (the supermarket floor, in front of the shelves):
+   * nothing in it is ever "below" something up there. "What was on the floor, below the tins?" made no sense.
+   */
+  inFront?: boolean;
+  /**
+   * Ground bands: keep feet at least this fraction of the band's depth above its bottom edge, so things clearly
+   * stand on it. On the park's thin path, feet at the very bottom looked to be on the grass.
+   */
+  feetInset?: number;
   /** Everything here faces the same way (traffic on a road), chosen once per picture. */
   oneWay?: boolean;
   /** At least this many of the band's kinds are anchors (tall, against the wall or extra wide): a room always has furniture. */
@@ -225,6 +235,11 @@ export interface DetailFact {
   spotlight?: boolean;
   /** Asked on every level, not just from Level 8 (the clock, whose times get harder instead). */
   everyLevel?: boolean;
+  /**
+   * 'story': about what was happening, not reading a number or a sign (the kettle steaming, what the person was
+   * holding): asked from Level 1, as its own kind of question. Otherwise a detail, from Level 3.
+   */
+  family?: 'story';
 }
 
 /**
@@ -240,6 +255,11 @@ export interface SceneDetails {
   facts?: DetailFact[];
   /** Other per-picture choices the backdrop draws from (e.g. which side the barn is on). */
   values?: Record<string, string>;
+  /**
+   * Kinds of thing with an extra one drawn somewhere else in the picture (a pupil playing the piano, dogs pulling a
+   * sled): "How many…?" and "What colour…?" aren't asked about them, since the extra one would make either arguable.
+   */
+  uncounted?: string[];
   /**
    * Kinds of thing that show in the picture without being one of its groups (a crab hiding under the beach towel),
    * so no question offers them as "not in the picture".

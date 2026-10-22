@@ -176,7 +176,8 @@ const items: ItemDef[] = [
     maxCount: 1,
     countable: false,
     colours: [C.red, C.blue, C.green, C.yellow, C.orange],
-    draw: (colour) => (
+    // Passengers looking out of some windows, chosen per picture: "How many people were looking out of the train's windows?".
+    draw: (colour, details) => (
       <G>
         {/* The carriage behind, then the rounded nose with its windscreen and lights. */}
         <Rect x={0} y={16} width={230} height={150} rx={10} fill={colour} />
@@ -185,6 +186,16 @@ const items: ItemDef[] = [
           {[18, 82, 146].map((x) => (
             <Rect key={x} x={x} y={40} width={50} height={46} rx={6} fill="#cfe9f7" />
           ))}
+          {/* A passenger in a window: head and shoulders, big enough to count on a phone. */}
+          {[18, 82, 146].map((x, i) =>
+            details?.values?.faces?.[i] === '1' ? (
+              <G key={`face${x}`}>
+                <Rect x={x + 9} y={70} width={32} height={16} rx={7} fill={PASSENGER_TOPS[i]} />
+                <Circle cx={x + 25} cy={60} r={11} fill={PASSENGER_SKIN[i]} />
+                <Path d={`M${x + 14},${58} Q${x + 25},${42} ${x + 36},${58} Q${x + 25},${51} ${x + 14},${58} Z`} fill="#3d2b1f" />
+              </G>
+            ) : null,
+          )}
           <Path d="M240,34 H262 Q300,36 306,86 H240 Z" fill="#2f3e46" />
           <Rect x={0} y={112} width={320} height={12} fill="#ffffff" fillOpacity={0.6} />
           <Circle cx={300} cy={140} r={8} fill="#fff3b0" />
@@ -550,7 +561,14 @@ function platformLookalikes(n: number): string[] {
  * The departure board (always there): the next train's time, where it's going and its platform. Three
  * details on one sign, a step up for Level 16. Plus the station clock's time, when it's hanging there.
  */
+/** The passengers' tops and skin in the three windows (fixed, so each one stands out from its neighbour). */
+const PASSENGER_TOPS = ['#e63946', '#2b9348', '#7b2cbf'];
+const PASSENGER_SKIN = ['#e0ac69', '#8d5524', '#f1c27d'];
+
 function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
+  // Which of the train's three windows have someone looking out: "101" is the first and the last.
+  const faces = [0, 1, 2].map(() => (random.next() < 0.5 ? '1' : '0')).join('');
+  const people = [...faces].filter((f) => f === '1').length;
   const departs = randomDigitalTime(random, clockStep);
   const dep = digitalLookalikes(departs);
   const platform = random.int(1, 9);
@@ -558,8 +576,17 @@ function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
   const clock = randomTime(random, clockStep);
   const clk = timeLookalikes(clock, clockStep);
   return {
-    values: { departs, platform: String(platform), destination, clock },
+    values: { departs, platform: String(platform), destination, clock, faces },
     facts: [
+      {
+        id: 'train-faces',
+        family: 'story',
+        type: 'count',
+        prompt: 'How many people were looking out of the train’s windows?',
+        answer: people ? String(people) : 'None',
+        wrong: ['None', '1', '2', '3'].filter((n) => n !== (people ? String(people) : 'None')),
+        needs: 'train',
+      },
       { id: 'departs', type: 'number', prompt: 'What time was the next train?', answer: departs, wrong: dep.close, fallback: dep.other, everyLevel: true },
       { id: 'platform', type: 'number', prompt: 'Which platform was the next train leaving from?', answer: `Platform ${platform}`, wrong: platformLookalikes(platform).map((p) => `Platform ${p}`) },
       { id: 'destination', type: 'object', prompt: 'Where was the next train going?', answer: destination, wrong: DESTINATIONS.filter((d) => d !== destination) },

@@ -450,6 +450,42 @@ const items: ItemDef[] = [
       </G>
     ),
   },
+  {
+    // A hen's nest in the straw with 1 to 5 eggs, chosen per picture: "How many eggs were in the nest?".
+    kind: 'nest',
+    singular: 'nest of eggs',
+    plural: 'nests of eggs',
+    article: 'a',
+    w: 100,
+    h: 56,
+    tier: 'small',
+    // Drawn bigger than life (about 40 cm across) so the eggs can be counted on a phone.
+    size: 0.13,
+    frontRow: true,
+    zones: YARD_Z,
+    maxCount: 1,
+    countable: false,
+    // Dark straw, so it stands out from the green yard (pale straw was too close to it to be placed).
+    tone: '#6b4423',
+    draw: (_colour, details) => {
+      const eggs = Math.max(1, Math.min(5, Number(details?.values?.eggs ?? 3)));
+      // Side by side, centred in the nest, with a little stagger so each egg stands apart.
+      const xs = Array.from({ length: eggs }, (_, i) => 50 + (i - (eggs - 1) / 2) * 19);
+      return (
+        <G>
+          <Ellipse cx={50} cy={44} rx={48} ry={11} fill="#3d2412" />
+          {/* Big white eggs with a dark outline, sitting high in the nest so each one can be counted. */}
+          {xs.map((x, i) => (
+            <Ellipse key={x} cx={x} cy={i % 2 ? 24 : 27} rx={9} ry={13} fill="#ffffff" stroke="#6c5a3e" strokeWidth={2.5} />
+          ))}
+          <Path d="M4,42 Q50,58 96,42 Q92,54 50,56 Q8,54 4,42 Z" fill="#6b4423" />
+          <G stroke="#c8954b" strokeWidth={2} strokeLinecap="round" fill="none">
+            <Path d="M10,44 L22,49 M26,47 L38,52 M44,50 L56,50 M62,52 L74,47 M78,49 L90,44 M16,40 L6,35 M84,40 L94,35" />
+          </G>
+        </G>
+      );
+    },
+  },
 ];
 
 type Palette = Record<'sky' | 'hills' | 'hillsFar' | 'field' | 'rows' | 'yard' | 'fence' | 'barn', string>;
@@ -459,10 +495,13 @@ const BARN_COLOURS: ColourDef[] = [C.red, C.blue, C.green, C.yellow];
 
 function details(random: Rng): SceneDetails {
   const colour = random.pick(BARN_COLOURS);
+  const eggs = random.int(1, 5);
+  const nearEggs = [eggs - 1, eggs + 1, eggs - 2, eggs + 2, eggs + 3].filter((n) => n >= 1 && n <= 6).map(String);
   return {
     palette: { barn: colour.hex },
-    values: { barnSide: random.next() < 0.5 ? 'left' : 'right' },
+    values: { barnSide: random.next() < 0.5 ? 'left' : 'right', eggs: String(eggs) },
     facts: [
+      { id: 'nest-eggs', family: 'story', type: 'count', prompt: 'How many eggs were in the nest?', answer: String(eggs), wrong: nearEggs.slice(0, 3), fallback: nearEggs.slice(3), needs: 'nest' },
       {
         id: 'barn-colour',
         type: 'colour',

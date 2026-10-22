@@ -134,13 +134,13 @@ export default function ProfileScreen() {
         {profile?.tester && (
           <Section
             title="Tester mode"
-            footer="Unlock every place: any one place can be played at any level, from My places. Unlimited Peeks: the Peek button never runs out (still one a round, half points for the peeked answer) and your earned Peeks stay untouched. Peek time: how long a Peek shows the picture, to find the best length (3 s is the standard; each round records the length used). Levels and scores still count. Turning off Unlock every place leaves tester mode and puts everything back to normal."
+            footer="Unlock every place: any one place can be played at any level, from My places. Unlimited Peeks: the Peek button never runs out (still one a round, half points for the peeked answer) and your earned Peeks stay untouched. Speed Round every round: Play opens a Super Speed Round straight away, and another comes before every new picture, at any level (not in the Daily Challenge); its results and prizes count as usual. Peek time: how long a Peek shows the picture, to find the best length (3 s is the standard; each round records the length used). Levels and scores still count. Turning off Unlock every place leaves tester mode and puts everything back to normal."
           >
             <View style={styles.switchRow}>
               <Text style={[styles.rowTitle, styles.switchText]}>Unlock every place</Text>
               <Switch
                 value
-                onValueChange={() => update({ tester: false, testPeeks: false, peekSeconds: undefined, placesOff: [], recipeFilter: null })}
+                onValueChange={() => update({ tester: false, testPeeks: false, testSpeed: false, peekSeconds: undefined, placesOff: [], recipeFilter: null })}
                 trackColor={{ true: colors.accent, false: colors.border }}
                 thumbColor={colors.text}
                 accessibilityLabel="Tester mode: unlock every place"
@@ -154,6 +154,16 @@ export default function ProfileScreen() {
                 trackColor={{ true: colors.accent, false: colors.border }}
                 thumbColor={colors.text}
                 accessibilityLabel="Tester mode: unlimited Peeks"
+              />
+            </View>
+            <View style={styles.switchRow}>
+              <Text style={[styles.rowTitle, styles.switchText]}>Speed Round every round</Text>
+              <Switch
+                value={profile.testSpeed === true}
+                onValueChange={(on) => update({ testSpeed: on })}
+                trackColor={{ true: colors.accent, false: colors.border }}
+                thumbColor={colors.text}
+                accessibilityLabel="Tester mode: a Speed Round every round"
               />
             </View>
             <View style={styles.peekTime}>

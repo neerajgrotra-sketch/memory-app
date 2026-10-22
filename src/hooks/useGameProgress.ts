@@ -3,7 +3,8 @@ import { useCallback, useState } from 'react';
 
 import { gameIdOf, type GameId } from '@/games/registry';
 import { ladderStateOf, type LadderState } from '@/games/lookRemember/ladder';
-import { walletOf, type PeekWallet } from '@/games/lookRemember/peeks';
+import { bossesBeaten } from '@/games/lookRemember/boss';
+import { fiftyOf, walletOf, type PeekWallet } from '@/games/lookRemember/peeks';
 import { statsStore } from '@/stats';
 import { parseRestart } from '@/stats/statsStore';
 import type { RoundResult } from '@/types/stats';
@@ -23,6 +24,10 @@ export interface GameProgress {
   restartedAt: string | null;
   /** Peeks held, and points towards the next. */
   peeks: PeekWallet;
+  /** 50:50s held. */
+  fifty: number;
+  /** The levels of the boss rounds beaten. */
+  bossesBeaten: Set<number>;
 }
 
 /** `restarts`: when each game was started again (from `statsStore.listRestarts`). */
@@ -36,12 +41,15 @@ export function progressOf(all: RoundResult[], gameId: GameId, restarts: Record<
     ladder: state,
     fromHistory,
     // Replays and the Daily Challenge (double points) never set the high score.
-    highScore: results.reduce((best, r) => (r.replay || r.mode === 'daily' ? best : Math.max(best, r.points ?? 0)), 0),
-    plays: results.length,
-    perfectRounds: results.filter((r) => !r.replay && r.score === r.total).length,
+    highScore: results.reduce((best, r) => (r.replay || r.speed || r.boss || r.mode === 'daily' ? best : Math.max(best, r.points ?? 0)), 0),
+    // A speed round turned down wasn't played.
+    plays: results.filter((r) => !r.skipped).length,
+    perfectRounds: results.filter((r) => !r.replay && !r.speed && !r.boss && r.score === r.total).length,
     lastPlayedAt: results.at(-1)?.playedAt ?? null,
     restartedAt,
     peeks: walletOf(results),
+    fifty: fiftyOf(results),
+    bossesBeaten: bossesBeaten(results),
   };
 }
 

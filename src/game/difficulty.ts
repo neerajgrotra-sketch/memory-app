@@ -1,11 +1,13 @@
 import type { ClockStep } from '@/scenes/clock';
-import type { Difficulty, Level, PlayMode, QuestionType } from '@/types/game';
+import type { Difficulty, Level, PlayMode, QuestionFamily, QuestionType } from '@/types/game';
 
 export const ROUND_SIZE = 5;
 
 export interface LevelConfig {
   /** Question types picked first; the rest of the pool tops up the round if needed. */
   preferredTypes: QuestionType[];
+  /** Fewer of a type than the usual two a round: a type on its way out, so the mix changes in two steps. */
+  typeCaps?: Partial<Record<QuestionType, number>>;
   /** How long the picture is shown. */
   viewSeconds: number;
   /** How many different kinds of thing are in the picture. */
@@ -25,6 +27,8 @@ export interface LevelConfig {
    * 0 none, 1 a clear peek (head and ears), 2 a small one (ears and eyes).
    */
   hidden: 0 | 1 | 2;
+  /** The kinds of question this level asks (all of them when missing, as in Practice): levels bring them in one by one. */
+  families?: QuestionFamily[];
 }
 
 export const LEVELS: Record<Level, LevelConfig> = {

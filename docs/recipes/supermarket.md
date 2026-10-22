@@ -12,14 +12,16 @@ Code: `src/scenes/recipes/supermarket.tsx`. Exact sizes, counts and colours: [re
 | On the bottom shelf | 53–68.5% | the same |
 | On the floor | 72–100% | `ground`, 2 rows |
 
-Each shelf's third holds one kind of product, like a real aisle: the slot grid's left, middle and right are the shelf's sections, so "Where were the tins?" reads "On the middle shelf, on the right".
+Each shelf's third holds one kind of product, like a real aisle: the slot grid's left, middle and right are the shelf's sections, so "Where were the tins of beans?" reads "On the middle shelf, on the right".
 
 ## Things and their habits
 
-- **Products (9, eggs and bread a little wider):** cereal boxes, packs of toilet rolls, bottles of water, tins, jars of honey (lid colour asked), bottles of juice (a row can mix flavours on Hard), cartons of milk, boxes of eggs, loaves of bread. Each belongs on one or two shelves.
+- **What's happening:** a shopping basket on its own holds apples, a loaf of bread or nothing ("What was in the shopping basket?"); the spill is asked as a story question.
+
+- **Products (9, eggs and bread a little wider):** cereal boxes, toilet rolls, bottles of water, tins of beans, jars of honey (lid colour asked), bottles of juice (a row can mix flavours on Hard), cartons of milk, boxes of eggs (an open tray of white eggs), loaves of bread. Each product says what it is on its label (CEREAL, TOILET ROLL, WATER, BEANS, HONEY, JUICE, MILK, EGGS) and is never drawn mirrored, so the words never read backwards. One item is one thing to count: a toilet roll is a single roll, since a pack showing three rolls got counted as three. Each belongs on one or two shelves.
   - **New habit, `lineUp`:** copies stand side by side in one neat row on the shelf, `LINE_GAP` (0.3 × their width) apart, never staggered. Close like real shelves, but easy to count. Two copies fit in a third of the shelf on every phone; three only on bigger screens, so shelf counts are 1–3.
   - Product colours leave out purple, black and brown, which would vanish on the dark shelving.
-- **On the floor (7):** shopping baskets (red, blue, green or yellow), a crate of apples, a crate of oranges, watermelons, a wet floor sign (one at most, not counted), cardboard boxes, paper shopping bags, sacks of potatoes.
+- **On the floor (8):** shopping baskets (red, blue, green or yellow), a crate of apples, a crate of oranges, watermelons, a wet floor sign (one at most, not counted), a spill (one at most, not counted: a cracked honey jar in a pool of honey, a tipped-over mop bucket of water or a knocked-over bottle of juice, chosen per picture), cardboard boxes, paper shopping bags, sacks of potatoes.
 
 ## Scale: why there are no shoppers
 
@@ -32,7 +34,7 @@ At that scale a person would be taller than the whole floor band and cover the s
 - **The shelving:** a dark backing, a pale (or wooden) board under each shelf with price labels along its edge, uprights at both ends, a plinth on the floor.
 - **Two signs hang from the ceiling**, swapping sides per picture:
   - the blue **aisle sign**, with a number from 1 to 15: "What was the aisle number?" Wrong answers are one or two along, the digits swapped, or ten more.
-  - the red **offer sign**, with a picture of apples, bananas, bread, milk or cheese: "What was on special offer?"
+  - the red **offer sign**: the deal (10% OFF, 20% OFF, HALF PRICE, BUY 1 GET 1 FREE or 3 FOR 2) next to a picture of apples, bananas, bread, milk or cheese: "What was on special offer?" and "What did the offer sign say?"
   - Both are detail facts, asked on levels with detail questions (Level 8+, so always here).
 - **No prices:** "How much were the apples?" would need a currency. The aisle number gives the same "remember the number" challenge.
 - **Marks:** lines between the floor tiles (30%), broken around anything standing on them.
@@ -43,4 +45,4 @@ At that scale a person would be taller than the whole floor band and cover the s
 
 ## Questions it gives
 
-Everything the engine asks: counts, colours, "Where were the cereal boxes?", "What was on the top shelf, on the left?", in / NOT in the picture, compare ("Were there more tins or more jars of honey?"), above / below ("What was on the top shelf, above the cartons of milk?"), colour twins, true or false, plus the aisle number and the offer.
+Everything the engine asks: counts, colours, "Where were the cereal boxes?", "What was on the top shelf, on the left?", in / NOT in the picture, compare ("Were there more tins of beans or more jars of honey?"), above / below between shelves only ("What was on the top shelf, above the cartons of milk?"; the floor is `inFront`, so nothing on it is "below" a shelf), colour twins, true or false, plus the aisle number, what was on offer, the deal on the offer sign, and "What had spilled on the floor?" (Honey / Water / Juice, with Milk as an extra wrong answer; only when there's a spill).

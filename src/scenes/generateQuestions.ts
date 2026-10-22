@@ -123,12 +123,43 @@ function nearestColour(hex: string): string {
   return best.name;
 }
 
+/**
+ * Other ways to ask the commonest questions, so a session doesn't keep repeating one sentence ("Where was the …?" made
+ * a fifth of all repeats). The first way is the usual one. Each keeps every word the checks look for (the band's name,
+ * "NOT"), and a question picks its way from its id, so it always reads the same (a resumed round, Play again).
+ */
+const WORDINGS: [RegExp, (m: RegExpMatchArray) => string[]][] = [
+  [/^Where (was|were) the ([^,?]+)\?$/, ([, v, x]) => [`Where ${v} the ${x}?`, `Where did you see the ${x}?`, `Where in the picture ${v} the ${x}?`, `Can you remember where the ${x} ${v}?`]],
+  [/^Which of these was in the picture\?$/, () => ['Which of these was in the picture?', 'Which of these did you see?', 'One of these was in the picture. Which one?']],
+  [/^Which of these was NOT in the picture\?$/, () => ['Which of these was NOT in the picture?', 'Which of these did you NOT see?', 'One of these was NOT in the picture. Which one?']],
+  [/^Which of these was ((?:in|on) [^,?]+)\?$/, ([, x]) => [`Which of these was ${x}?`, `Which of these did you see ${x}?`]],
+  [/^What was ((?:in|on) [^,?]+)\?$/, ([, x]) => [`What was ${x}?`, `What did you see ${x}?`, `Can you remember what was ${x}?`]],
+  [/^What colour (was|were) the ([^,?]+)\?$/, ([, v, x]) => [`What colour ${v} the ${x}?`, `The ${x} ${v} what colour?`, `Think back: what colour ${v} the ${x}?`]],
+  [/^How many ([^,?]+) were there\?$/, ([, x]) => [`How many ${x} were there?`, `How many ${x} did you see?`, `Count the ${x}: how many were there?`]],
+  [/^What time was on the ([^,?]+)\?$/, ([, x]) => [`What time was on the ${x}?`, `What time did the ${x} show?`, `What time did the ${x} say?`]],
+];
+
+/** A question in one of its other wordings (`WORDINGS`), picked by its id. */
+export function reworded(prompt: string, id: string): string {
+  for (const [pattern, ways] of WORDINGS) {
+    const m = prompt.match(pattern);
+    if (!m) continue;
+    let h = 0;
+    for (const c of id) h = (Math.imul(h, 31) + c.charCodeAt(0)) | 0;
+    const all = ways(m);
+    return all[Math.abs(h) % all.length];
+  }
+  return prompt;
+}
+
 /** Writes every question the scene can answer. Answers come straight from the scene, so they are always right. */
 export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: QuestionKnobs): Question[] {
   const rng = createRng(spec.seed ^ 0x9e3779b9);
   const itemOf = (kind: string) => recipe.items.find((i) => i.kind === kind)!;
   const zoneOf = (id: string) => recipe.zones.find((z) => z.id === id)!;
   const present = spec.groups.map((g) => itemOf(g.kind));
+  /** Kinds not to count or ask the colour of here (`SceneDetails.uncounted`). */
+  const uncounted = new Set(spec.details?.uncounted ?? []);
   const absent = recipe.items.filter((i) => !spec.groups.some((g) => g.kind === i.kind) && !spec.details?.alsoSeen?.includes(i.kind));
   const questions: Question[] = [];
   /** Every side a group is on: one, or each side a spread group has a copy on. */
@@ -262,10 +293,11 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   const rug = recipe.rug;
   const rugZone = rug ? recipe.zones.find((z) => z.surface === 'ground')?.id : undefined;
 
-  const FAMILY: Record<string, QuestionFamily> = { colours: 'colour', missing: 'seen', beside: 'where' };
+  const FAMILY: Record<string, QuestionFamily> = { colours: 'colour', missing: 'seen', beside: 'where', anything: 'what-here' };
   const add = (template: string, group: PlacedGroup | null, q: Omit<Question, 'id' | 'sceneId' | 'answerIndex'>, answerIndex = 0) =>
     questions.push({
       family: FAMILY[template] ?? (template as QuestionFamily),
+      template,
       ...q,
       id: `${spec.id}-${template}-${group?.kind ?? q.subject}`,
       sceneId: spec.id,
@@ -278,7 +310,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     const plural = group.count > 1;
 
     // Only things that can appear more than once: "How many mirrors?" would always be 1, a giveaway.
-    if (canBeSeveral(item)) {
+    if (canBeSeveral(item) && !uncounted.has(item.kind)) {
       add('count', group, {
         type: 'count',
         subject: item.kind,
@@ -287,7 +319,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       });
     }
 
-    if (group.colour && item.colours) {
+    if (group.colour && item.colours && !uncounted.has(item.kind)) {
       add('colour', group, {
         type: 'colour',
         subject: item.kind,
@@ -305,7 +337,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     const spread = item.spread === true && group.count > 1;
 
     // Copies in different colours (fire hydrants on Hard): which colours were they?
-    if (group.colours && item.colours) {
+    if (group.colours && item.colours && !uncounted.has(item.kind)) {
       const answer = colourList(group.colours.map((c) => c.name));
       const names = item.colours.map((c) => c.name);
       const n = new Set(group.colours.map((c) => c.name)).size;
@@ -423,6 +455,44 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     }
   }
 
+  // "Was there anything on the pond?" (or on the carpet): asked when a band (or the rug) is empty, or holds one kind
+  // of thing. "No, nothing" is the answer when it's empty and a wrong answer when it isn't, so it's never a giveaway;
+  // the other answers are things that could have been there. Not where a sign or a door is drawn in the band (it could
+  // count as "anything"), nor when something is hiding in the picture (a peeking crab).
+  if (!spec.details?.alsoSeen?.length) {
+    const NOTHING = 'No, nothing';
+    const yes = (item: ItemDef, plural: boolean) => `Yes, ${lower(nounPhrase(item, plural))}`;
+    const anything = (where: string, zoneId: string, here: PlacedGroup[], subject: string) => {
+      if (here.length > 1) return;
+      const could = recipe.items.filter(
+        (i) => !here.some((g) => g.kind === i.kind) && i.zones.includes(zoneId) && !(rug && zoneId === rugZone && i.avoidRug),
+      );
+      if (could.length < 3) return;
+      const answer = here.length ? yes(itemOf(here[0].kind), here[0].count > 1) : NOTHING;
+      add('anything', null, {
+        type: 'object',
+        subject,
+        prompt: `Was there anything ${lower(where)}?`,
+        // "No, nothing" is always one of the four, right or wrong: without it this is just "What was on the pond?".
+        options: [answer, ...(here.length ? [NOTHING] : []), ...rng.shuffle(could).map((i) => yes(i, false))].slice(0, 4),
+      });
+    };
+    const signIn = (z: ZoneDef) => (recipe.keepClear ?? []).some((k) => k.y0 < z.bottom && k.y1 > z.top);
+    for (const z of zones) {
+      if (z.faraway || signIn(z)) continue;
+      if (rug && z.id === rugZone) {
+        const onIt = spec.groups.filter((g) => g.zoneId === rugZone && g.onRug !== 'none');
+        // Only when nothing is half on, half off.
+        if (onIt.every((g) => g.onRug === 'all')) anything(rug.label, z.id, onIt, onIt.length ? `rug-${onIt.map((g) => g.kind).join('-')}` : 'rug-empty');
+        continue;
+      }
+      const here = spec.groups.filter((g) => g.zoneId === z.id);
+      // An empty sky still has clouds or stars in it, which could be "something": only asked when a thing is there.
+      if (!here.length && z.surface === 'air') continue;
+      anything(z.label, z.id, here, `band-${z.id}`);
+    }
+  }
+
   // "Which of these was in the departure lounge?": one thing that was in a band with several, against things that
   // could have been there but weren't in the picture at all, so exactly one choice is right. No side needed.
   for (const z of zones) {
@@ -473,6 +543,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         answerIndex: 0,
         type: 'number',
         family: 'detail',
+        template: 'house-number',
         ...subject,
         prompt: `What number was on the ${house.colour.name.toLowerCase()} house?`,
         options: withDistractors(n, numbers, numberLookalikes(house.number), rng),
@@ -483,6 +554,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         answerIndex: 0,
         type: 'colour',
         family: 'detail',
+        template: 'house-colour',
         ...subject,
         prompt: `What colour was house number ${n}?`,
         options: withColourDistractors(
@@ -498,7 +570,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   // Any recipe's backdrop facts ("What colour was the barn?"), asked on the same levels as house numbers;
   // a few (the clock) on every level, and some only when their thing is in the picture.
   for (const fact of spec.details?.facts ?? []) {
-    if (!(knobs.houseNumbers || fact.everyLevel)) continue;
+    if (!(knobs.houseNumbers || fact.everyLevel || fact.family === 'story')) continue;
     if (fact.needs && !spec.groups.some((g) => g.kind === fact.needs)) continue;
     {
       questions.push({
@@ -506,7 +578,8 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         sceneId: spec.id,
         answerIndex: 0,
         type: fact.type,
-        family: 'detail',
+        family: fact.family ?? 'detail',
+        template: `fact:${fact.id}`,
         spotlight: fact.spotlight,
         subject: fact.id,
         prompt: fact.prompt,
@@ -535,7 +608,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   // ---- Questions that link two things, or the whole picture ----------------------------------------
 
   /** Groups that can be counted (never the sun or the sofa). */
-  const countable = spec.groups.filter((g) => canBeSeveral(itemOf(g.kind)));
+  const countable = spec.groups.filter((g) => canBeSeveral(itemOf(g.kind)) && !uncounted.has(g.kind));
 
   // "Were there more kites or birds?": two things to remember and weigh up. Sometimes it's a tie.
   const pairs = rng.shuffle(combinations(countable, 2)).slice(0, 2);
@@ -554,6 +627,68 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       },
       a.count > b.count ? 0 : b.count > a.count ? 1 : 2,
     );
+  }
+
+  // The question names where the answer was ("in the sky", "on the wall"): "above the pumpkins" alone made players
+  // think of the barn on the hill. A few band names read oddly there ("What was close by, above the bench?"), so
+  // those questions stay plain.
+  const PLAIN_BANDS = new Set(['Close by', 'At the front', 'Near the hills']);
+
+  // Sums on what you saw: count two things, then add, take away or share. One pair each, chosen at random.
+  // "How many cats and dogs were there altogether?": up to 12, so it stays a quick sum.
+  const sumPair = rng.shuffle(combinations(countable, 2)).find(([a, b]) => a.count + b.count <= 12);
+  if (sumPair) {
+    const [a, b] = sumPair;
+    add('altogether', null, {
+      type: 'count',
+      subject: `altogether-${a.kind}-${b.kind}`,
+      prompt: `How many ${itemOf(a.kind).plural} and ${itemOf(b.kind).plural} were there altogether?`,
+      options: countOptions(a.count + b.count, true, rng),
+    });
+  }
+  // "How many more ducks than boats were there?": only when there were more, never "none more".
+  const diffPair = rng.shuffle(combinations(countable, 2)).find(([a, b]) => a.count !== b.count);
+  if (diffPair) {
+    const [more, fewer] = diffPair[0].count > diffPair[1].count ? diffPair : [diffPair[1], diffPair[0]];
+    add('difference', null, {
+      type: 'count',
+      subject: `difference-${more.kind}-${fewer.kind}`,
+      prompt: `How many more ${itemOf(more.kind).plural} than ${itemOf(fewer.kind).plural} were there?`,
+      options: countOptions(more.count - fewer.count, true, rng),
+    });
+  }
+  // Division, "If the 6 apples were split into 2 equal groups…", without saying how many there were: you have to
+  // remember 6 first. Only counts that share out exactly.
+  const shares = countable.flatMap((g) => [2, 3].filter((k) => g.count >= 2 * k && g.count % k === 0).map((k) => ({ g, k })));
+  if (shares.length) {
+    const { g, k } = rng.pick(shares);
+    add('sharing', g, {
+      type: 'count',
+      subject: g.kind,
+      prompt: `If the ${itemOf(g.kind).plural} were split into ${NUMBER_WORDS[k]} equal groups, how many would be in each group?`,
+      options: countOptions(g.count / k, true, rng),
+    });
+  }
+
+  // Two steps: "Only one kind of thing was on the pond. What colour was it?" Find it by where it was, then remember its colour. Only where
+  // it was the one thing in its band, all one colour, and nothing else could be "the thing" there (a peeking crab).
+  if (!spec.details?.alsoSeen?.length) {
+    for (const z of zones) {
+      const inBand = spec.groups.filter((g) => g.zoneId === z.id);
+      if (inBand.length !== 1 || PLAIN_BANDS.has(z.label)) continue;
+      const [g] = inBand;
+      const item = itemOf(g.kind);
+      if (!g.colour || !item.colours || item.colourPrompt || g.colours?.length || uncounted.has(g.kind)) continue;
+      const plural = g.count > 1;
+      add('two-step', g, {
+        type: 'colour',
+        // The same subject as "What colour were the boats?", so a round never asks both.
+        subject: item.kind,
+        // Says what's special about the band first: "the thing on the pavement" read oddly when it was a dog.
+        prompt: `Only one kind of thing was ${z.label[0].toLowerCase()}${z.label.slice(1)}.\nWhat colour ${plural ? 'were they' : 'was it'}?`,
+        options: withColourDistractors(g.colour.name, item.colours.map((c) => c.name), ALL_COLOURS.map((c) => c.name), rng),
+      });
+    }
   }
 
   // "Which was there the most of?": a clear winner, at least two ahead of nothing.
@@ -589,10 +724,6 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
 
   // "What was in the sky, above the pumpkins?": the only thing above (or below) it, in the same third and another band.
   const single = spec.groups.filter((g) => !(itemOf(g.kind).spread && g.count > 1) && !isWide(g) && !faraway(g));
-  // The question names where the answer was ("in the sky", "on the wall"): "above the pumpkins" alone made players
-  // think of the barn on the hill. A few band names read oddly there ("What was close by, above the bench?"), so
-  // those questions stay plain.
-  const PLAIN_BANDS = new Set(['Close by', 'At the front', 'Near the hills']);
   const where = (zoneId: string) => {
     const label = zoneOf(zoneId).label;
     return PLAIN_BANDS.has(label) ? '' : `${label[0].toLowerCase()}${label.slice(1)}, `;
@@ -605,9 +736,18 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       const isDir = (g: PlacedGroup) => (dir === 'above' ? zoneIndex(g) < zoneIndex(group) : zoneIndex(g) > zoneIndex(group));
       const near = spec.groups.filter((g) => g !== group && isDir(g) && reaches(g, group.region) && !faraway(g));
       if (near.length !== 1 || !single.includes(near[0]) || !alone(near[0])) continue;
+      // Only the very next band up or down: "on the top shelf, above the milk" skipped an empty middle shelf, where
+      // players looked first. (Bands that hold nothing, like the trees behind the park's pond, don't count.)
+      const bandsBetween = zones.filter((z) => {
+        const i = recipe.zones.indexOf(z);
+        return i > Math.min(zoneIndex(group), zoneIndex(near[0])) && i < Math.max(zoneIndex(group), zoneIndex(near[0]));
+      });
+      if (bandsBetween.length) continue;
       // Two flat bands (the path and the grass): the one lower down is nearer, not "below". "What was on the grass,
       // below the dog?" made no sense.
       if (isFlat(zoneOf(group.zoneId)) && isFlat(zoneOf(near[0].zoneId))) continue;
+      const lower = zoneIndex(group) > zoneIndex(near[0]) ? group : near[0];
+      if (zoneOf(lower.zoneId).inFront) continue;
       const target = near[0];
       const answerItem = itemOf(target.kind);
       const plural = target.count > 1;
@@ -641,7 +781,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   ]);
   const fixedColours = new Set(spec.groups.map((g) => itemOf(g.kind)).filter((i) => !i.colours && i.tone).map((i) => nearestColour(i.tone!)));
   const mixedColours = new Set(spec.groups.flatMap((g) => (g.colours ?? []).map((c) => c.name)));
-  const coloured = spec.groups.filter((g) => g.colour && itemOf(g.kind).colours);
+  const coloured = spec.groups.filter((g) => g.colour && itemOf(g.kind).colours && !uncounted.has(g.kind));
   for (const group of coloured) {
     const name = group.colour!.name;
     if (backdropColours.has(name) || fixedColours.has(name) || mixedColours.has(name)) continue;
@@ -690,10 +830,11 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   }
   for (const s of rng.shuffle(statements).slice(0, 3)) {
     questions.push({
-      id: `${spec.id}-true-false-${s.subject}`,
+      id: `${spec.id}-true-false-${s.type}-${s.subject}`,
       sceneId: spec.id,
       type: s.type,
       family: 'true-false',
+      template: 'true-false',
       subject: s.subject,
       prompt: `True or false?\n${s.text}`,
       options: ['True', 'False'],
@@ -705,5 +846,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   // A question needs at least three options to be a fair choice (true or false has its own two).
   // At least three choices, except where two is all there can be: true or false, "Was the floor lamp on or off?", and
   // left or right of a single landmark ("To the right of the moon").
-  return questions.filter((q) => q.options.length >= 3 || (q.options.length === 2 && (q.family === 'true-false' || q.family === 'detail' || q.family === 'where')));
+  return questions
+    .filter((q) => q.options.length >= 3 || (q.options.length === 2 && (q.family === 'true-false' || q.family === 'detail' || q.family === 'story' || q.family === 'where')))
+    .map((q) => ({ ...q, prompt: reworded(q.prompt, q.id) }));
 }

@@ -28,6 +28,22 @@ export interface RoundResult {
   replay?: boolean;
   /** A Peek was used in this round (see games/lookRemember/peeks). */
   peeked?: boolean;
+  /** A 50:50 was used in this round. */
+  fifty?: boolean;
+  /**
+   * A Super Speed Round (see games/lookRemember/speed): a bonus round of quick Yes / No questions. Never counted for
+   * level, high score, perfect rounds or accuracy.
+   */
+  speed?: boolean;
+  /**
+   * A boss round (see games/lookRemember/boss): the boss's level. 4 of 5 beats it. Never counted for level, high score,
+   * perfect rounds or accuracy.
+   */
+  boss?: number;
+  /** A Super Speed Round turned down with "Not now": saved only so the next one comes a few rounds later. */
+  skipped?: boolean;
+  /** Prizes this round won: Peeks and 50:50s. */
+  bonus?: { peeks?: number; fifty?: number };
   /** How long that Peek showed the picture, in seconds (recorded so peek lengths can be compared). */
   peekSeconds?: number;
   /** The setting, e.g. "beach". */

@@ -19,6 +19,8 @@ This also keeps it different from the train station: no platform clock or depart
 
 ## Things (15)
 
+- **What's happening:** the coffee kiosk is open or shut with its shutter down ("Was the coffee kiosk open or closed?").
+
 - **Sky:** planes, a helicopter (colour asked), birds.
 - **Airfield:** a parked plane (extra wide; the stripe in its airline colour asked), a fuel truck, a baggage train, the control tower.
 - **Lounge:** travellers (shirt colour asked), pilots (navy uniform, gold cuffs, peaked cap), flight attendants pulling a wheeled case (uniform colour asked), luggage trolleys (the big suitcase's colour asked), a row of seats (colour asked), a coffee kiosk (awning colour asked), an information desk (in the airport's blue, so it shows on the pale floor), potted plants.

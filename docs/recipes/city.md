@@ -19,8 +19,9 @@ Code: `src/scenes/recipes/city.tsx`. Exact sizes, counts and colours: [reference
 - **Per-picture details** (`details`):
   - three different named colours, chosen from yellow, blue, green, pink, orange and purple
   - house numbers that rise along the street with uneven gaps (like 1560, 1564, 1594), so each must be remembered
+  - a chimney on every house, with grey smoke rising from one of them, or now and then none ("Which house had smoke coming out of its chimney?"); the smoke is grey, never white, so it isn't taken for a cloud, and clouds keep clear of it
   - they are stored in `SceneSpec.details` and asked about on Medium and Hard.
-- **Doors and their numbers are `keepClear`:** nothing stands in front of them.
+- **Doors and their numbers, and each chimney with the space its smoke rises into, are `keepClear`:** nothing stands in front of them.
 - **Wide screens:** the street carries on with plain beige buildings, with no numbers and no named colours, so "the yellow house" is always exactly one house.
 
 ## Things and their habits

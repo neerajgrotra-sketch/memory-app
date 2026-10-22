@@ -1,7 +1,9 @@
+import type { ReactElement } from 'react';
 import { Circle, Ellipse, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
-import type { ItemDef } from '../types';
+import type { Rng } from '../random';
+import type { DetailFact, ItemDef, PlacedGroup } from '../types';
 
 /**
  * Things that turn up in several settings. Each recipe sets which bands they may go in and may
@@ -181,10 +183,100 @@ export const person: CommonItem = {
           <Circle cx={37.5} cy={17} r={1.8} />
         </G>
         <Path d="M27,23 Q32,27 37,23" fill="none" stroke="#7a3e2a" strokeWidth={1.6} strokeLinecap="round" />
+        {/* A hat and something in the hand, when the place's details give the person one (see `peopleStory`). */}
+        {HATS[_details?.values?.hat ?? '']?.draw()}
+        {HELD[_details?.values?.held ?? '']?.draw()}
       </G>
     );
   },
 };
+
+/** Hats a person can wear, drawn on their head, and how answers name them. */
+const HATS: Record<string, { name: string; draw: () => ReactElement }> = {
+  sunhat: {
+    name: 'A sun hat',
+    draw: () => (
+      <G>
+        <Ellipse cx={32} cy={7} rx={25} ry={5} fill="#e9c46a" stroke="#a07d2c" strokeWidth={2} />
+        <Path d="M20,7 Q20,-6 32,-6 Q44,-6 44,7 Z" fill="#e9c46a" stroke="#a07d2c" strokeWidth={2} />
+        <Rect x={20} y={2} width={24} height={4} fill="#e63946" />
+      </G>
+    ),
+  },
+  cap: {
+    name: 'A cap',
+    draw: () => (
+      <G>
+        <Path d="M17,10 Q17,-4 32,-4 Q47,-4 47,10 Z" fill="#1d70d6" stroke="#0d3f80" strokeWidth={2} />
+        <Path d="M45,8 H61 Q58,13 45,12 Z" fill="#1d70d6" stroke="#0d3f80" strokeWidth={2} />
+      </G>
+    ),
+  },
+  woolly: {
+    name: 'A woolly hat',
+    draw: () => (
+      <G>
+        <Path d="M17,11 Q17,-4 32,-4 Q47,-4 47,11 Z" fill="#2b9348" stroke="#155d27" strokeWidth={2} />
+        <Rect x={16} y={6} width={32} height={6} rx={3} fill="#f8f9fa" stroke="#adb5bd" strokeWidth={1.5} />
+        <Circle cx={32} cy={-6} r={5} fill="#f8f9fa" stroke="#adb5bd" strokeWidth={1.5} />
+      </G>
+    ),
+  },
+};
+
+/** Things a person can hold, in the hand on the right of the drawing. */
+const HELD: Record<string, { name: string; draw: () => ReactElement }> = {
+  balloon: {
+    name: 'A balloon',
+    draw: () => (
+      <G>
+        {/* Up beside the head, clear of it, big enough to see on a phone. */}
+        <Path d="M55,75 L60,42" stroke="#495057" strokeWidth={1.5} />
+        <Ellipse cx={60} cy={28} rx={11} ry={14} fill="#e63946" stroke="#9b1c26" strokeWidth={2} />
+        <Ellipse cx={56} cy={23} rx={3} ry={5} fill="#ffffff" fillOpacity={0.55} />
+        <Path d="M60,42 l-3,4 h6 Z" fill="#e63946" />
+      </G>
+    ),
+  },
+  icecream: {
+    name: 'An ice cream',
+    draw: () => (
+      <G>
+        <Path d="M49,70 L56,88 L63,70 Z" fill="#d4a373" stroke="#8a5a2b" strokeWidth={2} />
+        <Circle cx={56} cy={66} r={7} fill="#f7a1c4" stroke="#c2577f" strokeWidth={2} />
+      </G>
+    ),
+  },
+  bag: {
+    name: 'A shopping bag',
+    draw: () => (
+      <G>
+        <Path d="M50,80 Q56,70 62,80" fill="none" stroke="#8a5a2b" strokeWidth={2.5} />
+        <Rect x={47} y={80} width={18} height={20} rx={2} fill="#f4a261" stroke="#a65e24" strokeWidth={2} />
+      </G>
+    ),
+  },
+};
+
+/**
+ * Once things are placed, with exactly one person in the picture: a hat (or none) and something in the hand (or
+ * nothing), and "What was the person wearing on their head?" / "What was the person holding?". Both are about the
+ * person, like their shirt's colour, so a round asks one of them. With several people "the person" wouldn't say who.
+ */
+export function peopleStory(groups: PlacedGroup[], random: Rng, hats: string[], held: string[]): { values: Record<string, string>; facts: DetailFact[] } {
+  if (groups.find((g) => g.kind === 'person')?.count !== 1) return { values: {}, facts: [] };
+  const hat = random.next() < 0.25 ? '' : random.pick(hats);
+  const thing = random.next() < 0.25 ? '' : random.pick(held);
+  const hatName = hat ? HATS[hat].name : 'Nothing';
+  const heldName = thing ? HELD[thing].name : 'Nothing';
+  return {
+    values: { hat, held: thing },
+    facts: [
+      { id: 'person-hat', family: 'story', type: 'object', prompt: 'What was the person wearing on their head?', answer: hatName, wrong: [...hats.map((h) => HATS[h].name), 'Nothing'].filter((n) => n !== hatName), fallback: Object.values(HATS).map((h) => h.name).filter((n) => n !== hatName), needs: 'person' },
+      { id: 'person-held', family: 'story', type: 'object', prompt: 'What was the person holding?', answer: heldName, wrong: [...held.map((h) => HELD[h].name), 'Nothing'].filter((n) => n !== heldName), fallback: Object.values(HELD).map((h) => h.name).filter((n) => n !== heldName), needs: 'person' },
+    ],
+  };
+}
 
 export const dog: CommonItem = {
   kind: 'dog',

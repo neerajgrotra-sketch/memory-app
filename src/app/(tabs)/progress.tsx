@@ -12,6 +12,7 @@ import { BAND_LEVELS, titleFor } from '@/games/lookRemember/ladder';
 import { formatPoints } from '@/games/lookRemember/points';
 import { GAMES } from '@/games/registry';
 import { progressOf, type GameProgress } from '@/hooks/useGameProgress';
+import { clearSavedRound } from '@/games/lookRemember/savedRound';
 import { statsStore } from '@/stats';
 import { summarize, type StatsSummary, type Trend } from '@/stats/summarize';
 import { colors, levelColors, radius } from '@/theme';
@@ -68,6 +69,7 @@ export default function ProgressScreen() {
       return;
     }
     await statsStore.clear();
+    await Promise.all([clearSavedRound('play'), clearSavedRound('daily')]);
     setConfirmReset(false);
     load();
   };

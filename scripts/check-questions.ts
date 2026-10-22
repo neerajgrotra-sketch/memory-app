@@ -22,13 +22,26 @@ for (const recipe of RECIPES) {
     const scene = generateScene(recipe, LEVELS[lvl], s * 7919, { width: 393, height: 687 });
     const qs = generateQuestions(scene, recipe, LEVELS[lvl]);
     pictures++; total += qs.length; minPool = Math.min(minPool, qs.length);
+    // Every question has its own id: a round, Play again and the speed round tell questions apart by it.
+    const ids = qs.map((q) => q.id);
+    for (const id of ids.filter((id, k) => ids.indexOf(id) !== k)) { bad++; if (bad < 6) console.log('BAD two questions with the id', id); }
     for (const q of qs) {
       optCounts[q.options.length] = (optCounts[q.options.length] ?? 0) + 1;
       // The rug ("On the carpet") is part of the ground band; only things that may go on it are offered for it.
       const rugLabel = recipe.rug?.label;
       const groundZone = recipe.zones.find((z) => z.surface === 'ground');
       const onRugOk = (o: string) => recipe.items.some((i) => !i.avoidRug && (cap(i.plural) === o || `${cap(i.article)} ${i.singular}` === o));
-      if (q.family === 'what-here' && rugLabel && q.prompt.includes(rugLabel.toLowerCase())) {
+      if (q.template === 'anything') {
+        // "Was there anything on the pond?": "No, nothing" is always offered, and every "Yes, a …" is something that
+        // could be there (on the rug: something allowed on it).
+        if (!q.options.includes('No, nothing')) { bad++; console.log('BAD anything: no "No, nothing"', recipe.id, q.prompt); }
+        const onCarpet = !!rugLabel && q.prompt.includes(rugLabel.toLowerCase());
+        const zone = recipe.zones.find((z) => q.prompt.toLowerCase().includes(z.label.toLowerCase()));
+        for (const o of q.options.filter((x) => x !== 'No, nothing')) {
+          const thing = cap(o.replace(/^Yes, /, ''));
+          if (onCarpet ? !onRugOk(thing) : !zone || !phrase.get(thing)?.includes(zone.id)) { bad++; if (bad < 6) console.log('BAD anything', recipe.id, q.prompt, '→', o); }
+        }
+      } else if (q.family === 'what-here' && rugLabel && q.prompt.includes(rugLabel.toLowerCase())) {
         // "A cat and a cushion": each part must be something that can be on the rug.
         for (const o of q.options) for (const part of o.split(' and ').map(cap)) if (!onRugOk(part)) { bad++; if (bad < 6) console.log('BAD on the carpet', recipe.id, '→', o); }
       } else if (q.family === 'what-here') {

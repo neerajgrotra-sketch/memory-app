@@ -10,6 +10,142 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.12.1 (2026-10-22)
+
+- **Tester mode: a play button for each kind of round.** The game page's new **Tester: play** card has **Normal round**, **Speed Round** (starts with a Super Speed Round) and **Boss 10**, **Boss 20** and **Boss 30**, so each can be tried straight away without waiting for it to come up.
+
+## 4.12.0 (2026-10-22)
+
+- **More ways to ask the commonest questions.** "Where was the bicycle?" can also be "Where did you see the bicycle?" or "Can you remember where the bicycle was?"; "How many kites were there?" can be "Count the kites: how many were there?"; and so on for "Which of these was in the picture?", "…NOT in the picture?", colours, clocks and "What was on the pond?". In 10-round sessions, questions worded like one asked earlier fell from 30% to 20%.
+- **Where-questions in the Super Speed Round** ("Where did you see the plane? To the right of the bird?"). At most two each of how many, what colour and where in a round, so the mix is even: how many and what colour fell from 56% of speed questions to 41%. Only one "to the right of" guess a round, so two can't answer each other. `check:speed` now holds the mix.
+
+## 4.11.0 (2026-10-22)
+
+- **Boss rounds at Levels 10, 20 and 30.** A peak to climb to at each milestone: the Busy Farm (Farm Boss), the Busy Mountain (Mountain Boss) and the Busy Airport (the Final Boss). Each is a busy picture with two more kinds of thing than its level, a second less to look and harder questions (how many, where, numbers), about as hard as the level ten above. Get 4 of 5 right to win its badge; the first win also brings a Peek. Double points, no Peeks or 50:50s, and it never changes your level.
+  - The badge slams down with a drum hit and the screen shakes, then the rules show against the usual ("9 kinds of thing to remember (usually 7)"). **Take it on** or **Not now**.
+  - Take a boss on from the new **Boss rounds** card on the game page (gold once beaten, red to take on, grey until you reach its level), or from the level-up screen's **Boss round** button. Try again as often as you like, with a new picture each time.
+  - Its own sounds: drums and a dark chord for the intro, a fanfare for the win.
+- **Every level now brings something new:** Level 30, kept empty until now, brings the Final Boss.
+- **The level-up screen fits an iPhone SE:** with four headlines and three buttons, the buttons covered the news. The ring is smaller on short phones, the news scrolls, and the two smaller buttons sit side by side.
+- `npm run check:boss` checks each boss on 450 pictures across three iPhones.
+
+## 4.10.3 (2026-10-22)
+
+- **"Not now" for the Super Speed Round.** Its intro now has a **Not now** button under Start, to skip it and go straight on to the next picture. The next one then comes 4 to 6 rounds later, as after playing one, so it doesn't keep coming back. A skipped one isn't counted as a round played.
+
+## 4.10.2 (2026-10-22)
+
+- **Tester mode: Speed Round every round.** A new switch in Profile → Tester mode: tap Play and a Super Speed Round starts straight away, and another comes before every new picture, at any level (not in the Daily Challenge). Its results and prizes count as usual.
+
+## 4.10.1 (2026-10-22)
+
+- **Sounds for the Super Speed Round.** A whoosh and a crackling zap as the lightning bolt lands, thunder under it, and a bright stab as the title rises; four racing notes on **Start**; a tight tick on the last two seconds of every question; a double buzzer when time runs out; and a fanfare with sparkles for a prize (the kind "aww" for 2 or fewer). They're made from scratch by `scripts/sounds/make-speed-sounds.py`, at the same loudness as the other sounds, with vibration to match on phones.
+
+## 4.10.0 (2026-10-22)
+
+- **Super Speed Round.** A surprise every 4 to 6 Levels rounds, from Level 5, to break up the rhythm. A lightning bolt bursts in on spinning rays, then one line on what to do and what you can win, and it starts when you tap **Start**. A new picture, then 8 quick Yes or No questions, 4 seconds each (6 with "More time to look"), against a draining bar; running out of time counts as wrong. 8 of 8 wins a Peek and a 50:50, 7 a Peek, 6 or more bonus points. It never changes your level or high score. The questions are the picture's own, so every answer is right, each about something different, about half of them Yes.
+- **50:50**, a new lifeline won in the speed round: it takes away two wrong answers. One a round, next to the Peek, hold up to 2. Like a Peek, the answer earns half points and the round counts as usual.
+- Fixed: two true-or-false questions about the same thing (how many kites and what colour) shared an id, so asking one could count as having asked the other. `check:questions` now checks every id is different.
+- `npm run check:speed` checks the speed round on 1,500 pictures, its timing and prizes, and the 50:50.
+
+## 4.9.1 (2026-10-22)
+
+- **The sunbather is easy to see.** On a striped towel, someone lying on it was hard to make out on a phone. A towel with someone on it is now plain (no stripes), the sunbather has a dark outline, and their swimsuit is whichever of navy, yellow and white stands out most from the towel's colour. Checked on all six towel colours at iPhone SE size.
+
+## 4.9.0 (2026-10-22)
+
+- **No big step at Level 23.** Hard questions (where, above / below, details) jumped 13 points there, the biggest step left. "What was there" questions now fade out in two steps: at most one a round from Level 20, then no longer preferred from 23 (+6 and +5). No level now jumps more than about 7 points, and `check:levels` holds it to 10 (it allowed 15).
+- **More variety on the first levels.** "Where was it?" questions start at Level 2, with the living room (they were at 4), so the hard questions come in one at a time (where at 2, details at 3). And four new "what was happening?" questions:
+  - **Beach:** "Was there a flag on the sandcastle?" and "Was anyone lying on the beach towel?" (someone sunbathing; then people aren't counted, and "the person's" hat and things in hand aren't asked, since there are two).
+  - **Living room:** "Were the curtains open or closed?" and "Was the cat asleep or awake?" (eyes shut and "z"s; a sleeping cat isn't asked about its toy).
+- Measured as in the level review: a 10-round session now asks 12.2 different kinds of question at Level 1 (10.8 in 4.8.0), 15.8 at Level 2 (14.1) and 16.9 at Level 3 (14.8). The most-asked one comes up 7.6 times at Level 2 (8.4) and 7.0 at Level 3 (7.6), but still 8.8 at Level 1: there it's colour or "what was there", which Level 1 is built around.
+
+## 4.8.0 (2026-10-22)
+
+- **Someone playing the piano.** In the classroom, about half the time a pupil sits at the piano, seen from behind like the class: "Was anyone playing the piano?" or "What colour was the piano player’s jumper?".
+- **A rider on the snowmobile:** "Was anyone riding the snowmobile?"
+- **A dog sled** on the snowy mountain, a new thing: 2 to 4 dogs pulling it, its driver on the back. "How many dogs were pulling the sled?" It's drawn extra wide, by the lodge near the front, so the dogs can be counted on a phone (out on the slope they were too small).
+- **No arguable counts.** When a picture draws an extra one of something (the pupil at the piano, the sled dogs, the snowmobile rider), "How many…?" and "What colour…?" aren't asked about that kind of thing (`uncounted`): "How many dogs were there?" with two dogs and a sled team would have no clear answer.
+
+## 4.7.0 (2026-10-22)
+
+- **More "what was happening?" questions, in six more places:**
+  - **Space:** "Was there fire coming out of the rocket?" (engines firing or coasting) and "What was the astronaut holding?" (a camera, a torch or nothing).
+  - **Snowy mountain:** "What was the snowman wearing on its head?" A top hat, a woolly hat or a bucket.
+  - **Classroom:** "How many fish were in the fish tank?" (1 to 4).
+  - **Airport:** "Was the coffee kiosk open or closed?" (its shutter pulled down).
+  - **Train station:** "How many people were looking out of the train’s windows?" (none to three).
+  - **Supermarket:** "What was in the shopping basket?" Apples (green ones in a red basket, so they show), a loaf of bread, or nothing. The spill now counts as one of these too.
+- Every place now has at least one question about what was happening.
+
+## 4.6.1 (2026-10-22)
+
+- **"Was there anything on the carpet?"** A tester's idea: with "Yes, a teddy bear", "Yes, a toy car", "Yes, a ball" or "No, nothing" as answers. Asked when the carpet is empty or has one kind of thing on it, and the same for every place's bands: "Was there anything on the pond?", "…on the bottom shelf?", "…on the pitches?". "No, nothing" is always offered, right when it's empty and wrong when it isn't, so it never gives the answer away. Not asked of a band with a sign drawn in it (it could count as "anything"), an empty sky (clouds and stars could too), or when something is hiding in the picture.
+
+## 4.6.0 (2026-10-22)
+
+- **What was happening? A new kind of question, from Level 1.** Pictures now have things going on, different every time, and questions about them:
+  - **People** (beach, park, city, when there's one person): a sun hat, a cap or a woolly hat, and a balloon, an ice cream or a shopping bag in hand. "What was the person wearing on their head?", "What was the person holding?"
+  - **Park:** "What was the dog carrying?" A ball, a stick or a frisbee in its mouth.
+  - **Farm:** a new thing, a hen's nest: "How many eggs were in the nest?"
+  - **Zoo:** "Was the elephant spraying water?" (trunk up, a shower over its back) and "How many balloons was the balloon seller holding?"
+  - **Kitchen:** "Was the kettle steaming?" and "Was there toast in the toaster?"
+  - **Under the sea:** "What was the diver holding?" A torch, a net or a camera.
+  - **Beach:** "Was the beach umbrella open or closed?"
+  - Last release's ideas join them: the picture in the frame, chimney smoke, the campfire, riders, and the living room's TV, lamps and pets' toys.
+- **More variety on the first levels.** These questions are asked from Level 1 (reading clocks, numbers and signs still starts at 3), and a round picks one whenever the picture has one: about 1 round in 3. A 10-round session at Level 1 now asks 11 different kinds of question, up from 9; at Level 2, 13, up from 9.
+- **Clearer level-up messages:** "Pictures can now have up to 4 of one thing, like 4 kites" instead of "Up to 4 of the same thing", and "More to remember: 6 different kinds of thing in each picture".
+
+## 4.5.0 (2026-10-22)
+
+- **Maths on what you saw.** Count two things, then work it out: "How many kites and hot-air balloons were there altogether?" (from Level 11), "How many more crows than pumpkins were there?" (27), and sharing, a division: "If the fish were split into two equal groups, how many would be in each group?" (29). The question never says how many there were: you have to remember first.
+- **Two-step questions** (from Level 5): "Only one kind of thing was on the pond. What colour was it?" Find the thing by where it was, then remember its colour.
+- **The picture in the frame.** The living room's picture frame now shows one of four pictures: hills and a lake, a sailing boat, flowers in a vase, or a house and a tree. "What was in the picture frame?"
+- **Chimney smoke.** Every house in the city street has a chimney, and grey smoke rises from one of them (or now and then none): "Which house had smoke coming out of its chimney?"
+- **Is the campfire burning?** At the campsite the fire is either alight or burnt down to smoking embers: "Was the campfire burning, or just smoking?"
+- **Riders.** A bicycle in the park is ridden or parked on its stand: "Was anyone riding the bicycle?", or with two, "How many of the bicycles had someone riding them?"
+- **Every level from 1 to 29 now brings something new;** only Level 30 is kept, for a final round.
+
+## 4.4.0 (2026-10-21)
+
+- **Something new on every level.** Ten levels used to bring only more points. Now every level has a headline on the level-up screen: a new place on the even levels, and on the odd ones a new kind of question, a twist or a step in time or fullness. Features already in the game were moved to fill the gaps: questions about details at 3 (was 8), half-past clocks at 7 (8), closer counting at 11 (14), hiding animals at 13 (20) and less of them at 19 (25), mixed colours at 15 (12), quarter-past clocks at 17 (18). Levels 27, 29 and 30 are kept for the new questions and rounds coming next. Full table in [docs/levels-and-scoring.md](docs/levels-and-scoring.md#what-each-level-changes).
+- **Kinds of question come in one by one:** details at Level 3, "Where was it?" at 4, above and below at 9.
+- **No cliff at Level 18.** The shift to harder questions came all at once there (hard questions from 31% to 49% of a round). It now comes in four steps (4, 8, 18 and 23), never more than 9 points a level.
+- **Level 2 is no longer easier than Level 1.** The living room has fewer things than the beach, so with the same 10 seconds it was easier. Level 2 now brings 9 seconds and up to 4 of a kind.
+- **Fewer repeats in a session.** A round now avoids the wordings of the round before ("How many … were there?" round after round). In 10 rounds at Level 30 about 21 different wordings come up and none in more than about 5 rounds.
+- **`npm run check:levels`** keeps all this true.
+
+## 4.3.0 (2026-10-21)
+
+- **Resume a round.** Close the app (or leave with ✕) part way through a round and it's kept: a **Resume** card at the top of the Games tab ("Round in progress · 3 of 5 answered") goes straight back to the next question. Only the questions resume, never the picture, since remembering it is the game. A round lasts 24 hours; starting another one asks first ("Resume round" / "Start a new round"). A round closed while still looking at the picture is dropped.
+- **The Daily Challenge resumes too, and can't be replayed.** A Daily quit part way wasn't saved, so it could be played again with its picture already seen. It's now saved from the moment the picture shows; the daily card says **Resume**, and one closed while looking comes back at the questions. It lasts until midnight.
+- **✕ asks first** during the questions ("Leave this round? Your answers are saved. You can resume the round from Home."), and while looking at the Daily. A mis-tap used to throw the round away.
+- **The countdown pauses in the background.** A phone call or switching apps no longer eats the time to look: the countdown waits and carries on from where it was.
+
+## 4.2.5 (2026-10-21)
+
+- **Spills in the supermarket.** Next to the wet floor sign there can now be a mess on the floor: a cracked honey jar in a pool of honey, a tipped-over mop bucket of water or a knocked-over bottle of juice. "What had spilled on the floor?" (Honey / Water / Juice / Milk). One spill at most, so the question never has two right answers.
+- **The offer sign has a deal.** It now says 10% OFF, 20% OFF, HALF PRICE, BUY 1 GET 1 FREE or 3 FOR 2 next to its picture, and there's a new question: "What did the offer sign say?". "What was on special offer?" was already asked, as one of the place's detail questions (from Level 8, at most two of those a round), so it didn't come up often.
+
+## 4.2.4 (2026-10-21)
+
+- **Every product says what it is.** Like the milk, the cereal boxes, bottles of water, jars of honey, bottles of juice and the egg boxes now have their name on the label (**CEREAL**, **WATER**, **HONEY**, **JUICE**, **EGGS**). Players couldn't tell what the jar or the boxes were. Colours that are asked about (the cereal box, the juice bottle, the honey jar's lid) are still the main colour.
+- **Tins of beans.** "Tins" was too vague: they're now **tins of beans**, with **BEANS** and some beans on the label.
+- **Eggs look like eggs.** The closed brown box had bumps that didn't read as eggs. It's now an open tray of **white** eggs with an EGGS label.
+- **One toilet roll per toilet roll.** A "pack of toilet rolls" showed three rolls, so "Were there more bottles of water or more packs of toilet rolls?" with one pack and two bottles had players counting three rolls. Each is now a single labelled **toilet roll**, so what you count is what you see.
+- **Labels never read backwards.** Copies were sometimes drawn mirrored, which turned MILK into "KLIM". Anything with words on it is never mirrored.
+- **Nothing on the floor is "below" a shelf.** "What was on the floor, below the tins?" made no sense: the floor is in front of the shelves, not under them. Above / below never links a band marked `inFront` (the supermarket floor) with the bands above it. Shelf to shelf stays ("What was on the middle shelf, above the cartons of milk?").
+
+## 4.2.3 (2026-10-21)
+
+- **Milk looks like milk.** The supermarket's cartons had a blue drop on the front, which read as water. They now say **MILK** with cow-print patches.
+- **Above and below never skip a band.** "What was on the top shelf, above the cartons of milk?" answered the bread two shelves up, while the middle shelf right above the milk was empty there, and that's where players looked. The answer must now be in the very next band up or down. Bands that hold nothing (the trees behind the park's pond, the city's house fronts) don't count as in between.
+
+## 4.2.2 (2026-10-21)
+
+- **People stand on the park's path.** Things on the ground stood with their feet near the bottom of their band, and on the thin path that's the line where it meets the grass, so people asked about as "on the path" looked to be on the grass. The path now keeps feet well inside it (`feetInset` on a band).
+- **The picnic blanket in scale.** It was a thin strip with a big basket and an apple nearly the size of the basket. It's now deeper and as long as a person is tall, with a small basket, a plate with a sandwich and a little apple. (Things on the grass, nearer to us, still aren't drawn bigger than things on the path; that's "Depth in the outdoor places" on the backlog.)
+
 ## 4.2.1 (2026-10-20)
 
 - **No left / middle / right anywhere.** The last five places, under the sea, the zoo, the campsite, the airport and space, now ask "where" by landmarks too: "Between the owls and the shooting star", "Between the luggage trolley and the coffee kiosk", "To the left of the ostrich", "Between the fish and the jellyfish".

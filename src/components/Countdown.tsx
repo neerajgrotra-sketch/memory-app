@@ -16,7 +16,7 @@ import { colors } from '@/theme';
 
 interface CountdownProps {
   seconds: number;
-  /** The countdown starts when this becomes true (e.g. once the image has loaded). */
+  /** The countdown runs while this is true; set it false to pause (the app in the background), and it carries on from there. */
   running: boolean;
   onComplete: () => void;
   /** Called as the number changes to each new value (e.g. for a tick on the last seconds). */
@@ -50,12 +50,13 @@ export function Countdown({ seconds, running, onComplete, onTick }: CountdownPro
   useEffect(() => {
     if (!running) return;
     const complete = () => onCompleteRef.current();
-    // The first number is shown without a change, so announce it as the countdown starts.
-    tick(seconds);
-    remaining.value = seconds;
+    // After a pause it carries on from where it stopped; the first number is shown without a change, so
+    // announce it as the countdown starts (each number only ticks once).
+    const from = remaining.value > 0 ? remaining.value : seconds;
+    tick(Math.max(1, Math.ceil(from)));
     // A timer, not decoration: it always runs at real speed. (With the phone's "reduce motion" on,
     // animations otherwise finish at once, which skipped the picture entirely.)
-    remaining.value = withTiming(0, { duration: seconds * 1000, easing: Easing.linear, reduceMotion: ReduceMotion.Never }, (finished) => {
+    remaining.value = withTiming(0, { duration: from * 1000, easing: Easing.linear, reduceMotion: ReduceMotion.Never }, (finished) => {
       if (finished) scheduleOnRN(complete);
     });
     return () => cancelAnimation(remaining);

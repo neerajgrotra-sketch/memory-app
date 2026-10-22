@@ -9,6 +9,12 @@ export const colors = {
   accentText: '#1a1300',
   correct: '#2ec27e',
   wrong: '#e5484d',
+  /** The Super Speed Round and its prizes (white text reads on it). */
+  speed: '#6d4aff',
+  /** Boss rounds (white text reads on it). */
+  boss: '#c8102e',
+  /** Boss red for text on the dark background (the badge red is too dark to read small). */
+  bossText: '#ff6b81',
 };
 
 /** Chart colours per level (validated for colour-blind separation on the dark surface). */

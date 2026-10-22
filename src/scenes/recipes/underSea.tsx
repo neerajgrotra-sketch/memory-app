@@ -1,10 +1,11 @@
+import type { ReactElement } from 'react';
 import { Circle, Ellipse, G, Path, Polygon, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
 import { crab, dolphin, starfish } from '../items/common';
 import { scatterMarks } from '../marks';
 import type { Rng } from '../random';
-import type { ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import type { ItemDef, Mark, PlacedGroup, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
 import { glints, speckles } from '../texture';
 
 /**
@@ -226,9 +227,9 @@ const items: ItemDef[] = [
     maxCount: 2,
     colours: [C.red, C.yellow, C.orange, C.pink, C.white],
     colourPrompt: (plural) => (plural ? 'What colour were the divers’ wetsuits?' : 'What colour was the diver’s wetsuit?'),
-    // Swims level, head first, with an air tank on the back and flippers behind.
-    // Swims level, head first, with an air tank on the back and flippers behind.
-    draw: (colour) => (
+    // Swims level, head first, with an air tank on the back and flippers behind. A diver on their own may hold a torch,
+    // a net or a camera out in front (see `fitDetails`): "What was the diver holding?".
+    draw: (colour, details) => (
       <G>
         <Path d="M4,26 L22,34 L4,42 Z M6,44 L24,46 L10,58 Z" fill="#222" stroke="#111" />
         <Rect x={20} y={30} width={80} height={22} rx={11} fill={colour} />
@@ -246,11 +247,13 @@ const items: ItemDef[] = [
         <Rect x={108} y={30} width={22} height={14} rx={5} fill="#7fd1f7" stroke="#222" strokeWidth={2.5} />
         <Path d="M112,32 L118,32 L112,40 Z" fill="#ffffff" fillOpacity={0.6} stroke="none" />
         <Circle cx={128} cy={52} r={3} fill="#222" stroke="none" />
-        {/* Bubbles rising. */}
-        <G fill="none" stroke="#ffffff" strokeWidth={2}>
-          <Circle cx={134} cy={20} r={4} />
-          <Circle cx={128} cy={8} r={3} />
-        </G>
+        {DIVER_HOLDS[details?.values?.diverHolds ?? '']?.draw() ?? (
+          // Bubbles rising.
+          <G fill="none" stroke="#ffffff" strokeWidth={2}>
+            <Circle cx={134} cy={20} r={4} />
+            <Circle cx={128} cy={8} r={3} />
+          </G>
+        )}
       </G>
     ),
   },
@@ -429,6 +432,55 @@ type Palette = Record<'sky' | 'top' | 'open' | 'deep' | 'sand' | 'rock' | 'ray',
 /** What's in the treasure chest this time, and so the answer to "What was in the treasure chest?". */
 const CHEST_CONTENTS = ['Gold coins', 'Pearls', 'Red jewels', 'Nothing, it was closed'];
 
+/** What a diver can hold out in front, in the hand at about (118, 22), and how answers name it. */
+const DIVER_HOLDS: Record<string, { name: string; draw: () => ReactElement }> = {
+  torch: {
+    name: 'A torch',
+    draw: () => (
+      <G>
+        <Path d="M128,14 L140,2 V30 Z" fill="#fff3bf" fillOpacity={0.85} stroke="none" />
+        <Path d="M112,24 L130,14" stroke="#343a40" strokeWidth={7} strokeLinecap="round" />
+        <Circle cx={130} cy={14} r={4.5} fill="#ffd60a" stroke="#b08a00" strokeWidth={1.5} />
+      </G>
+    ),
+  },
+  net: {
+    name: 'A net',
+    draw: () => (
+      <G>
+        <Path d="M112,26 L128,10" stroke="#8a5a2b" strokeWidth={3.5} strokeLinecap="round" />
+        <Circle cx={132} cy={8} r={8} fill="#ffffff" fillOpacity={0.35} stroke="#f8f9fa" strokeWidth={2.5} />
+        <Path d="M126,4 L138,12 M126,12 L138,4 M132,0 V16" stroke="#f8f9fa" strokeWidth={1} />
+      </G>
+    ),
+  },
+  camera: {
+    name: 'A camera',
+    draw: () => (
+      <G>
+        <Rect x={116} y={10} width={20} height={14} rx={3} fill="#343a40" stroke="#111" strokeWidth={1.5} />
+        <Circle cx={128} cy={17} r={4.5} fill="#74c0fc" stroke="#111" strokeWidth={1.5} />
+        <Rect x={119} y={7} width={6} height={4} rx={1} fill="#495057" />
+      </G>
+    ),
+  },
+};
+
+/** Once things are placed: with one diver, what they're holding (or nothing). */
+function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  if (groups.find((g) => g.kind === 'diver')?.count !== 1) return d;
+  const holds = random.next() < 0.2 ? '' : random.pick(Object.keys(DIVER_HOLDS));
+  const answer = holds ? DIVER_HOLDS[holds].name : 'Nothing';
+  return {
+    ...d,
+    values: { ...d.values, diverHolds: holds },
+    facts: [
+      ...(d.facts ?? []),
+      { id: 'diver-holds', family: 'story', type: 'object', prompt: 'What was the diver holding?', answer, wrong: [...Object.values(DIVER_HOLDS).map((h) => h.name), 'Nothing'].filter((n) => n !== answer), needs: 'diver' },
+    ],
+  };
+}
+
 function details(random: Rng): SceneDetails {
   const contents = random.pick(CHEST_CONTENTS);
   return {
@@ -436,6 +488,7 @@ function details(random: Rng): SceneDetails {
     facts: [
       {
         id: 'chest',
+        family: 'story',
         type: 'object',
         prompt: 'What was in the treasure chest?',
         answer: contents,
@@ -559,6 +612,7 @@ export const underSea: Recipe = {
   ],
   items,
   details,
+  fitDetails,
   // The treasure chest's corner (either side) is kept clear, so nothing hides it.
   keepClear: [chestRect('left'), chestRect('right')],
   // Light across the backdrop: see `LightBand`. The contrast rules take it into account.

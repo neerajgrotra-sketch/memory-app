@@ -5,7 +5,7 @@ import { ClockFace, randomTime, timeLookalikes } from '../clock';
 import { HAIR, SKINS, person, plantPot } from '../items/common';
 import { lineMarks } from '../marks';
 import type { Rng } from '../random';
-import type { DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import type { DetailFact, DetailKnobs, ItemDef, Mark, PlacedGroup, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
 import { speckles } from '../texture';
 
 /**
@@ -394,7 +394,8 @@ const items: ItemDef[] = [
     maxCount: 1,
     countable: false,
     colours: [C.black, C.brown],
-    draw: (colour) => (
+    // Sometimes a pupil sits playing it, seen from behind (see `fitDetails`): "Was anyone playing the piano?".
+    draw: (colour, details) => (
       <G>
         <Rect x={0} y={0} width={170} height={70} rx={4} fill={colour} />
         <Rect x={0} y={66} width={170} height={20} fill="#f8f9fa" />
@@ -417,6 +418,16 @@ const items: ItemDef[] = [
           <Rect x={120} y={10} width={40} height={50} rx={3} fill="#ffffff" fillOpacity={0.08} />
           <Path d="M6,6 H164" stroke="#ffffff" strokeOpacity={0.25} strokeWidth={3} strokeLinecap="round" />
         </G>
+        {details?.values?.pianist && (
+          // A pupil on a stool at the keys, from behind: dark hair, the jumper, arms out to the keys.
+          <G>
+            <Rect x={70} y={116} width={30} height={14} rx={3} fill="#6b4423" />
+            <Path d="M66,80 L54,74 M104,80 L116,74" stroke={details.values.pianist} strokeWidth={9} strokeLinecap="round" />
+            <Rect x={63} y={70} width={44} height={48} rx={14} fill={details.values.pianist} />
+            <Circle cx={85} cy={58} r={15} fill="#e0ac69" />
+            <Path d="M70,58 Q70,40 85,40 Q100,40 100,58 Q100,66 85,66 Q70,66 70,58 Z" fill="#3d2b1f" />
+          </G>
+        )}
       </G>
     ),
   },
@@ -515,21 +526,25 @@ const items: ItemDef[] = [
     maxCount: 1,
     countable: false,
     tone: '#6b4423',
-    draw: () => (
+    // 1 to 4 fish, chosen per picture: "How many fish were in the fish tank?".
+    draw: (_colour, details) => (
       <G>
         <Rect x={10} y={80} width={110} height={60} rx={3} fill="#6b4423" />
         <Rect x={0} y={4} width={130} height={76} rx={4} fill="#a5d8ff" stroke="#495057" strokeWidth={4} />
         <G stroke="none">
           <Rect x={4} y={66} width={122} height={12} fill="#e9c46a" />
           <Path d="M26,66 Q22,46 30,30 M36,66 Q42,50 36,36" fill="none" stroke="#2b9348" strokeWidth={4} />
-          <Path d="M64,34 Q76,24 88,34 Q76,44 64,34 Z M88,34 L98,26 V42 Z" fill="#f77f00" />
-          <Path d="M84,54 Q94,46 104,54 Q94,62 84,54 Z M84,54 L76,48 V60 Z" fill="#ffd60a" />
-          {/* Eyes on the fish, bubbles rising, pebbles, a lid with a light, glare and cupboard doors. */}
-          <Circle cx={70} cy={33} r={1.8} fill="#212529" />
-          <Circle cx={98} cy={53} r={1.8} fill="#212529" />
-          <Circle cx={110} cy={40} r={3} fill="#ffffff" fillOpacity={0.8} />
-          <Circle cx={114} cy={28} r={2.5} fill="#ffffff" fillOpacity={0.8} />
-          <Circle cx={110} cy={18} r={2} fill="#ffffff" fillOpacity={0.8} />
+          {/* The fish, each well apart so they can be counted, facing this way and that. */}
+          {TANK_FISH.slice(0, Math.max(1, Math.min(4, Number(details?.values?.tankFish ?? 2)))).map(([x, y, fill, dir]) => (
+            <G key={`${x}-${y}`} transform={`translate(${x} ${y}) scale(${dir} 1)`}>
+              <Path d="M-12,0 Q0,-10 12,0 Q0,10 -12,0 Z M-12,0 L-20,-7 V7 Z" fill={fill} stroke="#7a3e00" strokeWidth={1.2} />
+              <Circle cx={6} cy={-1} r={1.8} fill="#212529" />
+            </G>
+          ))}
+          {/* Bubbles rising, pebbles, a lid with a light, glare and cupboard doors. */}
+          <Circle cx={120} cy={40} r={3} fill="#ffffff" fillOpacity={0.8} />
+          <Circle cx={123} cy={28} r={2.5} fill="#ffffff" fillOpacity={0.8} />
+          <Circle cx={120} cy={18} r={2} fill="#ffffff" fillOpacity={0.8} />
           {[14, 30, 50, 70, 90, 110].map((x) => (
             <Ellipse key={x} cx={x} cy={72} rx={5} ry={3} fill="#c9a227" />
           ))}
@@ -613,15 +628,46 @@ function sumLookalikes(a: number, op: Op, b: number): string[] {
 }
 
 /** The time on the clock, and the day and sum the teacher wrote on the board, chosen per picture. */
+/** Where the fish in the tank swim, in order for 1 to 4: [x, y, colour, 1 facing right or -1 facing left]. */
+const TANK_FISH: [number, number, string, number][] = [
+  [72, 30, '#f77f00', 1],
+  [100, 54, '#ffd60a', -1],
+  [52, 52, '#ff6b9a', 1],
+  [104, 24, '#4dabf7', -1],
+];
+
+/**
+ * Once things are placed: about half the time a pupil sits playing the piano, in a jumper of their own colour, with
+ * "Was anyone playing the piano?" or "What colour was the piano player's jumper?" (one, so neither gives the other
+ * away). The player is a pupil too, so pupils aren't counted or asked the colour of then (`uncounted`).
+ */
+function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  if (!groups.some((g) => g.kind === 'piano')) return d;
+  const playing = random.next() < 0.5;
+  const jumper = random.pick(JUMPERS);
+  const fact: DetailFact =
+    playing && random.next() < 0.5
+      ? { id: 'pianist', family: 'story', type: 'colour', prompt: 'What colour was the piano player’s jumper?', answer: jumper.name, wrong: JUMPERS.filter((c) => c !== jumper).map((c) => c.name) }
+      : { id: 'pianist', family: 'story', type: 'object', prompt: 'Was anyone playing the piano?', answer: playing ? 'Yes' : 'No', wrong: [playing ? 'No' : 'Yes'] };
+  return {
+    ...d,
+    values: { ...d.values, ...(playing ? { pianist: jumper.hex } : {}) },
+    facts: [...(d.facts ?? []), fact],
+    uncounted: playing ? [...(d.uncounted ?? []), 'pupil'] : d.uncounted,
+  };
+}
+
 function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
   const time = randomTime(random, clockStep);
+  const tankFish = random.int(1, 4);
   const { close, other } = timeLookalikes(time, clockStep);
   const day = random.pick(DAYS);
   const { a, op, b } = randomSum(random);
   const sum = `${a} ${op} ${b}`;
   return {
-    values: { clock: time, day, sum },
+    values: { clock: time, day, sum, tankFish: String(tankFish) },
     facts: [
+      { id: 'tank-fish', family: 'story', type: 'count', prompt: 'How many fish were in the fish tank?', answer: String(tankFish), wrong: ['1', '2', '3', '4', '5'].filter((n) => n !== String(tankFish)), needs: 'fish-tank' },
       { id: 'clock-time', type: 'number', prompt: 'What time was on the clock?', answer: time, wrong: close, fallback: other, needs: 'wall-clock', everyLevel: true, spotlight: true },
       { id: 'board-day', type: 'object', prompt: 'What day was written on the board?', answer: day, wrong: DAYS.filter((d) => d !== day) },
       { id: 'board-sum', type: 'number', prompt: 'What sum was on the board?', answer: sum, wrong: sumLookalikes(a, op, b) },
@@ -705,6 +751,7 @@ export const classroom: Recipe = {
   items,
   keepClear: [BOARD],
   details,
+  fitDetails,
   // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
   light: [
     // Light from the ceiling on the wall.

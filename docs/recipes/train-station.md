@@ -18,6 +18,8 @@ A wide scene, sized against the shared person (1.7 m, 1 m ≈ 0.115 of the width
 
 ## Things (14)
 
+- **What's happening:** a passenger looks out of some of the train's three windows ("How many people were looking out of the train's windows?").
+
 - **Roof:** a station clock (one), hanging lamps (spread apart), hanging baskets of flowers.
 - **Track:** a train (the front of one, with its windscreen and lights; colour asked), a freight wagon, a railway signal.
 - **Platform:** passengers (the shared person), dogs, benches (spread apart), a vending machine, a ticket machine, luggage trolleys (the big suitcase's colour is asked), a coffee cart, a newspaper stand.

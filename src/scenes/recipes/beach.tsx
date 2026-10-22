@@ -1,8 +1,8 @@
 import { Circle, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
-import { shade } from '../contrast';
-import { ball, balloon, bird, cloudShape, crab, dolphin, kite, person, plane, starfish, sun } from '../items/common';
+import { contrast, shade } from '../contrast';
+import { ball, balloon, bird, cloudShape, crab, dolphin, kite, peopleStory, person, plane, starfish, sun } from '../items/common';
 import { lineMarks, markIfClear, scatterMarks } from '../marks';
 import { glints, speckles } from '../texture';
 import type { Rng } from '../random';
@@ -32,6 +32,9 @@ const CRAB_SPOTS: Record<string, { name: string; w: number; scale: number; clear
 };
 
 /** The hiding crab, behind the thing at `kind` when the picture's details put it there. */
+/** Swimsuit colours for someone sunbathing on a towel: the one that stands out most from the towel is used. */
+const SWIMSUITS = ['#1d3557', '#ffd60a', '#ffffff'];
+
 function hidingCrab(kind: string, details?: SceneDetails) {
   if (details?.values?.crab !== kind) return null;
   const spot = CRAB_SPOTS[kind];
@@ -126,7 +129,17 @@ const items: ItemDef[] = [
     zones: SAND,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.orange, C.purple, C.pink],
-    draw: (colour) => (
+    // Open, or furled up round its pole (one umbrella on its own, see `fitDetails`): "Was the beach umbrella open?".
+    draw: (colour, details) =>
+      details?.values?.umbrella === 'closed' ? (
+        <G>
+          <Line x1={80} y1={40} x2={80} y2={180} stroke="#5c3d1e" strokeWidth={6} />
+          <Path d="M80,12 Q98,62 88,118 H72 Q62,62 80,12 Z" fill={colour} />
+          <Path d="M80,16 Q86,62 82,116" fill="none" stroke="#ffffff" strokeOpacity={0.55} strokeWidth={4} strokeLinecap="round" />
+          <Rect x={70} y={74} width={20} height={6} rx={3} fill="#5c3d1e" stroke="none" />
+          <Circle cx={80} cy={10} r={5} fill="#5c3d1e" />
+        </G>
+      ) : (
       <G>
         <Line x1={80} y1={60} x2={80} y2={180} stroke="#5c3d1e" strokeWidth={6} />
         <Path d="M77,90 H83 M77,120 H83 M77,150 H83" stroke="#ffffff" strokeOpacity={0.5} strokeWidth={4} />
@@ -139,7 +152,7 @@ const items: ItemDef[] = [
         </G>
         <Circle cx={80} cy={16} r={5} fill="#5c3d1e" />
       </G>
-    ),
+      ),
   },
   {
     kind: 'bucket',
@@ -189,13 +202,31 @@ const items: ItemDef[] = [
         {hidingCrab('towel', details)}
         <Polygon points="20,0 160,0 140,70 0,70" fill={colour} />
         <G stroke="none">
-          <Polygon points="50,0 70,0 50,70 30,70" fill="#ffffff" fillOpacity={0.7} />
-          <Polygon points="110,0 130,0 110,70 90,70" fill="#ffffff" fillOpacity={0.7} />
-          <Polygon points="76,0 82,0 62,70 56,70" fill="#ffffff" fillOpacity={0.45} />
+          {/* White stripes, left off when someone lies on it: a striped towel made them hard to make out. */}
+          {details?.values?.sunbather !== 'yes' && (
+            <G>
+              <Polygon points="50,0 70,0 50,70 30,70" fill="#ffffff" fillOpacity={0.7} />
+              <Polygon points="110,0 130,0 110,70 90,70" fill="#ffffff" fillOpacity={0.7} />
+              <Polygon points="76,0 82,0 62,70 56,70" fill="#ffffff" fillOpacity={0.45} />
+            </G>
+          )}
           {/* A soft fold and fringed ends. */}
           <Path d="M24,26 L156,26 L154,32 L22,32 Z" fill="#000000" fillOpacity={0.08} />
           <Path d="M22,0 V-4 M30,0 V-4 M38,0 V-4 M46,0 V-4 M150,0 V-4 M142,0 V-4 M2,70 V74 M10,70 V74 M18,70 V74 M132,70 V74 M124,70 V74 M116,70 V74" stroke={colour} strokeWidth={2.5} />
         </G>
+        {details?.values?.sunbather === 'yes' && (
+          // Someone lying on the plain towel in the sun, head on the left: outlined in dark brown, and in whichever
+          // swimsuit colour stands out most from the towel, so they read clearly on any towel colour.
+          <G>
+            <Path d="M58,32 H148" stroke="#3d2b1f" strokeWidth={18} strokeLinecap="round" />
+            <Path d="M58,32 H148" stroke="#e0ac69" strokeWidth={13} strokeLinecap="round" />
+            <Path d="M108,32 H146" stroke="#3d2b1f" strokeOpacity={0.5} strokeWidth={1.5} />
+            <Rect x={50} y={21} width={48} height={24} rx={10} fill={SWIMSUITS.reduce((best, c) => (contrast(c, colour) > contrast(best, colour) ? c : best))} stroke="#3d2b1f" strokeWidth={2.5} />
+            <Circle cx={36} cy={33} r={13} fill="#e0ac69" stroke="#3d2b1f" strokeWidth={2.5} />
+            <Path d="M24,30 Q26,18 38,20 Q46,22 47,30 Z" fill="#3d2b1f" stroke="none" />
+            <Rect x={28} y={27} width={14} height={5} rx={2} fill="#212529" stroke="none" />
+          </G>
+        )}
       </G>
     ),
   },
@@ -269,10 +300,11 @@ const items: ItemDef[] = [
           <Path d="M0,115 V30 H8 V22 H14 V30 H22 V22 H28 V30 H36 V115 Z" />
           <Path d="M94,115 V30 H102 V22 H108 V30 H116 V22 H122 V30 H130 V115 Z" />
           <Path d="M47,115 V20 H55 V12 H61 V20 H69 V12 H75 V20 H83 V115 Z" />
-          <Line x1={65} y1={12} x2={65} y2={0} stroke="#555" strokeWidth={3} />
+          {details?.values?.castleFlag !== 'no' && <Line x1={65} y1={12} x2={65} y2={0} stroke="#555" strokeWidth={3} />}
         </G>
         <G stroke="none">
-          <Polygon points="65,0 85,6 65,12" fill="#e63946" />
+          {/* A flag on the middle tower, or none (one sandcastle on its own, see `fitDetails`). */}
+          {details?.values?.castleFlag !== 'no' && <Polygon points="65,0 85,6 65,12" fill="#e63946" />}
           {/* Doorway, windows, a shell, and sand texture where the bucket left ridges. */}
           <Path d="M55,115 V95 C55,85 75,85 75,95 V115 Z" fill="#7a5426" />
           <Path d="M14,52 h8 v10 h-8 Z M108,52 h8 v10 h-8 Z M61,40 h8 v12 h-8 Z" fill="#7a5426" />
@@ -369,9 +401,38 @@ function droppedCoconuts(details: SceneDetails | undefined, index: number) {
   );
 }
 
-/** Once things are placed: the dropped coconuts, then the hiding crab. */
+/** Once things are placed: the dropped coconuts, the hiding crab, then a person's hat and what they're holding. */
 function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
-  return hideCrab(dropCoconuts(d, groups, random), groups, random);
+  const placed = hideCrab(dropCoconuts(d, groups, random), groups, random);
+  const people = peopleStory(groups, random, ['sunhat', 'cap'], ['icecream', 'balloon']);
+  const values = { ...placed.values, ...people.values };
+  const facts = [...(placed.facts ?? []), ...people.facts];
+  // One sandcastle on its own: a flag on its middle tower, or none.
+  if (groups.find((g) => g.kind === 'sandcastle')?.count === 1) {
+    const flag = random.next() < 0.5;
+    values.castleFlag = flag ? 'yes' : 'no';
+    facts.push({ id: 'castle-flag', family: 'story', type: 'object', prompt: 'Was there a flag on the sandcastle?', answer: flag ? 'Yes' : 'No', wrong: [flag ? 'No' : 'Yes'], needs: 'sandcastle' });
+  }
+  // One towel on its own, with no crab hiding under it: someone sunbathing on it, or not. They're a person too, so
+  // people aren't counted then.
+  let uncounted = placed.uncounted;
+  if (groups.find((g) => g.kind === 'towel')?.count === 1 && values.crab !== 'towel') {
+    const lying = random.next() < 0.5;
+    values.sunbather = lying ? 'yes' : 'no';
+    if (lying) {
+      uncounted = [...(uncounted ?? []), 'person'];
+      // "The person" wouldn't say which of the two either.
+      for (let i = facts.length - 1; i >= 0; i--) if (facts[i].id.startsWith('person-')) facts.splice(i, 1);
+    }
+    facts.push({ id: 'sunbather', family: 'story', type: 'object', prompt: 'Was anyone lying on the beach towel?', answer: lying ? 'Yes' : 'No', wrong: [lying ? 'No' : 'Yes'], needs: 'towel' });
+  }
+  // One umbrella on its own: open, or furled up round its pole.
+  if (groups.find((g) => g.kind === 'umbrella')?.count === 1) {
+    values.umbrella = random.next() < 0.5 ? 'open' : 'closed';
+    const answer = values.umbrella === 'open' ? 'Open' : 'Closed';
+    facts.push({ id: 'umbrella-open', family: 'story', type: 'object', prompt: 'Was the beach umbrella open or closed?', answer, wrong: [answer === 'Open' ? 'Closed' : 'Open'], needs: 'umbrella' });
+  }
+  return { ...placed, values, facts, uncounted };
 }
 
 /**
@@ -423,7 +484,7 @@ function dropCoconuts(d: SceneDetails, groups: PlacedGroup[], random: Rng): Scen
   const total = left + right;
   const answer = COCONUT_ANSWERS[coconuts];
   const which = {
-    id: 'coconuts',
+    id: 'coconuts', family: 'story' as const,
     type: 'position' as const,
     prompt: 'Which palm tree had coconuts on the sand by it?',
     answer,

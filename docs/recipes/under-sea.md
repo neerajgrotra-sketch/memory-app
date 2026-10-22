@@ -13,6 +13,8 @@ Code: `src/scenes/recipes/underSea.tsx`. Exact sizes, counts and colours: [refer
 
 ## Things and their habits
 
+- **What's happening:** a diver on their own holds a torch, a net, a camera or nothing ("What was the diver holding?"); the treasure chest is open with its treasure or shut.
+
 - **Near the surface:** a whale (extra large, one at most, not counted), dolphins (shared with the beach), sea turtles, jellyfish (pink, purple or white). Whales and dolphins never go deeper: they breathe air.
 - **Open water:**
   - fish (orange, yellow, pink, purple or red; a school can be **different colours on Hard**: "What colours were the fish?")

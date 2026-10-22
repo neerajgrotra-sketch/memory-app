@@ -22,7 +22,7 @@ How a player's level moves, what each level changes, and how points are worked o
 **Daily challenge and streak** (`src/games/lookRemember/daily.ts`, the card at the top of the Games tab once you've played a round):
 
 - **Streak:** days in a row with at least one finished round, in any mode. It stays alive all day until midnight ("Play today to keep your 3-day streak") and breaks only after a whole day without a round. Any round counts, not just the challenge: losing a streak after ten rounds because you skipped one picture would feel unfair. The best streak ever is kept (Progress tab). Days are the player's local calendar days.
-- **Daily Challenge:** one picture a day, the same all day (seeded by the date, `dailySeed`), at your level, from every place you've reached (My places doesn't apply, so it's the day's picture). Double points (`DAILY_MULTIPLIER`), one try: afterwards the card shows "Done ✓" with your score until tomorrow, and opening it again goes straight back. It never changes your level or high score, like Practice, and is saved as `mode: 'daily'`.
+- **Daily Challenge:** one picture a day, the same all day (seeded by the date, `dailySeed`), at your level, from every place you've reached (My places doesn't apply, so it's the day's picture). Double points (`DAILY_MULTIPLIER`), one try (a Daily closed part way through resumes at its questions, see [Resuming a round](#resuming-a-round)): afterwards the card shows "Done ✓" with your score until tomorrow, and opening it again goes straight back. It never changes your level or high score, like Practice, and is saved as `mode: 'daily'`.
 - **Result screen:** the first round of the day shows "🔥 N-day streak!" (or "Day 1 of your streak"); the challenge always shows it, with a "Daily ×2" points chip.
 - Everything is worked out from saved rounds, so there's nothing extra to store. `npm run check:daily` checks the rules, in two time zones.
 - **Not yet:** reminders (they need notifications on a real phone build) and streak freezes.
@@ -38,27 +38,37 @@ How a player's level moves, what each level changes, and how points are worked o
 
 ## What each level changes
 
-`knobsForLevel(level)` returns the same settings the pictures and questions have always used (`LevelConfig` in `src/game/difficulty.ts`), changing in small steps:
+Every level brings one named new thing, shown on the level-up screen (`unlocksAt`): a place on the even levels, and on the odd ones a kind of question, a twist or a step in time or fullness. `knobsForLevel(level)` in `src/games/lookRemember/ladder.ts` sets them, spread out so none bunch up and no level is a jump (4.4.0; before that, ten levels brought only points, Level 2 was a little easier than Level 1, and the shift to hard questions all came at Level 18).
 
-| Setting | Level 1 | How it changes | Top |
+| Level | New | Level | New |
 | --- | --- | --- | --- |
-| Kinds of thing | 5 | +1 every 4 levels | 9 from Level 17 |
-| Most of one kind | 3 | 4 at Level 4, 5 at 10, 6 at 16 | 6 |
-| View time | 10 s | −1 s about every 4 levels | 4 s from Level 24 |
-| Places | the beach | living room at Level 2, park at 4, city street at 6, kitchen at 8, farm at 10, under the sea at 12, supermarket at 14, train station at 16, zoo at 18, snowy mountain at 20, classroom at 22, night campsite at 24, airport at 26, the Moon at 28 | all fifteen |
-| House numbers | no | from Level 8 | |
-| Hydrants in mixed colours | no | from Level 12 | |
-| Close counting choices | no | from Level 14 | |
-| Clock times (living room) | whole hours | half past from Level 8, quarter past and to from Level 18 | quarters |
-| Questions asked first | object, colour | + count, position at Level 5; + number at 8; count, position, number from 18 | |
+| 1 | The beach: what was there, colours, how many, true or false | 16 | The train station · up to 6 of one kind · 6 s |
+| 2 | The living room · up to 4 of one kind · 9 s to look · "Where was it?" questions | 17 | 9 kinds of thing · clocks at quarter past and to |
+| 3 | Questions about details: clocks, signs, what was on TV | 18 | The zoo · fewer colour questions |
+| 4 | The park · more on how many and where | 19 | Hiding animals show less of themselves |
+| 5 | 6 kinds of thing · two-step questions ("Only one kind of thing was on the pond. What colour was it?") | 20 | The snowy mountain · fewer "what was there" questions · the Mountain Boss |
+| 6 | The city street, with house numbers and colours | 21 | 5 s to look |
+| 7 | Clocks at half past | 22 | The classroom |
+| 8 | The kitchen · more on numbers and times · 8 s | 23 | Mostly harder questions: how many, where and numbers |
+| 9 | 7 kinds of thing · above and below questions | 24 | The campsite at night |
+| 10 | The farm · up to 5 of one kind · the Farm Boss | 25 | 4 s to look |
+| 11 | Closer choices when counting · sums: "How many … and … altogether?" | 26 | The airport |
+| 12 | Under the sea · 7 s | 27 | Sums: "How many more … than …?" |
+| 13 | Animals hiding in the picture | 28 | The Moon, out in space |
+| 14 | The supermarket · 8 kinds of thing | 29 | Sharing (division): "If the … were split into two equal groups, how many in each?" |
+| 15 | Things in mixed colours (fish, sheep, plates, juice, hydrants) | 30 | The Final Boss |
 
-The scene checker plays levels 1, 4, 6, 8, 10, 12, 14, 17 and 30 on three phones with the places each has reached, and checks that no level is easier than the one before or asks for more than Hard.
+- **Kinds of question** come in one by one (`FAMILY_FROM`, as `LevelConfig.families`): what was there, not there, colour, same colour, true or false, how many / more or fewer / the most, and what was happening (story questions: the kettle steaming, the person's hat) from Level 1; where from 2; details from 3; two-step from 5; above and below from 9; altogether from 11; how many more from 27; sharing from 29. Practice asks everything.
+- **The question mix** (`preferredTypes`) moves in steps, at 4, 8 and 18, then "what was there" questions fade out in two: at most one a round from 20 (`typeCaps`), no longer preferred from 23. The share of hard questions (where, above / below, details) climbs from 0% to about 50% by at most about 7 points a level (one step at 23 used to be 15).
+- **Time and fullness:** look time 10 s, then 9 (2), 8 (8), 7 (12), 6 (16), 5 (21), 4 (25); kinds of thing 5, then 6 (5), 7 (9), 8 (14), 9 (17); most of one kind 3, then 4 (2), 5 (10), 6 (16). The seconds of looking per thing fall from 1.3 to 0.35 and never rise from one level to the next.
+- **No repeats in a row:** a round avoids the wordings (`Question.template`) of the round before ("How many … were there?" twice running), even over a less preferred question.
+- Level 30 brings the final boss (below), so every level from 2 to 30 now brings something new (`LEVELS_TO_FILL` is empty).
 
-**What's new** on the level-up screen is worked out from the difference between two levels' settings, so it's always true. Every level also raises what a right answer is worth, so there's always something.
+`npm run check:levels` keeps this true: something new on every level, no level easier than the one before (looking time per thing), no jump of more than 10 points in hard questions, no kind of question before its level, and 10-round sessions where no wording is asked much more than its share. The scene checker plays levels 1, 3, 4, 6, 8, 10, 13, 15, 17 and 30 on three phones with the places each has reached, and checks that no level asks for more than Hard.
+
+**What's new** on the level-up screen is worked out from the difference between two levels' settings, so it's always true. Every level also raises what a right answer is worth.
 
 **Titles** every 5 levels: Fresh Eyes (1), Sharp Eyes (5), Keen Observer (10), Detail Spotter (15), Eagle Eye (20), Total Recall (25), Photographic Memory (30).
-
-**Known gap:** after the Moon (Level 28) only the view time and points change (the farm, at Level 10, was the first place added after launch). New places (recipes) and new kinds of question are what will make the top levels feel different, and they slot into `RECIPE_UNLOCKS` and `knobsForLevel`.
 
 ## Points
 
@@ -84,7 +94,48 @@ A Peek is a second look at the picture while answering (`src/games/lookRemember/
 - **Nothing extra stored:** the wallet is rebuilt from saved rounds (each round's points and `peeked`), so "Delete all progress" empties it. A peek used in a round you quit isn't saved, so it comes back. "Start again from Level 1" keeps your Peeks.
 - **Never sold.** For a family brain-training game, peeks stay earned only.
 - **Testing:** Tester mode (tap the version in Profile 7 times) has an **Unlimited Peeks** switch (`profile.testPeeks`): peek on any question, any number of times (**Peek · ∞**). Those peeks aren't recorded, so they never come off your earned Peeks. Its **Peek time** setting (1 to 5 seconds, `profile.peekSeconds`, read through `peekSecondsFor` in `peeks.ts`) changes how long a Peek shows the picture, to find the best length; each peeked round saves the length used (`peekSeconds`). Each right answer after a peek still earns half points, and the round counts for your level as usual.
+- **Won:** a Super Speed Round also wins Peeks (below).
 - `npm run check:peeks` checks the rules.
+
+## Boss rounds
+
+A peak to climb to at Levels 10, 20 and 30 (`src/games/lookRemember/boss.ts`, `BOSSES` in `ladder.ts`, `BossRound`, the `/boss` screen).
+
+| Boss | Place | Kinds of thing | Look | The level itself |
+| --- | --- | --- | --- | --- |
+| Farm Boss (Level 10) | the Busy Farm | 9 | 7 s | 7 kinds, 8 s |
+| Mountain Boss (Level 20) | the Busy Mountain | 11 | 5 s | 9 kinds, 6 s |
+| Final Boss (Level 30) | the Busy Airport | 11 | 4 s | 9 kinds, 4 s |
+
+- **The picture** (`bossKnobs`): the level's settings with two more kinds of thing, up to one more of each, a second less to look (never under 4 s, plus "More time to look") and harder questions first (how many, where, numbers; at most one "what was there"). The looking time per thing is about that of the level ten above. (Two seconds less made the Level 20 boss harder than Level 30.) The Moon would be the final place, but it fits only one more kind of thing, so the final boss is the airport, which fits two.
+- **Beating it:** 4 of 5 right wins the badge, and the first win also brings a Peek (when there's room). No Peeks or 50:50s in a boss round, and points are doubled.
+- **When:** once you've reached its level (your best level, so dropping back keeps it open), from the **Boss rounds** card on the game page (gold once beaten, red to take on, grey with "Reach Level N"), and from the level-up screen's **Boss round** button. Try again as often as you like, with a new picture each time.
+- **The intro:** the badge drops and slams down with a drum hit, the screen shakes with a red flash (still with "reduce motion"), then the rules: how many kinds of thing against the usual, the look against the usual, and what wins. **Take it on** or **Not now**.
+- **Never counts against you:** saved with `boss` (its level), but never moves your level or counts for the high score, perfect rounds, the Progress tab or the speed round's count. Its points count towards Peeks. Leaving part way through saves nothing.
+- **Sounds:** `boss-intro` (drums and a dark chord) and `boss-win` (a fanfare); the gentle "aww" when the boss wins.
+- **Testing:** in tester mode every boss is open. `npm run check:boss` checks each boss is harder than its level, its pictures pass every scene rule on three iPhones and always give a round of 5, its level announces it, and badges are counted right.
+
+## Super Speed Round
+
+A surprise bonus round (`src/games/lookRemember/speed.ts`, `SpeedRound`), to break up the rhythm of round after round.
+
+- **When:** in Levels, from Level 5, after every 4 to 6 rounds (`speedCounterOf`, `speedDue`). Replays and Practice rounds don't count, and it never comes in the Daily Challenge or Practice. The gap is picked from the last speed round's id (`speedGap`), so it changes each time but stays the same if you close the app and come back. It comes when you tap the button for the next picture, before that picture.
+- **The intro:** a lightning bolt springs in on spinning rays with a flash (just the picture with "reduce motion" on), then "Super Speed Round", one line on what to do and what you can win. Nothing starts until you tap **Start**; **Not now** skips it and goes on to the next picture. A skip is saved (`skipped: true`, no score, not counted as a round played) so the count to the next one starts again: it doesn't come straight back.
+- **The round:** a new picture of its own (a different place from the last), looked at as usual, then 8 Yes or No questions with 4 seconds each (6 with "More time to look"), against a draining bar. Running out of time counts as wrong. After each answer it says "Right!" or "No, it was Yes" for half a second and moves on: no skipping, no Peeks.
+- **The questions** (`speedQuestions`) are the picture's own questions, so each answer is always right: the kinds that are quick to read (what was there, how many, what colour, where, true or false, details and "what was happening?"), never "Which of these…" or "more boats or more kites?". A question with options becomes the question and one guess, either its answer or one of its wrong options ("How many birds were there? 3?"); a true-or-false one is just the statement ("The bus was yellow."). Each is about something different (failing that, never the same thing asked the same way twice, so one can't give another away) and about half are Yes. At most two each of how many, what colour and where (`SPEED_CAPS`, lifted only if a picture can't make eight without), and one "To the right of the plane" guess, since the bird's and the plane's would answer each other. So the mix is even: colour 21%, how many 20%, true or false 15%, where 14%, details 13%, "what was happening?" 10%, what was there 7% (4.12.0; how many and what colour were 56% before). A long guess ("To the left of the flag") is shown smaller. Pictures that don't give 8 (about 1 in 50) are passed over for another; after four tries the round is skipped.
+- **Prizes** (`speedPrize`): 8 of 8 wins a Peek and a 50:50, 7 of 8 a Peek, and 6 or more bonus points (two answers' worth). A Peek or 50:50 you have no room for becomes bonus points instead. Each right answer earns half an answer's points.
+- **Never counts against you:** the round is saved (`speed: true`, with `bonus` for prizes) but never moves your level or counts for the high score, perfect rounds or the Progress tab. Its points count towards Peeks as usual.
+- **Sounds** (`assets/sounds/speed-*.mp3`): the lightning's zap and thunder with the intro, racing notes on Start, a tick on each question's last two seconds, a buzzer for too slow, and a fanfare for a prize.
+- **Testing:** tester mode's **Speed Round every round** switch brings one as soon as you tap Play and before every picture, at any level.
+- `npm run check:speed` checks the questions on 1,500 pictures, the timing, the prizes and 50:50s.
+
+## 50:50
+
+A second lifeline, won in a Super Speed Round: it takes away two wrong answers (one when there are three).
+
+- **Using:** **50:50 · n** on the question screen, next to the Peek, once you hold one (it takes the place of the question-type chip). One per round, not on a question with two answers, never in the Daily Challenge. The answers it takes away are picked from the question's id (`fiftyHidden`), so a resumed round shows the same ones.
+- **The cost:** like a Peek, a right answer after a 50:50 earns half its points ("50:50 −95" on the result screen, which marks the question "50:50"); the round counts for your level as usual.
+- **Holding:** at most 2 (`MAX_FIFTY`). Worked out again from saved rounds like Peeks (`fiftyOf`: a round's `fifty` spends one, a speed round's `bonus.fifty` wins one).
 
 ## Bands
 
@@ -93,6 +144,17 @@ For charts and the Progress tab's "By band" table, levels are grouped into the o
 ## Practice
 
 Easy, Medium and Hard are the fixed settings from before levels (`LEVELS` in `src/game/difficulty.ts`), with every place. They earn points and never change your level.
+
+## Resuming a round
+
+A round closed part way through can be resumed (`src/games/lookRemember/savedRound.ts`): the round in progress is saved on the phone after every answer, with its picture, questions, answers so far and any Peek used.
+
+- **Only the questions resume, never the picture.** Remembering the picture is the game, so a resumed round goes straight to its next unanswered question. Coming back later only makes the questions harder, so it can't be used to do better. A Peek still works if one is left (a Peek used before closing stays used).
+- **Levels and Practice** are saved once the questions start, and shown on a **Resume** card at the top of the Games tab. A round closed while looking at the picture is simply dropped: there's nothing to lose but a few seconds. Starting another round while one is saved asks "Resume round" or "Start a new round" (which loses it). A saved round lasts 24 hours, and "Start again" on the game page drops it.
+- **The Daily Challenge** is saved from the moment its picture shows, and the daily card says **Resume** ("In progress · 3 of 5 answered"). Closed while looking, it comes back at the questions: before 4.3.0 a Daily quit part way wasn't saved at all, so it could be played again with the same picture already seen. It lasts until midnight; a Daily not finished by then is missed.
+- **✕ asks first** during the questions ("Leave this round? Your answers are saved…"), and while looking at the Daily ("You've seen the picture, so when you come back it goes straight to the questions"). Leaving a Levels picture while looking doesn't ask.
+- **The countdown pauses** while the app is in the background (a phone call, switching apps), and carries on from where it was. Time away doesn't count as looking for the ready-early bonus.
+- Points, level, streak and Peeks earned count as for any round.
 
 ## The result screen's buttons
 

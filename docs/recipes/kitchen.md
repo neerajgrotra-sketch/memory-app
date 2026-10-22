@@ -17,6 +17,8 @@ Like the supermarket, the kitchen is a close-up, so **no people or pets**, and e
 
 ## Things (25)
 
+- **What's happening:** the kettle is steaming or not, the toaster has toast popped up or is empty, and the fruit bowl holds apples, oranges, bananas or lemons (story questions, from Level 1).
+
 - **Shelf:** plates standing in a rack (a row can mix colours on Hard), cookbooks, jars of pasta (lid colour asked), a teapot, a cookie jar, pots of herbs.
 - **Wall:** frying pans hanging by their handles (spread apart), oven gloves, a tea towel (stripe colour asked), a utensil rail (ladle, whisk, spatula, spoon), a window.
 - **Worktop:** the microwave, a kettle, a toaster, a fruit bowl, a chopping board with carrots, saucepans, a coffee machine, a food mixer. The teapot and cookie jar can also stand here.

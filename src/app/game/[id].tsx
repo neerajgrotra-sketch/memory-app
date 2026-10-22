@@ -3,11 +3,13 @@ import { useState } from 'react';
 import { ActivityIndicator, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { BossBadge } from '@/components/BossBadge';
 import { Button } from '@/components/Button';
 import { GameArt } from '@/components/GameArt';
 import { LevelRing } from '@/components/LevelRing';
 import { PRACTICE_OPTIONS } from '@/game/difficulty';
 import { MAX_LEVEL, ROUNDS_TO_LEVEL_UP, nextBigUnlock, nextTitle, titleFor } from '@/games/lookRemember/ladder';
+import { BOSSES, BOSS_TO_WIN, bossesOpen } from '@/games/lookRemember/boss';
 import { MAX_PEEKS, PEEK_POINTS, type PeekWallet } from '@/games/lookRemember/peeks';
 import { formatPoints } from '@/games/lookRemember/points';
 import { feedback } from '@/feedback';
@@ -15,6 +17,7 @@ import { getGame } from '@/games/registry';
 import { myPlaces, placesOff, togglePlace } from '@/games/lookRemember/places';
 import { useReloadableGameProgress } from '@/hooks/useGameProgress';
 import { useProfile } from '@/profile';
+import { clearSavedRound } from '@/games/lookRemember/savedRound';
 import { statsStore } from '@/stats';
 import { colors, radius } from '@/theme';
 
@@ -42,6 +45,8 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
   const [startAgain, setStartAgain] = useState<'idle' | 'confirm' | 'done'>('idle');
   const restart = async () => {
     await statsStore.restart(gameId);
+    // A round in progress was played at the old level.
+    await clearSavedRound('play');
     setStartAgain('done');
     reload();
   };
@@ -49,6 +54,7 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
   const pickLevel = async (level: number) => {
     feedback('tick');
     await statsStore.restart(gameId, level);
+    await clearSavedRound('play');
     setStartAgain('idle');
     reload();
   };
@@ -113,6 +119,10 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
                 <Text style={styles.peeksDetail}>{peeksLine(progress.peeks)}</Text>
               </View>
 
+              <Bosses best={progress.ladder.best} beaten={progress.bossesBeaten} tester={profile?.tester === true} />
+
+              {profile?.tester && <TesterPlay level={progress.ladder.level} onPlay={() => play('levels')} />}
+
               {profile?.tester && <PickLevel current={progress.ladder.level} onPick={pickLevel} />}
 
               {startAgain === 'done' ? (
@@ -174,6 +184,9 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
             <Text style={styles.note}>
               👀 Peeks: every {formatPoints(PEEK_POINTS)} points earns one (hold up to {MAX_PEEKS}). During the questions, a Peek shows the picture again for a few seconds; that answer earns half points.
             </Text>
+            <Text style={styles.note}>
+              👑 Boss rounds at Levels 10, 20 and 30: a busy picture, a shorter look and harder questions. Get {BOSS_TO_WIN} of 5 right to win the badge.
+            </Text>
             <Button label="Got it" onPress={() => setRulesOpen(false)} />
           </Pressable>
         </Pressable>
@@ -185,6 +198,80 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
           <Text style={styles.backText}>←  Games</Text>
         </Pressable>
       </SafeAreaView>
+    </View>
+  );
+}
+
+/** The three boss rounds: beaten (gold), ready to take on (red, tap to play), or still to reach (grey). */
+function Bosses({ best, beaten, tester }: { best: number; beaten: Set<number>; tester: boolean }) {
+  const open = bossesOpen(best, tester);
+  return (
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>Boss rounds</Text>
+      <Text style={styles.note}>A busy picture, a shorter look and harder questions. Get {BOSS_TO_WIN} of 5 right to win the badge. They never change your level.</Text>
+      <View style={styles.bosses}>
+        {BOSSES.map((b) => {
+          const isOpen = open.includes(b);
+          const won = beaten.has(b.level);
+          const state = won ? 'beaten' : isOpen ? 'open' : 'locked';
+          const status = won ? 'Beaten · play again' : isOpen ? 'Take it on' : `Reach Level ${b.level}`;
+          return (
+            <Pressable
+              key={b.level}
+              accessibilityRole="button"
+              accessibilityLabel={`${b.badge}, Level ${b.level}: ${status}`}
+              accessibilityState={{ disabled: !isOpen }}
+              disabled={!isOpen}
+              onPress={() => {
+                feedback('start');
+                router.push({ pathname: '/boss', params: { level: String(b.level) } });
+              }}
+              style={({ pressed }) => [styles.boss, pressed && styles.pressed]}
+            >
+              <BossBadge level={b.level} state={state} size={56} />
+              <Text style={styles.bossName}>{b.badge}</Text>
+              <Text style={[styles.bossStatus, state === 'open' && styles.bossStatusOpen]}>{status}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+/** Tester mode: start each kind of round straight away, at your level (a boss at its own level). */
+function TesterPlay({ level, onPlay }: { level: number; onPlay: () => void }) {
+  return (
+    <View style={[styles.section, styles.testerCard]}>
+      <Text style={styles.sectionTitle}>Tester: play</Text>
+      <Text style={styles.note}>Start any kind of round now. Results and prizes count as usual.</Text>
+      <View style={styles.testerButtons}>
+        <Button label={`Normal round · Level ${level}`} onPress={onPlay} />
+        <Button
+          label="Speed Round"
+          variant="secondary"
+          onPress={() => {
+            feedback('start');
+            router.push({ pathname: '/play', params: { game: 'look-remember', mode: 'levels', speed: '1' } });
+          }}
+        />
+        <View style={styles.testerRow}>
+          {BOSSES.map((b) => (
+            <Pressable
+              key={b.level}
+              accessibilityRole="button"
+              accessibilityLabel={`Play the ${b.badge} round`}
+              onPress={() => {
+                feedback('start');
+                router.push({ pathname: '/boss', params: { level: String(b.level) } });
+              }}
+              style={({ pressed }) => [styles.testerBoss, pressed && styles.pressed]}
+            >
+              <Text style={styles.testerBossText}>Boss {b.level}</Text>
+            </Pressable>
+          ))}
+        </View>
+      </View>
     </View>
   );
 }
@@ -303,6 +390,11 @@ function Tile({ label, value }: { label: string; value: string }) {
 }
 
 const styles = StyleSheet.create({
+  bosses: { flexDirection: 'row', gap: 10 },
+  boss: { flex: 1, alignItems: 'center', gap: 4, backgroundColor: colors.surface, borderRadius: radius.md, paddingVertical: 12, paddingHorizontal: 6 },
+  bossName: { color: colors.text, fontSize: 14, fontWeight: '800', textAlign: 'center' },
+  bossStatus: { color: colors.textMuted, fontSize: 12, textAlign: 'center' },
+  bossStatusOpen: { color: colors.bossText, fontWeight: '800' },
   screen: { flex: 1, backgroundColor: colors.background },
   peeks: { backgroundColor: colors.surface, borderRadius: radius.md, padding: 14, gap: 4 },
   peeksCount: { color: colors.text, fontSize: 16, fontWeight: '800' },
@@ -348,6 +440,11 @@ const styles = StyleSheet.create({
   tileValue: { color: colors.text, fontSize: 26, fontWeight: '900', fontVariant: ['tabular-nums'] },
   tileLabel: { color: colors.textMuted, fontSize: 13 },
   section: { gap: 10 },
+  testerButtons: { gap: 10 },
+  testerRow: { flexDirection: 'row', gap: 8 },
+  // Narrower than a Button, so three fit on a small phone.
+  testerBoss: { flex: 1, minHeight: 52, borderRadius: radius.pill, backgroundColor: colors.surfaceRaised, borderWidth: 1, borderColor: colors.boss, alignItems: 'center', justifyContent: 'center' },
+  testerBossText: { color: colors.text, fontSize: 16, fontWeight: '700' },
   testerCard: { backgroundColor: colors.surface, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, padding: 14 },
   levelGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   levelChip: { width: 48, height: 44, borderRadius: 10, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' },

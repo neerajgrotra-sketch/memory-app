@@ -17,6 +17,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="game/[id]" />
         <Stack.Screen name="play" options={{ gestureEnabled: false, animation: 'fade' }} />
+        <Stack.Screen name="boss" options={{ gestureEnabled: false, animation: 'fade' }} />
       </Stack>
       <Splash />
     </ProfileProvider>

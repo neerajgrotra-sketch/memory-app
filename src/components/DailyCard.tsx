@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { feedback } from '@/feedback';
 import { dailyResultOn, streakOf, weekOf, type Streak } from '@/games/lookRemember/daily';
 import { formatPoints } from '@/games/lookRemember/points';
+import { answeredOf, loadSavedRound, type SavedRound } from '@/games/lookRemember/savedRound';
 import { statsStore } from '@/stats';
 import { colors, radius } from '@/theme';
 import type { RoundResult } from '@/types/stats';
@@ -14,12 +15,12 @@ import type { RoundResult } from '@/types/stats';
  * double points, one try). Reloaded whenever the tab comes into view, so it's right after a round.
  */
 export function DailyCard() {
-  const [data, setData] = useState<{ streak: Streak; week: ReturnType<typeof weekOf>; today: RoundResult | null } | null>(null);
+  const [data, setData] = useState<{ streak: Streak; week: ReturnType<typeof weekOf>; today: RoundResult | null; saved: SavedRound | null } | null>(null);
   useFocusEffect(
     useCallback(() => {
       let live = true;
-      statsStore.listResults().then((all) => {
-        if (live) setData({ streak: streakOf(all), week: weekOf(all), today: dailyResultOn(all) });
+      Promise.all([statsStore.listResults(), loadSavedRound('daily')]).then(([all, saved]) => {
+        if (live) setData({ streak: streakOf(all), week: weekOf(all), today: dailyResultOn(all), saved });
       });
       return () => {
         live = false;
@@ -27,7 +28,7 @@ export function DailyCard() {
     }, []),
   );
   if (!data) return null;
-  const { streak, week, today } = data;
+  const { streak, week, today, saved } = data;
 
   const streakLine =
     streak.current === 0
@@ -71,13 +72,17 @@ export function DailyCard() {
             <Text style={styles.meta}>
               Done ✓ {today.score} of {today.total} right · {formatPoints(today.points ?? 0)} points. A new one tomorrow.
             </Text>
+          ) : saved ? (
+            <Text style={styles.meta}>
+              In progress · {answeredOf(saved)} of {saved.round.questions.length} answered
+            </Text>
           ) : (
             <Text style={styles.meta}>One special picture · double points · one try</Text>
           )}
         </View>
         {!today && (
-          <Pressable accessibilityRole="button" accessibilityLabel="Play today’s challenge" onPress={play} style={({ pressed }) => [styles.playPill, pressed && styles.pressed]}>
-            <Text style={styles.playPillText}>Play</Text>
+          <Pressable accessibilityRole="button" accessibilityLabel={saved ? 'Resume today’s challenge' : 'Play today’s challenge'} onPress={play} style={({ pressed }) => [styles.playPill, pressed && styles.pressed]}>
+            <Text style={styles.playPillText}>{saved ? 'Resume' : 'Play'}</Text>
           </Pressable>
         )}
       </View>

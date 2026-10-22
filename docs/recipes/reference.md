@@ -26,29 +26,29 @@ See [Levels and scoring](../levels-and-scoring.md).
 | Level | Title | Places | Kinds | Most | View time | House numbers | Mixed colours | Close counts | Asked first | Points per answer |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | Fresh Eyes | beach | 5 | 3 | 10 s |  |  |  | object, colour | 100 |
-| 2 | Fresh Eyes | beach, living-room | 5 | 3 | 10 s |  |  |  | object, colour | 110 |
-| 3 | Fresh Eyes | beach, living-room | 5 | 3 | 10 s |  |  |  | object, colour | 120 |
-| 4 | Fresh Eyes | beach, living-room, park | 5 | 4 | 9 s |  |  |  | object, colour | 130 |
-| 5 | Sharp Eyes | beach, living-room, park | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 140 |
-| 6 | Sharp Eyes | beach, living-room, park, city | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 150 |
-| 7 | Sharp Eyes | beach, living-room, park, city | 6 | 4 | 9 s |  |  |  | object, count, colour, position | 160 |
+| 2 | Fresh Eyes | beach, living-room | 5 | 4 | 9 s |  |  |  | object, colour | 110 |
+| 3 | Fresh Eyes | beach, living-room | 5 | 4 | 9 s | yes |  |  | object, colour | 120 |
+| 4 | Fresh Eyes | beach, living-room, park | 5 | 4 | 9 s | yes |  |  | object, count, colour, position | 130 |
+| 5 | Sharp Eyes | beach, living-room, park | 6 | 4 | 9 s | yes |  |  | object, count, colour, position | 140 |
+| 6 | Sharp Eyes | beach, living-room, park, city | 6 | 4 | 9 s | yes |  |  | object, count, colour, position | 150 |
+| 7 | Sharp Eyes | beach, living-room, park, city | 6 | 4 | 9 s | yes |  |  | object, count, colour, position | 160 |
 | 8 | Sharp Eyes | beach, living-room, park, city, kitchen | 6 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 170 |
 | 9 | Sharp Eyes | beach, living-room, park, city, kitchen | 7 | 4 | 8 s | yes |  |  | object, count, colour, position, number | 180 |
 | 10 | Keen Observer | beach, living-room, park, city, kitchen, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 190 |
-| 11 | Keen Observer | beach, living-room, park, city, kitchen, farm | 7 | 5 | 8 s | yes |  |  | object, count, colour, position, number | 200 |
-| 12 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea | 7 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 210 |
-| 13 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea | 8 | 5 | 7 s | yes | yes |  | object, count, colour, position, number | 220 |
-| 14 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 230 |
+| 11 | Keen Observer | beach, living-room, park, city, kitchen, farm | 7 | 5 | 8 s | yes |  | yes | object, count, colour, position, number | 200 |
+| 12 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea | 7 | 5 | 7 s | yes |  | yes | object, count, colour, position, number | 210 |
+| 13 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea | 7 | 5 | 7 s | yes |  | yes | object, count, colour, position, number | 220 |
+| 14 | Keen Observer | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 8 | 5 | 7 s | yes |  | yes | object, count, colour, position, number | 230 |
 | 15 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket | 8 | 5 | 7 s | yes | yes | yes | object, count, colour, position, number | 240 |
 | 16 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 8 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 250 |
 | 17 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station | 9 | 6 | 6 s | yes | yes | yes | object, count, colour, position, number | 260 |
-| 18 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 270 |
-| 19 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 6 s | yes | yes | yes | count, position, number | 280 |
-| 20 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 290 |
-| 21 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 300 |
-| 22 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 310 |
+| 18 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 6 s | yes | yes | yes | object, count, position, number | 270 |
+| 19 | Detail Spotter | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo | 9 | 6 | 6 s | yes | yes | yes | object, count, position, number | 280 |
+| 20 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 6 s | yes | yes | yes | object, count, position, number | 290 |
+| 21 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain | 9 | 6 | 5 s | yes | yes | yes | object, count, position, number | 300 |
+| 22 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 5 s | yes | yes | yes | object, count, position, number | 310 |
 | 23 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 320 |
-| 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 330 |
+| 24 | Eagle Eye | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 5 s | yes | yes | yes | count, position, number | 330 |
 | 25 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 340 |
 | 26 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 350 |
 | 27 | Total Recall | beach, living-room, park, city, kitchen, farm, under-sea, supermarket, train-station, zoo, snowy-mountain, classroom, night-campsite, airport | 9 | 6 | 4 s | yes | yes | yes | count, position, number | 360 |
@@ -109,9 +109,9 @@ Per-picture details: .
 | On the pavement (`pavement`) | 53% – 75% | ground | 2 | – |
 | On the road (`road`) | 75% – 100% | ground | 1 | at most 2 kinds; everything faces one way |
 
-Keep-clear areas (nothing may cover them): 3 (building doors and their house numbers).
+Keep-clear areas (nothing may cover them): 6 (building doors and their house numbers).
 
-Per-picture details: three houses with different named colours and rising house numbers; "What time was on the street clock?" (when there's a clock) on every level.
+Per-picture details: three houses with different named colours and rising house numbers; "What time was on the street clock?" (when there's a clock) on every level; "Which house had smoke coming out of its chimney?".
 
 ### Colour schemes
 
@@ -228,7 +228,7 @@ Per-picture details: "What number was on the rowing boat?" (when there's a boat)
 | bicycle | path | large 20% | 2 | Red, Blue, Green, Orange, Purple | – |
 | ice-cream cart | path, grass | large 21% | 1 | Red, Blue, Pink, Green, Yellow | one only, not counted |
 | bench | grass | large 21% | 2 | Green, Brown, Red, Blue | against the back (feet at the back line); copies spread one per third, on one line |
-| picnic blanket | grass | large 23% | 2 | Red, Blue, Yellow, Purple, Orange | – |
+| picnic blanket | grass | large 28% | 2 | Red, Blue, Yellow, Purple, Orange | – |
 | flower bed | grass | large 23% | 2 | Red, Yellow, Pink, Purple, Orange, White | – |
 | swing set | grass | large 28% | 1 | fixed (`#d62828`) | one only, not counted |
 | slide | grass | large 28% | 1 | Red, Blue, Orange | one only, not counted |
@@ -248,7 +248,7 @@ Per-picture details: "What number was on the rowing boat?" (when there's a boat)
 | On the worktop (`counter`) | 45% – 63% | ground | 1 | things stand exactly on its bottom line |
 | On the floor (`floor`) | 70% – 100% | ground | 1 | at most 3 kinds; things stand exactly on its bottom line |
 
-Per-picture details: "What time was on the microwave?" (when there's a microwave) on every level; "What was in the fruit bowl?" (when there's a fruit-bowl).
+Per-picture details: "Was the kettle steaming?" (when there's a kettle); "Was there toast in the toaster?" (when there's a toaster); "What time was on the microwave?" (when there's a microwave) on every level; "What was in the fruit bowl?" (when there's a fruit-bowl).
 
 ### Colour schemes
 
@@ -298,7 +298,7 @@ Per-picture details: "What time was on the microwave?" (when there's a microwave
 | In the field (`field`) | 38% – 55.5% | ground | 1 | at most 2 kinds; everything faces one way |
 | In the farmyard (`yard`) | 58.5% – 100% | ground | 2 | – |
 
-Per-picture details: "What colour was the barn?".
+Per-picture details: "How many eggs were in the nest?" (when there's a nest); "What colour was the barn?".
 
 ### Colour schemes
 
@@ -307,7 +307,7 @@ Per-picture details: "What colour was the barn?".
 | summer | sky `#8fd3f4`, hillsFar `#9fcf6b`, hills `#7fbf55`, field `#b5d86a`, rows `#7a9a3a`, yard `#7cb24a`, fence `#f1e7d0`, barn `#d00000` |
 | harvest | sky `#ffd8a8`, hillsFar `#c9b458`, hills `#a8a24a`, field `#c4cf7a`, rows `#8f9a45`, yard `#7f9a45`, fence `#f1e7d0`, barn `#d00000` |
 
-### Things (17)
+### Things (18)
 
 | Thing | Band | Size | Most | Colours | Habits |
 | --- | --- | --- | --- | --- | --- |
@@ -328,6 +328,7 @@ Per-picture details: "What colour was the barn?".
 | farmer | yard | small 10% | 1 | Red, Blue, Yellow, Green, Orange, Purple, Pink, White | – |
 | wheelbarrow | yard | medium 16% | 1 | Red, Green, Blue | – |
 | milk churn | yard | small 10% | 3 | fixed (`#c9d2dc`) | at the front edge |
+| nest of eggs | yard | small 13% | 1 | fixed (`#6b4423`) | at the front edge; one only, not counted |
 
 ## Under the sea (`under-sea`)
 
@@ -382,7 +383,7 @@ Per-picture details: "What was in the treasure chest?".
 | On the bottom shelf (`bottom`) | 53% – 68.5% | ground | 1 | things stand exactly on its bottom line |
 | On the floor (`floor`) | 72% – 100% | ground | 2 | – |
 
-Per-picture details: "What was the aisle number?"; "What was on special offer?".
+Per-picture details: "What was the aisle number?"; "What was on special offer?"; "What did the offer sign say?"; "What had spilled on the floor?" (when there's a spill).
 
 ### Colour schemes
 
@@ -391,14 +392,14 @@ Per-picture details: "What was the aisle number?"; "What was on special offer?".
 | modern | ceiling `#f1f4f7`, light `#ffffff`, backing `#3b4a5c`, board `#e9eef2`, tag `#ffd60a`, upright `#2b3644`, floor `#dfe5ea`, tile `#8c99a6` |
 | corner | ceiling `#f6efe2`, light `#fffaf0`, backing `#4b3a2c`, board `#a0703c`, tag `#f8f9fa`, upright `#3a2c20`, floor `#e6d2b5`, tile `#9c7a50` |
 
-### Things (17)
+### Things (18)
 
 | Thing | Band | Size | Most | Colours | Habits |
 | --- | --- | --- | --- | --- | --- |
 | cereal box | top, middle | small 11% | 3 | Red, Blue, Yellow, Green, Orange, Pink | – |
-| pack of toilet rolls | top | small 12% | 2 | fixed (`#f8f9fa`) | – |
+| toilet roll | top | small 10% | 2 | fixed (`#f8f9fa`) | – |
 | bottle of water | top, bottom | small 10% | 3 | fixed (`#5fb3e8`) | – |
-| tin | middle, bottom | small 10% | 3 | Red, Blue, Yellow, Green, Orange, Pink | – |
+| tin of beans | middle, bottom | small 10% | 3 | Red, Blue, Yellow, Green, Orange, Pink | – |
 | jar of honey | middle | small 10% | 3 | Red, Blue, Yellow, Green | – |
 | bottle of juice | top, middle | small 10% | 3 | Orange, Red, Green, Yellow, Pink | copies may differ in colour on Hard |
 | carton of milk | bottom, middle | small 10% | 3 | fixed (`#f8f9fa`) | – |
@@ -409,6 +410,7 @@ Per-picture details: "What was the aisle number?"; "What was on special offer?".
 | crate of oranges | floor | large 26% | 1 | fixed (`#8a5a2b`) | – |
 | watermelon | floor | medium 16% | 3 | fixed (`#3a8f3a`) | – |
 | wet floor sign | floor | medium 16% | 1 | fixed (`#ffd60a`) | one only, not counted |
+| spill | floor | large 23% | 1 | fixed (`#e8962a`) | one only, not counted |
 | cardboard box | floor | large 21% | 2 | fixed (`#b07d45`) | – |
 | shopping bag | floor | medium 16% | 2 | fixed (`#c8955a`) | – |
 | sack of potatoes | floor | large 20% | 2 | fixed (`#a68a64`) | – |
@@ -425,7 +427,7 @@ Per-picture details: "What was the aisle number?"; "What was on special offer?".
 
 Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
 
-Per-picture details: "What time was the next train?" on every level; "Which platform was the next train leaving from?"; "Where was the next train going?"; "What time was on the station clock?" (when there's a station-clock) on every level.
+Per-picture details: "How many people were looking out of the train’s windows?" (when there's a train); "What time was the next train?" on every level; "Which platform was the next train leaving from?"; "Where was the next train going?"; "What time was on the station clock?" (when there's a station-clock) on every level.
 
 ### Colour schemes
 
@@ -465,7 +467,7 @@ Per-picture details: "What time was the next train?" on every level; "Which plat
 
 Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
 
-Per-picture details: "What time was feeding time?" on every level.
+Per-picture details: "What time was feeding time?" on every level; "Was the elephant spraying water?" (when there's a elephant); "How many balloons was the balloon seller holding?" (when there's a balloon-seller).
 
 ### Colour schemes
 
@@ -520,7 +522,7 @@ Per-picture details: "Which animal was the danger sign about?"; "What number was
 | sunny | sky `#7cc4f0`, peaksFar `#9bb3c9`, peaks `#7d97b0`, snow `#e8eff5`, snowShade `#cfdbe6`, fence `#8a5a2b`, base `#e1e9f0`, track `#9fb3c6` |
 | dusk | sky `#b49ad6`, peaksFar `#a68fb8`, peaks `#8a76a3`, snow `#ece4f0`, snowShade `#d6cbe0`, fence `#6b4423`, base `#e4dceb`, track `#ad9fc0` |
 
-### Things (16)
+### Things (17)
 
 | Thing | Band | Size | Most | Colours | Habits |
 | --- | --- | --- | --- | --- | --- |
@@ -537,6 +539,7 @@ Per-picture details: "Which animal was the danger sign about?"; "What number was
 | dog | lodge | medium 14% | 2 | Brown, Black, White | – |
 | snowman | lodge | small 12% | 2 | Red, Blue, Green, Orange, Purple, Pink | – |
 | sledge | lodge | medium 15% | 2 | Red, Blue, Green, Orange | – |
+| dog sled | lodge | xl 42% | 1 | fixed (`#6c757d`) | may span columns; one only, not counted |
 | ski rack | lodge | medium 17% | 1 | fixed (`#6b4423`) | one only, not counted |
 | hot chocolate stand | lodge | large 23% | 1 | Red, Green, Blue, Brown | one only, not counted |
 | snowmobile | lodge | large 27% | 1 | Red, Blue, Green, Orange, Black | one only, not counted |
@@ -554,7 +557,7 @@ Per-picture details: "Which animal was the danger sign about?"; "What number was
 
 Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
 
-Per-picture details: "What time was on the clock?" (when there's a wall-clock) on every level; "What day was written on the board?"; "What sum was on the board?".
+Per-picture details: "How many fish were in the fish tank?" (when there's a fish-tank); "What time was on the clock?" (when there's a wall-clock) on every level; "What day was written on the board?"; "What sum was on the board?".
 
 ### Colour schemes
 
@@ -596,7 +599,7 @@ Per-picture details: "What time was on the clock?" (when there's a wall-clock) o
 
 Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
 
-Per-picture details: "What shape was the moon?" (when there's a moon); "What number was on the pitch sign?".
+Per-picture details: "What shape was the moon?" (when there's a moon); "What number was on the pitch sign?"; "Was the campfire burning, or just smoking?" (when there's a campfire).
 
 ### Colour schemes
 
@@ -638,7 +641,7 @@ Per-picture details: "What shape was the moon?" (when there's a moon); "What num
 
 Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
 
-Per-picture details: "Where was the flight on the screen going?"; "Which gate was the flight leaving from?"; "What was the flight number?".
+Per-picture details: "Was the coffee kiosk open or closed?" (when there's a coffee-kiosk); "Where was the flight on the screen going?"; "Which gate was the flight leaving from?"; "What was the flight number?".
 
 ### Colour schemes
 
@@ -680,7 +683,7 @@ Per-picture details: "Where was the flight on the screen going?"; "Which gate wa
 
 Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
 
-Per-picture details: "What was the mission called on the sign?"; "What number was the moon base on the sign?".
+Per-picture details: "Was there fire coming out of the rocket?" (when there's a rocket); "What was the mission called on the sign?"; "What number was the moon base on the sign?".
 
 ### Colour schemes
 

@@ -1,11 +1,12 @@
-import { Circle, G, Path, Rect, Text as SvgText } from 'react-native-svg';
+import type { ReactElement } from 'react';
+import { Circle, Ellipse, G, Path, Rect, Text as SvgText } from 'react-native-svg';
 
 import { ClockFace, randomTime, timeLookalikes } from '../clock';
 import { C } from '../colours';
-import { balloon, bird, cloudShape, dog, kite, person, plane, sun, tree } from '../items/common';
+import { balloon, bird, cloudShape, dog, kite, peopleStory, person, plane, sun, tree } from '../items/common';
 import { lineMarks, scatterMarks } from '../marks';
 import type { Rng } from '../random';
-import type { DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import type { DetailFact, DetailKnobs, ItemDef, Mark, PlacedGroup, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
 import { glints, speckles, strokes } from '../texture';
 
 /**
@@ -167,7 +168,8 @@ const items: ItemDef[] = [
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.orange, C.purple],
     colourPrompt: (plural) => (plural ? 'What colour were the bicycles?' : 'What colour was the bicycle?'),
-    draw: (colour) => (
+    // Ridden or parked on its stand, chosen per bicycle once placed (see `fitDetails`): "Was anyone riding it?".
+    draw: (colour, details, _copy, index = 0) => (
       <G>
         <G fill="none" stroke="#343a40" strokeWidth={6}>
           <Circle cx={25} cy={94} r={22} />
@@ -181,13 +183,20 @@ const items: ItemDef[] = [
         <Circle cx={58} cy={94} r={7} fill="none" stroke="#495057" strokeWidth={3} />
         <Path d="M25,94 L48,62 H86 L95,94 M48,62 L58,94 L25,94 M58,94 L86,62" fill="none" stroke={colour} strokeWidth={7} strokeLinejoin="round" />
         <Path d="M86,62 L84,46 H94" fill="none" stroke="#343a40" strokeWidth={5} strokeLinecap="round" />
-        {/* The rider: body leaning forward, hands on the handlebar, a foot on the pedal, in a helmet. */}
-        <Path d="M52,56 L62,94" fill="none" stroke="#343a40" strokeWidth={8} strokeLinecap="round" />
-        <Path d="M52,56 L62,20" fill="none" stroke="#457b9d" strokeWidth={16} strokeLinecap="round" />
-        <Path d="M62,26 L86,46" fill="none" stroke="#457b9d" strokeWidth={7} strokeLinecap="round" />
-        <Circle cx={66} cy={10} r={10} fill="#e0ac69" />
-        <Path d="M55,8 Q60,-4 72,-1 Q78,2 77,9 Z" fill="#ffd60a" stroke="none" />
-        <Circle cx={71} cy={11} r={1.4} fill="#2b2b2b" stroke="none" />
+        {details?.values?.riders?.[index] === '0' ? (
+          // Parked: up on its kickstand, nobody on it.
+          <Path d="M58,94 L48,116" fill="none" stroke="#343a40" strokeWidth={4} strokeLinecap="round" />
+        ) : (
+          <G>
+            {/* The rider: body leaning forward, hands on the handlebar, a foot on the pedal, in a helmet. */}
+            <Path d="M52,56 L62,94" fill="none" stroke="#343a40" strokeWidth={8} strokeLinecap="round" />
+            <Path d="M52,56 L62,20" fill="none" stroke="#457b9d" strokeWidth={16} strokeLinecap="round" />
+            <Path d="M62,26 L86,46" fill="none" stroke="#457b9d" strokeWidth={7} strokeLinecap="round" />
+            <Circle cx={66} cy={10} r={10} fill="#e0ac69" />
+            <Path d="M55,8 Q60,-4 72,-1 Q78,2 77,9 Z" fill="#ffd60a" stroke="none" />
+            <Circle cx={71} cy={11} r={1.4} fill="#2b2b2b" stroke="none" />
+          </G>
+        )}
         <Rect x={40} y={54} width={18} height={6} rx={3} fill="#343a40" />
       </G>
     ),
@@ -270,27 +279,30 @@ const items: ItemDef[] = [
     plural: 'picnic blankets',
     article: 'a',
     w: 160,
-    h: 62,
+    h: 74,
+    // About as long as a person is tall, and deep enough to read as a blanket lying on the grass, not a strip.
     tier: 'large',
-    size: 0.23,
+    size: 0.28,
     zones: ON_GRASS,
     maxCount: 2,
     colours: [C.red, C.blue, C.yellow, C.purple, C.orange],
     draw: (colour) => (
       <G>
-        <Path d="M14,36 H146 L160,62 H0 Z" fill={colour} />
+        <Path d="M20,26 H140 L160,74 H0 Z" fill={colour} />
         {/* A gingham check: white stripes both ways, brighter where they cross. */}
         <G stroke="none">
-          <Path d="M36,36 L30,62 H40 L45,36 Z M68,36 L66,62 H76 L77,36 Z M100,36 L102,62 H112 L109,36 Z M132,36 L138,62 H148 L141,36 Z" fill="#ffffff" fillOpacity={0.5} />
-          <Path d="M10,42 H150 L152,46 H8 Z M4,53 H156 L158,57 H2 Z" fill="#ffffff" fillOpacity={0.5} />
+          <Path d="M44,26 L36,74 H48 L54,26 Z M76,26 L74,74 H86 L86,26 Z M106,26 L112,74 H124 L116,26 Z" fill="#ffffff" fillOpacity={0.5} />
+          <Path d="M15,38 H145 L148,44 H12 Z M8,56 H152 L155,62 H5 Z" fill="#ffffff" fillOpacity={0.5} />
         </G>
-        {/* A wicker basket on the blanket, with a red apple. */}
-        <Path d="M96,20 Q110,0 124,20" fill="none" stroke="#8a5a2b" strokeWidth={4} />
-        <Rect x={92} y={18} width={36} height={24} rx={4} fill="#c8955a" />
+        {/* A small wicker basket, a plate with a sandwich and an apple: in scale with the blanket. */}
+        <Path d="M103,26 Q115,10 127,26" fill="none" stroke="#8a5a2b" strokeWidth={3} />
+        <Rect x={100} y={23} width={30} height={19} rx={3} fill="#c8955a" />
         <G stroke="none">
-          <Path d="M94,26 H126 M94,34 H126 M102,20 V40 M110,20 V40 M118,20 V40" stroke="#8a5a2b" strokeOpacity={0.6} strokeWidth={1.5} />
-          <Circle cx={74} cy={44} r={6} fill="#e63946" />
-          <Path d="M74,38 L76,34" stroke="#5c3d1e" strokeWidth={2} />
+          <Path d="M101,30 H129 M101,36 H129 M110,24 V41 M120,24 V41" stroke="#8a5a2b" strokeOpacity={0.6} strokeWidth={1.2} />
+          <Ellipse cx={58} cy={50} rx={14} ry={5} fill="#f8f9fa" />
+          <Path d="M50,49 L64,46 L66,50 L52,53 Z" fill="#f4d58d" />
+          <Circle cx={86} cy={54} r={3.5} fill="#d00000" />
+          <Path d="M86,50.5 L87,48" stroke="#5c3d1e" strokeWidth={1.2} />
         </G>
       </G>
     ),
@@ -419,7 +431,8 @@ const items: ItemDef[] = [
   // A grown tree, about 4 m tall: stands at the back of the grass and rises over the path behind it.
   { ...tree, size: 0.28, tall: true, zones: ON_GRASS, maxCount: 2 },
   { ...person, zones: [...ON_PATH, ...ON_GRASS], maxCount: 3 },
-  { ...dog, zones: [...ON_PATH, ...ON_GRASS], maxCount: 2 },
+  // A dog on its own may be carrying something in its mouth (see `fitDetails`): "What was the dog carrying?".
+  { ...dog, zones: [...ON_PATH, ...ON_GRASS], maxCount: 2, draw: (colour, details) => <G>{dog.draw(colour)}{DOG_FETCH[details?.values?.fetch ?? '']?.draw()}</G> },
 ];
 
 /** Boat numbers easy to mix up with `n`: one or two along, the digits swapped, or ten more. */
@@ -442,6 +455,72 @@ function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
       { id: 'clock-time', type: 'number', prompt: 'What time was on the park clock?', answer: time, wrong: close, fallback: other, needs: 'park-clock', everyLevel: true, spotlight: true },
     ],
   };
+}
+
+/** What a dog can carry across its mouth (below its nose, at about 96,38), drawn big enough to make out on a phone. */
+const DOG_FETCH: Record<string, { name: string; draw: () => ReactElement }> = {
+  ball: {
+    name: 'A ball',
+    draw: () => (
+      <G>
+        <Circle cx={98} cy={42} r={9} fill="#c0eb75" stroke="#5c940d" strokeWidth={2} />
+        <Path d="M90,38 Q98,44 106,38 M90,46 Q98,40 106,46" fill="none" stroke="#ffffff" strokeWidth={1.5} />
+      </G>
+    ),
+  },
+  stick: {
+    name: 'A stick',
+    draw: () => (
+      <G>
+        <Path d="M76,44 L118,34" stroke="#8a5a2b" strokeWidth={6} strokeLinecap="round" />
+        <Path d="M104,37 L110,28" stroke="#8a5a2b" strokeWidth={4} strokeLinecap="round" />
+      </G>
+    ),
+  },
+  frisbee: {
+    name: 'A frisbee',
+    draw: () => (
+      <G>
+        <Ellipse cx={100} cy={42} rx={15} ry={6} fill="#e63946" stroke="#9b1c26" strokeWidth={2} />
+        <Ellipse cx={100} cy={41} rx={8} ry={2.5} fill="#ffffff" fillOpacity={0.4} />
+      </G>
+    ),
+  },
+};
+
+/** Once things are placed: a person's hat and what they're holding, then who's riding each bicycle (one per copy, left to
+ * right: "1" ridden, "0" parked). */
+function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  const people = peopleStory(groups, random, ['sunhat', 'cap', 'woolly'], ['balloon', 'icecream', 'bag']);
+  const values = { ...d.values, ...people.values };
+  const facts = [...(d.facts ?? []), ...people.facts];
+  // A dog on its own carries a ball, a stick or a frisbee, or now and then nothing.
+  if (groups.find((g) => g.kind === 'dog')?.count === 1) {
+    const fetch = random.next() < 0.2 ? '' : random.pick(Object.keys(DOG_FETCH));
+    values.fetch = fetch;
+    const answer = fetch ? DOG_FETCH[fetch].name : 'Nothing';
+    facts.push({ id: 'dog-fetch', family: 'story', type: 'object', prompt: 'What was the dog carrying?', answer, wrong: [...Object.values(DOG_FETCH).map((f) => f.name), 'Nothing'].filter((n) => n !== answer), needs: 'dog' });
+  }
+  return rideBikes({ ...d, values, facts }, groups, random);
+}
+
+function rideBikes(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  const bikes = groups.find((g) => g.kind === 'bicycle')?.count ?? 0;
+  if (!bikes) return d;
+  const riders = Array.from({ length: bikes }, () => (random.next() < 0.5 ? '1' : '0')).join('');
+  const ridden = [...riders].filter((r) => r === '1').length;
+  const fact: DetailFact =
+    bikes === 1
+      ? { id: 'bike-rider', family: 'story', type: 'object', prompt: 'Was anyone riding the bicycle?', answer: ridden ? 'Yes' : 'No', wrong: [ridden ? 'No' : 'Yes'], needs: 'bicycle' }
+      : {
+          id: 'bike-rider', family: 'story',
+          type: 'count',
+          prompt: 'How many of the bicycles had someone riding them?',
+          answer: ['None of them', 'One of them', 'Both of them'][ridden],
+          wrong: ['None of them', 'One of them', 'Both of them'].filter((_, i) => i !== ridden),
+          needs: 'bicycle',
+        };
+  return { ...d, values: { ...d.values, riders }, facts: [...(d.facts ?? []), fact] };
 }
 
 type Palette = Record<'sky' | 'bushes' | 'bushesDark' | 'pond' | 'ripple' | 'grass' | 'tuft' | 'path' | 'edge', string>;
@@ -547,11 +626,13 @@ export const park: Recipe = {
     { id: 'bushes', label: 'By the trees', surface: 'ground', top: BUSHES, bottom: POND, rows: 0 },
     { id: 'pond', label: 'On the pond', surface: 'ground', top: POND, bottom: BANK, rows: 1, maxGroups: 2 },
     // Bikes and walkers all go the same way along the path.
-    { id: 'path', label: 'On the path', surface: 'ground', top: PATH, bottom: GRASS, rows: 1, maxGroups: 2, oneWay: true },
+    // Feet well inside the path, so people and bikes clearly stand on it (at its bottom edge they looked to be on the grass).
+    { id: 'path', label: 'On the path', surface: 'ground', top: PATH, bottom: GRASS, rows: 1, maxGroups: 2, oneWay: true, feetInset: 0.2 },
     { id: 'grass', label: 'On the grass', surface: 'ground', top: GRASS_TOP, bottom: 1, rows: 2 },
   ],
   items,
   details,
+  fitDetails,
   // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
   light: [
     // Haze near the trees.

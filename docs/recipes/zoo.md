@@ -33,6 +33,8 @@ Sized against the shared person (1.7 m, 1 m ≈ 0.115 of the width). An enclosur
 
 ## Things (19)
 
+- **What's happening:** the elephant has its trunk down or raised, spraying water over its back ("Was the elephant spraying water?"); the balloon seller holds 2 to 5 balloons ("How many balloons was the balloon seller holding?").
+
 - **Sky:** the sun, birds, hot-air balloons, a plane.
 - **Enclosures:** giraffe, elephant, zebra, lion, rhino (one of each at most); ostriches and kangaroos (up to 3); bear; penguins (up to 4, about 1.2 m tall, like emperor penguins).
 - **Path:** visitors, zookeepers (green uniform and hat), benches, pushchairs, a balloon seller (the balloons' colour is asked), a signpost.
