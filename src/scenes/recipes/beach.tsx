@@ -1,7 +1,7 @@
 import { Circle, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
-import { shade } from '../contrast';
+import { contrast, shade } from '../contrast';
 import { ball, balloon, bird, cloudShape, crab, dolphin, kite, peopleStory, person, plane, starfish, sun } from '../items/common';
 import { lineMarks, markIfClear, scatterMarks } from '../marks';
 import { glints, speckles } from '../texture';
@@ -32,6 +32,9 @@ const CRAB_SPOTS: Record<string, { name: string; w: number; scale: number; clear
 };
 
 /** The hiding crab, behind the thing at `kind` when the picture's details put it there. */
+/** Swimsuit colours for someone sunbathing on a towel: the one that stands out most from the towel is used. */
+const SWIMSUITS = ['#1d3557', '#ffd60a', '#ffffff'];
+
 function hidingCrab(kind: string, details?: SceneDetails) {
   if (details?.values?.crab !== kind) return null;
   const spot = CRAB_SPOTS[kind];
@@ -199,21 +202,29 @@ const items: ItemDef[] = [
         {hidingCrab('towel', details)}
         <Polygon points="20,0 160,0 140,70 0,70" fill={colour} />
         <G stroke="none">
-          <Polygon points="50,0 70,0 50,70 30,70" fill="#ffffff" fillOpacity={0.7} />
-          <Polygon points="110,0 130,0 110,70 90,70" fill="#ffffff" fillOpacity={0.7} />
-          <Polygon points="76,0 82,0 62,70 56,70" fill="#ffffff" fillOpacity={0.45} />
+          {/* White stripes, left off when someone lies on it: a striped towel made them hard to make out. */}
+          {details?.values?.sunbather !== 'yes' && (
+            <G>
+              <Polygon points="50,0 70,0 50,70 30,70" fill="#ffffff" fillOpacity={0.7} />
+              <Polygon points="110,0 130,0 110,70 90,70" fill="#ffffff" fillOpacity={0.7} />
+              <Polygon points="76,0 82,0 62,70 56,70" fill="#ffffff" fillOpacity={0.45} />
+            </G>
+          )}
           {/* A soft fold and fringed ends. */}
           <Path d="M24,26 L156,26 L154,32 L22,32 Z" fill="#000000" fillOpacity={0.08} />
           <Path d="M22,0 V-4 M30,0 V-4 M38,0 V-4 M46,0 V-4 M150,0 V-4 M142,0 V-4 M2,70 V74 M10,70 V74 M18,70 V74 M132,70 V74 M124,70 V74 M116,70 V74" stroke={colour} strokeWidth={2.5} />
         </G>
         {details?.values?.sunbather === 'yes' && (
-          // Someone lying on the towel in the sun, head on the left, in a dark swimsuit.
+          // Someone lying on the plain towel in the sun, head on the left: outlined in dark brown, and in whichever
+          // swimsuit colour stands out most from the towel, so they read clearly on any towel colour.
           <G>
+            <Path d="M58,32 H148" stroke="#3d2b1f" strokeWidth={18} strokeLinecap="round" />
             <Path d="M58,32 H148" stroke="#e0ac69" strokeWidth={13} strokeLinecap="round" />
-            <Rect x={50} y={22} width={46} height={22} rx={10} fill="#1d3557" />
-            <Circle cx={36} cy={33} r={13} fill="#e0ac69" />
-            <Path d="M24,30 Q26,18 38,20 Q46,22 47,30 Z" fill="#3d2b1f" />
-            <Rect x={28} y={27} width={14} height={5} rx={2} fill="#212529" />
+            <Path d="M108,32 H146" stroke="#3d2b1f" strokeOpacity={0.5} strokeWidth={1.5} />
+            <Rect x={50} y={21} width={48} height={24} rx={10} fill={SWIMSUITS.reduce((best, c) => (contrast(c, colour) > contrast(best, colour) ? c : best))} stroke="#3d2b1f" strokeWidth={2.5} />
+            <Circle cx={36} cy={33} r={13} fill="#e0ac69" stroke="#3d2b1f" strokeWidth={2.5} />
+            <Path d="M24,30 Q26,18 38,20 Q46,22 47,30 Z" fill="#3d2b1f" stroke="none" />
+            <Rect x={28} y={27} width={14} height={5} rx={2} fill="#212529" stroke="none" />
           </G>
         )}
       </G>

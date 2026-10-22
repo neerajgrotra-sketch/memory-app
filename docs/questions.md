@@ -134,7 +134,7 @@ Things drawn differently per picture, about what was going on rather than readin
 | Place | Question | Answers |
 | --- | --- | --- |
 | Beach, park, city (one person in the picture) | "What was the person wearing on their head?" / "What was the person holding?" (`peopleStory`; both about the person, like their shirt's colour, so a round asks one) | A sun hat · A cap · A woolly hat · Nothing / A balloon · An ice cream · A shopping bag · Nothing (each place its own few) |
-| Beach | "Was the beach umbrella open or closed?" (one umbrella); "Which palm tree had coconuts on the sand by it?"; "Was there a flag on the sandcastle?" (one sandcastle); "Was anyone lying on the beach towel?" (one towel with no crab under it; then people aren't counted, and the person's hat and things in hand aren't asked) | Open · Closed / Yes · No |
+| Beach | "Was the beach umbrella open or closed?" (one umbrella); "Which palm tree had coconuts on the sand by it?"; "Was there a flag on the sandcastle?" (one sandcastle); "Was anyone lying on the beach towel?" (one towel with no crab under it; the towel is drawn plain, without its stripes, and the sunbather outlined, in whichever swimsuit colour stands out most from the towel; then people aren't counted, and the person's hat and things in hand aren't asked) | Open · Closed / Yes · No |
 | Park | "What was the dog carrying?" (one dog, in its mouth) | A ball · A stick · A frisbee · Nothing |
 | Farm | "How many eggs were in the nest?" (a hen's nest, a thing of its own, drawn bigger than life to count) | 1 to 5 |
 | Zoo | "Was the elephant spraying water?" (trunk raised, a shower over its back) · "How many balloons was the balloon seller holding?" | Yes · No / 2 to 5 |

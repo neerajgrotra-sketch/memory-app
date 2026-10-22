@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.9.1 (2026-10-22)
+
+- **The sunbather is easy to see.** On a striped towel, someone lying on it was hard to make out on a phone. A towel with someone on it is now plain (no stripes), the sunbather has a dark outline, and their swimsuit is whichever of navy, yellow and white stands out most from the towel's colour. Checked on all six towel colours at iPhone SE size.
+
 ## 4.9.0 (2026-10-22)
 
 - **No big step at Level 23.** Hard questions (where, above / below, details) jumped 13 points there, the biggest step left. "What was there" questions now fade out in two steps: at most one a round from Level 20, then no longer preferred from 23 (+6 and +5). No level now jumps more than about 7 points, and `check:levels` holds it to 10 (it allowed 15).
