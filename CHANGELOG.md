@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.10.2 (2026-10-22)
+
+- **Tester mode: Speed Round every round.** A new switch in Profile → Tester mode: tap Play and a Super Speed Round starts straight away, and another comes before every new picture, at any level (not in the Daily Challenge). Its results and prizes count as usual.
+
 ## 4.10.1 (2026-10-22)
 
 - **Sounds for the Super Speed Round.** A whoosh and a crackling zap as the lightning bolt lands, thunder under it, and a bright stab as the title rises; four racing notes on **Start**; a tight tick on the last two seconds of every question; a double buzzer when time runs out; and a fanfare with sparkles for a prize (the kind "aww" for 2 or fewer). They're made from scratch by `scripts/sounds/make-speed-sounds.py`, at the same loudness as the other sounds, with vibration to match on phones.

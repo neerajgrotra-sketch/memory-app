@@ -127,12 +127,19 @@ function Game({ start }: { start: SessionStart & { streak: Streak; speed: SpeedC
   // Counted from the start of the session, or from this session's last speed round (`levelsRounds` then).
   const [speedFrom, setSpeedFrom] = useState({ ...start.speed, at: 0 });
   const speedCount = { since: speedFrom.since + levelsRounds - speedFrom.at, gap: speedFrom.gap };
-  const [speedRound, setSpeedRound] = useState<SpeedRoundSetup | null>(null);
+  const { profile } = useProfile();
+  // Tester mode can bring a speed round before every picture, starting with the first.
+  const testSpeed = profile?.tester === true && profile.testSpeed === true && start.mode !== 'daily';
+  /** The speed round showing, and whether the picture after it is already dealt (the first one) or still to come. */
+  const [speedRound, setSpeedRound] = useState<{ setup: SpeedRoundSetup; then: 'next' | 'first' } | null>(() => {
+    const first = testSpeed && !start.resume ? makeSpeedRound() : null;
+    return first ? { setup: first, then: 'first' } : null;
+  });
   /** The next picture, or a Super Speed Round first when one is due. */
   const next = () => {
-    const due = start.mode === 'levels' && speedDue(speedCount, ladder.level) ? makeSpeedRound() : null;
+    const due = testSpeed || (start.mode === 'levels' && speedDue(speedCount, ladder.level)) ? makeSpeedRound() : null;
     // The usual start sound, unless the speed round's lightning plays instead.
-    if (due) setSpeedRound(due);
+    if (due) setSpeedRound({ setup: due, then: 'next' });
     else {
       feedback('start');
       nextPicture();
@@ -140,7 +147,6 @@ function Game({ start }: { start: SessionStart & { streak: Streak; speed: SpeedC
   };
   // A Peek shows the picture again over the question for a few seconds (a tester can change how many).
   const [peeking, setPeeking] = useState(false);
-  const { profile } = useProfile();
   // The level-up screen shows once per level gained, before the round's results.
   const [celebrated, setCelebrated] = useState<string | null>(null);
   const levelUpKey = outcome?.ladder && outcome.ladder.after.level > outcome.ladder.before.level ? `${round.index}` : null;
@@ -156,16 +162,16 @@ function Game({ start }: { start: SessionStart & { streak: Streak; speed: SpeedC
     return (
       <View style={styles.container}>
         <SpeedRound
-          setup={speedRound}
+          setup={speedRound.setup}
           moreTime={profile?.moreTime === true}
           onFinish={(right, looked) => {
-            const prize = finishSpeed(speedRound, right, looked);
+            const prize = finishSpeed(speedRound.setup, right, looked);
             setSpeedFrom({ since: 0, gap: speedGap(prize.resultId), at: levelsRounds });
             return prize;
           }}
           onContinue={() => {
             setSpeedRound(null);
-            nextPicture();
+            if (speedRound.then === 'next') nextPicture();
           }}
         />
       </View>

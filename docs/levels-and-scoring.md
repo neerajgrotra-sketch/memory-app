@@ -108,6 +108,7 @@ A surprise bonus round (`src/games/lookRemember/speed.ts`, `SpeedRound`), to bre
 - **Prizes** (`speedPrize`): 8 of 8 wins a Peek and a 50:50, 7 of 8 a Peek, and 6 or more bonus points (two answers' worth). A Peek or 50:50 you have no room for becomes bonus points instead. Each right answer earns half an answer's points.
 - **Never counts against you:** the round is saved (`speed: true`, with `bonus` for prizes) but never moves your level or counts for the high score, perfect rounds or the Progress tab. Its points count towards Peeks as usual.
 - **Sounds** (`assets/sounds/speed-*.mp3`): the lightning's zap and thunder with the intro, racing notes on Start, a tick on each question's last two seconds, a buzzer for too slow, and a fanfare for a prize.
+- **Testing:** tester mode's **Speed Round every round** switch brings one as soon as you tap Play and before every picture, at any level.
 - `npm run check:speed` checks the questions on 1,500 pictures, the timing, the prizes and 50:50s.
 
 ## 50:50

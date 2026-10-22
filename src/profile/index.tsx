@@ -64,7 +64,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   const value = useMemo<ProfileContextValue>(
     () => ({
       // Without the tester tools, a saved tester flag counts for nothing.
-      profile: TESTER_TOOLS || !profile?.tester ? profile : { ...profile, tester: false, testPeeks: false },
+      profile: TESTER_TOOLS || !profile?.tester ? profile : { ...profile, tester: false, testPeeks: false, testSpeed: false },
       update,
       setAgeBand: (band) => update({ ageBand: band, moreTime: band ? MORE_TIME_BANDS.includes(band) : false }),
       clearDetails: () => update({ name: null, ageBand: null, moreTime: false }),
