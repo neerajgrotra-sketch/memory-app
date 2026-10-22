@@ -235,6 +235,11 @@ export interface DetailFact {
   spotlight?: boolean;
   /** Asked on every level, not just from Level 8 (the clock, whose times get harder instead). */
   everyLevel?: boolean;
+  /**
+   * 'story': about what was happening, not reading a number or a sign (the kettle steaming, what the person was
+   * holding): asked from Level 1, as its own kind of question. Otherwise a detail, from Level 3.
+   */
+  family?: 'story';
 }
 
 /**

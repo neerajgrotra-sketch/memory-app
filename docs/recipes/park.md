@@ -21,6 +21,8 @@ Everything is sized against the shared person (1.7 m tall, so 1 m ≈ 0.115 of t
 
 ## Things and their habits
 
+- **What's happening:** one dog on its own carries a ball, a stick, a frisbee or nothing; one person on their own may wear a sun hat, a cap or a woolly hat and hold a balloon, an ice cream or a shopping bag; each bicycle is ridden or parked (story questions, from Level 1).
+
 - **Sky:** the sun, birds, kites, hot-air balloons, a plane (all shared).
 - **Pond:** a rowing boat with someone rowing (extra wide, one at most, with a **number** on its side), swans, a stone fountain (one).
 - **Path:** bicycles, each ridden or parked on its stand (frame colour asked; "Was anyone riding the bicycle?"), an ice-cream cart (umbrella colour asked; it can also stand on the grass), people and dogs.

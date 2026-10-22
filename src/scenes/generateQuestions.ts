@@ -501,7 +501,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   // Any recipe's backdrop facts ("What colour was the barn?"), asked on the same levels as house numbers;
   // a few (the clock) on every level, and some only when their thing is in the picture.
   for (const fact of spec.details?.facts ?? []) {
-    if (!(knobs.houseNumbers || fact.everyLevel)) continue;
+    if (!(knobs.houseNumbers || fact.everyLevel || fact.family === 'story')) continue;
     if (fact.needs && !spec.groups.some((g) => g.kind === fact.needs)) continue;
     {
       questions.push({
@@ -509,7 +509,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         sceneId: spec.id,
         answerIndex: 0,
         type: fact.type,
-        family: 'detail',
+        family: fact.family ?? 'detail',
         template: `fact:${fact.id}`,
         spotlight: fact.spotlight,
         subject: fact.id,
@@ -777,5 +777,5 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   // A question needs at least three options to be a fair choice (true or false has its own two).
   // At least three choices, except where two is all there can be: true or false, "Was the floor lamp on or off?", and
   // left or right of a single landmark ("To the right of the moon").
-  return questions.filter((q) => q.options.length >= 3 || (q.options.length === 2 && (q.family === 'true-false' || q.family === 'detail' || q.family === 'where')));
+  return questions.filter((q) => q.options.length >= 3 || (q.options.length === 2 && (q.family === 'true-false' || q.family === 'detail' || q.family === 'story' || q.family === 'where')));
 }

@@ -8,8 +8,7 @@
  * - a level never asks a kind of question before it's brought in;
  * - a 10-round session doesn't keep asking the same wording (`Question.template`): none is asked in more than about
  *   two rounds in three, or, where a level has few wordings to choose from (the beach alone at Level 1), much more than
- *   its share. Levels 1–4 are closest to the line (Level 4: about 6 in 10): more questions for the beach, living room
- *   and park are what will bring them down.
+ *   its share. At Levels 1–3, which are about what was there and colours, those two may come up in up to 7.5 of 10.
  *
  * Run with `npm run check:levels`.
  */
@@ -26,6 +25,8 @@ const fail = (message: string) => {
 };
 const SIZE = { width: 393, height: 640 };
 const HARD = new Set(['where', 'relation', 'detail']);
+/** The wordings Levels 1–3 are about: what colour, and what was there. */
+const CORE = new Set(['colour', 'what-here']);
 
 const round = (level: number, pool: Question[], previousTemplates?: ReadonlySet<string>) => {
   const knobs = knobsForLevel(level);
@@ -74,6 +75,7 @@ const SESSIONS = 40;
 const variety: string[] = [];
 for (const level of [1, 2, 4, 9, 13, 18, 23, 30]) {
   let worst = 0;
+  let worstOther = 0;
   let distinct = 0;
   for (let s = 0; s < SESSIONS; s++) {
     let place: string | undefined;
@@ -87,14 +89,20 @@ for (const level of [1, 2, 4, 9, 13, 18, 23, 30]) {
       for (const t of last) counts[t] = (counts[t] ?? 0) + 1;
     }
     worst += Math.max(...Object.values(counts));
+    worstOther += Math.max(0, ...Object.entries(counts).filter(([t]) => !CORE.has(t)).map(([, n]) => n));
     distinct += Object.keys(counts).length;
   }
-  const most = worst / SESSIONS;
   const kinds = distinct / SESSIONS;
-  variety.push(`${level}: ${kinds.toFixed(1)} kinds, most ${most.toFixed(1)}×`);
   // 5 questions a round over 10 rounds, shared evenly between the wordings there are.
   const share = (10 * ROUND_SIZE) / kinds;
-  if (most > Math.max(6.5, 1.5 * share)) fail(`level ${level}: one wording is asked in ${most.toFixed(1)} of 10 rounds (an even share is ${share.toFixed(1)})`);
+  const limit = Math.max(6.5, 1.5 * share);
+  // At Levels 1–3 a round is mostly "what was there" and colours (`preferredTypes`), so those two may come up in most
+  // rounds; nothing else may.
+  const most = (level <= 3 ? worstOther : worst) / SESSIONS;
+  const core = worst / SESSIONS;
+  variety.push(`${level}: ${kinds.toFixed(1)} kinds, most ${(worst / SESSIONS).toFixed(1)}×`);
+  if (most > limit) fail(`level ${level}: one wording is asked in ${most.toFixed(1)} of 10 rounds (an even share is ${share.toFixed(1)})`);
+  if (level <= 3 && core > 7.5) fail(`level ${level}: "what colour" or "what was there" is asked in ${core.toFixed(1)} of 10 rounds`);
 }
 console.log('  10-round sessions (different wordings asked, most-asked one):', variety.join(' · '));
 

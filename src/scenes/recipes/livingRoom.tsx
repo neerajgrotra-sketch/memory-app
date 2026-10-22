@@ -990,7 +990,7 @@ function details(random: Rng, { clockStep, hidden = 0, closeCounts = false }: De
     values: { clock: time, tv, ...(hidden ? { peek: String(hidden) } : {}), ...(closeCounts ? { countShelves: '1' } : {}) },
     facts: [
       { id: 'clock-time', type: 'number', prompt: 'What time was on the clock?', answer: time, wrong: close, fallback: other, needs: 'wall-clock', everyLevel: true, spotlight: true },
-      { id: 'tv-show', type: 'object', prompt: 'What was on the television?', answer: TV_SHOWS[tv], wrong: Object.values(TV_SHOWS).filter((s) => s !== TV_SHOWS[tv]), needs: 'tv' },
+      { id: 'tv-show', family: 'story', type: 'object', prompt: 'What was on the television?', answer: TV_SHOWS[tv], wrong: Object.values(TV_SHOWS).filter((s) => s !== TV_SHOWS[tv]), needs: 'tv' },
     ],
   };
 }
@@ -1019,12 +1019,12 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
     if (lamps === 1) {
       values[key] = random.next() < 0.5 ? 'on' : 'off';
       const answer = values[key] === 'on' ? 'On' : 'Off';
-      facts.push({ id: `${kind}-on`, type: 'object', prompt: `Was the ${name} on or off?`, answer, wrong: [answer === 'On' ? 'Off' : 'On'], needs: kind });
+      facts.push({ id: `${kind}-on`, family: 'story', type: 'object', prompt: `Was the ${name} on or off?`, answer, wrong: [answer === 'On' ? 'Off' : 'On'], needs: kind });
     } else if (lamps === 2) {
       const r = random.next();
       values[key] = r < 0.35 ? 'left' : r < 0.7 ? 'right' : r < 0.85 ? 'both' : 'none';
       const answer = WHICH_OF_TWO[values[key]];
-      facts.push({ id: `${kind}-on`, type: 'position', prompt: `Which ${name} was on?`, answer, wrong: Object.values(WHICH_OF_TWO).filter((a) => a !== answer), needs: kind });
+      facts.push({ id: `${kind}-on`, family: 'story', type: 'position', prompt: `Which ${name} was on?`, answer, wrong: Object.values(WHICH_OF_TWO).filter((a) => a !== answer), needs: kind });
     }
   }
 
@@ -1037,7 +1037,7 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
     if (frames === 2) values.frame2 = second;
     else
       facts.push({
-        id: 'frame-picture',
+        id: 'frame-picture', family: 'story',
         type: 'object',
         prompt: 'What was in the picture frame?',
         answer: FRAME_PICTURES[first].name,
@@ -1071,7 +1071,7 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
     values[`${animal}Toy`] = toy;
     const other = PET_TOYS[animal === 'cat' ? 'dog' : 'cat'];
     facts.push({
-      id: `${animal}-toy`,
+      id: `${animal}-toy`, family: 'story',
       type: 'object',
       prompt: `What was the ${animal} playing with?`,
       answer: toys[toy],
@@ -1116,7 +1116,7 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
       values.catColour = random.pick(items.find((i) => i.kind === 'cat')!.colours!).hex;
       alsoSeen.push('cat');
       facts.push({
-        id: 'cat-seat',
+        id: 'cat-seat', family: 'story',
         type: 'position',
         prompt: 'Where was the cat?',
         answer,

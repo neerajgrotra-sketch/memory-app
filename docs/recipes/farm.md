@@ -15,6 +15,8 @@ A fence runs between the field and the farmyard (55.5–58.5%).
 
 ## Things and their habits
 
+- **What's happening:** a hen's nest in the yard (one at most, dark straw so it stands out from the grass, drawn bigger than life) with 1 to 5 eggs: "How many eggs were in the nest?".
+
 - **Sky:** sun (one, not counted), crows, hot-air balloons.
 - **Field:**
   - **tractor** (extra large, one at most, red, green, blue or yellow; faces the way it drives)

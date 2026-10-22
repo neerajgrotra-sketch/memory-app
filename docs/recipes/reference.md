@@ -248,7 +248,7 @@ Per-picture details: "What number was on the rowing boat?" (when there's a boat)
 | On the worktop (`counter`) | 45% – 63% | ground | 1 | things stand exactly on its bottom line |
 | On the floor (`floor`) | 70% – 100% | ground | 1 | at most 3 kinds; things stand exactly on its bottom line |
 
-Per-picture details: "What time was on the microwave?" (when there's a microwave) on every level; "What was in the fruit bowl?" (when there's a fruit-bowl).
+Per-picture details: "Was the kettle steaming?" (when there's a kettle); "Was there toast in the toaster?" (when there's a toaster); "What time was on the microwave?" (when there's a microwave) on every level; "What was in the fruit bowl?" (when there's a fruit-bowl).
 
 ### Colour schemes
 
@@ -298,7 +298,7 @@ Per-picture details: "What time was on the microwave?" (when there's a microwave
 | In the field (`field`) | 38% – 55.5% | ground | 1 | at most 2 kinds; everything faces one way |
 | In the farmyard (`yard`) | 58.5% – 100% | ground | 2 | – |
 
-Per-picture details: "What colour was the barn?".
+Per-picture details: "How many eggs were in the nest?" (when there's a nest); "What colour was the barn?".
 
 ### Colour schemes
 
@@ -307,7 +307,7 @@ Per-picture details: "What colour was the barn?".
 | summer | sky `#8fd3f4`, hillsFar `#9fcf6b`, hills `#7fbf55`, field `#b5d86a`, rows `#7a9a3a`, yard `#7cb24a`, fence `#f1e7d0`, barn `#d00000` |
 | harvest | sky `#ffd8a8`, hillsFar `#c9b458`, hills `#a8a24a`, field `#c4cf7a`, rows `#8f9a45`, yard `#7f9a45`, fence `#f1e7d0`, barn `#d00000` |
 
-### Things (17)
+### Things (18)
 
 | Thing | Band | Size | Most | Colours | Habits |
 | --- | --- | --- | --- | --- | --- |
@@ -328,6 +328,7 @@ Per-picture details: "What colour was the barn?".
 | farmer | yard | small 10% | 1 | Red, Blue, Yellow, Green, Orange, Purple, Pink, White | – |
 | wheelbarrow | yard | medium 16% | 1 | Red, Green, Blue | – |
 | milk churn | yard | small 10% | 3 | fixed (`#c9d2dc`) | at the front edge |
+| nest of eggs | yard | small 13% | 1 | fixed (`#6b4423`) | at the front edge; one only, not counted |
 
 ## Under the sea (`under-sea`)
 
@@ -466,7 +467,7 @@ Per-picture details: "What time was the next train?" on every level; "Which plat
 
 Keep-clear areas (nothing may cover them): 1 (building doors and their house numbers).
 
-Per-picture details: "What time was feeding time?" on every level.
+Per-picture details: "What time was feeding time?" on every level; "Was the elephant spraying water?" (when there's a elephant); "How many balloons was the balloon seller holding?" (when there's a balloon-seller).
 
 ### Colour schemes
 

@@ -126,12 +126,20 @@ Optional fields:
 - `spotlight`: asked first in a round when it can be
 - `fallback`: more wrong answers when `wrong` runs short.
 
-### Things that change from picture to picture (4.5.0)
+### What was happening: story questions (4.5.0, 4.6.0)
 
-Drawn differently per picture and asked as detail facts, from Level 3:
+Things drawn differently per picture, about what was going on rather than reading a number or a sign. They're facts with `family: 'story'`: asked from **Level 1** (reading clocks, numbers and signs waits for Level 3), at most one a round, and a round picks one whenever the picture has it, just after a spotlight question (they're the fun part of a picture, and rare). Two-choice ones (Yes / No, On / Off) are allowed, like true or false. Every answer really happens, "Nothing" and "None of them" included.
 
 | Place | Question | Answers |
 | --- | --- | --- |
+| Beach, park, city (one person in the picture) | "What was the person wearing on their head?" / "What was the person holding?" (`peopleStory`; both about the person, like their shirt's colour, so a round asks one) | A sun hat · A cap · A woolly hat · Nothing / A balloon · An ice cream · A shopping bag · Nothing (each place its own few) |
+| Beach | "Was the beach umbrella open or closed?" (one umbrella); "Which palm tree had coconuts on the sand by it?" | Open · Closed |
+| Park | "What was the dog carrying?" (one dog, in its mouth) | A ball · A stick · A frisbee · Nothing |
+| Farm | "How many eggs were in the nest?" (a hen's nest, a thing of its own, drawn bigger than life to count) | 1 to 5 |
+| Zoo | "Was the elephant spraying water?" (trunk raised, a shower over its back) · "How many balloons was the balloon seller holding?" | Yes · No / 2 to 5 |
+| Kitchen | "Was the kettle steaming?" · "Was there toast in the toaster?" · "What was in the fruit bowl?" | Yes · No |
+| Under the sea | "What was the diver holding?" (one diver) · "What was in the treasure chest?" | A torch · A net · A camera · Nothing |
+| Living room | the TV, the lamps on or off, the pets' toys, where the cat was, and: | |
 | Living room | "What was in the picture frame?" (one frame; a second frame shows another picture, so no question) | Hills and a lake · A sailing boat · Flowers in a vase · A house and a tree |
 | City street | "Which house had smoke coming out of its chimney?" (each house has a chimney; smoke from one, or now and then none) | The yellow / pink / … house (the street's own colours) · None of them |
 | Night campsite | "Was the campfire burning, or just smoking?" | Burning · Just smoking |

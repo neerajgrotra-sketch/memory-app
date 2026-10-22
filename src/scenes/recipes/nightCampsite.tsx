@@ -536,7 +536,7 @@ function details(random: Rng): SceneDetails {
       { id: 'moon-shape', type: 'object', prompt: 'What shape was the moon?', answer: moon, wrong: MOONS.filter((m) => m !== moon), needs: 'moon' },
       { id: 'pitch', type: 'number', prompt: 'What number was on the pitch sign?', answer: String(pitch), wrong: pitchLookalikes(pitch) },
       {
-        id: 'campfire',
+        id: 'campfire', family: 'story',
         type: 'object',
         prompt: 'Was the campfire burning, or just smoking?',
         answer: fire === 'burning' ? 'Burning' : 'Just smoking',

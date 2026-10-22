@@ -73,6 +73,8 @@ const FAMILY_FROM: [QuestionFamily, number][] = [
   ['count', 1],
   ['compare', 1],
   ['most', 1],
+  // What was happening: the kettle steaming, the person's hat, the dog's stick.
+  ['story', 1],
   ['detail', 3],
   ['where', 4],
   ['two-step', 5],
@@ -144,7 +146,7 @@ const streetHouses = (level: number) => knobsForLevel(level).houseNumbers && rec
 /** The kinds of question a level brings in, in words. */
 const FAMILY_NEWS: Partial<Record<QuestionFamily, string>> = {
   count: 'New questions: how many, and which there was more of',
-  detail: 'New questions about details: clocks, signs, what was on TV',
+  detail: 'New questions about details: clocks, numbers and signs',
   where: 'New questions: where was it?',
   relation: 'New questions: what was above or below something',
   'two-step': 'New questions in two steps: find the thing by where it was, then say its colour',
@@ -167,8 +169,8 @@ export function unlocksAt(level: number): string[] {
   if (now.clockStep < before.clockStep) news.push(now.clockStep === 30 ? 'Clocks can show half past' : 'Clocks can show quarter past and quarter to');
   if (now.closeCounts && !before.closeCounts) news.push('Closer choices when counting');
   if (now.hidden > before.hidden) news.push(now.hidden === 1 ? 'Animals hiding in the picture: find where' : 'Hiding animals show less of themselves');
-  if (now.groups > before.groups) news.push('One more kind of thing in each picture');
-  if (now.maxCount > before.maxCount) news.push(`Up to ${now.maxCount} of the same thing`);
+  if (now.groups > before.groups) news.push(`More to remember: ${now.groups} different kinds of thing in each picture`);
+  if (now.maxCount > before.maxCount) news.push(`Pictures can now have up to ${now.maxCount} of one thing, like ${now.maxCount} kites`);
   if (now.viewSeconds < before.viewSeconds) news.push(`Pictures stay for ${now.viewSeconds} seconds`);
   for (const family of newFamilies(before, now)) news.push(FAMILY_NEWS[family]!);
   const added = now.preferredTypes.filter((t) => !before.preferredTypes.includes(t));

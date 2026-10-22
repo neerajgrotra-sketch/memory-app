@@ -14,6 +14,8 @@ The sea band is drawn from 35% to 60%. Its placement band is inset at both ends,
 
 ## Things and their habits
 
+- **What's happening:** one beach umbrella on its own is open or furled round its pole; one person on their own may wear a sun hat or a cap and hold an ice cream or a balloon (story questions, from Level 1).
+
 - **Sky:** sun (one, not counted), birds (up to 6), kites, hot-air balloons, one plane.
 - **Sea:** sailboats (large), buoys (with a bold red or white band, so white and yellow buoys read clearly on blue water), dolphins.
 - **Sand:**

@@ -2,7 +2,7 @@ import { Circle, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 
 import { C } from '../colours';
 import { shade } from '../contrast';
-import { ball, balloon, bird, cloudShape, crab, dolphin, kite, person, plane, starfish, sun } from '../items/common';
+import { ball, balloon, bird, cloudShape, crab, dolphin, kite, peopleStory, person, plane, starfish, sun } from '../items/common';
 import { lineMarks, markIfClear, scatterMarks } from '../marks';
 import { glints, speckles } from '../texture';
 import type { Rng } from '../random';
@@ -126,7 +126,17 @@ const items: ItemDef[] = [
     zones: SAND,
     maxCount: 3,
     colours: [C.red, C.blue, C.yellow, C.green, C.orange, C.purple, C.pink],
-    draw: (colour) => (
+    // Open, or furled up round its pole (one umbrella on its own, see `fitDetails`): "Was the beach umbrella open?".
+    draw: (colour, details) =>
+      details?.values?.umbrella === 'closed' ? (
+        <G>
+          <Line x1={80} y1={40} x2={80} y2={180} stroke="#5c3d1e" strokeWidth={6} />
+          <Path d="M80,12 Q98,62 88,118 H72 Q62,62 80,12 Z" fill={colour} />
+          <Path d="M80,16 Q86,62 82,116" fill="none" stroke="#ffffff" strokeOpacity={0.55} strokeWidth={4} strokeLinecap="round" />
+          <Rect x={70} y={74} width={20} height={6} rx={3} fill="#5c3d1e" stroke="none" />
+          <Circle cx={80} cy={10} r={5} fill="#5c3d1e" />
+        </G>
+      ) : (
       <G>
         <Line x1={80} y1={60} x2={80} y2={180} stroke="#5c3d1e" strokeWidth={6} />
         <Path d="M77,90 H83 M77,120 H83 M77,150 H83" stroke="#ffffff" strokeOpacity={0.5} strokeWidth={4} />
@@ -139,7 +149,7 @@ const items: ItemDef[] = [
         </G>
         <Circle cx={80} cy={16} r={5} fill="#5c3d1e" />
       </G>
-    ),
+      ),
   },
   {
     kind: 'bucket',
@@ -369,9 +379,19 @@ function droppedCoconuts(details: SceneDetails | undefined, index: number) {
   );
 }
 
-/** Once things are placed: the dropped coconuts, then the hiding crab. */
+/** Once things are placed: the dropped coconuts, the hiding crab, then a person's hat and what they're holding. */
 function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
-  return hideCrab(dropCoconuts(d, groups, random), groups, random);
+  const placed = hideCrab(dropCoconuts(d, groups, random), groups, random);
+  const people = peopleStory(groups, random, ['sunhat', 'cap'], ['icecream', 'balloon']);
+  const values = { ...placed.values, ...people.values };
+  const facts = [...(placed.facts ?? []), ...people.facts];
+  // One umbrella on its own: open, or furled up round its pole.
+  if (groups.find((g) => g.kind === 'umbrella')?.count === 1) {
+    values.umbrella = random.next() < 0.5 ? 'open' : 'closed';
+    const answer = values.umbrella === 'open' ? 'Open' : 'Closed';
+    facts.push({ id: 'umbrella-open', family: 'story', type: 'object', prompt: 'Was the beach umbrella open or closed?', answer, wrong: [answer === 'Open' ? 'Closed' : 'Open'], needs: 'umbrella' });
+  }
+  return { ...placed, values, facts };
 }
 
 /**
@@ -423,7 +443,7 @@ function dropCoconuts(d: SceneDetails, groups: PlacedGroup[], random: Rng): Scen
   const total = left + right;
   const answer = COCONUT_ANSWERS[coconuts];
   const which = {
-    id: 'coconuts',
+    id: 'coconuts', family: 'story' as const,
     type: 'position' as const,
     prompt: 'Which palm tree had coconuts on the sand by it?',
     answer,

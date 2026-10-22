@@ -35,6 +35,7 @@ const FAMILY_CAP: Partial<Record<QuestionFamily, number>> = {
   relation: 1,
   twins: 1,
   'two-step': 1,
+  story: 1,
   altogether: 1,
   difference: 1,
   sharing: 1,
@@ -62,7 +63,10 @@ export function selectQuestions(pool: Question[], options: SelectOptions): Quest
   const rank = (question: Question) => {
     const preferred = preferredTypes.includes(question.type) ? 0 : 1;
     if (seenIds.has(question.id)) return 3 + preferred + easy(question);
-    return question.spotlight ? 0 : 1 + preferred + easy(question) + repeated(question);
+    // What was happening (the kettle steaming, the dog's stick) is the fun part of a picture, and rare: asked when
+    // there is one, just after a spotlight question.
+    const story = question.family === 'story' ? -0.5 : 0;
+    return question.spotlight ? 0 : 1 + preferred + easy(question) + repeated(question) + story;
   };
 
   const ranked = source

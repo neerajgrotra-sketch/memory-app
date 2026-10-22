@@ -10,6 +10,20 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.6.0 (2026-10-22)
+
+- **What was happening? A new kind of question, from Level 1.** Pictures now have things going on, different every time, and questions about them:
+  - **People** (beach, park, city, when there's one person): a sun hat, a cap or a woolly hat, and a balloon, an ice cream or a shopping bag in hand. "What was the person wearing on their head?", "What was the person holding?"
+  - **Park:** "What was the dog carrying?" A ball, a stick or a frisbee in its mouth.
+  - **Farm:** a new thing, a hen's nest: "How many eggs were in the nest?"
+  - **Zoo:** "Was the elephant spraying water?" (trunk up, a shower over its back) and "How many balloons was the balloon seller holding?"
+  - **Kitchen:** "Was the kettle steaming?" and "Was there toast in the toaster?"
+  - **Under the sea:** "What was the diver holding?" A torch, a net or a camera.
+  - **Beach:** "Was the beach umbrella open or closed?"
+  - Last release's ideas join them: the picture in the frame, chimney smoke, the campfire, riders, and the living room's TV, lamps and pets' toys.
+- **More variety on the first levels.** These questions are asked from Level 1 (reading clocks, numbers and signs still starts at 3), and a round picks one whenever the picture has one: about 1 round in 3. A 10-round session at Level 1 now asks 11 different kinds of question, up from 9; at Level 2, 13, up from 9.
+- **Clearer level-up messages:** "Pictures can now have up to 4 of one thing, like 4 kites" instead of "Up to 4 of the same thing", and "More to remember: 6 different kinds of thing in each picture".
+
 ## 4.5.0 (2026-10-22)
 
 - **Maths on what you saw.** Count two things, then work it out: "How many kites and hot-air balloons were there altogether?" (from Level 11), "How many more crows than pumpkins were there?" (27), and sharing, a division: "If the fish were split into two equal groups, how many would be in each group?" (29). The question never says how many there were: you have to remember first.

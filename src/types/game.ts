@@ -26,6 +26,8 @@ export type QuestionFamily =
   | 'twins'
   | 'true-false'
   | 'detail'
+  /** What was happening in the picture: "Was the kettle steaming?", "What was the person holding?" */
+  | 'story'
   /** "Only one kind of thing was on the pond. What colour was it?": find it by where it was, then remember its colour. */
   | 'two-step'
   /** Sums on what you saw: "How many … and … altogether?" */

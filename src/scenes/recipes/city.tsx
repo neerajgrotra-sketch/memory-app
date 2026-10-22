@@ -2,10 +2,10 @@ import { Circle, G, Line, Path, Polygon, Rect, Text as SvgText } from 'react-nat
 
 import { ClockFace, randomTime, timeLookalikes } from '../clock';
 import { C } from '../colours';
-import { balloon, bird, cloudShape, dog, person, plane, tree } from '../items/common';
+import { balloon, bird, cloudShape, dog, peopleStory, person, plane, tree } from '../items/common';
 import { markIfClear, scatterMarks } from '../marks';
 import type { Rng } from '../random';
-import type { ColourDef, DetailKnobs, ItemDef, Mark, Recipe, Rect as Box, SceneDetails } from '../types';
+import type { ColourDef, DetailKnobs, ItemDef, Mark, PlacedGroup, Recipe, Rect as Box, SceneDetails } from '../types';
 import { speckles } from '../texture';
 
 /** Band edges, as fractions of the picture height. */
@@ -597,7 +597,7 @@ function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
     facts: [
       { id: 'clock-time', type: 'number', prompt: 'What time was on the street clock?', answer: time, wrong: close, fallback: other, needs: 'clock', everyLevel: true, spotlight: true },
       {
-        id: 'chimney-smoke',
+        id: 'chimney-smoke', family: 'story',
         type: 'object',
         prompt: 'Which house had smoke coming out of its chimney?',
         answer: smokeAnswer,
@@ -605,6 +605,12 @@ function details(random: Rng, { clockStep }: DetailKnobs): SceneDetails {
       },
     ],
   };
+}
+
+/** Once things are placed: a person's hat and what they're holding. */
+function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  const people = peopleStory(groups, random, ['cap', 'woolly', 'sunhat'], ['bag', 'balloon', 'icecream']);
+  return { ...d, values: { ...d.values, ...people.values }, facts: [...(d.facts ?? []), ...people.facts] };
 }
 
 function backdrop(height: number, palette: Palette, details?: SceneDetails) {
@@ -764,6 +770,7 @@ export const city: Recipe = {
     ...FACADES.map(smokeSpace),
   ],
   details,
+  fitDetails,
   // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
   light: [
     // Haze near the rooftops.
