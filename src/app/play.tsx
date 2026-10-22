@@ -34,10 +34,11 @@ function goBack() {
 
 export default function PlayScreen() {
   // `resume=1` (the Resume card on Home) goes straight back into the saved round, whatever its mode.
-  const params = useLocalSearchParams<{ mode?: string; resume?: string }>();
+  // `speed=1` (tester mode's Speed Round button) opens with a Super Speed Round.
+  const params = useLocalSearchParams<{ mode?: string; resume?: string; speed?: string }>();
   const asked: PlayMode = isPlayMode(params.mode) ? params.mode : 'levels';
   // Your level and high score come from saved rounds, so wait for them before the first picture.
-  const [start, setStart] = useState<(SessionStart & { streak: Streak; speed: SpeedCounter }) | null>(null);
+  const [start, setStart] = useState<(SessionStart & { streak: Streak; speed: SpeedCounter; speedFirst?: boolean }) | null>(null);
   // A Levels or Practice round in progress when another one is started: resume it or start a new one?
   const [choice, setChoice] = useState<{ saved: SavedRound; begin: (resume?: SavedRound) => void } | null>(null);
   useEffect(() => {
@@ -55,6 +56,7 @@ export default function PlayScreen() {
           fifty: progress.fifty,
           streak: streakOf(all),
           speed: speedCounterOf(progress.results),
+          speedFirst: params.speed === '1' && !resume,
           resume,
         });
       };
@@ -73,7 +75,7 @@ export default function PlayScreen() {
     return () => {
       live = false;
     };
-  }, [asked, params.resume]);
+  }, [asked, params.resume, params.speed]);
 
   if (choice) {
     const { saved, begin } = choice;
@@ -100,7 +102,7 @@ export default function PlayScreen() {
   return <Game key={start.mode} start={start} />;
 }
 
-function Game({ start }: { start: SessionStart & { streak: Streak; speed: SpeedCounter } }) {
+function Game({ start }: { start: SessionStart & { streak: Streak; speed: SpeedCounter; speedFirst?: boolean } }) {
   const {
     stage,
     round,
@@ -134,7 +136,7 @@ function Game({ start }: { start: SessionStart & { streak: Streak; speed: SpeedC
   const testSpeed = profile?.tester === true && profile.testSpeed === true && start.mode !== 'daily';
   /** The speed round showing, and whether the picture after it is already dealt (the first one) or still to come. */
   const [speedRound, setSpeedRound] = useState<{ setup: SpeedRoundSetup; then: 'next' | 'first' } | null>(() => {
-    const first = testSpeed && !start.resume ? makeSpeedRound() : null;
+    const first = (testSpeed || (start.speedFirst && profile?.tester === true)) && !start.resume ? makeSpeedRound() : null;
     return first ? { setup: first, then: 'first' } : null;
   });
   /** The next picture, or a Super Speed Round first when one is due. */

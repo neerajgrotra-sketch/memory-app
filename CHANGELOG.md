@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.12.1 (2026-10-22)
+
+- **Tester mode: a play button for each kind of round.** The game page's new **Tester: play** card has **Normal round**, **Speed Round** (starts with a Super Speed Round) and **Boss 10**, **Boss 20** and **Boss 30**, so each can be tried straight away without waiting for it to come up.
+
 ## 4.12.0 (2026-10-22)
 
 - **More ways to ask the commonest questions.** "Where was the bicycle?" can also be "Where did you see the bicycle?" or "Can you remember where the bicycle was?"; "How many kites were there?" can be "Count the kites: how many were there?"; and so on for "Which of these was in the picture?", "…NOT in the picture?", colours, clocks and "What was on the pond?". In 10-round sessions, questions worded like one asked earlier fell from 30% to 20%.

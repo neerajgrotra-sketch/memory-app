@@ -6,7 +6,7 @@ glance is built in Expo's cloud with **EAS Build** and sent to Apple's TestFligh
 
 | File | What it holds |
 | --- | --- |
-| `app.json` | The app's name, version (`4.12.0`), icons, and its app ID: `com.neerajgrotra.glance` on both iPhone and Android. `ITSAppUsesNonExemptEncryption: false` answers Apple's encryption question (glance uses none), so TestFlight doesn't ask each time. iPad is off for now (`supportsTablet: false`): the App Store would otherwise need iPad screenshots and an iPad-tested layout. |
+| `app.json` | The app's name, version (`4.12.1`), icons, and its app ID: `com.neerajgrotra.glance` on both iPhone and Android. `ITSAppUsesNonExemptEncryption: false` answers Apple's encryption question (glance uses none), so TestFlight doesn't ask each time. iPad is off for now (`supportsTablet: false`): the App Store would otherwise need iPad screenshots and an iPad-tested layout. |
 | `eas.json` | Three build profiles (below). Build numbers are kept by EAS (`appVersionSource: remote`) and go up by themselves for store builds. |
 | `assets/icon.png` and `assets/android-icon-*.png` | The app icon: the eye from the launch animation. Made by `scripts/icons/make-icons.js`; run it again after changing the drawing. |
 
@@ -74,6 +74,6 @@ See the README's Status section for what else is planned first.
 
 ## Notes
 
-- **Version numbers:** the version players see (`4.12.0`) comes from `app.json`; bump it as for every change. The build number underneath is EAS's job.
+- **Version numbers:** the version players see (`4.12.1`) comes from `app.json`; bump it as for every change. The build number underneath is EAS's job.
 - **Tester tools in store builds:** they're off in `production` only. Never submit a `testflight` build for App Store review.
 - **Expo Go** (`npx expo start --tunnel`) is still the quickest way to try a change on your own phone during development; EAS builds are for testers and the stores.

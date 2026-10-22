@@ -121,6 +121,8 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
 
               <Bosses best={progress.ladder.best} beaten={progress.bossesBeaten} tester={profile?.tester === true} />
 
+              {profile?.tester && <TesterPlay level={progress.ladder.level} onPlay={() => play('levels')} />}
+
               {profile?.tester && <PickLevel current={progress.ladder.level} onPick={pickLevel} />}
 
               {startAgain === 'done' ? (
@@ -232,6 +234,43 @@ function Bosses({ best, beaten, tester }: { best: number; beaten: Set<number>; t
             </Pressable>
           );
         })}
+      </View>
+    </View>
+  );
+}
+
+/** Tester mode: start each kind of round straight away, at your level (a boss at its own level). */
+function TesterPlay({ level, onPlay }: { level: number; onPlay: () => void }) {
+  return (
+    <View style={[styles.section, styles.testerCard]}>
+      <Text style={styles.sectionTitle}>Tester: play</Text>
+      <Text style={styles.note}>Start any kind of round now. Results and prizes count as usual.</Text>
+      <View style={styles.testerButtons}>
+        <Button label={`Normal round · Level ${level}`} onPress={onPlay} />
+        <Button
+          label="Speed Round"
+          variant="secondary"
+          onPress={() => {
+            feedback('start');
+            router.push({ pathname: '/play', params: { game: 'look-remember', mode: 'levels', speed: '1' } });
+          }}
+        />
+        <View style={styles.testerRow}>
+          {BOSSES.map((b) => (
+            <Pressable
+              key={b.level}
+              accessibilityRole="button"
+              accessibilityLabel={`Play the ${b.badge} round`}
+              onPress={() => {
+                feedback('start');
+                router.push({ pathname: '/boss', params: { level: String(b.level) } });
+              }}
+              style={({ pressed }) => [styles.testerBoss, pressed && styles.pressed]}
+            >
+              <Text style={styles.testerBossText}>Boss {b.level}</Text>
+            </Pressable>
+          ))}
+        </View>
       </View>
     </View>
   );
@@ -401,6 +440,11 @@ const styles = StyleSheet.create({
   tileValue: { color: colors.text, fontSize: 26, fontWeight: '900', fontVariant: ['tabular-nums'] },
   tileLabel: { color: colors.textMuted, fontSize: 13 },
   section: { gap: 10 },
+  testerButtons: { gap: 10 },
+  testerRow: { flexDirection: 'row', gap: 8 },
+  // Narrower than a Button, so three fit on a small phone.
+  testerBoss: { flex: 1, minHeight: 52, borderRadius: radius.pill, backgroundColor: colors.surfaceRaised, borderWidth: 1, borderColor: colors.boss, alignItems: 'center', justifyContent: 'center' },
+  testerBossText: { color: colors.text, fontSize: 16, fontWeight: '700' },
   testerCard: { backgroundColor: colors.surface, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, padding: 14 },
   levelGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   levelChip: { width: 48, height: 44, borderRadius: 10, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' },
