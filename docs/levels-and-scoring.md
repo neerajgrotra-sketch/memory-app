@@ -106,6 +106,7 @@ The 30 levels as one trip (`src/games/lookRemember/journey.ts`, `JourneyMap`, `S
 - **Arriving:** **Continue your journey** on the level-up screen opens the map with `arrive=N`: the marker hops along the path from the stop before to the new one with a whoosh (`journey-travel`), the new stop's picture appears with sparkles and bells (`journey-arrive`), and the stop pulses with **Tap to explore** until tapped. With "reduce motion" the marker simply appears there.
 - **The stop's card:** the place's postcard flips in and is stamped "Greetings from the farm" (`stamp`), with its story and what it brings. **Explore the farm** plays a round there: `/play?place=farm` makes the first picture that place, even one switched off in My places. A challenge stop offers **Play Level N**; a boss stop you've reached, **Take on the Farm Boss**. A stop ahead keeps its picture a surprise ("Reach Level 12 to find out").
 - **Postcards** (`placePostcard`, `placeThumb` in `GameArt.tsx`): one picture per place, picked by eye, as a 3:2 card and a square centred on the same middle for the map.
+- **Testing:** in tester mode every stop is open, and its card plays that level in its place (**Tester: play Level N here**).
 - **Any time:** **Your journey** on the game page (with a drawn folded-map icon, `JourneyIcon`) opens the map.
 - `npm run check:journey` checks a stop for every level, each place at its unlock level with a story, the kinds of stop, and every postcard inside its picture.
 

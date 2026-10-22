@@ -8,7 +8,10 @@ import { StopIntro } from '@/components/StopIntro';
 import { feedback } from '@/feedback';
 import { JOURNEY, isPlaceStop, type Stop } from '@/games/lookRemember/journey';
 import { MAX_LEVEL } from '@/games/lookRemember/ladder';
+import { clearSavedRound } from '@/games/lookRemember/savedRound';
 import { useGameProgress } from '@/hooks/useGameProgress';
+import { useProfile } from '@/profile';
+import { statsStore } from '@/stats';
 import { colors, radius } from '@/theme';
 
 function goBack() {
@@ -23,6 +26,9 @@ function goBack() {
 export default function JourneyScreen() {
   const { arrive } = useLocalSearchParams<{ arrive?: string }>();
   const progress = useGameProgress('look-remember');
+  // Tester mode: every stop is open, and its card plays that stop's level in its place.
+  const { profile } = useProfile();
+  const tester = profile?.tester === true;
   const [open, setOpen] = useState<{ stop: Stop; arrived: boolean } | null>(null);
   if (!progress) {
     return (
@@ -31,8 +37,9 @@ export default function JourneyScreen() {
       </View>
     );
   }
-  const { level, best } = progress.ladder;
-  const places = JOURNEY.filter((s) => isPlaceStop(s) && s.level <= best).length;
+  const { level } = progress.ladder;
+  const best = tester ? MAX_LEVEL : progress.ladder.best;
+  const places = JOURNEY.filter((s) => isPlaceStop(s) && s.level <= progress.ladder.best).length;
   const play = (params: Record<string, string>) => {
     feedback('start');
     setOpen(null);
@@ -65,6 +72,18 @@ export default function JourneyScreen() {
           router.push({ pathname: '/boss', params: { level: String(l) } });
         }}
         onClose={() => setOpen(null)}
+        onTestPlay={
+          tester
+            ? async (stop) => {
+                // A "start again" at that level, as tester mode's level grid does: history, high score and best level are kept.
+                if (stop.level !== level) {
+                  await statsStore.restart('look-remember', stop.level);
+                  await clearSavedRound('play');
+                }
+                play({ place: stop.recipeId });
+              }
+            : undefined
+        }
       />
     </SafeAreaView>
   );

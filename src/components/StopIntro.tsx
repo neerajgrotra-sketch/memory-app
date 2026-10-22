@@ -22,6 +22,8 @@ interface StopIntroProps {
   onPlay: () => void;
   onBoss: (level: number) => void;
   onClose: () => void;
+  /** Tester mode: every stop is open, and its button plays that stop's level there. */
+  onTestPlay?: (stop: Stop) => void;
 }
 
 /**
@@ -29,17 +31,17 @@ interface StopIntroProps {
  * level brings, and the way in: Explore a place you've reached, or Play your level. A stop not reached yet keeps its
  * picture a surprise.
  */
-export function StopIntro({ stop, arrived, level, best, onExplore, onPlay, onBoss, onClose }: StopIntroProps) {
+export function StopIntro({ stop, arrived, level, best, onExplore, onPlay, onBoss, onClose, onTestPlay }: StopIntroProps) {
   return (
     <Modal visible={!!stop} transparent animationType="fade" onRequestClose={onClose}>
       <Pressable style={styles.backdrop} onPress={onClose} accessibilityRole="button" accessibilityLabel="Close">
-        {stop && <Card stop={stop} arrived={arrived} level={level} best={best} onExplore={onExplore} onPlay={onPlay} onBoss={onBoss} onClose={onClose} />}
+        {stop && <Card stop={stop} arrived={arrived} level={level} best={best} onExplore={onExplore} onPlay={onPlay} onBoss={onBoss} onClose={onClose} onTestPlay={onTestPlay} />}
       </Pressable>
     </Modal>
   );
 }
 
-function Card({ stop, arrived, level, best, onExplore, onPlay, onBoss, onClose }: Omit<StopIntroProps, 'stop'> & { stop: Stop }) {
+function Card({ stop, arrived, level, best, onExplore, onPlay, onBoss, onClose, onTestPlay }: Omit<StopIntroProps, 'stop'> & { stop: Stop }) {
   const reduceMotion = useReducedMotion();
   const reached = stop.level <= best;
   const animate = arrived && !reduceMotion;
@@ -108,8 +110,14 @@ function Card({ stop, arrived, level, best, onExplore, onPlay, onBoss, onClose }
         )}
       </ScrollView>
       <View style={styles.actions}>
-        {reached && place && <Button label={`Explore ${stop.placeName}`} onPress={() => onExplore(stop.recipeId)} />}
-        {reached && !place && <Button label={`Play Level ${level}`} onPress={onPlay} />}
+        {onTestPlay ? (
+          <Button label={`Tester: play Level ${stop.level} here`} onPress={() => onTestPlay(stop)} />
+        ) : (
+          <>
+            {reached && place && <Button label={`Explore ${stop.placeName}`} onPress={() => onExplore(stop.recipeId)} />}
+            {reached && !place && <Button label={`Play Level ${level}`} onPress={onPlay} />}
+          </>
+        )}
         {bossOpen && <Button label={`Take on the ${stop.boss!.badge}`} variant="secondary" onPress={() => onBoss(stop.boss!.level)} />}
         <Button label={reached ? 'Back to the map' : 'Close'} variant="secondary" onPress={onClose} />
       </View>

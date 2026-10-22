@@ -14,6 +14,11 @@ Agreed with the tester feedback of 22 Oct 2026: every level is a stop on one tri
 - **Step 2, story and travel:** short story lines between stops, and different ways of travelling on the map (a boat to under the sea, a train to the station, a rocket to the Moon); bosses drawn as landmarks.
 - **Step 3, new places, one per release,** each filling a stop that has no place yet (the odd levels), picked from user feedback: a bakery, a fairground, a harbour, a castle, a jungle, a toy shop.
 - **Step 4, collections:** a postcard album of the places visited, and the bosses' badges on the map.
+- **A paid "Unlock the whole journey"** (idea, 22 Oct 2026). A one-off purchase that opens every stop on the map, so a player can tap any stop and play that level in its place, as tester mode already does (4.13.2: every stop open, **Play Level N here**). To decide first:
+  - **What it unlocks:** every stop to visit and play, and all bosses? The climb (3 good rounds a level) should still count, with "your level" kept separate from "stops open", so the free path stays meaningful.
+  - **Price and shape:** one-off rather than a subscription suits a family game. Whether it joins the wider plan (more places, future games; see "A business model" below).
+  - **Building it:** App Store and Google Play in-app purchases (Expo's in-app purchase options or a service such as RevenueCat), restoring purchases on a new phone, and a store-safe screen saying what you get. No pressure tactics for children: never shown mid-round, and never as a "you lost, pay to continue".
+  - **Before then:** accounts or a purchase receipt to remember it; today progress lives only on the phone.
 
 ## Games
 

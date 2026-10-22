@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.13.2 (2026-10-22)
+
+- **Tester mode: play from any stop on the journey map.** Every stop is open, with its picture, and its card has **Tester: play Level N here**, which plays that level in that stop's place (a "start again" at that level, like the level grid; history, high score and best level are kept).
+- Backlog: a paid **Unlock the whole journey**, with what to decide first.
+
 ## 4.13.1 (2026-10-22)
 
 - **A proper icon for Your journey** (tester feedback: the 🗺 emoji looked like a missing image on iPhone). It's now our own drawing of a folded map with a yellow dotted route and a pin, the same on every phone. `Button` takes an `icon`.
