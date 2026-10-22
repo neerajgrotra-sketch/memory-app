@@ -123,6 +123,35 @@ function nearestColour(hex: string): string {
   return best.name;
 }
 
+/**
+ * Other ways to ask the commonest questions, so a session doesn't keep repeating one sentence ("Where was the …?" made
+ * a fifth of all repeats). The first way is the usual one. Each keeps every word the checks look for (the band's name,
+ * "NOT"), and a question picks its way from its id, so it always reads the same (a resumed round, Play again).
+ */
+const WORDINGS: [RegExp, (m: RegExpMatchArray) => string[]][] = [
+  [/^Where (was|were) the ([^,?]+)\?$/, ([, v, x]) => [`Where ${v} the ${x}?`, `Where did you see the ${x}?`, `Where in the picture ${v} the ${x}?`, `Can you remember where the ${x} ${v}?`]],
+  [/^Which of these was in the picture\?$/, () => ['Which of these was in the picture?', 'Which of these did you see?', 'One of these was in the picture. Which one?']],
+  [/^Which of these was NOT in the picture\?$/, () => ['Which of these was NOT in the picture?', 'Which of these did you NOT see?', 'One of these was NOT in the picture. Which one?']],
+  [/^Which of these was ((?:in|on) [^,?]+)\?$/, ([, x]) => [`Which of these was ${x}?`, `Which of these did you see ${x}?`]],
+  [/^What was ((?:in|on) [^,?]+)\?$/, ([, x]) => [`What was ${x}?`, `What did you see ${x}?`, `Can you remember what was ${x}?`]],
+  [/^What colour (was|were) the ([^,?]+)\?$/, ([, v, x]) => [`What colour ${v} the ${x}?`, `The ${x} ${v} what colour?`, `Think back: what colour ${v} the ${x}?`]],
+  [/^How many ([^,?]+) were there\?$/, ([, x]) => [`How many ${x} were there?`, `How many ${x} did you see?`, `Count the ${x}: how many were there?`]],
+  [/^What time was on the ([^,?]+)\?$/, ([, x]) => [`What time was on the ${x}?`, `What time did the ${x} show?`, `What time did the ${x} say?`]],
+];
+
+/** A question in one of its other wordings (`WORDINGS`), picked by its id. */
+export function reworded(prompt: string, id: string): string {
+  for (const [pattern, ways] of WORDINGS) {
+    const m = prompt.match(pattern);
+    if (!m) continue;
+    let h = 0;
+    for (const c of id) h = (Math.imul(h, 31) + c.charCodeAt(0)) | 0;
+    const all = ways(m);
+    return all[Math.abs(h) % all.length];
+  }
+  return prompt;
+}
+
 /** Writes every question the scene can answer. Answers come straight from the scene, so they are always right. */
 export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: QuestionKnobs): Question[] {
   const rng = createRng(spec.seed ^ 0x9e3779b9);
@@ -817,5 +846,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   // A question needs at least three options to be a fair choice (true or false has its own two).
   // At least three choices, except where two is all there can be: true or false, "Was the floor lamp on or off?", and
   // left or right of a single landmark ("To the right of the moon").
-  return questions.filter((q) => q.options.length >= 3 || (q.options.length === 2 && (q.family === 'true-false' || q.family === 'detail' || q.family === 'story' || q.family === 'where')));
+  return questions
+    .filter((q) => q.options.length >= 3 || (q.options.length === 2 && (q.family === 'true-false' || q.family === 'detail' || q.family === 'story' || q.family === 'where')))
+    .map((q) => ({ ...q, prompt: reworded(q.prompt, q.id) }));
 }

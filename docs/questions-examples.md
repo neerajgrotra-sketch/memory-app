@@ -26,32 +26,32 @@ Detail `castleFlag`: no.
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| count | count | How many palm trees were there? | **✓ 1** · 2 · 4 · 3 | palm |
-| position | where | Where was the palm tree? | **✓ Between the sandcastle and the crab** · To the right of the crab · To the left of the sandcastle | palm |
-| count | count | How many kites were there? | **✓ 1** · 4 · 3 · 2 | kite |
-| colour | colour | What colour was the kite? | **✓ Purple** · Red · Green · Yellow | kite |
+| count | count | How many palm trees did you see? | **✓ 1** · 2 · 4 · 3 | palm |
+| position | where | Where did you see the palm tree? | **✓ Between the sandcastle and the crab** · To the right of the crab · To the left of the sandcastle | palm |
+| count | count | How many kites did you see? | **✓ 1** · 4 · 3 · 2 | kite |
+| colour | colour | Think back: what colour was the kite? | **✓ Purple** · Red · Green · Yellow | kite |
 | position | where | Where was the kite? | **✓ To the right of the birds** · Between the birds and the hot-air balloons · To the left of the birds · To the left of the hot-air balloons | kite |
-| count | count | How many hot-air balloons were there? | **✓ 2** · 1 · 3 · 4 | balloon |
-| colour | colour | What colour were the hot-air balloons? | **✓ Red** · Blue · Pink · Purple | balloon |
-| position | where | Where were the hot-air balloons? | **✓ Between the birds and the kite** · To the left of the birds · To the right of the kite | balloon |
+| count | count | How many hot-air balloons did you see? | **✓ 2** · 1 · 3 · 4 | balloon |
+| colour | colour | Think back: what colour were the hot-air balloons? | **✓ Red** · Blue · Pink · Purple | balloon |
+| position | where | Where in the picture were the hot-air balloons? | **✓ Between the birds and the kite** · To the left of the birds · To the right of the kite | balloon |
 | count | count | How many sandcastles were there? | **✓ 1** · 2 · 4 · 3 | sandcastle |
-| position | where | Where was the sandcastle? | **✓ To the left of the crab** · To the right of the crab · Between the palm tree and the crab · To the right of the palm tree | sandcastle |
-| count | count | How many buoys were there? | **✓ 3** · 4 · 6 · 1 | buoy |
-| colour | colour | What colour were the buoys? | **✓ Orange** · White · Yellow · Black | buoy |
-| count | count | How many crabs were there? | **✓ 1** · 3 · 4 · 2 | crab |
-| position | where | Where was the crab? | **✓ To the right of the palm tree** · To the left of the palm tree · Between the sandcastle and the palm tree · To the left of the sandcastle | crab |
-| count | count | How many birds were there? | **✓ 4** · 7 · 6 · 2 | bird |
-| position | where | Where were the birds? | **✓ To the left of the kite** · Between the hot-air balloons and the kite · To the right of the kite · To the right of the hot-air balloons | bird |
+| position | where | Where did you see the sandcastle? | **✓ To the left of the crab** · To the right of the crab · Between the palm tree and the crab · To the right of the palm tree | sandcastle |
+| count | count | How many buoys did you see? | **✓ 3** · 4 · 6 · 1 | buoy |
+| colour | colour | Think back: what colour were the buoys? | **✓ Orange** · White · Yellow · Black | buoy |
+| count | count | How many crabs did you see? | **✓ 1** · 3 · 4 · 2 | crab |
+| position | where | Can you remember where the crab was? | **✓ To the right of the palm tree** · To the left of the palm tree · Between the sandcastle and the palm tree · To the left of the sandcastle | crab |
+| count | count | How many birds did you see? | **✓ 4** · 7 · 6 · 2 | bird |
+| position | where | Where in the picture were the birds? | **✓ To the left of the kite** · Between the hot-air balloons and the kite · To the right of the kite · To the right of the hot-air balloons | bird |
 | object | what-here | Which of these was in the sky? | **✓ A bird** · A plane · The sun | in-sky |
-| object | what-here | Which of these was on the sand? | **✓ A crab** · A beach umbrella · A person · A beach towel | in-sand |
-| object | what-here | What was in the sea? | **✓ Buoys** · Dolphins · Sailboats | band-sea |
+| object | what-here | Which of these did you see on the sand? | **✓ A crab** · A beach umbrella · A person · A beach towel | in-sand |
+| object | what-here | Can you remember what was in the sea? | **✓ Buoys** · Dolphins · Sailboats | band-sea |
 | object | story | Was there a flag on the sandcastle? | **✓ No** · Yes | castle-flag |
-| object | seen | Which of these was in the picture? | **✓ Sandcastle** · Sailboat · Sun · Beach ball | sandcastle |
-| object | seen | Which of these was NOT in the picture? | **✓ Sailboat** · Buoy · Kite · Crab | sailboat |
+| object | seen | Which of these did you see? | **✓ Sandcastle** · Sailboat · Sun · Beach ball | sandcastle |
+| object | seen | Which of these did you NOT see? | **✓ Sailboat** · Buoy · Kite · Crab | sailboat |
 | count | compare | Were there more hot-air balloons or more buoys? | Hot-air balloons · **✓ Buoys** · The same number | compare-balloon-buoy |
 | count | compare | Were there more hot-air balloons or more sandcastles? | **✓ Hot-air balloons** · Sandcastles · The same number | compare-balloon-sandcastle |
 | count | altogether | How many buoys and crabs were there altogether? | **✓ 4** · 3 · 5 · 2 | altogether-buoy-crab |
-| count | difference | How many more birds than buoys were there? | **✓ 1** · 2 · 3 · 4 | difference-bird-buoy |
+| count | difference | Count the more birds than buoys: how many were there? | **✓ 1** · 2 · 3 · 4 | difference-bird-buoy |
 | count | sharing | If the birds were split into two equal groups, how many would be in each group? | **✓ 2** · 1 · 3 · 4 | bird |
 | colour | two-step | Only one kind of thing was in the sea. What colour were they? | **✓ Orange** · Yellow · White · Blue | buoy |
 | count | most | Which was there the most of? | **✓ Birds** · Hot-air balloons · Sandcastles · Palm trees | most-bird |
@@ -88,21 +88,21 @@ Detail `smoke`: 2.
 | --- | --- | --- | --- | --- |
 | count | count | How many vans were there? | **✓ 2** · 1 · 5 · 3 | van |
 | colour | colour | What colour were the vans? | **✓ Green** · Blue · Red · Yellow | van |
-| count | count | How many hot-air balloons were there? | **✓ 1** · 4 · 2 · 3 | balloon |
-| colour | colour | What colour was the hot-air balloon? | **✓ Red** · Purple · Blue · Pink | balloon |
-| position | where | Where was the hot-air balloon? | **✓ To the right of the helicopter** · To the left of the helicopter | balloon |
+| count | count | How many hot-air balloons did you see? | **✓ 1** · 4 · 2 · 3 | balloon |
+| colour | colour | The hot-air balloon was what colour? | **✓ Red** · Purple · Blue · Pink | balloon |
+| position | where | Where in the picture was the hot-air balloon? | **✓ To the right of the helicopter** · To the left of the helicopter | balloon |
 | count | count | How many street lamps were there? | **✓ 2** · 5 · 4 · 3 | lamp-post |
 | colour | colour | What colour was the helicopter? | **✓ Yellow** · Blue · Green · Red | helicopter |
 | position | where | Where was the helicopter? | **✓ To the left of the hot-air balloon** · To the right of the hot-air balloon | helicopter |
 | count | count | How many satellite dishes were there? | **✓ 1** · 3 · 2 · 4 | dish |
-| count | count | How many fire hydrants were there? | **✓ 1** · 2 · 4 · 3 | hydrant |
-| colour | colour | What colour was the fire hydrant? | **✓ Red** · Yellow · Grey · Blue | hydrant |
-| position | where | Where was the fire hydrant? | **✓ Between the street lamps** · To the right of the street lamps · To the left of the street lamps | hydrant |
-| count | count | How many bicycles were there? | **✓ 1** · 2 · 4 · 3 | bicycle |
-| colour | colour | What colour was the bicycle? | **✓ Pink** · Red · Yellow · Black | bicycle |
+| count | count | How many fire hydrants did you see? | **✓ 1** · 2 · 4 · 3 | hydrant |
+| colour | colour | Think back: what colour was the fire hydrant? | **✓ Red** · Yellow · Grey · Blue | hydrant |
+| position | where | Can you remember where the fire hydrant was? | **✓ Between the street lamps** · To the right of the street lamps · To the left of the street lamps | hydrant |
+| count | count | How many bicycles did you see? | **✓ 1** · 2 · 4 · 3 | bicycle |
+| colour | colour | The bicycle was what colour? | **✓ Pink** · Red · Yellow · Black | bicycle |
 | object | what-here | Was there anything on the road? | **✓ Yes, vans** · No, nothing · Yes, a scooter · Yes, a bus | band-road |
 | object | what-here | Which of these was in the sky? | **✓ A helicopter** · A bird · A plane | in-sky |
-| object | what-here | Which of these was on the pavement? | **✓ A fire hydrant** · A dog · A bench · A street clock | in-pavement |
+| object | what-here | Which of these did you see on the pavement? | **✓ A fire hydrant** · A dog · A bench · A street clock | in-pavement |
 | object | what-here | What was on the road? | **✓ Vans** · Cars · Scooters | band-road |
 | number | detail | What number was on the blue house? | **✓ 306** · 312 · 342 · 360 | house-306 |
 | colour | detail | What colour was house number 306? | **✓ Blue** · Yellow · Purple · Orange | house-306 |
@@ -111,7 +111,7 @@ Detail `smoke`: 2.
 | number | detail | What number was on the purple house? | **✓ 342** · 306 · 312 · 432 | house-342 |
 | colour | detail | What colour was house number 342? | **✓ Purple** · Blue · Yellow · Orange | house-342 |
 | object | story | Which house had smoke coming out of its chimney? | **✓ The purple house** · None of them · The blue house · The yellow house | chimney-smoke |
-| object | seen | Which of these was in the picture? | **✓ Satellite dish** · Market stall · Scooter · Bird | dish |
+| object | seen | One of these was in the picture. Which one? | **✓ Satellite dish** · Market stall · Scooter · Bird | dish |
 | object | seen | Which of these was NOT in the picture? | **✓ Market stall** · Satellite dish · Van · Hot-air balloon | stall |
 | count | compare | Were there more hot-air balloons or more bicycles? | Hot-air balloons · Bicycles · **✓ The same number** | compare-balloon-bicycle |
 | count | compare | Were there more vans or more satellite dishes? | **✓ Vans** · Satellite dishes · The same number | compare-van-dish |
@@ -150,32 +150,32 @@ Detail `curtains`: closed.
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| position | where | Where was the television? | **✓ To the left of the bookshelf** · To the right of the bookshelf | tv |
+| position | where | Where did you see the television? | **✓ To the left of the bookshelf** · To the right of the bookshelf | tv |
 | count | count | How many bookshelves were there? | **✓ 1** · 2 · 4 · 3 | bookshelf |
 | position | where | Where was the bookshelf? | **✓ To the right of the television** · To the left of the television | bookshelf |
-| position | where | Where was the window? | **✓ To the left of the clock** · To the right of the clock | window |
+| position | where | Where did you see the window? | **✓ To the left of the clock** · To the right of the clock | window |
 | position | where | Where was the clock? | **✓ On the wall on the right, above the bookshelf** · On the wall on the left, above the floor lamp · On the wall on the right, above the floor lamp · On the wall in the middle, above the television | wall-clock |
 | object | what-here | What was on the wall on the right, above the bookshelf? | **✓ A clock** · A window · A picture frame · A mirror | wall-clock |
-| count | count | How many toy cars were there? | **✓ 1** · 4 · 3 · 2 | toy-car |
+| count | count | How many toy cars did you see? | **✓ 1** · 4 · 3 · 2 | toy-car |
 | colour | colour | What colour was the toy car? | **✓ Green** · Blue · Red · Yellow | toy-car |
 | position | where | Where was the toy car? | **✓ On the floor** · On the carpet · On the armchair · On the sofa | toy-car |
-| count | count | How many cushions were there? | **✓ 2** · 3 · 5 · 1 | cushion |
-| colour | colour | What colour were the cushions? | **✓ Red** · Purple · Pink · Green | cushion |
+| count | count | How many cushions did you see? | **✓ 2** · 3 · 5 · 1 | cushion |
+| colour | colour | Think back: what colour were the cushions? | **✓ Red** · Purple · Pink · Green | cushion |
 | position | where | Where were the cushions? | **✓ On the carpet** · On the floor · On the windowsill · On the sofa | cushion |
 | position | where | Where was the box of crayons? | **✓ On the floor** · On the carpet · On the windowsill · On the sofa | crayons |
-| object | what-here | What was on the carpet? | **✓ Cushions** · Cushions and a cat · A box of crayons · A dog | rug-cushion |
+| object | what-here | Can you remember what was on the carpet? | **✓ Cushions** · Cushions and a cat · A box of crayons · A dog | rug-cushion |
 | object | what-here | Was there anything on the carpet? | **✓ Yes, cushions** · No, nothing · Yes, a teddy bear · Yes, a cat | rug-cushion |
-| object | what-here | Which of these was on the wall? | **✓ A window** · A picture frame · A mirror | in-wall |
-| object | what-here | Which of these was on the floor? | **✓ A box of crayons** · A teddy bear · A spilled cup · A cat | in-floor |
-| number | detail | What time was on the clock? | **✓ 7:30** · 6:30 · 4:30 · 8:30 | clock-time |
-| object | story | What was on the television? | **✓ A football match** · Fish swimming · A cartoon · Nothing, it was off | tv-show |
+| object | what-here | Which of these did you see on the wall? | **✓ A window** · A picture frame · A mirror | in-wall |
+| object | what-here | Which of these did you see on the floor? | **✓ A box of crayons** · A teddy bear · A spilled cup · A cat | in-floor |
+| number | detail | What time did the clock show? | **✓ 7:30** · 6:30 · 4:30 · 8:30 | clock-time |
+| object | story | Can you remember what was on the television? | **✓ A football match** · Fish swimming · A cartoon · Nothing, it was off | tv-show |
 | object | story | Were the curtains open or closed? | **✓ Closed** · Open | curtains |
-| object | seen | Which of these was in the picture? | **✓ Cushion** · Dog · Potted plant · Table lamp | cushion |
-| object | seen | Which of these was NOT in the picture? | **✓ Dog** · Toy car · Cushion · Window | dog |
+| object | seen | One of these was in the picture. Which one? | **✓ Cushion** · Dog · Potted plant · Table lamp | cushion |
+| object | seen | One of these was NOT in the picture. Which one? | **✓ Dog** · Toy car · Cushion · Window | dog |
 | count | compare | Were there more bookshelves or more toy cars? | Bookshelves · Toy cars · **✓ The same number** | compare-bookshelf-toy-car |
 | count | compare | Were there more toy cars or more cushions? | Toy cars · **✓ Cushions** · The same number | compare-toy-car-cushion |
 | count | altogether | How many toy cars and cushions were there altogether? | **✓ 3** · 2 · 4 · 1 | altogether-toy-car-cushion |
-| count | difference | How many more cushions than toy cars were there? | **✓ 1** · 2 · 3 · 4 | difference-cushion-toy-car |
+| count | difference | Count the more cushions than toy cars: how many were there? | **✓ 1** · 2 · 3 · 4 | difference-cushion-toy-car |
 | position | relation | What was on the wall, above the bookshelf? | **✓ A clock** · A picture frame · A mirror · A window | bookshelf |
 | position | relation | What was on the floor, below the clock? | **✓ A bookshelf** · A television · A cushion · A teddy bear | wall-clock |
 | colour | true-false | True or false? The cushions were red. | **✓ True** · False | cushion |
@@ -206,30 +206,30 @@ Detail `clock`: 7:30.
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| position | where | Where was the swing set? | **✓ To the right of the picnic blanket** · To the left of the picnic blanket | swings |
-| count | count | How many picnic blankets were there? | **✓ 1** · 2 · 4 · 3 | picnic |
-| colour | colour | What colour was the picnic blanket? | **✓ Orange** · Blue · Purple · Yellow | picnic |
+| position | where | Where did you see the swing set? | **✓ To the right of the picnic blanket** · To the left of the picnic blanket | swings |
+| count | count | How many picnic blankets did you see? | **✓ 1** · 2 · 4 · 3 | picnic |
+| colour | colour | The picnic blanket was what colour? | **✓ Orange** · Blue · Purple · Yellow | picnic |
 | position | where | Where was the picnic blanket? | **✓ To the left of the swing set** · To the right of the swing set | picnic |
 | count | count | How many kites were there? | **✓ 2** · 5 · 1 · 4 | kite |
-| colour | colour | What colour were the kites? | **✓ Blue** · Purple · Yellow · Green | kite |
-| position | where | Where were the kites? | **✓ To the right of the birds** · To the left of the birds | kite |
-| count | count | How many people were there? | **✓ 2** · 1 · 3 · 4 | person |
-| colour | colour | What colour were the people’s shirts? | **✓ Pink** · Purple · Orange · Blue | person |
-| position | where | Where were the people? | **✓ On the path** · On the grass · On the slide · In the fountain | person |
+| colour | colour | Think back: what colour were the kites? | **✓ Blue** · Purple · Yellow · Green | kite |
+| position | where | Where did you see the kites? | **✓ To the right of the birds** · To the left of the birds | kite |
+| count | count | How many people did you see? | **✓ 2** · 1 · 3 · 4 | person |
+| colour | colour | The people’s shirts were what colour? | **✓ Pink** · Purple · Orange · Blue | person |
+| position | where | Where did you see the people? | **✓ On the path** · On the grass · On the slide · In the fountain | person |
 | count | count | How many birds were there? | **✓ 4** · 1 · 7 · 6 | bird |
-| position | where | Where were the birds? | **✓ To the left of the kites** · To the right of the kites | bird |
+| position | where | Can you remember where the birds were? | **✓ To the left of the kites** · To the right of the kites | bird |
 | object | what-here | Was there anything on the path? | **✓ Yes, people** · No, nothing · Yes, an ice-cream cart · Yes, a dog | band-path |
-| object | what-here | Which of these was in the sky? | **✓ A bird** · The sun · A plane · A hot-air balloon | in-sky |
+| object | what-here | Which of these did you see in the sky? | **✓ A bird** · The sun · A plane · A hot-air balloon | in-sky |
 | object | what-here | Which of these was on the grass? | **✓ A park clock** · A dog · A tree · A bench | in-grass |
-| object | what-here | What was on the pond? | **✓ A fountain** · A swan · A rowing boat | band-pond |
+| object | what-here | What did you see on the pond? | **✓ A fountain** · A swan · A rowing boat | band-pond |
 | object | what-here | What was on the path? | **✓ People** · Bicycles · Dogs | band-path |
 | number | detail | What time was on the park clock? | **✓ 7:30** · 8:30 · 6:30 · 4:30 | clock-time |
-| object | seen | Which of these was in the picture? | **✓ Park clock** · Ice-cream cart · Plane · Sun | park-clock |
-| object | seen | Which of these was NOT in the picture? | **✓ Bicycle** · Person · Swing set · Bird | bicycle |
+| object | seen | Which of these did you see? | **✓ Park clock** · Ice-cream cart · Plane · Sun | park-clock |
+| object | seen | One of these was NOT in the picture. Which one? | **✓ Bicycle** · Person · Swing set · Bird | bicycle |
 | count | compare | Were there more picnic blankets or more people? | Picnic blankets · **✓ People** · The same number | compare-picnic-person |
 | count | compare | Were there more picnic blankets or more kites? | Picnic blankets · **✓ Kites** · The same number | compare-picnic-kite |
 | count | altogether | How many kites and birds were there altogether? | **✓ 6** · 5 · 7 · 8 | altogether-kite-bird |
-| count | difference | How many more birds than kites were there? | **✓ 2** · 1 · 3 · 4 | difference-bird-kite |
+| count | difference | How many more birds than kites did you see? | **✓ 2** · 1 · 3 · 4 | difference-bird-kite |
 | count | sharing | If the birds were split into two equal groups, how many would be in each group? | **✓ 2** · 1 · 3 · 4 | bird |
 | count | most | Which was there the most of? | **✓ Birds** · People · Picnic blankets · Kites | most-bird |
 | count | most | Which was there just one of? | **✓ A picnic blanket** · A bird · A person · A kite | only-picnic |
@@ -267,22 +267,22 @@ Detail `toast`: yes.
 | --- | --- | --- | --- | --- |
 | position | where | Where was the window? | **✓ To the right of the tea towel** · To the left of the tea towel | window |
 | colour | colour | What colour was the bucket? | **✓ Yellow** · Green · Blue · Red | bucket |
-| position | where | Where was the mop and bucket? | **✓ Between the pet bowl and the recycling box** · To the right of the recycling box · To the left of the pet bowl | bucket |
+| position | where | Where in the picture was the mop and bucket? | **✓ Between the pet bowl and the recycling box** · To the right of the recycling box · To the left of the pet bowl | bucket |
 | position | where | Where was the recycling box? | **✓ To the right of the pet bowl** · Between the pet bowl and the mop and bucket · To the left of the pet bowl · To the left of the mop and bucket | recycling |
-| colour | colour | What colour were the stripes on the tea towel? | **✓ Blue** · Yellow · Red · Green | tea-towel |
-| position | where | Where was the tea towel? | **✓ To the left of the window** · To the right of the window | tea-towel |
+| colour | colour | The stripes on the tea towel were what colour? | **✓ Blue** · Yellow · Red · Green | tea-towel |
+| position | where | Where in the picture was the tea towel? | **✓ To the left of the window** · To the right of the window | tea-towel |
 | colour | colour | What colour was the teapot? | **✓ Yellow** · Green · Pink · Red | teapot |
-| count | count | How many pet bowls were there? | **✓ 1** · 3 · 2 · 4 | pet-bowl |
-| colour | colour | What colour was the pet bowl? | **✓ Green** · Yellow · Blue · Red | pet-bowl |
+| count | count | Count the pet bowls: how many were there? | **✓ 1** · 3 · 2 · 4 | pet-bowl |
+| colour | colour | The pet bowl was what colour? | **✓ Green** · Yellow · Blue · Red | pet-bowl |
 | position | where | Where was the pet bowl? | **✓ To the left of the recycling box** · To the right of the recycling box · Between the mop and bucket, and the recycling box · To the right of the mop and bucket | pet-bowl |
 | object | what-here | Was there anything on the shelf? | **✓ Yes, a teapot** · No, nothing · Yes, a cookie jar · Yes, a jar of pasta | band-shelf |
 | object | what-here | Was there anything on the worktop? | **✓ Yes, a coffee machine** · No, nothing · Yes, a food mixer · Yes, a saucepan | band-counter |
 | object | what-here | Which of these was on the wall? | **✓ A window** · An oven glove · A frying pan · A utensil rail | in-wall |
 | object | what-here | Which of these was on the floor? | **✓ A recycling box** · A pedal bin · A basket of vegetables · A step stool | in-floor |
-| object | what-here | What was on the shelf? | **✓ A teapot** · A cookie jar · A jar of pasta · A cookbook | band-shelf |
-| object | what-here | What was on the worktop? | **✓ A coffee machine** · A microwave · A teapot · A chopping board | band-counter |
-| object | seen | Which of these was in the picture? | **✓ Mop and bucket** · Food mixer · Oven glove · Frying pan | bucket |
-| object | seen | Which of these was NOT in the picture? | **✓ Fruit bowl** · Coffee machine · Teapot · Recycling box | fruit-bowl |
+| object | what-here | What did you see on the shelf? | **✓ A teapot** · A cookie jar · A jar of pasta · A cookbook | band-shelf |
+| object | what-here | What did you see on the worktop? | **✓ A coffee machine** · A microwave · A teapot · A chopping board | band-counter |
+| object | seen | One of these was in the picture. Which one? | **✓ Mop and bucket** · Food mixer · Oven glove · Frying pan | bucket |
+| object | seen | Which of these did you NOT see? | **✓ Fruit bowl** · Coffee machine · Teapot · Recycling box | fruit-bowl |
 | colour | two-step | Only one kind of thing was on the shelf. What colour was it? | **✓ Yellow** · Green · Red · Blue | teapot |
 | position | relation | What was on the shelf, above the window? | **✓ A teapot** · A jar of pasta · A cookie jar · A pot of herbs | window |
 | position | relation | What was on the worktop, above the recycling box? | **✓ A coffee machine** · A teapot · A toaster · A food mixer | recycling |
@@ -317,33 +317,33 @@ Detail `eggs`: 3.
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| count | count | How many cows were there? | **✓ 2** · 1 · 5 · 3 | cow |
-| colour | colour | What colour were the cows? | **✓ Black and white** · Brown · Pink · Blue | cow |
-| count | count | How many hot-air balloons were there? | **✓ 1** · 2 · 3 · 4 | balloon |
-| colour | colour | What colour was the hot-air balloon? | **✓ Red** · Green · Pink · Blue | balloon |
-| position | where | Where was the hot-air balloon? | **✓ To the left of the crow** · To the right of the crow | balloon |
+| count | count | How many cows did you see? | **✓ 2** · 1 · 5 · 3 | cow |
+| colour | colour | Think back: what colour were the cows? | **✓ Black and white** · Brown · Pink · Blue | cow |
+| count | count | How many hot-air balloons did you see? | **✓ 1** · 2 · 3 · 4 | balloon |
+| colour | colour | The hot-air balloon was what colour? | **✓ Red** · Green · Pink · Blue | balloon |
+| position | where | Can you remember where the hot-air balloon was? | **✓ To the left of the crow** · To the right of the crow | balloon |
 | count | count | How many scarecrows were there? | **✓ 2** · 5 · 4 · 1 | scarecrow |
-| colour | colour | What colour were the scarecrows’ shirts? | **✓ Purple** · Red · Blue · Green | scarecrow |
-| count | count | How many sheep were there? | **✓ 2** · 5 · 1 · 3 | sheep |
-| colour | colour | What colour were the sheep? | **✓ Black** · White · Purple · Brown | sheep |
-| position | where | Where were the sheep? | **✓ Between the cows** · To the right of the cows · To the left of the cows · To the right of the nest of eggs | sheep |
-| count | count | How many chickens were there? | **✓ 1** · 2 · 4 · 3 | chicken |
-| colour | colour | What colour was the chicken? | **✓ White** · Brown · Green · Purple | chicken |
-| position | where | Where was the chicken? | **✓ Between the cows** · To the left of the cows · To the right of the cows · To the right of the nest of eggs | chicken |
-| position | where | Where was the nest of eggs? | **✓ To the right of the chicken** · To the left of the chicken · To the left of the sheep | nest |
-| count | count | How many crows were there? | **✓ 1** · 3 · 2 · 4 | crow |
-| position | where | Where was the crow? | **✓ To the right of the hot-air balloon** · To the left of the hot-air balloon | crow |
+| colour | colour | The scarecrows’ shirts were what colour? | **✓ Purple** · Red · Blue · Green | scarecrow |
+| count | count | How many sheep did you see? | **✓ 2** · 5 · 1 · 3 | sheep |
+| colour | colour | Think back: what colour were the sheep? | **✓ Black** · White · Purple · Brown | sheep |
+| position | where | Where did you see the sheep? | **✓ Between the cows** · To the right of the cows · To the left of the cows · To the right of the nest of eggs | sheep |
+| count | count | How many chickens did you see? | **✓ 1** · 2 · 4 · 3 | chicken |
+| colour | colour | The chicken was what colour? | **✓ White** · Brown · Green · Purple | chicken |
+| position | where | Can you remember where the chicken was? | **✓ Between the cows** · To the left of the cows · To the right of the cows · To the right of the nest of eggs | chicken |
+| position | where | Where in the picture was the nest of eggs? | **✓ To the right of the chicken** · To the left of the chicken · To the left of the sheep | nest |
+| count | count | How many crows did you see? | **✓ 1** · 3 · 2 · 4 | crow |
+| position | where | Where did you see the crow? | **✓ To the right of the hot-air balloon** · To the left of the hot-air balloon | crow |
 | object | what-here | Was there anything in the field? | **✓ Yes, scarecrows** · No, nothing · Yes, a pumpkin · Yes, a tractor | band-field |
 | object | what-here | Which of these was in the farmyard? | **✓ A cow** · A goat · A farmer · A hay bale | in-yard |
-| object | what-here | What was in the field? | **✓ Scarecrows** · Pumpkins · Hay bales | band-field |
+| object | what-here | Can you remember what was in the field? | **✓ Scarecrows** · Pumpkins · Hay bales | band-field |
 | count | story | How many eggs were in the nest? | **✓ 3** · 1 · 4 · 2 | nest-eggs |
-| colour | detail | What colour was the barn? | **✓ Green** · Red · Blue · Yellow | barn-colour |
+| colour | detail | Think back: what colour was the barn? | **✓ Green** · Red · Blue · Yellow | barn-colour |
 | object | seen | Which of these was in the picture? | **✓ Scarecrow** · Goat · Wheelbarrow · Horse | scarecrow |
-| object | seen | Which of these was NOT in the picture? | **✓ Sun** · Chicken · Crow · Hot-air balloon | sun |
+| object | seen | Which of these did you NOT see? | **✓ Sun** · Chicken · Crow · Hot-air balloon | sun |
 | count | compare | Were there more cows or more scarecrows? | Cows · Scarecrows · **✓ The same number** | compare-cow-scarecrow |
 | count | compare | Were there more cows or more hot-air balloons? | **✓ Cows** · Hot-air balloons · The same number | compare-cow-balloon |
 | count | altogether | How many scarecrows and crows were there altogether? | **✓ 3** · 4 · 2 · 5 | altogether-scarecrow-crow |
-| count | difference | How many more scarecrows than chickens were there? | **✓ 1** · 2 · 3 · 4 | difference-scarecrow-chicken |
+| count | difference | Count the more scarecrows than chickens: how many were there? | **✓ 1** · 2 · 3 · 4 | difference-scarecrow-chicken |
 | colour | true-false | True or false? The hot-air balloon was green. | True · **✓ False** | balloon |
 | count | true-false | True or false? There were two chickens. | True · **✓ False** | chicken |
 | count | true-false | True or false? There were two sheep. | **✓ True** · False | sheep |
@@ -374,22 +374,22 @@ Detail `chest`: Red jewels.
 | --- | --- | --- | --- | --- |
 | colour | colour | What colour was the submarine? | **✓ Yellow** · Orange · Grey · Black | submarine |
 | position | where | Where was the submarine? | **✓ To the left of the shark** · To the right of the shark | submarine |
-| position | where | Where was the shark? | **✓ To the right of the clownfish** · To the left of the clownfish | shark |
-| count | count | How many jellyfish were there? | **✓ 2** · 1 · 3 · 4 | jellyfish |
-| colour | colour | What colour were the jellyfish? | **✓ Pink** · White · Purple · Green | jellyfish |
+| position | where | Where did you see the shark? | **✓ To the right of the clownfish** · To the left of the clownfish | shark |
+| count | count | Count the jellyfish: how many were there? | **✓ 2** · 1 · 3 · 4 | jellyfish |
+| colour | colour | Think back: what colour were the jellyfish? | **✓ Pink** · White · Purple · Green | jellyfish |
 | position | where | Where were the jellyfish? | **✓ To the left of the sea turtle** · To the right of the sea turtle | jellyfish |
-| count | count | How many sea turtles were there? | **✓ 1** · 4 · 3 · 2 | turtle |
-| position | where | Where was the sea turtle? | **✓ To the right of the jellyfish** · To the left of the jellyfish | turtle |
-| count | count | How many starfish were there? | **✓ 2** · 5 · 4 · 1 | starfish |
-| colour | colour | What colour were the starfish? | **✓ Red** · Purple · Pink · Grey | starfish |
-| count | count | How many clownfish were there? | **✓ 3** · 5 · 6 · 2 | clownfish |
-| position | where | Where were the clownfish? | **✓ To the left of the shark** · To the right of the shark | clownfish |
+| count | count | How many sea turtles did you see? | **✓ 1** · 4 · 3 · 2 | turtle |
+| position | where | Where in the picture was the sea turtle? | **✓ To the right of the jellyfish** · To the left of the jellyfish | turtle |
+| count | count | How many starfish did you see? | **✓ 2** · 5 · 4 · 1 | starfish |
+| colour | colour | Think back: what colour were the starfish? | **✓ Red** · Purple · Pink · Grey | starfish |
+| count | count | How many clownfish did you see? | **✓ 3** · 5 · 6 · 2 | clownfish |
+| position | where | Where did you see the clownfish? | **✓ To the left of the shark** · To the right of the shark | clownfish |
 | object | what-here | Which of these was near the surface? | **✓ A jellyfish** · A dolphin · A whale | in-top |
 | object | what-here | Which of these was in the open water? | **✓ A clownfish** · A diver · A fish | in-open |
-| object | what-here | Which of these was on the seabed? | **✓ A seaweed plant** · An octopus · A coral · A seashell | in-bed |
+| object | what-here | Which of these did you see on the seabed? | **✓ A seaweed plant** · An octopus · A coral · A seashell | in-bed |
 | object | story | What was in the treasure chest? | **✓ Red jewels** · Gold coins · Pearls · Nothing, it was closed | chest |
-| object | seen | Which of these was in the picture? | **✓ Submarine** · Crab · Dolphin · Coral | submarine |
-| object | seen | Which of these was NOT in the picture? | **✓ Octopus** · Jellyfish · Submarine · Starfish | octopus |
+| object | seen | Which of these did you see? | **✓ Submarine** · Crab · Dolphin · Coral | submarine |
+| object | seen | One of these was NOT in the picture. Which one? | **✓ Octopus** · Jellyfish · Submarine · Starfish | octopus |
 | count | compare | Were there more jellyfish or more starfish? | Jellyfish · Starfish · **✓ The same number** | compare-jellyfish-starfish |
 | count | compare | Were there more jellyfish or more sea turtles? | **✓ Jellyfish** · Sea turtles · The same number | compare-jellyfish-turtle |
 | count | altogether | How many starfish and clownfish were there altogether? | **✓ 5** · 6 · 4 · 3 | altogether-starfish-clownfish |
@@ -430,33 +430,33 @@ Detail `aisleSide`: left.
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| position | where | Where was the crate of apples? | **✓ To the right of the spill** · To the left of the spill · Between the spill and the shopping bag · To the left of the shopping bag | apples |
-| count | count | How many shopping bags were there? | **✓ 1** · 4 · 2 · 3 | shopping-bag |
+| position | where | Where in the picture was the crate of apples? | **✓ To the right of the spill** · To the left of the spill · Between the spill and the shopping bag · To the left of the shopping bag | apples |
+| count | count | Count the shopping bags: how many were there? | **✓ 1** · 4 · 2 · 3 | shopping-bag |
 | position | where | Where was the shopping bag? | **✓ Between the spill and the crate of apples** · To the right of the crate of apples · To the left of the spill | shopping-bag |
-| position | where | Where was the spill? | **✓ To the left of the crate of apples** · Between the shopping bag and the crate of apples · To the right of the crate of apples · To the right of the shopping bag | spill |
-| count | count | How many bottles of juice were there? | **✓ 1** · 2 · 4 · 3 | juice |
+| position | where | Can you remember where the spill was? | **✓ To the left of the crate of apples** · Between the shopping bag and the crate of apples · To the right of the crate of apples · To the right of the shopping bag | spill |
+| count | count | Count the bottles of juice: how many were there? | **✓ 1** · 2 · 4 · 3 | juice |
 | colour | colour | What colour was the bottle of juice? | **✓ Green** · Red · Pink · Yellow | juice |
-| position | where | Where was the bottle of juice? | **✓ To the right of the toilet rolls** · To the left of the toilet rolls | juice |
+| position | where | Can you remember where the bottle of juice was? | **✓ To the right of the toilet rolls** · To the left of the toilet rolls | juice |
 | count | count | How many bottles of water were there? | **✓ 1** · 4 · 2 · 3 | water |
-| count | count | How many boxes of eggs were there? | **✓ 1** · 2 · 3 · 4 | eggs |
-| count | count | How many toilet rolls were there? | **✓ 2** · 5 · 3 · 1 | toilet-rolls |
-| position | where | Where were the toilet rolls? | **✓ To the left of the bottle of juice** · To the right of the bottle of juice | toilet-rolls |
+| count | count | How many boxes of eggs did you see? | **✓ 1** · 2 · 3 · 4 | eggs |
+| count | count | Count the toilet rolls: how many were there? | **✓ 2** · 5 · 3 · 1 | toilet-rolls |
+| position | where | Where did you see the toilet rolls? | **✓ To the left of the bottle of juice** · To the right of the bottle of juice | toilet-rolls |
 | object | what-here | Was there anything on the middle shelf? | **✓ Yes, a box of eggs** · No, nothing · Yes, a tin of beans · Yes, a carton of milk | band-middle |
 | object | what-here | Was there anything on the bottom shelf? | **✓ Yes, a bottle of water** · No, nothing · Yes, a tin of beans · Yes, a carton of milk | band-bottom |
 | object | what-here | Which of these was on the top shelf? | **✓ A bottle of juice** · A loaf of bread · A cereal box | in-top |
-| object | what-here | Which of these was on the floor? | **✓ A crate of apples** · A crate of oranges · A shopping basket · A wet floor sign | in-floor |
-| object | what-here | What was on the middle shelf? | **✓ A box of eggs** · A jar of honey · A bottle of juice · A tin of beans | band-middle |
-| object | what-here | What was on the bottom shelf? | **✓ A bottle of water** · A carton of milk · A loaf of bread · A box of eggs | band-bottom |
+| object | what-here | Which of these did you see on the floor? | **✓ A crate of apples** · A crate of oranges · A shopping basket · A wet floor sign | in-floor |
+| object | what-here | What did you see on the middle shelf? | **✓ A box of eggs** · A jar of honey · A bottle of juice · A tin of beans | band-middle |
+| object | what-here | Can you remember what was on the bottom shelf? | **✓ A bottle of water** · A carton of milk · A loaf of bread · A box of eggs | band-bottom |
 | number | detail | What was the aisle number? | **✓ 8** · 7 · 18 · 9 | aisle-number |
-| object | detail | What was on special offer? | **✓ Bread** · Apples · Cheese · Milk | offer |
+| object | detail | What did you see on special offer? | **✓ Bread** · Apples · Cheese · Milk | offer |
 | object | detail | What did the offer sign say? | **✓ Half price** · 20% off · 10% off · Buy one, get one free | deal |
 | object | story | What had spilled on the floor? | **✓ Juice** · Water · Milk · Honey | spill |
-| object | seen | Which of these was in the picture? | **✓ Bottle of water** · Wet floor sign · Jar of honey · Watermelon | water |
-| object | seen | Which of these was NOT in the picture? | **✓ Carton of milk** · Shopping bag · Spill · Crate of apples | milk |
+| object | seen | Which of these did you see? | **✓ Bottle of water** · Wet floor sign · Jar of honey · Watermelon | water |
+| object | seen | Which of these did you NOT see? | **✓ Carton of milk** · Shopping bag · Spill · Crate of apples | milk |
 | count | compare | Were there more shopping bags or more boxes of eggs? | Shopping bags · Boxes of eggs · **✓ The same number** | compare-shopping-bag-eggs |
 | count | compare | Were there more shopping bags or more bottles of juice? | Shopping bags · Bottles of juice · **✓ The same number** | compare-shopping-bag-juice |
 | count | altogether | How many boxes of eggs and toilet rolls were there altogether? | **✓ 3** · 2 · 4 · 1 | altogether-eggs-toilet-rolls |
-| count | difference | How many more toilet rolls than bottles of juice were there? | **✓ 1** · 2 · 3 · 4 | difference-toilet-rolls-juice |
+| count | difference | How many more toilet rolls than bottles of juice did you see? | **✓ 1** · 2 · 3 · 4 | difference-toilet-rolls-juice |
 | count | most | Which was there the most of? | **✓ Toilet rolls** · Boxes of eggs · Bottles of juice · Shopping bags | most-toilet-rolls |
 | position | relation | What was on the top shelf, above the box of eggs? | **✓ Toilet rolls** · Loaves of bread · Bottles of juice · Cereal boxes | eggs |
 | count | true-false | True or false? There was one bottle of water. | **✓ True** · False | water |
@@ -493,30 +493,30 @@ Detail `faces`: 000.
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| colour | colour | What colour was the freight wagon? | **✓ Blue** · Orange · Brown · Grey | wagon |
-| position | where | Where was the ticket machine? | **✓ To the left of the coffee cart** · To the right of the coffee cart · Between the newspaper stand and the coffee cart · To the right of the dog | ticket-machine |
-| position | where | Where was the newspaper stand? | **✓ Between the ticket machine and the coffee cart** · To the left of the ticket machine · To the right of the coffee cart · To the left of the bench | newspapers |
-| count | count | How many hanging baskets were there? | **✓ 2** · 4 · 3 · 1 | flower-basket |
+| colour | colour | The freight wagon was what colour? | **✓ Blue** · Orange · Brown · Grey | wagon |
+| position | where | Can you remember where the ticket machine was? | **✓ To the left of the coffee cart** · To the right of the coffee cart · Between the newspaper stand and the coffee cart · To the right of the dog | ticket-machine |
+| position | where | Where did you see the newspaper stand? | **✓ Between the ticket machine and the coffee cart** · To the left of the ticket machine · To the right of the coffee cart · To the left of the bench | newspapers |
+| count | count | Count the hanging baskets: how many were there? | **✓ 2** · 4 · 3 · 1 | flower-basket |
 | colour | colour | What colour were the flowers in the hanging baskets? | **✓ Pink** · Yellow · Red · Purple | flower-basket |
 | count | count | How many dogs were there? | **✓ 1** · 2 · 3 · 4 | dog |
-| colour | colour | What colour was the dog? | **✓ Brown** · Black · White · Yellow | dog |
-| position | where | Where was the dog? | **✓ To the right of the ticket machine** · To the left of the ticket machine · Between the ticket machine and the newspaper stand · Between the bench and the newspaper stand | dog |
+| colour | colour | Think back: what colour was the dog? | **✓ Brown** · Black · White · Yellow | dog |
+| position | where | Can you remember where the dog was? | **✓ To the right of the ticket machine** · To the left of the ticket machine · Between the ticket machine and the newspaper stand · Between the bench and the newspaper stand | dog |
 | colour | colour | What colour was the coffee cart? | **✓ Red** · Green · Blue · Black | coffee-cart |
 | position | where | Where was the coffee cart? | **✓ To the right of the newspaper stand** · Between the bench and the newspaper stand · Between the ticket machine and the newspaper stand · To the left of the newspaper stand | coffee-cart |
-| count | count | How many benches were there? | **✓ 1** · 3 · 4 · 2 | bench |
+| count | count | How many benches did you see? | **✓ 1** · 3 · 4 · 2 | bench |
 | colour | colour | What colour was the bench? | **✓ Blue** · Green · Red · Brown | bench |
-| position | where | Where was the bench? | **✓ To the left of the newspaper stand** · To the right of the newspaper stand · Between the newspaper stand and the coffee cart · Between the newspaper stand and the dog | bench |
+| position | where | Where did you see the bench? | **✓ To the left of the newspaper stand** · To the right of the newspaper stand · Between the newspaper stand and the coffee cart · Between the newspaper stand and the dog | bench |
 | object | what-here | Which of these was on the platform? | **✓ A dog** · A vending machine · A luggage trolley · A passenger | in-platform |
-| object | what-here | What was on the track? | **✓ A freight wagon** · A railway signal · A train | band-track |
+| object | what-here | What did you see on the track? | **✓ A freight wagon** · A railway signal · A train | band-track |
 | number | detail | What time was the next train? | **✓ 11:00** · 11:10 · 12:00 · 10:00 | departs |
 | number | detail | Which platform was the next train leaving from? | **✓ Platform 1** · Platform 11 · Platform 2 · Platform 3 | platform |
 | object | detail | Where was the next train going? | **✓ Hilltop** · Riverside · Seaside · Lakeside | destination |
-| object | seen | Which of these was in the picture? | **✓ Freight wagon** · Vending machine · Station clock · Passenger | wagon |
-| object | seen | Which of these was NOT in the picture? | **✓ Train** · Coffee cart · Hanging basket · Ticket machine | train |
+| object | seen | One of these was in the picture. Which one? | **✓ Freight wagon** · Vending machine · Station clock · Passenger | wagon |
+| object | seen | One of these was NOT in the picture. Which one? | **✓ Train** · Coffee cart · Hanging basket · Ticket machine | train |
 | count | compare | Were there more dogs or more benches? | Dogs · Benches · **✓ The same number** | compare-dog-bench |
 | count | compare | Were there more hanging baskets or more benches? | **✓ Hanging baskets** · Benches · The same number | compare-flower-basket-bench |
 | count | altogether | How many hanging baskets and dogs were there altogether? | **✓ 3** · 2 · 4 · 5 | altogether-flower-basket-dog |
-| count | difference | How many more hanging baskets than dogs were there? | **✓ 1** · 2 · 3 · 4 | difference-flower-basket-dog |
+| count | difference | Count the more hanging baskets than dogs: how many were there? | **✓ 1** · 2 · 3 · 4 | difference-flower-basket-dog |
 | colour | two-step | Only one kind of thing was on the track. What colour was it? | **✓ Blue** · Green · Grey · Orange | wagon |
 | count | true-false | True or false? There were two dogs. | True · **✓ False** | dog |
 | count | true-false | True or false? There were two hanging baskets. | **✓ True** · False | flower-basket |
@@ -559,33 +559,33 @@ Detail `fedSide`: right.
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
 | colour | colour | What colour were the balloon seller’s balloons? | **✓ Red** · Blue · Pink · Yellow | balloon-seller |
-| position | where | Where was the balloon seller? | **✓ To the left of the visitor** · To the right of the visitor · To the right of the benches · Between the benches | balloon-seller |
-| position | where | Where was the elephant? | **✓ To the left of the ostrich** · To the right of the ostrich | elephant |
-| count | count | How many ostriches were there? | **✓ 1** · 2 · 4 · 3 | ostrich |
-| position | where | Where was the ostrich? | **✓ To the right of the elephant** · To the left of the elephant | ostrich |
-| count | count | How many hot-air balloons were there? | **✓ 1** · 3 · 2 · 4 | balloon |
+| position | where | Can you remember where the balloon seller was? | **✓ To the left of the visitor** · To the right of the visitor · To the right of the benches · Between the benches | balloon-seller |
+| position | where | Can you remember where the elephant was? | **✓ To the left of the ostrich** · To the right of the ostrich | elephant |
+| count | count | How many ostriches did you see? | **✓ 1** · 2 · 4 · 3 | ostrich |
+| position | where | Where in the picture was the ostrich? | **✓ To the right of the elephant** · To the left of the elephant | ostrich |
+| count | count | How many hot-air balloons did you see? | **✓ 1** · 3 · 2 · 4 | balloon |
 | colour | colour | What colour was the hot-air balloon? | **✓ Orange** · Green · Blue · Purple | balloon |
-| position | where | Where was the hot-air balloon? | **✓ To the left of the birds** · To the right of the birds | balloon |
-| count | count | How many benches were there? | **✓ 2** · 3 · 5 · 1 | bench |
+| position | where | Where did you see the hot-air balloon? | **✓ To the left of the birds** · To the right of the birds | balloon |
+| count | count | How many benches did you see? | **✓ 2** · 3 · 5 · 1 | bench |
 | colour | colour | What colour were the benches? | **✓ Blue** · Red · Brown · Green | bench |
-| count | count | How many visitors were there? | **✓ 1** · 3 · 2 · 4 | person |
-| colour | colour | What colour was the visitor’s shirt? | **✓ Blue** · White · Pink · Purple | person |
-| position | where | Where was the visitor? | **✓ To the right of the balloon seller** · To the left of the balloon seller | person |
-| count | count | How many birds were there? | **✓ 4** · 1 · 7 · 5 | bird |
-| position | where | Where were the birds? | **✓ To the right of the hot-air balloon** · To the left of the hot-air balloon | bird |
-| object | what-here | Which of these was in the sky? | **✓ A bird** · A plane · The sun | in-sky |
+| count | count | Count the visitors: how many were there? | **✓ 1** · 3 · 2 · 4 | person |
+| colour | colour | Think back: what colour was the visitor’s shirt? | **✓ Blue** · White · Pink · Purple | person |
+| position | where | Where did you see the visitor? | **✓ To the right of the balloon seller** · To the left of the balloon seller | person |
+| count | count | How many birds did you see? | **✓ 4** · 1 · 7 · 5 | bird |
+| position | where | Where did you see the birds? | **✓ To the right of the hot-air balloon** · To the left of the hot-air balloon | bird |
+| object | what-here | Which of these did you see in the sky? | **✓ A bird** · A plane · The sun | in-sky |
 | object | what-here | Which of these was in the enclosure? | **✓ An elephant** · A rhino · A kangaroo · A zebra | in-enclosure |
-| object | what-here | Which of these was on the path? | **✓ A visitor** · A signpost · A zookeeper · A pushchair | in-path |
+| object | what-here | Which of these did you see on the path? | **✓ A visitor** · A signpost · A zookeeper · A pushchair | in-path |
 | number | detail | What time was feeding time? | **✓ 11:00** · 10:00 · 11:10 · 12:00 | feeding-time |
 | object | story | Was the elephant spraying water? | **✓ Yes** · No | elephant-spray |
 | count | story | How many balloons was the balloon seller holding? | **✓ 3** · 2 · 4 · 5 | seller-balloons |
 | object | detail | Which animals were being fed at feeding time? | **✓ Ostriches** · Penguins · Bears · Giraffes | fed |
-| object | seen | Which of these was in the picture? | **✓ Hot-air balloon** · Rhino · Signpost · Plane | balloon |
+| object | seen | Which of these did you see? | **✓ Hot-air balloon** · Rhino · Signpost · Plane | balloon |
 | object | seen | Which of these was NOT in the picture? | **✓ Zebra** · Balloon seller · Hot-air balloon · Bird | zebra |
 | count | compare | Were there more ostriches or more visitors? | Ostriches · Visitors · **✓ The same number** | compare-ostrich-person |
 | count | compare | Were there more ostriches or more birds? | Ostriches · **✓ Birds** · The same number | compare-ostrich-bird |
 | count | altogether | How many ostriches and hot-air balloons were there altogether? | **✓ 2** · 1 · 3 · 4 | altogether-ostrich-balloon |
-| count | difference | How many more benches than visitors were there? | **✓ 1** · 2 · 3 · 4 | difference-bench-person |
+| count | difference | Count the more benches than visitors: how many were there? | **✓ 1** · 2 · 3 · 4 | difference-bench-person |
 | count | sharing | If the birds were split into two equal groups, how many would be in each group? | **✓ 2** · 3 · 1 · 4 | bird |
 | count | most | Which was there the most of? | **✓ Birds** · Ostriches · Visitors · Benches | most-bird |
 | position | relation | What was in the sky, above the ostrich? | **✓ Birds** · Hot-air balloons · Visitors · Benches | ostrich |
@@ -622,23 +622,23 @@ Detail `snowRider`: yes.
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
 | colour | colour | What colour was the snowmobile? | **✓ Green** · Orange · Blue · Black | snowmobile |
-| position | where | Where was the snowmobile? | **✓ To the left of the sledge** · To the right of the sledge · Between the dog and the sledge · To the right of the dog | snowmobile |
-| count | count | How many slalom flags were there? | **✓ 2** · 4 · 1 · 3 | flag |
+| position | where | Where did you see the snowmobile? | **✓ To the left of the sledge** · To the right of the sledge · Between the dog and the sledge · To the right of the dog | snowmobile |
+| count | count | How many slalom flags did you see? | **✓ 2** · 4 · 1 · 3 | flag |
 | colour | colour | What colour were the slalom flags? | **✓ Red** · Blue · Purple · Yellow | flag |
 | count | count | How many snowboarders were there? | **✓ 2** · 5 · 1 · 4 | snowboarder |
 | colour | colour | What colour were the snowboarders’ jackets? | **✓ Pink** · Orange · Blue · Purple | snowboarder |
 | position | where | Where were the snowboarders? | **✓ Between the slalom flags** · To the right of the slalom flags · To the left of the slalom flags | snowboarder |
-| count | count | How many dogs were there? | **✓ 1** · 4 · 2 · 3 | dog |
+| count | count | Count the dogs: how many were there? | **✓ 1** · 4 · 2 · 3 | dog |
 | colour | colour | What colour was the dog? | **✓ Brown** · White · Black · Purple | dog |
 | position | where | Where was the dog? | **✓ Between the snowmobile and the sledge** · To the right of the sledge · To the left of the snowmobile | dog |
 | position | where | Where was the plane? | **✓ To the left of the birds** · To the right of the birds | plane |
-| count | count | How many sledges were there? | **✓ 1** · 2 · 4 · 3 | sledge |
-| colour | colour | What colour was the sledge? | **✓ Green** · Orange · Blue · Brown | sledge |
-| position | where | Where was the sledge? | **✓ To the right of the dog** · Between the snowmobile and the dog · To the left of the dog · To the left of the snowmobile | sledge |
-| count | count | How many birds were there? | **✓ 2** · 5 · 1 · 4 | bird |
-| position | where | Where were the birds? | **✓ To the right of the plane** · To the left of the plane | bird |
-| object | what-here | Which of these was in the sky? | **✓ A plane** · The sun · A cable car | in-sky |
-| object | what-here | Which of these was on the ski slope? | **✓ A snowboarder** · A ski racer · A skier · A pine tree | in-slope |
+| count | count | Count the sledges: how many were there? | **✓ 1** · 2 · 4 · 3 | sledge |
+| colour | colour | The sledge was what colour? | **✓ Green** · Orange · Blue · Brown | sledge |
+| position | where | Where in the picture was the sledge? | **✓ To the right of the dog** · Between the snowmobile and the dog · To the left of the dog · To the left of the snowmobile | sledge |
+| count | count | Count the birds: how many were there? | **✓ 2** · 5 · 1 · 4 | bird |
+| position | where | Can you remember where the birds were? | **✓ To the right of the plane** · To the left of the plane | bird |
+| object | what-here | Which of these did you see in the sky? | **✓ A plane** · The sun · A cable car | in-sky |
+| object | what-here | Which of these did you see on the ski slope? | **✓ A snowboarder** · A ski racer · A skier · A pine tree | in-slope |
 | object | what-here | Which of these was by the lodge? | **✓ A snowmobile** · A dog sled · A person · A ski rack | in-lodge |
 | object | detail | Which animal was the danger sign about? | **✓ Wolf** · Deer · Bear · Fox | danger |
 | object | story | Was anyone riding the snowmobile? | **✓ Yes** · No | snow-rider |
@@ -647,7 +647,7 @@ Detail `snowRider`: yes.
 | count | compare | Were there more slalom flags or more snowboarders? | Slalom flags · Snowboarders · **✓ The same number** | compare-flag-snowboarder |
 | count | compare | Were there more dogs or more sledges? | Dogs · Sledges · **✓ The same number** | compare-dog-sledge |
 | count | altogether | How many slalom flags and dogs were there altogether? | **✓ 3** · 4 · 2 · 1 | altogether-flag-dog |
-| count | difference | How many more slalom flags than sledges were there? | **✓ 1** · 2 · 3 · 4 | difference-flag-sledge |
+| count | difference | How many more slalom flags than sledges did you see? | **✓ 1** · 2 · 3 · 4 | difference-flag-sledge |
 | colour | twins | What else was the same colour as the snowmobile? | **✓ The sledge** · The snowboarders’ jackets · The dog · The slalom flags | snowmobile |
 | colour | twins | What else was the same colour as the sledge? | **✓ The snowmobile** · The dog · The slalom flags · The snowboarders’ jackets | sledge |
 | colour | true-false | True or false? The sledge was blue. | True · **✓ False** | sledge |
@@ -682,18 +682,18 @@ Detail `tankFish`: 3.
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| colour | colour | What colour was the teacher’s jumper? | **✓ Red** · Blue · Green · Pink | teacher |
-| position | where | Where was the fish tank? | **✓ To the right of the potted plant** · To the left of the potted plant · To the left of the pupils · Between the pupils | fish-tank |
-| count | count | How many pupils were there? | **✓ 2** · 1 · 4 · 5 | pupil |
-| colour | colour | What colour were the pupils’ jumpers? | **✓ Purple** · Blue · Green · Yellow | pupil |
-| colour | colour | What colour were the curtains? | **✓ Orange** · Blue · Yellow · Purple | window |
-| position | where | Where was the window? | **✓ On the wall on the left, above the teacher** · On the wall in the middle, above the bookcase · On the wall on the left, above the bookcase · On the wall on the right, above the bookcase | window |
+| colour | colour | The teacher’s jumper was what colour? | **✓ Red** · Blue · Green · Pink | teacher |
+| position | where | Where in the picture was the fish tank? | **✓ To the right of the potted plant** · To the left of the potted plant · To the left of the pupils · Between the pupils | fish-tank |
+| count | count | Count the pupils: how many were there? | **✓ 2** · 1 · 4 · 5 | pupil |
+| colour | colour | The pupils’ jumpers were what colour? | **✓ Purple** · Blue · Green · Yellow | pupil |
+| colour | colour | Think back: what colour were the curtains? | **✓ Orange** · Blue · Yellow · Purple | window |
+| position | where | Can you remember where the window was? | **✓ On the wall on the left, above the teacher** · On the wall in the middle, above the bookcase · On the wall on the left, above the bookcase · On the wall on the right, above the bookcase | window |
 | object | what-here | What was on the wall on the left, above the teacher? | **✓ A window** · A poster · A world map · A noticeboard | window |
-| position | where | Where was the world map? | **✓ To the right of the window** · To the left of the window | map |
-| count | count | How many potted plants were there? | **✓ 1** · 2 · 4 · 3 | plant |
+| position | where | Where did you see the world map? | **✓ To the right of the window** · To the left of the window | map |
+| count | count | How many potted plants did you see? | **✓ 1** · 2 · 4 · 3 | plant |
 | colour | colour | What colour was the plant pot? | **✓ Blue** · Yellow · White · Pink | plant |
-| position | where | Where was the potted plant? | **✓ To the left of the fish tank** · To the right of the fish tank | plant |
-| object | what-here | Which of these was on the wall? | **✓ A window** · A clock · A noticeboard · A poster | in-wall |
+| position | where | Where in the picture was the potted plant? | **✓ To the left of the fish tank** · To the right of the fish tank | plant |
+| object | what-here | Which of these did you see on the wall? | **✓ A window** · A clock · A noticeboard · A poster | in-wall |
 | object | what-here | Which of these was at the front of the class? | **✓ A globe** · A piano · A bookcase | in-front |
 | object | what-here | Which of these was at the back of the class? | **✓ A pupil** · A beanbag · An easel · A computer | in-back |
 | count | story | How many fish were in the fish tank? | **✓ 3** · 5 · 2 · 1 | tank-fish |
@@ -737,27 +737,27 @@ Detail `fire`: smoking.
 | --- | --- | --- | --- | --- |
 | count | count | How many tents were there? | **✓ 1** · 2 · 4 · 3 | tent |
 | colour | colour | What colour was the tent? | **✓ Pink** · Orange · Yellow · Blue | tent |
-| position | where | Where was the tent? | **✓ To the left of the picnic table** · To the right of the picnic table | tent |
-| position | where | Where was the picnic table? | **✓ To the right of the tent** · To the left of the tent | picnic-table |
-| count | count | How many people were there? | **✓ 2** · 5 · 3 · 1 | person |
-| colour | colour | What colour were the people’s jumpers? | **✓ Orange** · Yellow · Pink · Green | person |
+| position | where | Where in the picture was the tent? | **✓ To the left of the picnic table** · To the right of the picnic table | tent |
+| position | where | Where in the picture was the picnic table? | **✓ To the right of the tent** · To the left of the tent | picnic-table |
+| count | count | Count the people: how many were there? | **✓ 2** · 5 · 3 · 1 | person |
+| colour | colour | The people’s jumpers were what colour? | **✓ Orange** · Yellow · Pink · Green | person |
 | position | where | Where were the people? | **✓ To the right of the fox** · To the left of the fox · Between the campfire and the fox · To the left of the campfire | person |
-| position | where | Where was the campfire? | **✓ To the left of the fox** · Between the fox and the people · To the right of the fox · To the right of the people | campfire |
-| position | where | Where was the shooting star? | **✓ To the right of the owl** · To the left of the owl | shooting-star |
+| position | where | Where in the picture was the campfire? | **✓ To the left of the fox** · Between the fox and the people · To the right of the fox · To the right of the people | campfire |
+| position | where | Can you remember where the shooting star was? | **✓ To the right of the owl** · To the left of the owl | shooting-star |
 | position | where | Where was the fox? | **✓ Between the campfire and the people** · To the left of the campfire · To the right of the people | fox |
 | count | count | How many owls were there? | **✓ 1** · 2 · 3 · 4 | owl |
-| position | where | Where was the owl? | **✓ To the left of the shooting star** · To the right of the shooting star | owl |
+| position | where | Can you remember where the owl was? | **✓ To the left of the shooting star** · To the right of the shooting star | owl |
 | object | what-here | Which of these was in the sky? | **✓ A shooting star** · The moon · A plane | in-sky |
-| object | what-here | Which of these was on the pitches? | **✓ A tent** · A lantern post · A campervan · A canoe | in-pitches |
+| object | what-here | Which of these did you see on the pitches? | **✓ A tent** · A lantern post · A campervan · A canoe | in-pitches |
 | object | what-here | Which of these was at the front? | **✓ A person** · A pile of firewood · A dog · A log seat | in-fire |
 | number | detail | What number was on the pitch sign? | **✓ 27** · 26 · 28 · 29 | pitch |
 | object | story | Was the campfire burning, or just smoking? | **✓ Just smoking** · Burning | campfire |
-| object | seen | Which of these was in the picture? | **✓ Shooting star** · Dog · Canoe · Plane | shooting-star |
-| object | seen | Which of these was NOT in the picture? | **✓ Moon** · Fox · Tent · Person | moon |
+| object | seen | Which of these did you see? | **✓ Shooting star** · Dog · Canoe · Plane | shooting-star |
+| object | seen | Which of these did you NOT see? | **✓ Moon** · Fox · Tent · Person | moon |
 | count | compare | Were there more tents or more owls? | Tents · Owls · **✓ The same number** | compare-tent-owl |
 | count | compare | Were there more tents or more people? | Tents · **✓ People** · The same number | compare-tent-person |
 | count | altogether | How many tents and people were there altogether? | **✓ 3** · 2 · 4 · 1 | altogether-tent-person |
-| count | difference | How many more people than tents were there? | **✓ 1** · 2 · 3 · 4 | difference-person-tent |
+| count | difference | Count the more people than tents: how many were there? | **✓ 1** · 2 · 3 · 4 | difference-person-tent |
 | position | relation | What was in the sky, above the tent? | **✓ An owl** · The moon · A shooting star · A plane | tent |
 | count | true-false | True or false? There was one tent. | **✓ True** · False | tent |
 | count | true-false | True or false? There was one owl. | **✓ True** · False | owl |
@@ -792,21 +792,21 @@ Detail `kiosk`: open.
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
 | colour | colour | What colour was the row of seats? | **✓ Orange** · Blue · Grey · Green | seats |
-| position | where | Where was the row of seats? | **✓ To the right of the flight attendant** · To the left of the flight attendant · Between the flight attendant and the potted plants · To the left of the potted plants | seats |
-| count | count | How many potted plants were there? | **✓ 2** · 1 · 4 · 5 | plant |
-| colour | colour | What colour were the plant pots? | **✓ Purple** · Yellow · Blue · White | plant |
-| position | where | Where were the potted plants? | **✓ Between the flight attendant and the row of seats** · To the left of the flight attendant · To the right of the row of seats | plant |
-| count | count | How many flight attendants were there? | **✓ 1** · 2 · 3 · 4 | flight-attendant |
+| position | where | Where did you see the row of seats? | **✓ To the right of the flight attendant** · To the left of the flight attendant · Between the flight attendant and the potted plants · To the left of the potted plants | seats |
+| count | count | Count the potted plants: how many were there? | **✓ 2** · 1 · 4 · 5 | plant |
+| colour | colour | The plant pots were what colour? | **✓ Purple** · Yellow · Blue · White | plant |
+| position | where | Where in the picture were the potted plants? | **✓ Between the flight attendant and the row of seats** · To the left of the flight attendant · To the right of the row of seats | plant |
+| count | count | Count the flight attendants: how many were there? | **✓ 1** · 2 · 3 · 4 | flight-attendant |
 | colour | colour | What colour was the flight attendant’s uniform? | **✓ Green** · Blue · Red · Purple | flight-attendant |
-| position | where | Where was the flight attendant? | **✓ To the left of the row of seats** · To the right of the row of seats · Between the potted plants and the row of seats · To the right of the potted plants | flight-attendant |
+| position | where | Where did you see the flight attendant? | **✓ To the left of the row of seats** · To the right of the row of seats · Between the potted plants and the row of seats · To the right of the potted plants | flight-attendant |
 | position | where | Where was the control tower? | **✓ To the right of the fuel truck** · To the left of the fuel truck | control-tower |
 | colour | colour | What colour was the helicopter? | **✓ Orange** · White · Yellow · Green | helicopter |
 | position | where | Where was the helicopter? | **✓ To the right of the birds** · To the left of the birds | helicopter |
-| position | where | Where was the fuel truck? | **✓ To the left of the control tower** · To the right of the control tower | fuel-truck |
+| position | where | Where did you see the fuel truck? | **✓ To the left of the control tower** · To the right of the control tower | fuel-truck |
 | count | count | How many birds were there? | **✓ 2** · 5 · 4 · 3 | bird |
-| position | where | Where were the birds? | **✓ To the left of the helicopter** · To the right of the helicopter | bird |
-| object | what-here | Which of these was in the departure lounge? | **✓ A potted plant** · A coffee kiosk · A traveller · A luggage trolley | in-lounge |
-| object | detail | Where was the flight on the screen going? | **✓ Athens** · Rome · Madrid · Paris | flight-city |
+| position | where | Where in the picture were the birds? | **✓ To the left of the helicopter** · To the right of the helicopter | bird |
+| object | what-here | Which of these did you see in the departure lounge? | **✓ A potted plant** · A coffee kiosk · A traveller · A luggage trolley | in-lounge |
+| object | detail | Where in the picture was the flight on the screen going? | **✓ Athens** · Rome · Madrid · Paris | flight-city |
 | number | detail | Which gate was the flight leaving from? | **✓ C15** · D15 · C14 · C16 | flight-gate |
 | number | detail | What was the flight number? | **✓ GL 789** · GL 799 · GL 879 · GL 788 | flight-number |
 | object | seen | Which of these was in the picture? | **✓ Fuel truck** · Information desk · Luggage trolley · Plane | fuel-truck |
@@ -814,7 +814,7 @@ Detail `kiosk`: open.
 | count | compare | Were there more flight attendants or more birds? | Flight attendants · **✓ Birds** · The same number | compare-flight-attendant-bird |
 | count | compare | Were there more potted plants or more flight attendants? | **✓ Potted plants** · Flight attendants · The same number | compare-plant-flight-attendant |
 | count | altogether | How many flight attendants and birds were there altogether? | **✓ 3** · 4 · 2 · 1 | altogether-flight-attendant-bird |
-| count | difference | How many more birds than flight attendants were there? | **✓ 1** · 2 · 3 · 4 | difference-bird-flight-attendant |
+| count | difference | Count the more birds than flight attendants: how many were there? | **✓ 1** · 2 · 3 · 4 | difference-bird-flight-attendant |
 | count | most | Which was there just one of? | **✓ A flight attendant** · A potted plant · A bird · A luggage trolley | only-flight-attendant |
 | colour | twins | What else was the same colour as the row of seats? | **✓ The helicopter** · The plant pots · The flight attendant’s uniform · The stripe on the parked plane | seats |
 | colour | twins | What else was the same colour as the helicopter? | **✓ The row of seats** · The flight attendant’s uniform · The plant pots · The stripe on the parked plane | helicopter |
@@ -848,29 +848,29 @@ Detail `engine`: off.
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
-| position | where | Where was the lunar lander? | **✓ To the left of the solar panel** · To the right of the solar panel | lander |
+| position | where | Where in the picture was the lunar lander? | **✓ To the left of the solar panel** · To the right of the solar panel | lander |
 | count | count | How many solar panels were there? | **✓ 1** · 2 · 4 · 3 | solar-panel |
 | count | count | How many astronauts were there? | **✓ 2** · 4 · 3 · 5 | astronaut |
 | colour | colour | What colour were the astronauts’ backpacks? | **✓ Blue** · Red · Green · Yellow | astronaut |
-| position | where | Where were the astronauts? | **✓ To the left of the boulder** · To the right of the boulder | astronaut |
-| colour | colour | What colour were the rocket’s fins? | **✓ Red** · Green · Blue · Yellow | rocket |
-| position | where | Where was the rocket? | **✓ To the left of the space station** · Between the satellites and the space station · To the right of the space station · To the right of the satellites | rocket |
-| position | where | Where was the space station? | **✓ To the right of the satellites** · To the left of the satellites · Between the rocket and the satellites · To the left of the rocket | space-station |
-| count | count | How many satellites were there? | **✓ 2** · 3 · 5 · 1 | satellite |
-| position | where | Where were the satellites? | **✓ Between the rocket and the space station** · To the right of the space station · To the left of the rocket | satellite |
-| count | count | How many boulders were there? | **✓ 1** · 2 · 3 · 4 | moon-rock |
-| position | where | Where was the boulder? | **✓ To the right of the astronauts** · To the left of the astronauts | moon-rock |
+| position | where | Can you remember where the astronauts were? | **✓ To the left of the boulder** · To the right of the boulder | astronaut |
+| colour | colour | The rocket’s fins were what colour? | **✓ Red** · Green · Blue · Yellow | rocket |
+| position | where | Where in the picture was the rocket? | **✓ To the left of the space station** · Between the satellites and the space station · To the right of the space station · To the right of the satellites | rocket |
+| position | where | Can you remember where the space station was? | **✓ To the right of the satellites** · To the left of the satellites · Between the rocket and the satellites · To the left of the rocket | space-station |
+| count | count | Count the satellites: how many were there? | **✓ 2** · 3 · 5 · 1 | satellite |
+| position | where | Where did you see the satellites? | **✓ Between the rocket and the space station** · To the right of the space station · To the left of the rocket | satellite |
+| count | count | How many boulders did you see? | **✓ 1** · 2 · 3 · 4 | moon-rock |
+| position | where | Can you remember where the boulder was? | **✓ To the right of the astronauts** · To the left of the astronauts | moon-rock |
 | object | what-here | Which of these was near the hills? | **✓ A lunar lander** · A radio dish · A habitat pod · A flag | in-back |
 | object | what-here | Which of these was close by? | **✓ A boulder** · A crater · A moon buggy · A robot | in-front |
 | object | story | Was there fire coming out of the rocket? | **✓ No** · Yes | rocket-fire |
 | object | detail | What was the mission called on the sign? | **✓ Eagle** · Orion · Artemis · Falcon | mission |
 | number | detail | What number was the moon base on the sign? | **✓ 27** · 25 · 29 · 26 | base-number |
-| object | seen | Which of these was in the picture? | **✓ Boulder** · Moon buggy · Radio dish · Comet | moon-rock |
+| object | seen | One of these was in the picture. Which one? | **✓ Boulder** · Moon buggy · Radio dish · Comet | moon-rock |
 | object | seen | Which of these was NOT in the picture? | **✓ Earth** · Satellite · Lunar lander · Astronaut | earth |
 | count | compare | Were there more solar panels or more astronauts? | Solar panels · **✓ Astronauts** · The same number | compare-solar-panel-astronaut |
 | count | compare | Were there more solar panels or more boulders? | Solar panels · Boulders · **✓ The same number** | compare-solar-panel-moon-rock |
 | count | altogether | How many astronauts and satellites were there altogether? | **✓ 4** · 3 · 5 · 6 | altogether-astronaut-satellite |
-| count | difference | How many more satellites than boulders were there? | **✓ 1** · 2 · 3 · 4 | difference-satellite-moon-rock |
+| count | difference | Count the more satellites than boulders: how many were there? | **✓ 1** · 2 · 3 · 4 | difference-satellite-moon-rock |
 | colour | true-false | True or false? The rocket’s fins were red. | **✓ True** · False | rocket |
 | colour | true-false | True or false? The astronauts’ backpacks were blue. | **✓ True** · False | astronaut |
 | count | true-false | True or false? There were two solar panels. | True · **✓ False** | solar-panel |

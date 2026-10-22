@@ -27,9 +27,16 @@ export interface SpeedQuestion {
 
 const YES_NO = /^(Yes|No)\b/;
 /** Kinds of question quick enough to read and answer in a few seconds. */
-const QUICK = new Set(['true-false', 'count', 'colour', 'what-here', 'detail', 'story', 'seen']);
+const QUICK = new Set(['true-false', 'count', 'colour', 'what-here', 'detail', 'story', 'seen', 'where']);
+/**
+ * At most this many of the commonest kinds a round, so speed rounds don't feel alike (how many and what colour were
+ * over half of them). Lifted only if a picture can't make eight without.
+ */
+const SPEED_CAPS: Record<string, number> = { count: 2, colour: 2, where: 2 };
+/** "To the right of the plane": one a round, or the bird's and the plane's would answer each other. */
+const BESIDE = /^(To the (left|right) of|Between) /;
 /** Questions that pick one of several options ("Which of these…", "more boats or more kites?") make no sense with one guess. */
-const CHOOSES = /\bNOT\b|Which of these|Which was there| or more |Which (house|one)/;
+const CHOOSES = /\bNOT\b|Which of these|One of these|Which was there| or more |Which (house|one)/;
 
 /**
  * Eight quick questions from a picture's question pool (already the kinds the level asks), about different things,
@@ -41,20 +48,23 @@ export function speedQuestions(pool: Question[], seed: number, count = SPEED_QUE
   const wanted = rng.shuffle(Array.from({ length: count }, (_, i) => i < count / 2));
   const subjects = new Set<string>();
   const picked: SpeedQuestion[] = [];
+  const families: Record<string, number> = {};
   const take = (q: Question, s: SpeedQuestion) => {
     const i = wanted.indexOf(s.yes);
     if (i < 0) return;
     wanted.splice(i, 1);
     subjects.add(q.subject ?? q.id);
     subjects.add(`${q.subject ?? q.id}|${q.type}`);
+    families[q.family!] = (families[q.family!] ?? 0) + 1;
     picked.push(s);
   };
-  for (const pass of [0, 1]) {
+  for (const pass of [0, 1, 2]) {
     for (const q of rng.shuffle(pool)) {
       if (picked.length >= count) break;
       // The second pass may ask about something twice, if the picture had too few things for eight, but never the same
       // way: "The kettle was yellow" and "What colour was the kettle? Blue?" would answer each other.
       if (picked.some((p) => p.id === q.id) || subjects.has(pass === 0 ? (q.subject ?? q.id) : `${q.subject ?? q.id}|${q.type}`)) continue;
+      if (pass < 2 && q.family && (families[q.family] ?? 0) >= (SPEED_CAPS[q.family] ?? Infinity)) continue;
       const answer = q.options[q.answerIndex];
       if (!q.family || !QUICK.has(q.family) || CHOOSES.test(q.prompt) || q.prompt.includes('\n') !== (q.family === 'true-false')) continue;
       if (q.family === 'true-false') {
@@ -65,7 +75,9 @@ export function speedQuestions(pool: Question[], seed: number, count = SPEED_QUE
         // "Was there anything on the table? No, nothing?" reads badly, so options that are answers in themselves are left out.
         const yes = wanted.filter(Boolean).length >= wanted.filter((w) => !w).length;
         const wrong = q.options.filter((_, i) => i !== q.answerIndex);
-        take(q, { id: q.id, prompt: q.prompt, guess: yes ? answer : rng.pick(wrong), yes });
+        const guess = yes ? answer : rng.pick(wrong);
+        if (BESIDE.test(guess) && picked.some((p) => p.guess && BESIDE.test(p.guess))) continue;
+        take(q, { id: q.id, prompt: q.prompt, guess, yes });
       }
     }
   }

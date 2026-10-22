@@ -242,7 +242,8 @@ function Quiz({ setup, seconds, onDone }: { setup: SpeedRoundSetup; seconds: num
         </View>
         <Animated.View key={question.id} entering={FadeIn.duration(150)} style={styles.questionBlock}>
           <Text style={[styles.prompt, !question.guess && styles.promptBig]}>{question.prompt}</Text>
-          {question.guess && <Text style={styles.guess}>{question.guess}?</Text>}
+          {/* A where-guess can be long ("On the wall on the left, above the television"): smaller, so it stays a glance. */}
+          {question.guess && <Text style={[styles.guess, question.guess.length > 16 && styles.guessLong]}>{question.guess}?</Text>}
         </Animated.View>
         <View style={styles.verdictSpace}>
           {shown && (
@@ -352,6 +353,7 @@ const styles = StyleSheet.create({
   prompt: { color: colors.text, fontSize: 22, fontWeight: '700', lineHeight: 29 },
   promptBig: { fontSize: 28, fontWeight: '900', lineHeight: 35 },
   guess: { color: colors.accent, fontSize: 40, fontWeight: '900' },
+  guessLong: { fontSize: 28, lineHeight: 34 },
   verdictSpace: { minHeight: 34, justifyContent: 'center' },
   verdict: { fontSize: 20, fontWeight: '900', textAlign: 'center' },
   yesNo: { flexDirection: 'row', gap: 14, padding: 24, width: '100%', maxWidth: 520, alignSelf: 'center' },

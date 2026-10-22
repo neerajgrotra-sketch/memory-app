@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.12.0 (2026-10-22)
+
+- **More ways to ask the commonest questions.** "Where was the bicycle?" can also be "Where did you see the bicycle?" or "Can you remember where the bicycle was?"; "How many kites were there?" can be "Count the kites: how many were there?"; and so on for "Which of these was in the picture?", "…NOT in the picture?", colours, clocks and "What was on the pond?". In 10-round sessions, questions worded like one asked earlier fell from 30% to 20%.
+- **Where-questions in the Super Speed Round** ("Where did you see the plane? To the right of the bird?"). At most two each of how many, what colour and where in a round, so the mix is even: how many and what colour fell from 56% of speed questions to 41%. Only one "to the right of" guess a round, so two can't answer each other. `check:speed` now holds the mix.
+
 ## 4.11.0 (2026-10-22)
 
 - **Boss rounds at Levels 10, 20 and 30.** A peak to climb to at each milestone: the Busy Farm (Farm Boss), the Busy Mountain (Mountain Boss) and the Busy Airport (the Final Boss). Each is a busy picture with two more kinds of thing than its level, a second less to look and harder questions (how many, where, numbers), about as hard as the level ten above. Get 4 of 5 right to win its badge; the first win also brings a Peek. Double points, no Peeks or 50:50s, and it never changes your level.

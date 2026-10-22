@@ -1,8 +1,8 @@
 /**
  * Checks the Super Speed Round (src/games/lookRemember/speed.ts) and the 50:50 (peeks.ts): eight quick questions from
- * every place at every level it's played, each answer true to the picture's own question, about half of them Yes, none
- * giving another away; when it comes (every 4 to 6 Levels rounds from Level 5); what each score wins; and 50:50s won,
- * spent and capped. Run with `npm run check:speed`.
+ * every place at every level it's played, each answer true to the picture's own question, about half of them Yes, how
+ * many and what colour under half of them, none giving another away; when it comes (every 4 to 6 Levels rounds from
+ * Level 5); what each score wins; and 50:50s won, spent and capped. Run with `npm run check:speed`.
  */
 import { MAX_FIFTY, fiftyHidden, fiftyOf, walletOf } from '@/games/lookRemember/peeks';
 import { knobsForLevel, recipesForLevel } from '@/games/lookRemember/ladder';
@@ -27,6 +27,7 @@ let full = 0;
 let yes = 0;
 let asked = 0;
 const places: Record<string, number> = {};
+const kinds: Record<string, number> = {};
 for (let k = 0; k < PICTURES; k++) {
   const level = SPEED_FROM_LEVEL + (k % (31 - SPEED_FROM_LEVEL));
   const stage = createStage(knobsForLevel(level), { width: 393, height: 640 }, undefined, 7919 * k + 31337, { unlocked: recipesForLevel(level) });
@@ -34,6 +35,8 @@ for (let k = 0; k < PICTURES; k++) {
   if (qs.length === SPEED_QUESTIONS) full++;
   places[stage.scene.recipeId] = (places[stage.scene.recipeId] ?? 0) + 1;
   const asks = new Set<string>();
+  // "To the right of the plane" twice could answer each other (the bird's and the plane's).
+  if (qs.filter((s) => s.guess && /^(To the (left|right) of|Between) /.test(s.guess)).length > 1) fail(`${stage.scene.id}: two "beside" guesses in one round`);
   for (const s of qs) {
     asked++;
     if (s.yes) yes++;
@@ -42,6 +45,7 @@ for (let k = 0; k < PICTURES; k++) {
       fail(`${stage.scene.id}: "${s.prompt}" isn't one of the picture's questions`);
       continue;
     }
+    kinds[q.family ?? q.type] = (kinds[q.family ?? q.type] ?? 0) + 1;
     const answer = q.options[q.answerIndex];
     if (s.guess !== undefined) {
       if (!q.options.includes(s.guess)) fail(`${stage.scene.id}: "${s.prompt} ${s.guess}?" isn't one of its options`);
@@ -55,6 +59,11 @@ for (let k = 0; k < PICTURES; k++) {
 // The app tries up to four pictures for a full round, so one in 30 falling short is plenty.
 if (full / PICTURES < 0.97) fail(`only ${full} of ${PICTURES} pictures have ${SPEED_QUESTIONS} quick questions`);
 if (Math.abs(yes / asked - 0.5) > 0.03) fail(`${Math.round((100 * yes) / asked)}% of answers are Yes`);
+// Speed rounds shouldn't feel alike: how many and what colour together under half, where-questions in the mix.
+const share = (k: string) => (kinds[k] ?? 0) / asked;
+if (share('count') + share('colour') >= 0.5) fail(`how many and what colour are ${Math.round(100 * (share('count') + share('colour')))}% of speed questions`);
+if (share('where') < 0.08) fail(`where-questions are only ${Math.round(100 * share('where'))}% of speed questions`);
+console.log(`  mix: ${Object.entries(kinds).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${Math.round((100 * v) / asked)}%`).join(', ')}`);
 console.log(`  ${full} of ${PICTURES} pictures make a full round; ${Math.round((100 * yes) / asked)}% Yes; places: ${Object.keys(places).length}`);
 
 // When it comes.

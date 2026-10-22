@@ -206,6 +206,20 @@ When the picture has a clock (the living room's wall clock, the city's street cl
 ## 7. Determinism, ids and types
 
 - **Same picture, same questions.** Wording and wrong options come from `createRng(seed ^ 0x9e3779b9)`. Only the round's selection and the option order use `Math.random`.
+- **Other wordings** (`WORDINGS` and `reworded` in `generateQuestions.ts`): the commonest questions have two to four ways of asking, so a session doesn't keep repeating one sentence. Each question picks its way from its id, so it always reads the same (a resumed round, Same picture again). Every way keeps the words the checks look for (the band's name, "NOT").
+
+  | Usual | Also |
+  | --- | --- |
+  | Where was the bicycle? | Where did you see the bicycle? · Where in the picture was the bicycle? · Can you remember where the bicycle was? |
+  | Which of these was in the picture? | Which of these did you see? · One of these was in the picture. Which one? |
+  | Which of these was NOT in the picture? | Which of these did you NOT see? · One of these was NOT in the picture. Which one? |
+  | Which of these was in the sky? | Which of these did you see in the sky? |
+  | What was on the pond? | What did you see on the pond? · Can you remember what was on the pond? |
+  | What colour was the kite? | The kite was what colour? · Think back: what colour was the kite? |
+  | How many kites were there? | How many kites did you see? · Count the kites: how many were there? |
+  | What time was on the clock? | What time did the clock show? · What time did the clock say? |
+
+  In 10-round sessions, the share of questions worded like one asked earlier fell from 30% to 20% (4.12.0).
 - **Question id:** `<scene id>-<template>-<kind>`. Templates are `count`, `colour`, `colours`, `where`, `what-here`, `seen`, `missing`, `compare`, `most`, `above`, `below`, `twins` and `true-false`. Houses use `<scene id>-house-number-<n>` and `<scene id>-house-colour-<n>`; detail facts `<scene id>-fact-<id>`.
 - **Options:** two to four. Every wrong option must be believable: things that could really be in that band, places the thing could really be. When there aren't three believable ones, a question has three options; with fewer than three in all it isn't asked (true or false has its own two; compare always has three).
 - **Question types** (`QuestionType` in `src/types/game.ts`), shown on the quiz chip and tracked on the progress screen:
