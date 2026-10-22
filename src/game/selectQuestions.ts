@@ -16,6 +16,8 @@ interface SelectOptions {
   seenIds: ReadonlySet<string>;
   /** Questions from the round just played; never repeated back-to-back if avoidable. */
   previousIds: ReadonlySet<string>;
+  /** Wordings (`Question.template`) asked in the round before, on any picture: asked again only after fresh ones. */
+  previousTemplates?: ReadonlySet<string>;
 }
 
 /**
@@ -33,17 +35,20 @@ const TYPE_CAP = 2;
  * variety rule (`FAMILY_CAP`) unless the picture has too few kinds of question.
  */
 export function selectQuestions(pool: Question[], options: SelectOptions): Question[] {
-  const { count, preferredTypes, seenIds, previousIds } = options;
+  const { count, preferredTypes, seenIds, previousIds, previousTemplates } = options;
   const candidates = pool.filter((question) => !previousIds.has(question.id));
   const source = candidates.length >= count ? candidates : pool;
 
   // A two-choice "where" ("To the left of the moon / To the right of the moon") is easier than one with three or four
   // choices: within its group it comes after them, so a round asks it only when there's no better one about where.
   const easy = (question: Question) => (question.options.length === 2 && question.family === 'where' ? 0.5 : 0);
+  // The same sentence two rounds running ("How many … were there?" each time) made a session feel samey: a wording
+  // from the round before comes after every fresh one, even of a less preferred type.
+  const repeated = (question: Question) => (question.template && previousTemplates?.has(question.template) ? 1.05 : 0);
   const rank = (question: Question) => {
     const preferred = preferredTypes.includes(question.type) ? 0 : 1;
     if (seenIds.has(question.id)) return 3 + preferred + easy(question);
-    return question.spotlight ? 0 : 1 + preferred + easy(question);
+    return question.spotlight ? 0 : 1 + preferred + easy(question) + repeated(question);
   };
 
   const ranked = source
@@ -86,6 +91,7 @@ export function toRoundQuestion(question: Question): RoundQuestion {
   return {
     id: question.id,
     type: question.type,
+    template: question.template,
     prompt: question.prompt,
     options: order.map((index) => question.options[index]),
     answerIndex: order.indexOf(question.answerIndex),

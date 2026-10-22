@@ -5,6 +5,7 @@
 | `npm run typecheck` | TypeScript |
 | `npm run lint` | ESLint (Expo config) |
 | `npm run check:questions` | Checks every question's wrong options are believable in every place (nothing offered in a band it can't be in, no empty options) and every picture gives at least 12 questions; no band is named after a thing that can stand in it ("Where was the campfire? Around the campfire") |
+| `npm run check:levels` | Plays rounds and 10-round sessions at every level: something new on every level, no level easier than the one before, no jump in hard questions, no kind of question before its level, no wording asked round after round |
 | `npm run check:daily` | Checks the streak and Daily Challenge rules (days in a row, midnight, daylight saving, the week strip), in two time zones |
 | `npm run check:peeks` | Checks the Peek rules (earning, the cap of 3, spending, the wallet rebuilt from saved rounds, half points for a peeked answer) and prints how often Peeks come at a few levels |
 | `npm run check:scenes` | Checks the level rules and points, then generates 61,800 scenes and checks every rule (below) |

@@ -38,27 +38,37 @@ How a player's level moves, what each level changes, and how points are worked o
 
 ## What each level changes
 
-`knobsForLevel(level)` returns the same settings the pictures and questions have always used (`LevelConfig` in `src/game/difficulty.ts`), changing in small steps:
+Every level brings one named new thing, shown on the level-up screen (`unlocksAt`): a place on the even levels, and on the odd ones a kind of question, a twist or a step in time or fullness. `knobsForLevel(level)` in `src/games/lookRemember/ladder.ts` sets them, spread out so none bunch up and no level is a jump (4.4.0; before that, ten levels brought only points, Level 2 was a little easier than Level 1, and the shift to hard questions all came at Level 18).
 
-| Setting | Level 1 | How it changes | Top |
+| Level | New | Level | New |
 | --- | --- | --- | --- |
-| Kinds of thing | 5 | +1 every 4 levels | 9 from Level 17 |
-| Most of one kind | 3 | 4 at Level 4, 5 at 10, 6 at 16 | 6 |
-| View time | 10 s | −1 s about every 4 levels | 4 s from Level 24 |
-| Places | the beach | living room at Level 2, park at 4, city street at 6, kitchen at 8, farm at 10, under the sea at 12, supermarket at 14, train station at 16, zoo at 18, snowy mountain at 20, classroom at 22, night campsite at 24, airport at 26, the Moon at 28 | all fifteen |
-| House numbers | no | from Level 8 | |
-| Hydrants in mixed colours | no | from Level 12 | |
-| Close counting choices | no | from Level 14 | |
-| Clock times (living room) | whole hours | half past from Level 8, quarter past and to from Level 18 | quarters |
-| Questions asked first | object, colour | + count, position at Level 5; + number at 8; count, position, number from 18 | |
+| 1 | The beach: what was there, colours, how many, true or false | 16 | The train station · up to 6 of one kind · 6 s |
+| 2 | The living room · up to 4 of one kind · 9 s to look | 17 | 9 kinds of thing · clocks at quarter past and to |
+| 3 | Questions about details: clocks, signs, what was on TV | 18 | The zoo · fewer colour questions |
+| 4 | The park · "Where was it?" questions · more on how many and where | 19 | Hiding animals show less of themselves |
+| 5 | 6 kinds of thing | 20 | The snowy mountain |
+| 6 | The city street, with house numbers and colours | 21 | 5 s to look |
+| 7 | Clocks at half past | 22 | The classroom |
+| 8 | The kitchen · more on numbers and times · 8 s | 23 | Mostly harder questions: how many, where and numbers |
+| 9 | 7 kinds of thing · above and below questions | 24 | The campsite at night |
+| 10 | The farm · up to 5 of one kind | 25 | 4 s to look |
+| 11 | Closer choices when counting | 26 | The airport |
+| 12 | Under the sea · 7 s | 27 | *(kept for new questions)* |
+| 13 | Animals hiding in the picture | 28 | The Moon, out in space |
+| 14 | The supermarket · 8 kinds of thing | 29 | *(kept for new questions)* |
+| 15 | Things in mixed colours (fish, sheep, plates, juice, hydrants) | 30 | *(kept for a final round)* |
 
-The scene checker plays levels 1, 4, 6, 8, 10, 12, 14, 17 and 30 on three phones with the places each has reached, and checks that no level is easier than the one before or asks for more than Hard.
+- **Kinds of question** come in one by one (`FAMILY_FROM`, as `LevelConfig.families`): what was there, not there, colour, same colour, true or false and how many / more or fewer / the most from Level 1; details from 3; where from 4; above and below from 9. Practice asks everything.
+- **The question mix** (`preferredTypes`) moves in four steps, at 4, 8, 18 and 23, so the share of hard questions (where, above / below, details) climbs from 0% to about 50% by at most 9 points a level.
+- **Time and fullness:** look time 10 s, then 9 (2), 8 (8), 7 (12), 6 (16), 5 (21), 4 (25); kinds of thing 5, then 6 (5), 7 (9), 8 (14), 9 (17); most of one kind 3, then 4 (2), 5 (10), 6 (16). The seconds of looking per thing fall from 1.3 to 0.35 and never rise from one level to the next.
+- **No repeats in a row:** a round avoids the wordings (`Question.template`) of the round before ("How many … were there?" twice running), even over a less preferred question.
+- Levels 27, 29 and 30 (`LEVELS_TO_FILL`) are kept for the new kinds of question and the final round still to come.
 
-**What's new** on the level-up screen is worked out from the difference between two levels' settings, so it's always true. Every level also raises what a right answer is worth, so there's always something.
+`npm run check:levels` keeps this true: something new on every level, no level easier than the one before (looking time per thing), no jump of more than 15 points in hard questions, no kind of question before its level, and 10-round sessions where no wording is asked much more than its share. The scene checker plays levels 1, 3, 4, 6, 8, 10, 13, 15, 17 and 30 on three phones with the places each has reached, and checks that no level asks for more than Hard.
+
+**What's new** on the level-up screen is worked out from the difference between two levels' settings, so it's always true. Every level also raises what a right answer is worth.
 
 **Titles** every 5 levels: Fresh Eyes (1), Sharp Eyes (5), Keen Observer (10), Detail Spotter (15), Eagle Eye (20), Total Recall (25), Photographic Memory (30).
-
-**Known gap:** after the Moon (Level 28) only the view time and points change (the farm, at Level 10, was the first place added after launch). New places (recipes) and new kinds of question are what will make the top levels feel different, and they slot into `RECIPE_UNLOCKS` and `knobsForLevel`.
 
 ## Points
 

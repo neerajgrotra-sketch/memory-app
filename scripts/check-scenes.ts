@@ -94,7 +94,7 @@ for (const i of [0, 1, 2]) {
 /** Practice bands, plus levels where the knobs change, for the settings each level has reached. */
 const CASES: { label: string; knobs: LevelConfig; recipes?: string[] }[] = [
   ...(['easy', 'medium', 'hard'] as const).map((level) => ({ label: level, knobs: LEVELS[level] })),
-  ...[1, 4, 6, 8, 10, 12, 14, 17, 30].map((level) => ({ label: `level ${level}`, knobs: knobsForLevel(level), recipes: recipesForLevel(level) })),
+  ...[1, 3, 4, 6, 8, 10, 13, 15, 17, 30].map((level) => ({ label: `level ${level}`, knobs: knobsForLevel(level), recipes: recipesForLevel(level) })),
 ];
 
 const started = Date.now();

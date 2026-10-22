@@ -13,7 +13,7 @@ Checks: `npm run typecheck`, `npm run lint` and `npm run check:scenes` (the leve
 
 Every change bumps the version (shown on the Games tab). See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
 
-## Status (4.3.0)
+## Status (4.4.0)
 
 - **Works:** the Look & Remember game with 30 levels, 15 places, points, the Daily Challenge and streak, Peeks, sounds and vibration. Played and tested in the browser (Expo web), with every automated check passing.
 - **Ready, not yet run:** builds for real phones with EAS: TestFlight for iPhone, an APK for Android ([docs/building.md](docs/building.md)).
@@ -41,7 +41,7 @@ Closing the app part way through (or leaving with ✕, which asks first) keeps t
 
 4. **Result**: your points with how they were earned, how the round moved your level, and every question with all its options (the right answer in green, your wrong pick in red). Tap the picture to see it full size. The main button plays a new picture at your level (**Try again**, **Keep going** or **Play Level N**). After a weaker round, and always in Practice, **Same picture again** replays the picture with different questions as practice: it never moves your level or sets a high score.
 
-**Levels** run from 1 to 30. 3 good rounds (4 or 5 right) take you up a level; 2 very poor rounds in a row (0 or 1 right) take you back one. Your best level never goes down. Each level adds a little: more kinds of thing, more of each, less time, new places (living room at 2, park at 4, city street at 6, kitchen at 8, farm at 10, under the sea at 12, supermarket at 14, train station at 16, zoo at 18, snowy mountain at 20, classroom at 22, night campsite at 24, airport at 26, the Moon at 28), house numbers (8), mixed-colour hydrants (12) and closer counting choices (14). Players from before levels start at a level worked out from their earlier rounds.
+**Levels** run from 1 to 30. 3 good rounds (4 or 5 right) take you up a level; 2 very poor rounds in a row (0 or 1 right) take you back one. Your best level never goes down. Every level brings one named new thing: a new place on the even levels (living room at 2, park at 4, city street at 6, kitchen at 8, farm at 10, under the sea at 12, supermarket at 14, train station at 16, zoo at 18, snowy mountain at 20, classroom at 22, night campsite at 24, airport at 26, the Moon at 28), and on the odd ones a new kind of question (details at 3, above and below at 9), a twist (half-past clocks at 7, closer counting at 11, hiding animals at 13, mixed colours at 15) or a step in time or fullness. Levels 27, 29 and 30 are kept for new questions still to come. Players from before levels start at a level worked out from their earlier rounds.
 
 **Points**: each right answer scores 100 at Level 1, plus 10 per level. Right answers in a row add a bonus (+20, +40, +60…), and so does tapping **I'm ready** early (5 points per spare second per right answer). Slow answers never cost points.
 

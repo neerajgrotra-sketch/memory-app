@@ -10,6 +10,15 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.4.0 (2026-10-21)
+
+- **Something new on every level.** Ten levels used to bring only more points. Now every level has a headline on the level-up screen: a new place on the even levels, and on the odd ones a new kind of question, a twist or a step in time or fullness. Features already in the game were moved to fill the gaps: questions about details at 3 (was 8), half-past clocks at 7 (8), closer counting at 11 (14), hiding animals at 13 (20) and less of them at 19 (25), mixed colours at 15 (12), quarter-past clocks at 17 (18). Levels 27, 29 and 30 are kept for the new questions and rounds coming next. Full table in [docs/levels-and-scoring.md](docs/levels-and-scoring.md#what-each-level-changes).
+- **Kinds of question come in one by one:** details at Level 3, "Where was it?" at 4, above and below at 9.
+- **No cliff at Level 18.** The shift to harder questions came all at once there (hard questions from 31% to 49% of a round). It now comes in four steps (4, 8, 18 and 23), never more than 9 points a level.
+- **Level 2 is no longer easier than Level 1.** The living room has fewer things than the beach, so with the same 10 seconds it was easier. Level 2 now brings 9 seconds and up to 4 of a kind.
+- **Fewer repeats in a session.** A round now avoids the wordings of the round before ("How many … were there?" round after round). In 10 rounds at Level 30 about 21 different wordings come up and none in more than about 5 rounds.
+- **`npm run check:levels`** keeps all this true.
+
 ## 4.3.0 (2026-10-21)
 
 - **Resume a round.** Close the app (or leave with ✕) part way through a round and it's kept: a **Resume** card at the top of the Games tab ("Round in progress · 3 of 5 answered") goes straight back to the next question. Only the questions resume, never the picture, since remembering it is the game. A round lasts 24 hours; starting another one asks first ("Resume round" / "Start a new round"). A round closed while still looking at the picture is dropped.

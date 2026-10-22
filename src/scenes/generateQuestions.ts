@@ -266,6 +266,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   const add = (template: string, group: PlacedGroup | null, q: Omit<Question, 'id' | 'sceneId' | 'answerIndex'>, answerIndex = 0) =>
     questions.push({
       family: FAMILY[template] ?? (template as QuestionFamily),
+      template,
       ...q,
       id: `${spec.id}-${template}-${group?.kind ?? q.subject}`,
       sceneId: spec.id,
@@ -473,6 +474,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         answerIndex: 0,
         type: 'number',
         family: 'detail',
+        template: 'house-number',
         ...subject,
         prompt: `What number was on the ${house.colour.name.toLowerCase()} house?`,
         options: withDistractors(n, numbers, numberLookalikes(house.number), rng),
@@ -483,6 +485,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         answerIndex: 0,
         type: 'colour',
         family: 'detail',
+        template: 'house-colour',
         ...subject,
         prompt: `What colour was house number ${n}?`,
         options: withColourDistractors(
@@ -507,6 +510,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         answerIndex: 0,
         type: fact.type,
         family: 'detail',
+        template: `fact:${fact.id}`,
         spotlight: fact.spotlight,
         subject: fact.id,
         prompt: fact.prompt,
@@ -703,6 +707,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       sceneId: spec.id,
       type: s.type,
       family: 'true-false',
+      template: 'true-false',
       subject: s.subject,
       prompt: `True or false?\n${s.text}`,
       options: ['True', 'False'],

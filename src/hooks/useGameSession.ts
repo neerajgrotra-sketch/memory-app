@@ -79,12 +79,14 @@ function buildRound(
   previousIds: ReadonlySet<string>,
   extraSeconds = 0,
   replay = false,
+  previousTemplates?: ReadonlySet<string>,
 ): Round {
   const picked = selectQuestions(pool, {
     count: ROUND_SIZE,
     preferredTypes: setup.knobs.preferredTypes,
     seenIds,
     previousIds,
+    previousTemplates,
   });
   return {
     index,
@@ -170,6 +172,8 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
   /** Question ids already asked about the current picture. */
   const seenIds = useRef(new Set<string>(resume?.seenIds ?? []));
   const roundCount = useRef(resume?.round.index ?? 0);
+  /** The wordings of the last round finished, which the next round avoids where it can. */
+  const lastTemplates = useRef(new Set<string>());
   const sessionId = useRef(resume?.sessionId ?? makeId());
 
   /** Builds a brand-new picture for round `index`, in a different setting from the last one. */
@@ -179,7 +183,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
       const next = createStage(setup.knobs, size, previousRecipeId, undefined, { unlocked: tester ? undefined : setup.unlocked, off });
       seenIds.current = new Set();
       setStage(next);
-      const nextRound = buildRound(setup, index, next.questions, seenIds.current, new Set(), extra);
+      const nextRound = buildRound(setup, index, next.questions, seenIds.current, new Set(), extra, false, lastTemplates.current);
       setRound(nextRound);
       setAnswers(emptyAnswers(nextRound.questions.length));
       setOutcome(null);
@@ -268,6 +272,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
   const finishRound = useCallback(() => {
     const ids = new Set(round.questions.map((question) => question.id));
     ids.forEach((id) => seenIds.current.add(id));
+    lastTemplates.current = new Set(round.questions.flatMap((question) => (question.template ? [question.template] : [])));
     roundCount.current = round.index + 1;
     return ids;
   }, [round]);
@@ -277,7 +282,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     const previousIds = finishRound();
     // Keeps the settings the picture was made with (your level may have changed since).
     const setup = mode === 'levels' ? setupFor(mode, round.level) : setupFor(mode, ladder.level);
-    const nextRound = buildRound(setup, roundCount.current, stage.questions, seenIds.current, previousIds, extra, true);
+    const nextRound = buildRound(setup, roundCount.current, stage.questions, seenIds.current, previousIds, extra, true, lastTemplates.current);
     setRound(nextRound);
     setAnswers(emptyAnswers(nextRound.questions.length));
     setOutcome(null);

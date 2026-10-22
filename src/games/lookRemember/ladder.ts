@@ -1,6 +1,7 @@
 import type { LevelConfig } from '@/game/difficulty';
 import { pointsPerAnswer } from '@/games/lookRemember/points';
-import type { Level, QuestionType } from '@/types/game';
+import type { ClockStep } from '@/scenes/clock';
+import type { Level, QuestionFamily, QuestionType } from '@/types/game';
 import type { RoundResult } from '@/types/stats';
 
 /**
@@ -54,29 +55,63 @@ export function applyRound(state: LadderState, score: number, total: number): La
 
 const clampLevel = (level: number) => Math.max(1, Math.min(MAX_LEVEL, Math.round(level)));
 
-/** What a level asks of you. Every value changes in small steps, so no level is a sudden jump. */
+/** A value that steps up at the given levels: `steps(level, [[1, 10], [4, 9]])` is 10 until Level 4, then 9. */
+function steps<T>(level: number, table: [number, T][]): T {
+  let value = table[0][1];
+  for (const [from, v] of table) if (level >= from) value = v;
+  return value;
+}
+
+/** The kinds of question, each from the level it starts at. Every early level brings one in. */
+const FAMILY_FROM: [QuestionFamily, number][] = [
+  ['what-here', 1],
+  ['seen', 1],
+  ['colour', 1],
+  ['true-false', 1],
+  ['twins', 1],
+  // How many from the start: without it Level 1 had too few kinds of question to keep a session varied.
+  ['count', 1],
+  ['compare', 1],
+  ['most', 1],
+  ['detail', 3],
+  ['where', 4],
+  ['relation', 9],
+];
+
+/**
+ * What a level asks of you. Every level brings one named new thing (shown on the level-up screen, `unlocksAt`): a
+ * place on the even levels, and on the odd ones a kind of question, a twist (clocks, hiding animals, mixed colours)
+ * or a step in time or fullness. The changes are spread out so none bunch up and no level is a sudden jump; Levels 27,
+ * 29 and 30 are kept for new kinds of question and round still to come. `check:levels` checks it stays that way.
+ */
 export function knobsForLevel(rawLevel: number): LevelConfig {
   const level = clampLevel(rawLevel);
-  const preferredTypes: QuestionType[] =
-    level < 5
-      ? ['object', 'colour']
-      : level < 8
-        ? ['object', 'count', 'colour', 'position']
-        : level < 18
-          ? ['object', 'count', 'colour', 'position', 'number']
-          : ['count', 'position', 'number'];
+  // Harder questions come in four steps (4, 8, 18, 23), never all at once.
+  const preferredTypes = steps<QuestionType[]>(level, [
+    [1, ['object', 'colour']],
+    [4, ['object', 'count', 'colour', 'position']],
+    [8, ['object', 'count', 'colour', 'position', 'number']],
+    [18, ['object', 'count', 'position', 'number']],
+    [23, ['count', 'position', 'number']],
+  ]);
   return {
     preferredTypes,
-    viewSeconds: Math.max(4, Math.round(10 - (level - 1) * 0.25)),
-    groups: Math.min(9, 5 + Math.floor((level - 1) / 4)),
-    maxCount: level < 4 ? 3 : level < 10 ? 4 : level < 16 ? 5 : 6,
-    closeCounts: level >= 14,
-    mixedColours: level >= 12,
-    houseNumbers: level >= 8,
-    clockStep: level < 8 ? 60 : level < 18 ? 30 : 15,
-    hidden: level < 20 ? 0 : level < 25 ? 1 : 2,
+    // 9 s from Level 2: the living room has fewer things than the beach, so at 10 s Level 2 was easier than Level 1.
+    viewSeconds: steps(level, [[1, 10], [2, 9], [8, 8], [12, 7], [16, 6], [21, 5], [25, 4]]),
+    // The 8th kind comes with the supermarket, whose neat shelves hold fewer things than other places.
+    groups: steps(level, [[1, 5], [5, 6], [9, 7], [14, 8], [17, 9]]),
+    maxCount: steps(level, [[1, 3], [2, 4], [10, 5], [16, 6]]),
+    closeCounts: level >= 11,
+    mixedColours: level >= 15,
+    houseNumbers: level >= 3,
+    clockStep: steps<ClockStep>(level, [[1, 60], [7, 30], [17, 15]]),
+    hidden: steps<0 | 1 | 2>(level, [[1, 0], [13, 1], [19, 2]]),
+    families: FAMILY_FROM.filter(([, from]) => level >= from).map(([family]) => family),
   };
 }
+
+/** Levels that bring nothing new yet: kept for the new kinds of question and round still to come. */
+export const LEVELS_TO_FILL = [27, 29, 30];
 
 /** The level each place first appears at. */
 export const RECIPE_UNLOCKS: { recipeId: string; level: number; name: string }[] = [
@@ -99,6 +134,19 @@ export const RECIPE_UNLOCKS: { recipeId: string; level: number; name: string }[]
 
 export const recipesForLevel = (level: number) => RECIPE_UNLOCKS.filter((r) => r.level <= level).map((r) => r.recipeId);
 
+/** The street's house numbers: asked once details are, in the city. */
+const streetHouses = (level: number) => knobsForLevel(level).houseNumbers && recipesForLevel(level).includes('city');
+
+/** The kinds of question a level brings in, in words. */
+const FAMILY_NEWS: Partial<Record<QuestionFamily, string>> = {
+  count: 'New questions: how many, and which there was more of',
+  detail: 'New questions about details: clocks, signs, what was on TV',
+  where: 'New questions: where was it?',
+  relation: 'New questions: what was above or below something',
+};
+const newFamilies = (before: LevelConfig, now: LevelConfig) =>
+  (now.families ?? []).filter((f) => !(before.families ?? []).includes(f) && FAMILY_NEWS[f]);
+
 /** What's new when you reach `level`, in words, for the level-up screen. */
 export function unlocksAt(level: number): string[] {
   if (level <= 1) return [];
@@ -106,18 +154,21 @@ export function unlocksAt(level: number): string[] {
   const now = knobsForLevel(level);
   const news: string[] = [];
   for (const r of RECIPE_UNLOCKS) if (r.level === level) news.push(`A new place: ${r.name}`);
-  if (now.houseNumbers && !before.houseNumbers) news.push('House numbers to remember in the street');
-  if (now.mixedColours && !before.mixedColours) news.push('Fire hydrants can each be a different colour');
+  if (streetHouses(level) && !streetHouses(level - 1)) news.push('House numbers and colours to remember in the street');
+  if (now.mixedColours && !before.mixedColours) news.push('Fish, sheep, plates and more can each be a different colour');
   if (now.clockStep < before.clockStep) news.push(now.clockStep === 30 ? 'Clocks can show half past' : 'Clocks can show quarter past and quarter to');
   if (now.closeCounts && !before.closeCounts) news.push('Closer choices when counting');
   if (now.hidden > before.hidden) news.push(now.hidden === 1 ? 'Animals hiding in the picture: find where' : 'Hiding animals show less of themselves');
   if (now.groups > before.groups) news.push('One more kind of thing in each picture');
   if (now.maxCount > before.maxCount) news.push(`Up to ${now.maxCount} of the same thing`);
   if (now.viewSeconds < before.viewSeconds) news.push(`Pictures stay for ${now.viewSeconds} seconds`);
+  for (const family of newFamilies(before, now)) news.push(FAMILY_NEWS[family]!);
   const added = now.preferredTypes.filter((t) => !before.preferredTypes.includes(t));
   const dropped = before.preferredTypes.filter((t) => !now.preferredTypes.includes(t));
   if (added.includes('count')) news.push('More questions on how many and where');
-  if (dropped.length) news.push('Mostly harder questions: how many, where, and numbers');
+  if (added.includes('number')) news.push('More questions on numbers and times');
+  if (dropped.includes('colour')) news.push('Fewer colour questions, more on how many and where');
+  if (dropped.includes('object')) news.push('Mostly harder questions: how many, where, and numbers');
   news.push(`Each right answer now scores ${pointsPerAnswer(level)} points`);
   return news;
 }
@@ -129,8 +180,10 @@ export function nextBigUnlock(level: number): { level: number; text: string } | 
     const now = knobsForLevel(l);
     const place = RECIPE_UNLOCKS.find((r) => r.level === l);
     if (place) return { level: l, text: `A new place: ${place.name}` };
-    if (now.houseNumbers && !before.houseNumbers) return { level: l, text: 'House numbers' };
-    if (now.mixedColours && !before.mixedColours) return { level: l, text: 'Hydrants in different colours' };
+    const family = newFamilies(before, now)[0];
+    if (family) return { level: l, text: FAMILY_NEWS[family]!.replace(/^New questions( about)?: /, '').replace(/^./, (c) => c.toUpperCase()) };
+
+    if (now.mixedColours && !before.mixedColours) return { level: l, text: 'Things in mixed colours' };
     if (now.clockStep < before.clockStep) return { level: l, text: now.clockStep === 30 ? 'Clocks at half past' : 'Clocks at quarter past and quarter to' };
     if (now.closeCounts && !before.closeCounts) return { level: l, text: 'Closer choices when counting' };
     if (now.hidden > before.hidden) return { level: l, text: now.hidden === 1 ? 'Hiding animals' : 'Better-hidden animals' };

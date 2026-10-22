@@ -41,6 +41,11 @@ export interface Question {
   /** What the question is about; a round avoids asking about the same thing twice. */
   subject?: string;
   family?: QuestionFamily;
+  /**
+   * The question's wording, whatever it's about ("colour" for every "What colour was the …?", "fact:clock-time"):
+   * a round avoids the wordings of the round before, so a session doesn't keep asking the same sentence.
+   */
+  template?: string;
   /** Asked first when it's in the picture (the time on a clock: rare, so always worth asking). */
   spotlight?: boolean;
   /** Keep the options in this order (True before False; "The same number" last). */
@@ -51,6 +56,8 @@ export interface Question {
 export interface RoundQuestion {
   id: string;
   type: QuestionType;
+  /** See `Question.template`. */
+  template?: string;
   prompt: string;
   options: string[];
   answerIndex: number;
