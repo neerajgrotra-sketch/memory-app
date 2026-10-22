@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BossBadge } from '@/components/BossBadge';
 import { Button } from '@/components/Button';
+import { JourneyIcon } from '@/components/JourneyIcon';
 import { GameArt } from '@/components/GameArt';
 import { LevelRing } from '@/components/LevelRing';
 import { PRACTICE_OPTIONS } from '@/game/difficulty';
@@ -105,7 +106,8 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
               {/* The main action, right under your level, so it's in view without scrolling. */}
               <Button label={`Play level ${progress.ladder.level}`} onPress={() => play('levels')} />
               <Button
-                label="🗺  Your journey"
+                label="Your journey"
+                icon={<JourneyIcon />}
                 variant="secondary"
                 accessibilityHint="The map of your trip: every level's stop and the places you've reached"
                 onPress={() => {

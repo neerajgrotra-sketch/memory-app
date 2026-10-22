@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.13.1 (2026-10-22)
+
+- **A proper icon for Your journey** (tester feedback: the 🗺 emoji looked like a missing image on iPhone). It's now our own drawing of a folded map with a yellow dotted route and a pin, the same on every phone. `Button` takes an `icon`.
+
 ## 4.13.0 (2026-10-22)
 
 - **The journey map.** The 30 levels are now one trip, shown as a winding path up the screen: a new place at every even level, a new challenge in between, the Final Boss at the top. A place ahead shows its name, but its picture stays a "?" until you reach it.
