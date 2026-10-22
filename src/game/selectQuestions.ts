@@ -12,6 +12,8 @@ export function shuffle<T>(items: readonly T[]): T[] {
 interface SelectOptions {
   count: number;
   preferredTypes: QuestionType[];
+  /** At most this many of a type in a round, instead of `TYPE_CAP` (see `LevelConfig.typeCaps`). */
+  typeCaps?: Partial<Record<QuestionType, number>>;
   /** Questions already asked for this image; avoided while enough fresh ones remain. */
   seenIds: ReadonlySet<string>;
   /** Questions from the round just played; never repeated back-to-back if avoidable. */
@@ -50,7 +52,7 @@ const TYPE_CAP = 2;
  * variety rule (`FAMILY_CAP`) unless the picture has too few kinds of question.
  */
 export function selectQuestions(pool: Question[], options: SelectOptions): Question[] {
-  const { count, preferredTypes, seenIds, previousIds, previousTemplates } = options;
+  const { count, preferredTypes, typeCaps = {}, seenIds, previousIds, previousTemplates } = options;
   const candidates = pool.filter((question) => !previousIds.has(question.id));
   const source = candidates.length >= count ? candidates : pool;
 
@@ -86,7 +88,7 @@ export function selectQuestions(pool: Question[], options: SelectOptions): Quest
       if (picked.includes(question) || (question.subject && subjects.has(question.subject))) continue;
       const family = question.family;
       if (keepVariety && family && (families.get(family) ?? 0) >= (FAMILY_CAP[family] ?? DEFAULT_CAP)) continue;
-      if (keepVariety && (types.get(question.type) ?? 0) >= TYPE_CAP) continue;
+      if (keepVariety && (types.get(question.type) ?? 0) >= (typeCaps[question.type] ?? TYPE_CAP)) continue;
       picked.push(question);
       types.set(question.type, (types.get(question.type) ?? 0) + 1);
       if (question.subject) subjects.add(question.subject);

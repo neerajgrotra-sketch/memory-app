@@ -4,7 +4,7 @@
  *
  * - every level brings something new besides points (`unlocksAt`), apart from `LEVELS_TO_FILL`;
  * - no level is easier than the one before: the seconds of looking per thing in the picture never go up;
- * - no level is a cliff: the share of hard questions (where, above / below, details) never jumps by more than 15 points;
+ * - no level is a cliff: the share of hard questions (where, above / below, details) never jumps by more than 10 points;
  * - a level never asks a kind of question before it's brought in;
  * - a 10-round session doesn't keep asking the same wording (`Question.template`): none is asked in more than about
  *   two rounds in three, or, where a level has few wordings to choose from (the beach alone at Level 1), much more than
@@ -30,7 +30,7 @@ const CORE = new Set(['colour', 'what-here']);
 
 const round = (level: number, pool: Question[], previousTemplates?: ReadonlySet<string>) => {
   const knobs = knobsForLevel(level);
-  return selectQuestions(pool, { count: ROUND_SIZE, preferredTypes: knobs.preferredTypes, seenIds: new Set(), previousIds: new Set(), previousTemplates });
+  return selectQuestions(pool, { count: ROUND_SIZE, preferredTypes: knobs.preferredTypes, typeCaps: knobs.typeCaps, seenIds: new Set(), previousIds: new Set(), previousTemplates });
 };
 
 // Something new on every level.
@@ -65,7 +65,7 @@ for (let level = 1; level <= MAX_LEVEL; level++) {
   const hardShare = (100 * hard) / asked;
   rows.push(`${level}:${perThing.toFixed(2)}s/${Math.round(hardShare)}%`);
   if (previous && perThing > previous.perThing * 1.05) fail(`level ${level} is easier than level ${level - 1}: ${perThing.toFixed(2)} s to look at each thing, up from ${previous.perThing.toFixed(2)}`);
-  if (previous && hardShare - previous.hard > 15) fail(`level ${level} is a cliff: hard questions jump from ${Math.round(previous.hard)}% to ${Math.round(hardShare)}%`);
+  if (previous && hardShare - previous.hard > 10) fail(`level ${level} is a cliff: hard questions jump from ${Math.round(previous.hard)}% to ${Math.round(hardShare)}%`);
   previous = { perThing, hard: hardShare };
 }
 console.log('  per level (seconds to look at each thing / hard questions):', rows.join(' '));

@@ -10,6 +10,14 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.9.0 (2026-10-22)
+
+- **No big step at Level 23.** Hard questions (where, above / below, details) jumped 13 points there, the biggest step left. "What was there" questions now fade out in two steps: at most one a round from Level 20, then no longer preferred from 23 (+6 and +5). No level now jumps more than about 7 points, and `check:levels` holds it to 10 (it allowed 15).
+- **More variety on the first levels.** "Where was it?" questions start at Level 2, with the living room (they were at 4), so the hard questions come in one at a time (where at 2, details at 3). And four new "what was happening?" questions:
+  - **Beach:** "Was there a flag on the sandcastle?" and "Was anyone lying on the beach towel?" (someone sunbathing; then people aren't counted, and "the person's" hat and things in hand aren't asked, since there are two).
+  - **Living room:** "Were the curtains open or closed?" and "Was the cat asleep or awake?" (eyes shut and "z"s; a sleeping cat isn't asked about its toy).
+- Measured as in the level review: a 10-round session now asks 12.2 different kinds of question at Level 1 (10.8 in 4.8.0), 15.8 at Level 2 (14.1) and 16.9 at Level 3 (14.8). The most-asked one comes up 7.6 times at Level 2 (8.4) and 7.0 at Level 3 (7.6), but still 8.8 at Level 1: there it's colour or "what was there", which Level 1 is built around.
+
 ## 4.8.0 (2026-10-22)
 
 - **Someone playing the piano.** In the classroom, about half the time a pupil sits at the piano, seen from behind like the class: "Was anyone playing the piano?" or "What colour was the piano player’s jumper?".

@@ -76,7 +76,9 @@ const FAMILY_FROM: [QuestionFamily, number][] = [
   // What was happening: the kettle steaming, the person's hat, the dog's stick.
   ['story', 1],
   ['detail', 3],
-  ['where', 4],
+  // From Level 2, with the living room: the first levels have more kinds of question to mix, and the hard ones
+  // come in one at a time (where at 2, details at 3).
+  ['where', 2],
   ['two-step', 5],
   ['relation', 9],
   ['altogether', 11],
@@ -92,7 +94,7 @@ const FAMILY_FROM: [QuestionFamily, number][] = [
  */
 export function knobsForLevel(rawLevel: number): LevelConfig {
   const level = clampLevel(rawLevel);
-  // Harder questions come in four steps (4, 8, 18, 23), never all at once.
+  // Harder questions come in steps (4, 8, 18, then "what was there" fading out at 20 and 23), never all at once.
   const preferredTypes = steps<QuestionType[]>(level, [
     [1, ['object', 'colour']],
     [4, ['object', 'count', 'colour', 'position']],
@@ -100,8 +102,12 @@ export function knobsForLevel(rawLevel: number): LevelConfig {
     [18, ['object', 'count', 'position', 'number']],
     [23, ['count', 'position', 'number']],
   ]);
+  // "What was there" questions fade out over two steps: at most one a round from 20, then no longer preferred from 23
+  // (one step at 23 was a jump of 15 points in hard questions).
+  const typeCaps = level >= 20 && level < 23 ? { object: 1 } : undefined;
   return {
     preferredTypes,
+    typeCaps,
     // 9 s from Level 2: the living room has fewer things than the beach, so at 10 s Level 2 was easier than Level 1.
     viewSeconds: steps(level, [[1, 10], [2, 9], [8, 8], [12, 7], [16, 6], [21, 5], [25, 4]]),
     // The 8th kind comes with the supermarket, whose neat shelves hold fewer things than other places.
@@ -178,6 +184,7 @@ export function unlocksAt(level: number): string[] {
   if (added.includes('count')) news.push('More questions on how many and where');
   if (added.includes('number')) news.push('More questions on numbers and times');
   if (dropped.includes('colour')) news.push('Fewer colour questions, more on how many and where');
+  if (now.typeCaps?.object && !before.typeCaps?.object) news.push('Fewer "what was there" questions, more on how many and where');
   if (dropped.includes('object')) news.push('Mostly harder questions: how many, where, and numbers');
   news.push(`Each right answer now scores ${pointsPerAnswer(level)} points`);
   return news;

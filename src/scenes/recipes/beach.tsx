@@ -206,6 +206,16 @@ const items: ItemDef[] = [
           <Path d="M24,26 L156,26 L154,32 L22,32 Z" fill="#000000" fillOpacity={0.08} />
           <Path d="M22,0 V-4 M30,0 V-4 M38,0 V-4 M46,0 V-4 M150,0 V-4 M142,0 V-4 M2,70 V74 M10,70 V74 M18,70 V74 M132,70 V74 M124,70 V74 M116,70 V74" stroke={colour} strokeWidth={2.5} />
         </G>
+        {details?.values?.sunbather === 'yes' && (
+          // Someone lying on the towel in the sun, head on the left, in a dark swimsuit.
+          <G>
+            <Path d="M58,32 H148" stroke="#e0ac69" strokeWidth={13} strokeLinecap="round" />
+            <Rect x={50} y={22} width={46} height={22} rx={10} fill="#1d3557" />
+            <Circle cx={36} cy={33} r={13} fill="#e0ac69" />
+            <Path d="M24,30 Q26,18 38,20 Q46,22 47,30 Z" fill="#3d2b1f" />
+            <Rect x={28} y={27} width={14} height={5} rx={2} fill="#212529" />
+          </G>
+        )}
       </G>
     ),
   },
@@ -279,10 +289,11 @@ const items: ItemDef[] = [
           <Path d="M0,115 V30 H8 V22 H14 V30 H22 V22 H28 V30 H36 V115 Z" />
           <Path d="M94,115 V30 H102 V22 H108 V30 H116 V22 H122 V30 H130 V115 Z" />
           <Path d="M47,115 V20 H55 V12 H61 V20 H69 V12 H75 V20 H83 V115 Z" />
-          <Line x1={65} y1={12} x2={65} y2={0} stroke="#555" strokeWidth={3} />
+          {details?.values?.castleFlag !== 'no' && <Line x1={65} y1={12} x2={65} y2={0} stroke="#555" strokeWidth={3} />}
         </G>
         <G stroke="none">
-          <Polygon points="65,0 85,6 65,12" fill="#e63946" />
+          {/* A flag on the middle tower, or none (one sandcastle on its own, see `fitDetails`). */}
+          {details?.values?.castleFlag !== 'no' && <Polygon points="65,0 85,6 65,12" fill="#e63946" />}
           {/* Doorway, windows, a shell, and sand texture where the bucket left ridges. */}
           <Path d="M55,115 V95 C55,85 75,85 75,95 V115 Z" fill="#7a5426" />
           <Path d="M14,52 h8 v10 h-8 Z M108,52 h8 v10 h-8 Z M61,40 h8 v12 h-8 Z" fill="#7a5426" />
@@ -385,13 +396,32 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
   const people = peopleStory(groups, random, ['sunhat', 'cap'], ['icecream', 'balloon']);
   const values = { ...placed.values, ...people.values };
   const facts = [...(placed.facts ?? []), ...people.facts];
+  // One sandcastle on its own: a flag on its middle tower, or none.
+  if (groups.find((g) => g.kind === 'sandcastle')?.count === 1) {
+    const flag = random.next() < 0.5;
+    values.castleFlag = flag ? 'yes' : 'no';
+    facts.push({ id: 'castle-flag', family: 'story', type: 'object', prompt: 'Was there a flag on the sandcastle?', answer: flag ? 'Yes' : 'No', wrong: [flag ? 'No' : 'Yes'], needs: 'sandcastle' });
+  }
+  // One towel on its own, with no crab hiding under it: someone sunbathing on it, or not. They're a person too, so
+  // people aren't counted then.
+  let uncounted = placed.uncounted;
+  if (groups.find((g) => g.kind === 'towel')?.count === 1 && values.crab !== 'towel') {
+    const lying = random.next() < 0.5;
+    values.sunbather = lying ? 'yes' : 'no';
+    if (lying) {
+      uncounted = [...(uncounted ?? []), 'person'];
+      // "The person" wouldn't say which of the two either.
+      for (let i = facts.length - 1; i >= 0; i--) if (facts[i].id.startsWith('person-')) facts.splice(i, 1);
+    }
+    facts.push({ id: 'sunbather', family: 'story', type: 'object', prompt: 'Was anyone lying on the beach towel?', answer: lying ? 'Yes' : 'No', wrong: [lying ? 'No' : 'Yes'], needs: 'towel' });
+  }
   // One umbrella on its own: open, or furled up round its pole.
   if (groups.find((g) => g.kind === 'umbrella')?.count === 1) {
     values.umbrella = random.next() < 0.5 ? 'open' : 'closed';
     const answer = values.umbrella === 'open' ? 'Open' : 'Closed';
     facts.push({ id: 'umbrella-open', family: 'story', type: 'object', prompt: 'Was the beach umbrella open or closed?', answer, wrong: [answer === 'Open' ? 'Closed' : 'Open'], needs: 'umbrella' });
   }
-  return { ...placed, values, facts };
+  return { ...placed, values, facts, uncounted };
 }
 
 /**

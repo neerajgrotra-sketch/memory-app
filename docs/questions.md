@@ -134,7 +134,7 @@ Things drawn differently per picture, about what was going on rather than readin
 | Place | Question | Answers |
 | --- | --- | --- |
 | Beach, park, city (one person in the picture) | "What was the person wearing on their head?" / "What was the person holding?" (`peopleStory`; both about the person, like their shirt's colour, so a round asks one) | A sun hat · A cap · A woolly hat · Nothing / A balloon · An ice cream · A shopping bag · Nothing (each place its own few) |
-| Beach | "Was the beach umbrella open or closed?" (one umbrella); "Which palm tree had coconuts on the sand by it?" | Open · Closed |
+| Beach | "Was the beach umbrella open or closed?" (one umbrella); "Which palm tree had coconuts on the sand by it?"; "Was there a flag on the sandcastle?" (one sandcastle); "Was anyone lying on the beach towel?" (one towel with no crab under it; then people aren't counted, and the person's hat and things in hand aren't asked) | Open · Closed / Yes · No |
 | Park | "What was the dog carrying?" (one dog, in its mouth) | A ball · A stick · A frisbee · Nothing |
 | Farm | "How many eggs were in the nest?" (a hen's nest, a thing of its own, drawn bigger than life to count) | 1 to 5 |
 | Zoo | "Was the elephant spraying water?" (trunk raised, a shower over its back) · "How many balloons was the balloon seller holding?" | Yes · No / 2 to 5 |
@@ -147,7 +147,7 @@ Things drawn differently per picture, about what was going on rather than readin
 | Train station | "How many people were looking out of the train’s windows?" (a passenger in each window or not) | None · 1 · 2 · 3 |
 | Airport | "Was the coffee kiosk open or closed?" (shut: its shutter down) | Open · Closed |
 | Supermarket | "What was in the shopping basket?" (one basket; green apples in a red basket) · "What had spilled on the floor?" | Apples · A loaf of bread · Nothing, it was empty |
-| Living room | the TV, the lamps on or off, the pets' toys, where the cat was, and: | |
+| Living room | the TV, the lamps on or off, the pets' toys, where the cat was, "Was the cat asleep or awake?" (one cat; a sleeping cat has no toy), "Were the curtains open or closed?", and: | |
 | Living room | "What was in the picture frame?" (one frame; a second frame shows another picture, so no question) | Hills and a lake · A sailing boat · Flowers in a vase · A house and a tree |
 | City street | "Which house had smoke coming out of its chimney?" (each house has a chimney; smoke from one, or now and then none) | The yellow / pink / … house (the street's own colours) · None of them |
 | Night campsite | "Was the campfire burning, or just smoking?" | Burning · Just smoking |

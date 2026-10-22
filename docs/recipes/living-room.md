@@ -4,6 +4,8 @@ Code: `src/scenes/recipes/livingRoom.tsx`. Exact sizes, counts and colours: [ref
 
 ## Bands
 
+- **What's happening:** one cat on its own may be asleep (eyes shut, "z"s); the window's curtains are open or closed.
+
 | Band | Height | How things sit |
 | --- | --- | --- |
 | On the ceiling | 0–10% | no slots: a thin ceiling strip |

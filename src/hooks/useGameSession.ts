@@ -84,6 +84,7 @@ function buildRound(
   const picked = selectQuestions(pool, {
     count: ROUND_SIZE,
     preferredTypes: setup.knobs.preferredTypes,
+    typeCaps: setup.knobs.typeCaps,
     seenIds,
     previousIds,
     previousTemplates,

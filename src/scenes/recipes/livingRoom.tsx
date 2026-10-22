@@ -114,7 +114,8 @@ const items: ItemDef[] = [
     // One window: two would end up one above the other on a single wall.
     maxCount: 1,
     tone: '#5aa9e6',
-    draw: () => (
+    // Curtains drawn back at the sides, or closed across the glass, chosen per picture: "Were the curtains open?".
+    draw: (_colour, details) => (
       <G>
         <Rect x={0} y={0} width={150} height={175} fill="#ffffff" />
         <G fill="#5aa9e6" stroke="none">
@@ -131,6 +132,20 @@ const items: ItemDef[] = [
           <Path d="M16,30 L34,14 M86,30 L104,14" stroke="#ffffff" strokeOpacity={0.55} strokeWidth={4} strokeLinecap="round" />
           <Rect x={-6} y={168} width={162} height={7} rx={2} fill="#e9ecef" />
         </G>
+        {details?.values?.curtains === 'closed' ? (
+          // Two curtains drawn across, meeting in the middle, with folds.
+          <G>
+            <Path d="M0,0 H76 V168 H0 Z M74,0 H150 V168 H74 Z" fill="#b5838d" stroke="#6d4c55" strokeWidth={2.5} />
+            <Path d="M18,4 V166 M38,4 V166 M58,4 V166 M92,4 V166 M112,4 V166 M132,4 V166" stroke="#6d4c55" strokeOpacity={0.45} strokeWidth={3} />
+          </G>
+        ) : (
+          // Drawn back, bunched at each side.
+          <G>
+            <Path d="M0,0 H18 Q12,90 22,168 H0 Z M150,0 H132 Q138,90 128,168 H150 Z" fill="#b5838d" stroke="#6d4c55" strokeWidth={2.5} />
+            <Path d="M8,4 V164 M142,4 V164" stroke="#6d4c55" strokeOpacity={0.45} strokeWidth={3} />
+          </G>
+        )}
+        <Rect x={-4} y={-6} width={158} height={6} rx={3} fill="#6d4c55" />
       </G>
     ),
   },
@@ -381,10 +396,20 @@ const items: ItemDef[] = [
           {/* Tabby stripes, pink ears, green eyes, a nose and whiskers. */}
           <Path d="M40,40 Q44,48 40,56 M52,40 Q56,48 52,58 M64,44 Q66,50 64,58" fill="none" stroke="#000000" strokeOpacity={0.18} strokeWidth={4} strokeLinecap="round" />
           <Path d="M11,18 L11,6 L19,14 Z M33,18 L33,6 L25,14 Z" fill="#ffadc6" />
-          <Ellipse cx={15} cy={30} rx={3.5} ry={4} fill="#8ac926" />
-          <Ellipse cx={29} cy={30} rx={3.5} ry={4} fill="#8ac926" />
-          <Ellipse cx={15} cy={30} rx={1.3} ry={3} fill="#111" />
-          <Ellipse cx={29} cy={30} rx={1.3} ry={3} fill="#111" />
+          {details?.values?.catAsleep === 'yes' ? (
+            // Asleep: eyes shut, and "z"s floating up.
+            <G>
+              <Path d="M11,30 Q15,34 19,30 M25,30 Q29,34 33,30" fill="none" stroke="#111" strokeWidth={2} strokeLinecap="round" />
+              <Path d="M44,8 H52 L44,16 H52 M56,0 H62 L56,6 H62" fill="none" stroke="#1d70d6" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
+            </G>
+          ) : (
+            <G>
+              <Ellipse cx={15} cy={30} rx={3.5} ry={4} fill="#8ac926" />
+              <Ellipse cx={29} cy={30} rx={3.5} ry={4} fill="#8ac926" />
+              <Ellipse cx={15} cy={30} rx={1.3} ry={3} fill="#111" />
+              <Ellipse cx={29} cy={30} rx={1.3} ry={3} fill="#111" />
+            </G>
+          )}
           <Path d="M20,37 H24 L22,40 Z" fill="#e5737a" />
           <Path d="M18,40 L2,37 M18,42 L3,44 M26,40 L42,37 M26,42 L41,44" stroke="#495057" strokeOpacity={0.6} strokeWidth={1.2} />
         </G>
@@ -1064,8 +1089,22 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
   }
 
   // One cat or one dog: what it was playing with. (With several, "the cat" wouldn't say which.)
+  // One cat on its own: asleep (then no toy) or awake.
+  if (one('cat')) {
+    const asleep = random.next() < 0.4;
+    values.catAsleep = asleep ? 'yes' : 'no';
+    facts.push({ id: 'cat-asleep', family: 'story', type: 'object', prompt: 'Was the cat asleep or awake?', answer: asleep ? 'Asleep' : 'Awake', wrong: [asleep ? 'Awake' : 'Asleep'], needs: 'cat' });
+  }
+
+  // Curtains open or closed, when there's a window.
+  if (one('window')) {
+    values.curtains = random.next() < 0.5 ? 'open' : 'closed';
+    const answer = values.curtains === 'open' ? 'Open' : 'Closed';
+    facts.push({ id: 'curtains', family: 'story', type: 'object', prompt: 'Were the curtains open or closed?', answer, wrong: [answer === 'Open' ? 'Closed' : 'Open'], needs: 'window' });
+  }
+
   for (const animal of ['cat', 'dog'] as const) {
-    if (!one(animal)) continue;
+    if (!one(animal) || (animal === 'cat' && values.catAsleep === 'yes')) continue;
     const toys = PET_TOYS[animal];
     const toy = random.pick(Object.keys(toys));
     values[`${animal}Toy`] = toy;

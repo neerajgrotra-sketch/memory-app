@@ -20,7 +20,9 @@ Scene `beach-c29hz`, colour scheme `day`.
 | crab | 1 | fixed | On the sand | right |
 | birds | 4 | fixed | In the sky | left |
 
-### Questions (32)
+Detail `castleFlag`: no.
+
+### Questions (33)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
@@ -43,6 +45,7 @@ Scene `beach-c29hz`, colour scheme `day`.
 | object | what-here | Which of these was in the sky? | **✓ A bird** · A plane · The sun | in-sky |
 | object | what-here | Which of these was on the sand? | **✓ A crab** · A beach umbrella · A person · A beach towel | in-sand |
 | object | what-here | What was in the sea? | **✓ Buoys** · Dolphins · Sailboats | band-sea |
+| object | story | Was there a flag on the sandcastle? | **✓ No** · Yes | castle-flag |
 | object | seen | Which of these was in the picture? | **✓ Sandcastle** · Sailboat · Sun · Beach ball | sandcastle |
 | object | seen | Which of these was NOT in the picture? | **✓ Sailboat** · Buoy · Kite · Crab | sailboat |
 | count | compare | Were there more hot-air balloons or more buoys? | Hot-air balloons · **✓ Buoys** · The same number | compare-balloon-buoy |
@@ -141,7 +144,9 @@ Detail `clock`: 7:30.
 
 Detail `tv`: football.
 
-### Questions (30)
+Detail `curtains`: closed.
+
+### Questions (31)
 
 | Type | Kind | Question | Options (✓ = answer) | Subject |
 | --- | --- | --- | --- | --- |
@@ -164,6 +169,7 @@ Detail `tv`: football.
 | object | what-here | Which of these was on the floor? | **✓ A box of crayons** · A teddy bear · A spilled cup · A cat | in-floor |
 | number | detail | What time was on the clock? | **✓ 7:30** · 6:30 · 4:30 · 8:30 | clock-time |
 | object | story | What was on the television? | **✓ A football match** · Fish swimming · A cartoon · Nothing, it was off | tv-show |
+| object | story | Were the curtains open or closed? | **✓ Closed** · Open | curtains |
 | object | seen | Which of these was in the picture? | **✓ Cushion** · Dog · Potted plant · Table lamp | cushion |
 | object | seen | Which of these was NOT in the picture? | **✓ Dog** · Toy car · Cushion · Window | dog |
 | count | compare | Were there more bookshelves or more toy cars? | Bookshelves · Toy cars · **✓ The same number** | compare-bookshelf-toy-car |

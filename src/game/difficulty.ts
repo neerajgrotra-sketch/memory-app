@@ -6,6 +6,8 @@ export const ROUND_SIZE = 5;
 export interface LevelConfig {
   /** Question types picked first; the rest of the pool tops up the round if needed. */
   preferredTypes: QuestionType[];
+  /** Fewer of a type than the usual two a round: a type on its way out, so the mix changes in two steps. */
+  typeCaps?: Partial<Record<QuestionType, number>>;
   /** How long the picture is shown. */
   viewSeconds: number;
   /** How many different kinds of thing are in the picture. */

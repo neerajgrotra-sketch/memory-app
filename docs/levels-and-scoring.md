@@ -43,10 +43,10 @@ Every level brings one named new thing, shown on the level-up screen (`unlocksAt
 | Level | New | Level | New |
 | --- | --- | --- | --- |
 | 1 | The beach: what was there, colours, how many, true or false | 16 | The train station · up to 6 of one kind · 6 s |
-| 2 | The living room · up to 4 of one kind · 9 s to look | 17 | 9 kinds of thing · clocks at quarter past and to |
+| 2 | The living room · up to 4 of one kind · 9 s to look · "Where was it?" questions | 17 | 9 kinds of thing · clocks at quarter past and to |
 | 3 | Questions about details: clocks, signs, what was on TV | 18 | The zoo · fewer colour questions |
-| 4 | The park · "Where was it?" questions · more on how many and where | 19 | Hiding animals show less of themselves |
-| 5 | 6 kinds of thing · two-step questions ("Only one kind of thing was on the pond. What colour was it?") | 20 | The snowy mountain |
+| 4 | The park · more on how many and where | 19 | Hiding animals show less of themselves |
+| 5 | 6 kinds of thing · two-step questions ("Only one kind of thing was on the pond. What colour was it?") | 20 | The snowy mountain · fewer "what was there" questions |
 | 6 | The city street, with house numbers and colours | 21 | 5 s to look |
 | 7 | Clocks at half past | 22 | The classroom |
 | 8 | The kitchen · more on numbers and times · 8 s | 23 | Mostly harder questions: how many, where and numbers |
@@ -58,13 +58,13 @@ Every level brings one named new thing, shown on the level-up screen (`unlocksAt
 | 14 | The supermarket · 8 kinds of thing | 29 | Sharing (division): "If the … were split into two equal groups, how many in each?" |
 | 15 | Things in mixed colours (fish, sheep, plates, juice, hydrants) | 30 | *(kept for a final round)* |
 
-- **Kinds of question** come in one by one (`FAMILY_FROM`, as `LevelConfig.families`): what was there, not there, colour, same colour, true or false, how many / more or fewer / the most, and what was happening (story questions: the kettle steaming, the person's hat) from Level 1; details from 3; where from 4; two-step from 5; above and below from 9; altogether from 11; how many more from 27; sharing from 29. Practice asks everything.
-- **The question mix** (`preferredTypes`) moves in four steps, at 4, 8, 18 and 23, so the share of hard questions (where, above / below, details) climbs from 0% to about 50% by at most 9 points a level.
+- **Kinds of question** come in one by one (`FAMILY_FROM`, as `LevelConfig.families`): what was there, not there, colour, same colour, true or false, how many / more or fewer / the most, and what was happening (story questions: the kettle steaming, the person's hat) from Level 1; where from 2; details from 3; two-step from 5; above and below from 9; altogether from 11; how many more from 27; sharing from 29. Practice asks everything.
+- **The question mix** (`preferredTypes`) moves in steps, at 4, 8 and 18, then "what was there" questions fade out in two: at most one a round from 20 (`typeCaps`), no longer preferred from 23. The share of hard questions (where, above / below, details) climbs from 0% to about 50% by at most about 7 points a level (one step at 23 used to be 15).
 - **Time and fullness:** look time 10 s, then 9 (2), 8 (8), 7 (12), 6 (16), 5 (21), 4 (25); kinds of thing 5, then 6 (5), 7 (9), 8 (14), 9 (17); most of one kind 3, then 4 (2), 5 (10), 6 (16). The seconds of looking per thing fall from 1.3 to 0.35 and never rise from one level to the next.
 - **No repeats in a row:** a round avoids the wordings (`Question.template`) of the round before ("How many … were there?" twice running), even over a less preferred question.
 - Level 30 (`LEVELS_TO_FILL`) is kept for the final round still to come.
 
-`npm run check:levels` keeps this true: something new on every level, no level easier than the one before (looking time per thing), no jump of more than 15 points in hard questions, no kind of question before its level, and 10-round sessions where no wording is asked much more than its share. The scene checker plays levels 1, 3, 4, 6, 8, 10, 13, 15, 17 and 30 on three phones with the places each has reached, and checks that no level asks for more than Hard.
+`npm run check:levels` keeps this true: something new on every level, no level easier than the one before (looking time per thing), no jump of more than 10 points in hard questions, no kind of question before its level, and 10-round sessions where no wording is asked much more than its share. The scene checker plays levels 1, 3, 4, 6, 8, 10, 13, 15, 17 and 30 on three phones with the places each has reached, and checks that no level asks for more than Hard.
 
 **What's new** on the level-up screen is worked out from the difference between two levels' settings, so it's always true. Every level also raises what a right answer is worth.
 
