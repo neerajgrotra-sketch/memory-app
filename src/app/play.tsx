@@ -21,7 +21,7 @@ import { bossAt } from '@/games/lookRemember/boss';
 import { speedCounterOf, speedDue, speedGap, type SpeedCounter } from '@/games/lookRemember/speed';
 import { answeredOf, clearSavedRound, loadSavedRound, slotFor, type SavedRound } from '@/games/lookRemember/savedRound';
 import { loadProgress } from '@/hooks/useGameProgress';
-import { useProfile } from '@/profile';
+import { profileStore, useProfile } from '@/profile';
 import { statsStore } from '@/stats';
 import { useGameSession, type SessionStart, type SpeedRoundSetup } from '@/hooks/useGameSession';
 import { colors, radius } from '@/theme';
@@ -44,7 +44,8 @@ export default function PlayScreen() {
   const [choice, setChoice] = useState<{ saved: SavedRound; begin: (resume?: SavedRound) => void } | null>(null);
   useEffect(() => {
     let live = true;
-    Promise.all([loadProgress('look-remember'), statsStore.listResults(), loadSavedRound(slotFor(asked))]).then(([progress, all, saved]) => {
+    // The saved profile says whether the guided first round has been played.
+    Promise.all([loadProgress('look-remember'), statsStore.listResults(), loadSavedRound(slotFor(asked)), profileStore.load()]).then(([progress, all, saved, stored]) => {
       if (!live) return;
       const begin = (resume?: SavedRound) => {
         const mode = resume?.mode ?? asked;
@@ -62,6 +63,10 @@ export default function PlayScreen() {
           resume,
         });
       };
+      // A new player's first Levels round starts with the guided practice round (once; How to play replays it).
+      if (asked === 'levels' && progress.plays === 0 && !saved && !stored?.guided && !params.place && params.speed !== '1') {
+        return router.replace('/guided');
+      }
       if (asked === 'daily') {
         // One Daily Challenge a day; one closed part way through carries on.
         if (dailyResultOn(all)) {

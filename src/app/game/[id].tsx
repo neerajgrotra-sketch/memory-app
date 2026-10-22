@@ -199,6 +199,14 @@ function GamePage({ gameId }: { gameId: 'look-remember' }) {
               👑 Boss rounds at Levels 10, 20 and 30: a busy picture, a shorter look and harder questions. Get {BOSS_TO_WIN} of 5 right to win the badge.
             </Text>
             <Button label="Got it" onPress={() => setRulesOpen(false)} />
+            <Button
+              label="Play the practice round"
+              variant="secondary"
+              onPress={() => {
+                setRulesOpen(false);
+                router.push({ pathname: '/guided', params: { replay: '1' } });
+              }}
+            />
           </Pressable>
         </Pressable>
       </Modal>

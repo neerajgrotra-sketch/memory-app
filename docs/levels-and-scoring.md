@@ -97,6 +97,17 @@ A Peek is a second look at the picture while answering (`src/games/lookRemember/
 - **Won:** a Super Speed Round also wins Peeks (below).
 - `npm run check:peeks` checks the rules.
 
+## The guided first round
+
+A new player's first **Play** in Levels starts with a practice round (`GuidedRound`, the `/guided` screen), once:
+
+1. **How to play** in three lines (look, it goes away, climb the levels), with **Try a practice round** or **Skip, I know how to play**.
+2. **A calm practice picture:** the beach with four kinds of thing, for 20 seconds (twice the usual), with a tip over it for its first 3.5 seconds ("Look closely: what's there, how many and what colour").
+3. **Three coached questions,** one at a time with a tip each: what was there, a colour, and how many (never of something there was just one of). The third offers **Try a Peek**. A wrong answer is explained kindly ("That's fine. In a real round you see the answer, then move on.").
+4. **You're ready!** What real rounds are like (5 questions, a shorter look, 3 good rounds to go up, Peeks, the surprises on the journey), then **Start Level 1**.
+
+Nothing is saved, so it never counts towards a level. Playing or skipping it sets `profile.guided`, so it doesn't come again; **Play the practice round** in How to play replays it.
+
 ## The journey
 
 The 30 levels as one trip (`src/games/lookRemember/journey.ts`, `JourneyMap`, `StopIntro`, the `/journey` screen).

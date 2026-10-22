@@ -10,6 +10,16 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.14.0 (2026-10-22)
+
+- **A guided first round.** A new player's first Play now starts with a short practice round instead of going straight into a timed picture:
+  - **How to play** in three lines, with **Try a practice round** or **Skip, I know how to play**.
+  - A calm beach picture with four kinds of thing for 20 seconds, with a tip over it for the first few seconds.
+  - Three coached questions with a tip each (what was there, a colour, how many), a Peek to try on the last, and a kind word for a wrong answer.
+  - **You're ready!**: what real rounds are like, then **Start Level 1**.
+  - It never counts towards a level and comes only once; **Play the practice round** in How to play replays it.
+- `MemoriseStage` can show a tip over the picture for its first few seconds.
+
 ## 4.13.2 (2026-10-22)
 
 - **Tester mode: play from any stop on the journey map.** Every stop is open, with its picture, and its card has **Tester: play Level N here**, which plays that level in that stop's place (a "start again" at that level, like the level grid; history, high score and best level are kept).

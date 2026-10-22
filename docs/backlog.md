@@ -70,7 +70,6 @@ Rules learned so far: every answer of a "which" or "what" question must really h
 
 - **Accounts, cloud sync and family profiles** (behind the existing `ProfileStore` and `StatsStore` interfaces; see the README).
 - **Colour-blind mode and a text-size setting.**
-- **Onboarding:** a guided first round.
 - **Reminders** and a weekly progress card.
 - **Crash reporting and analytics**, then tuning difficulty on real data.
 - **A business model:** a generous free tier; a subscription or one-off purchase for more places, unlimited Peeks and future games.
