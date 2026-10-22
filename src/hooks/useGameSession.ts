@@ -379,6 +379,28 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     [fiftyLeft, wallet.peeks],
   );
 
+  /** A speed round turned down ("Not now"): saved with no score, so the count to the next one starts again. Returns its id. */
+  const skipSpeed = useCallback((setup: SpeedRoundSetup): string => {
+    const result: RoundResult = {
+      id: makeId(),
+      sessionId: sessionId.current,
+      gameId: 'look-remember',
+      playedAt: new Date().toISOString(),
+      mode: 'levels',
+      level: bandOf(setup.level),
+      speed: true,
+      skipped: true,
+      points: 0,
+      recipeId: setup.stage.scene.recipeId,
+      sceneId: setup.stage.scene.id,
+      score: 0,
+      total: 0,
+      byType: {},
+    };
+    statsStore.addResult(result).catch(() => {});
+    return result.id;
+  }, []);
+
   /**
    * A Super Speed Round's own picture, at your level, in another place from the one just played. Tries a few pictures
    * for one with eight quick questions; null if none had (a rare, small picture), and the round is skipped.
@@ -441,6 +463,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
     fiftied,
     applyFifty,
     finishSpeed,
+    skipSpeed,
     makeSpeedRound,
     finishMemorising,
     answer,

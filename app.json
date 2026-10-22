@@ -2,7 +2,7 @@
   "expo": {
     "name": "glance",
     "slug": "glance",
-    "version": "4.10.2",
+    "version": "4.10.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",

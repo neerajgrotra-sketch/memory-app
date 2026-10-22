@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.10.3 (2026-10-22)
+
+- **"Not now" for the Super Speed Round.** Its intro now has a **Not now** button under Start, to skip it and go straight on to the next picture. The next one then comes 4 to 6 rounds later, as after playing one, so it doesn't keep coming back. A skipped one isn't counted as a round played.
+
 ## 4.10.2 (2026-10-22)
 
 - **Tester mode: Speed Round every round.** A new switch in Profile → Tester mode: tap Play and a Super Speed Round starts straight away, and another comes before every new picture, at any level (not in the Daily Challenge). Its results and prizes count as usual.

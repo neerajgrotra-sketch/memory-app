@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Animated, {
   cancelAnimation,
   Easing,
@@ -37,6 +37,8 @@ interface SpeedRoundProps {
   onFinish: (right: number, lookedSeconds: number) => SpeedPrize;
   /** On to the next picture. */
   onContinue: () => void;
+  /** "Not now" on the intro: no round, on to the next picture (the next speed round comes a few rounds later). */
+  onSkip: () => void;
 }
 
 type Step = 'intro' | 'memorise' | 'quiz' | 'result';
@@ -45,7 +47,7 @@ type Step = 'intro' | 'memorise' | 'quiz' | 'result';
  * A Super Speed Round (see games/lookRemember/speed): a burst of lightning and the prizes on offer, then a picture
  * of its own, then eight quick Yes / No questions against the clock, then what you won.
  */
-export function SpeedRound({ setup, moreTime, onFinish, onContinue }: SpeedRoundProps) {
+export function SpeedRound({ setup, moreTime, onFinish, onContinue, onSkip }: SpeedRoundProps) {
   const [step, setStep] = useState<Step>('intro');
   const looked = useRef(0);
   const [prize, setPrize] = useState<SpeedPrize | null>(null);
@@ -54,7 +56,7 @@ export function SpeedRound({ setup, moreTime, onFinish, onContinue }: SpeedRound
     setStep('result');
   };
 
-  if (step === 'intro') return <Intro onStart={() => setStep('memorise')} />;
+  if (step === 'intro') return <Intro onStart={() => setStep('memorise')} onSkip={onSkip} />;
   if (step === 'memorise')
     return (
       <MemoriseStage
@@ -75,7 +77,7 @@ export function SpeedRound({ setup, moreTime, onFinish, onContinue }: SpeedRound
 const RAYS = 14;
 
 /** The lightning bolt bursting in on spinning rays, a flash, then the title and what you can win. */
-function Intro({ onStart }: { onStart: () => void }) {
+function Intro({ onStart, onSkip }: { onStart: () => void; onSkip: () => void }) {
   const reduceMotion = useReducedMotion();
   const bolt = useSharedValue(reduceMotion ? 1 : 0);
   const spin = useSharedValue(0);
@@ -96,7 +98,9 @@ function Intro({ onStart }: { onStart: () => void }) {
   const raysStyle = useAnimatedStyle(() => ({ opacity: rays.value, transform: [{ scale: 0.4 + 0.6 * rays.value }, { rotate: `${spin.value * 360}deg` }] }));
   const flashStyle = useAnimatedStyle(() => ({ opacity: flash.value }));
 
-  const SIZE = 210;
+  // Smaller on a short phone (iPhone SE), so the burst, the prizes and both buttons fit.
+  const { height } = useWindowDimensions();
+  const SIZE = height < 740 ? 160 : 210;
   const c = SIZE / 2;
   const rayPoints = Array.from({ length: RAYS }, (_, i) => {
     const a = (i / RAYS) * 2 * Math.PI;
@@ -117,7 +121,7 @@ function Intro({ onStart }: { onStart: () => void }) {
             </Svg>
           </Animated.View>
           <Animated.View style={boltStyle}>
-            <Svg width={96} height={130} viewBox="0 0 48 65">
+            <Svg width={SIZE * 0.46} height={SIZE * 0.62} viewBox="0 0 48 65">
               <Path d="M30 1 L4 37 H21 L15 64 L44 24 H27 Z" fill={colors.accent} stroke="#fff3c4" strokeWidth={2} strokeLinejoin="round" />
             </Svg>
           </Animated.View>
@@ -150,6 +154,7 @@ function Intro({ onStart }: { onStart: () => void }) {
             onStart();
           }}
         />
+        <Button label="Not now" variant="secondary" onPress={onSkip} accessibilityHint="Skips this speed round and goes on to the next picture" />
       </Animated.View>
       <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, styles.flash, flashStyle]} />
     </SafeAreaView>

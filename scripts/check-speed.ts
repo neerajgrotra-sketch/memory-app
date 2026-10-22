@@ -67,6 +67,8 @@ check('after the first gap of rounds', [speedDue(speedCounterOf(levels(gapFirst 
 const speed = { id: 'speedy', playedAt: at(50), mode: 'levels', speed: true } as unknown as RoundResult;
 const after = [...levels(10), speed, ...levels(3, 60)];
 check('counts from the last speed round', speedCounterOf(after), { since: 3, gap: speedGap('speedy') });
+const skipped = { id: 'not-now', playedAt: at(90), mode: 'levels', speed: true, skipped: true } as unknown as RoundResult;
+check('"Not now" starts the count again', speedCounterOf([...after, skipped]), { since: 0, gap: speedGap('not-now') });
 const replay = { ...levels(1, 70)[0], replay: true } as RoundResult;
 const practice = { ...levels(1, 80)[0], mode: 'easy' } as unknown as RoundResult;
 check('replays and Practice never count', speedCounterOf([speed, replay, practice]).since, 0);

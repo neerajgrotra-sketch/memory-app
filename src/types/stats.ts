@@ -35,6 +35,8 @@ export interface RoundResult {
    * level, high score, perfect rounds or accuracy.
    */
   speed?: boolean;
+  /** A Super Speed Round turned down with "Not now": saved only so the next one comes a few rounds later. */
+  skipped?: boolean;
   /** Prizes this round won: Peeks and 50:50s. */
   bonus?: { peeks?: number; fifty?: number };
   /** How long that Peek showed the picture, in seconds (recorded so peek lengths can be compared). */

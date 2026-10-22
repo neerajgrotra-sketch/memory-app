@@ -117,6 +117,7 @@ function Game({ start }: { start: SessionStart & { streak: Streak; speed: SpeedC
     fiftied,
     applyFifty,
     finishSpeed,
+    skipSpeed,
     makeSpeedRound,
     finishMemorising,
     answer,
@@ -171,6 +172,13 @@ function Game({ start }: { start: SessionStart & { streak: Streak; speed: SpeedC
           }}
           onContinue={() => {
             setSpeedRound(null);
+            if (speedRound.then === 'next') nextPicture();
+          }}
+          onSkip={() => {
+            const id = skipSpeed(speedRound.setup);
+            setSpeedFrom({ since: 0, gap: speedGap(id), at: levelsRounds });
+            setSpeedRound(null);
+            feedback('start');
             if (speedRound.then === 'next') nextPicture();
           }}
         />

@@ -39,7 +39,8 @@ export function progressOf(all: RoundResult[], gameId: GameId, restarts: Record<
     fromHistory,
     // Replays and the Daily Challenge (double points) never set the high score.
     highScore: results.reduce((best, r) => (r.replay || r.speed || r.mode === 'daily' ? best : Math.max(best, r.points ?? 0)), 0),
-    plays: results.length,
+    // A speed round turned down wasn't played.
+    plays: results.filter((r) => !r.skipped).length,
     perfectRounds: results.filter((r) => !r.replay && !r.speed && r.score === r.total).length,
     lastPlayedAt: results.at(-1)?.playedAt ?? null,
     restartedAt,
