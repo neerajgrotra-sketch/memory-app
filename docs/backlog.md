@@ -23,7 +23,7 @@ Not decided yet. These are the options on the table, to compare once there are r
 ### Option A: 10 levels free, then $2.99 to unlock the rest (one-off)
 
 - **How it plays:** Levels 1–10 are free (6 places, the guided round, Speed Rounds from Level 5 and the Farm Boss at 10). After the Farm Boss, a friendly screen offers the rest of the journey: Levels 11–30, 9 more places, the Mountain and Final Bosses.
-- **Why 10:** it's a natural milestone (the first boss and the first title change), and it's long enough to know whether you like the game: at least 27 good rounds, roughly 30–50 rounds in all.
+- **Why 10:** it's a natural milestone (the first boss, the farm and a new title), and it's long enough to know whether you like the game: at least 27 good rounds, roughly 30–50 rounds in all.
 - **Also unlocks:** every stop on the journey map to visit and play any time, as tester mode does today (4.13.2: every stop open, **Play Level N here**). Keep "your level" separate from "stops open", so the climb still counts.
 - **Good:** simple, honest, suits families and older players; one price, no subscriptions; a store "Free with in-app purchase" listing.
 - **Watch:** the first-boss wall must feel like an invitation, not a cut-off; a Daily Challenge should stay free for everyone, so lapsed players have a reason to come back.
