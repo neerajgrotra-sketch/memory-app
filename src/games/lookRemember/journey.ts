@@ -55,7 +55,9 @@ export function stopAt(level: number): Stop {
   const base = { level: l, recipeId: place.recipeId, placeName: place.name, news, boss };
   if (l === 1) return { ...base, kind: 'start', title: cap(place.name), story: PLACE_STORIES[place.recipeId] };
   if (place.level === l) return { ...base, kind: 'place', title: cap(place.name), story: PLACE_STORIES[place.recipeId] };
-  if (boss) return { ...base, kind: 'boss', title: `The ${boss.badge}`, story: `The last stop on the trip: ${boss.name} is the busiest place yet.` };
+  // The boss's own place (the airport), not the last place reached (the Moon): its card showed the wrong picture.
+  if (boss)
+    return { ...base, kind: 'boss', recipeId: boss.recipeId, title: `The ${boss.badge}`, story: `The last stop on the trip: ${boss.name} is the busiest place yet.` };
   return { ...base, kind: 'challenge', title: `Level ${l}`, story: `Still at ${place.name}. ${CHALLENGE_LINES[l % CHALLENGE_LINES.length]}` };
 }
 

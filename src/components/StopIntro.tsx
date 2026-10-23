@@ -110,15 +110,21 @@ function Card({ stop, arrived, level, best, onExplore, onPlay, onBoss, onClose, 
         )}
       </ScrollView>
       <View style={styles.actions}>
+        {/* The Final Boss's stop: the boss is the point, so it comes first (the tester's normal round was mistaken for it). */}
+        {bossOpen && stop.kind === 'boss' && <Button label={`Take on the ${stop.boss!.badge}`} onPress={() => onBoss(stop.boss!.level)} />}
         {onTestPlay ? (
-          <Button label={`Tester: play Level ${stop.level} here`} onPress={() => onTestPlay(stop)} />
+          <Button
+            label={stop.boss ? `Tester: normal Level ${stop.level}` : `Tester: play Level ${stop.level} here`}
+            variant={stop.kind === 'boss' ? 'secondary' : 'primary'}
+            onPress={() => onTestPlay(stop)}
+          />
         ) : (
           <>
             {reached && place && <Button label={`Explore ${stop.placeName}`} onPress={() => onExplore(stop.recipeId)} />}
-            {reached && !place && <Button label={`Play Level ${level}`} onPress={onPlay} />}
+            {reached && !place && stop.kind !== 'boss' && <Button label={`Play Level ${level}`} onPress={onPlay} />}
           </>
         )}
-        {bossOpen && <Button label={`Take on the ${stop.boss!.badge}`} variant="secondary" onPress={() => onBoss(stop.boss!.level)} />}
+        {bossOpen && stop.kind !== 'boss' && <Button label={`Take on the ${stop.boss!.badge}`} variant="secondary" onPress={() => onBoss(stop.boss!.level)} />}
         <Button label={reached ? 'Back to the map' : 'Close'} variant="secondary" onPress={onClose} />
       </View>
     </Pressable>

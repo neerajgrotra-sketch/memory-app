@@ -10,6 +10,11 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.14.4 (2026-10-23)
+
+- **Fixed: the Final Boss's card showed the Moon** (tester feedback). Its stop took the picture of the last place reached (the Moon, Level 28) instead of the boss's own place, the airport. Boss stops now show their boss's place, and `check:journey` checks it.
+- **On the Final Boss's card, the boss comes first.** **Take on the Final Boss** is the main button; tester mode's button, which plays a normal round (it was mistaken for the boss), is now the second one, labelled **Tester: normal Level 30** (also on Levels 10 and 20).
+
 ## 4.14.3 (2026-10-23)
 
 - **The practice tip comes before the picture, not on it** (tester feedback: the tip at the bottom of the picture went unread). A centred screen now says what to look for (what's there, how many, what colour) and that you'll have 20 seconds; **Show me the picture** starts the look, with nothing over the picture. The same screen comes before a second practice. `MemoriseStage` no longer shows tips.

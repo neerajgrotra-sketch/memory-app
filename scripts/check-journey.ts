@@ -25,6 +25,7 @@ JOURNEY.forEach((s, i) => {
   if (s.kind !== want) fail(`Level ${s.level}: a ${s.kind} stop, should be ${want}`);
   if (unlock && s.recipeId !== unlock.recipeId) fail(`Level ${s.level}: in ${s.recipeId}, but it unlocks ${unlock.recipeId}`);
   if (BOSSES.some((b) => b.level === s.level) !== !!s.boss) fail(`Level ${s.level}: its boss is missing or extra`);
+  if (s.boss && s.recipeId !== s.boss.recipeId) fail(`Level ${s.level}: shows ${s.recipeId}, but its boss is at ${s.boss.recipeId}`);
 });
 const stories = JOURNEY.filter((s) => s.kind === 'place' || s.kind === 'start').map((s) => s.story);
 if (new Set(stories).size !== stories.length) fail('two places share a story');
