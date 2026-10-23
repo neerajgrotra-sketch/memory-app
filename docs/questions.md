@@ -127,7 +127,7 @@ Optional fields:
 - `needs`: only asked when that kind of thing is in the picture
 - `subject`: facts about the same thing share one, so a round asks only one of them
 
-A recipe's `fitDetails` adds facts that depend on where things were put: the airport's "Was the helicopter flying or on the ground?" and "What number was on the helicopter?", and someone pushing a lone luggage trolley. The airport also asks "Which country's flag was on the parked plane's tail?" (Japan, Sweden, Switzerland, Germany, France, Canada: simple flags that stay different at a small size). An item with `anyZone` picks one of its zones at random before the bands are filled (the helicopter: sky or airfield); otherwise the first band with room always took it.
+A recipe's `fitDetails` adds facts that depend on where things were put: the airport's "Was the helicopter flying or on the ground?" (no number on it: too small to read on a phone), and someone pushing a lone luggage trolley. The airport also asks "Which country's flag was on the parked plane's tail?" (Japan, Sweden, Switzerland, Germany, France, Canada: simple flags that stay different at a small size). An item with `anyZone` picks one of its zones at random before the bands are filled (the helicopter: sky or airfield); otherwise the first band with room always took it.
 - `everyLevel`: asked from Level 1, not just from Level 8
 - `spotlight`: asked first in a round when it can be
 - `fallback`: more wrong answers when `wrong` runs short.

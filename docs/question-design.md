@@ -36,9 +36,10 @@ Desks, kiosks, counters and vehicles are staffed or used: someone at the desk, s
 
 ### 3. Give things the details that belong to the place
 
-Gates and flight numbers at an airport, a bib number on a ski racer, a sum on the classroom board, a flag on a plane's tail, a number on a helicopter. They make the place itself the puzzle.
+Gates and flight numbers at an airport, a bib number on a ski racer, a sum on the classroom board, a flag on a plane's tail. They make the place itself the puzzle.
 
 - Use **made-up names**, never real brands or airlines.
+- **Big enough to read on an iPhone SE.** A number on the helicopter was a few pixels tall and impossible to read: put numbers and flags only on big things (a sign, the parked plane's tail, a board).
 - **Flags** are simple and clearly different from each other, never two that look alike (no French, Italian and Irish tricolours together).
 
 ### 4. Retire the dull kinds as the levels rise

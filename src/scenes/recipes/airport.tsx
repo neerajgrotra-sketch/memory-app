@@ -185,8 +185,8 @@ const items: ItemDef[] = [
     maxCount: 1,
     countable: false,
     colours: [C.red, C.yellow, C.orange, C.white],
-    // A big number on its side, chosen per picture: "What number was on the helicopter?".
-    draw: (colour, details) => (
+    // No number on its side: it's drawn about a bird's size, too small to read one on a phone (tester feedback, 4.15.1).
+    draw: (colour) => (
       <G>
         <Path d="M20,8 H130" stroke="#495057" strokeWidth={4} strokeLinecap="round" />
         <Rect x={72} y={8} width={6} height={12} fill="#495057" stroke="none" />
@@ -203,10 +203,6 @@ const items: ItemDef[] = [
           <Circle cx={76} cy={62} r={3} fill="#e63946" />
           <Path d="M46,32 Q60,24 86,24" fill="none" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={3} strokeLinecap="round" />
         </G>
-        <Rect x={44} y={29} width={40} height={26} rx={5} fill="#ffffff" stroke="#212529" strokeWidth={2.5} />
-        <SvgText x={64} y={43} fontSize={20} fontWeight="bold" fontFamily="Arial" fill="#212529" textAnchor="middle" alignmentBaseline="central">
-          {details?.values?.heliNumber ?? '27'}
-        </SvgText>
       </G>
     ),
   },
@@ -674,12 +670,6 @@ function flightLookalikes(code: string): string[] {
   return [...new Set([`${prefix} ${n + 1}`, `${prefix} ${n - 1}`, `${prefix} ${swapped}`, `${prefix} ${n + 10}`])].filter((c) => c !== code);
 }
 
-/** The helicopter's number, easy to mix up: one along, or the digits swapped. */
-function numberLookalikes(n: number): string[] {
-  const swapped = Number(String(n).split('').reverse().join(''));
-  return [...new Set([n + 1, n - 1, swapped, n + 10, n - 10])].filter((x) => x !== n && x >= 10 && x <= 99).map(String);
-}
-
 const DESK_HATS: Record<string, string> = { cap: 'A cap', headset: 'A headset', '': 'Nothing' };
 
 /**
@@ -716,7 +706,7 @@ function details(random: Rng): SceneDetails {
     );
   }
   return {
-    values: { city, gate, flight, kiosk, kioskApron: apron.hex, deskStaff: desk?.hex ?? '', deskHat, planeFlag: flag, onSeats, heliNumber: String(random.int(11, 89)) },
+    values: { city, gate, flight, kiosk, kioskApron: apron.hex, deskStaff: desk?.hex ?? '', deskHat, planeFlag: flag, onSeats },
     facts,
   };
 }
@@ -729,11 +719,7 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
   const heli = groups.find((g) => g.kind === 'helicopter');
   if (heli) {
     const flying = heli.zoneId === 'sky';
-    const n = Number(values.heliNumber ?? 27);
-    facts.push(
-      { id: 'heli-flying', subject: 'helicopter-state', family: 'story', type: 'object', prompt: 'Was the helicopter flying or on the ground?', answer: flying ? 'Flying' : 'On the ground', wrong: [flying ? 'On the ground' : 'Flying'], needs: 'helicopter' },
-      { id: 'heli-number', type: 'number', prompt: 'What number was on the helicopter?', answer: String(n), wrong: numberLookalikes(n), needs: 'helicopter' },
-    );
+    facts.push({ id: 'heli-flying', subject: 'helicopter-state', family: 'story', type: 'object', prompt: 'Was the helicopter flying or on the ground?', answer: flying ? 'Flying' : 'On the ground', wrong: [flying ? 'On the ground' : 'Flying'], needs: 'helicopter' });
   }
   if (groups.find((g) => g.kind === 'trolley')?.count === 1) {
     const pushed = random.next() < 0.6;

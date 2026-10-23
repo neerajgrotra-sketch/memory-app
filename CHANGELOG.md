@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.15.1 (2026-10-23)
+
+- **No number on the helicopter** (tester feedback: "impossible to read"). It's drawn about the size of a bird, so a number on its side was a few pixels tall on a phone. "What number was on the helicopter?" is gone; "Was the helicopter flying or on the ground?" stays.
+
 ## 4.15.0 (2026-10-23)
 
 Questions rethought after the owner's play-through of the Final Boss ("no fun in the questions at high levels"). The rules are in [docs/question-design.md](docs/question-design.md): ask what was happening and who was there, not where things were.
