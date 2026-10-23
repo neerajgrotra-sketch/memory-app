@@ -20,6 +20,8 @@ interface SelectOptions {
   previousIds: ReadonlySet<string>;
   /** Wordings (`Question.template`) asked in the round before, on any picture: asked again only after fresh ones. */
   previousTemplates?: ReadonlySet<string>;
+  /** At least this many fresh "what was happening?" questions, when there are, before the type caps apply (`LevelConfig.storyMin`). */
+  storyMin?: number;
 }
 
 /**
@@ -52,7 +54,7 @@ const TYPE_CAP = 2;
  * variety rule (`FAMILY_CAP`) unless the picture has too few kinds of question.
  */
 export function selectQuestions(pool: Question[], options: SelectOptions): Question[] {
-  const { count, preferredTypes, typeCaps = {}, seenIds, previousIds, previousTemplates } = options;
+  const { count, preferredTypes, typeCaps = {}, seenIds, previousIds, previousTemplates, storyMin = 0 } = options;
   const candidates = pool.filter((question) => !previousIds.has(question.id));
   const source = candidates.length >= count ? candidates : pool;
 
@@ -82,12 +84,14 @@ export function selectQuestions(pool: Question[], options: SelectOptions): Quest
   const subjects = new Set<string>();
   const families = new Map<QuestionFamily, number>();
   const types = new Map<QuestionType, number>();
-  const pass = (keepVariety: boolean) => {
+  const cap = (family: QuestionFamily) => (family === 'story' ? Math.max(storyMin, FAMILY_CAP.story ?? 1) : (FAMILY_CAP[family] ?? DEFAULT_CAP));
+  const pass = (keepVariety: boolean, only?: (question: Question) => boolean, most = count) => {
     for (const question of ranked) {
-      if (picked.length >= count) break;
+      if (picked.length >= most) break;
+      if (only && !only(question)) continue;
       if (picked.includes(question) || (question.subject && subjects.has(question.subject))) continue;
       const family = question.family;
-      if (keepVariety && family && (families.get(family) ?? 0) >= (FAMILY_CAP[family] ?? DEFAULT_CAP)) continue;
+      if (keepVariety && family && (families.get(family) ?? 0) >= cap(family)) continue;
       if (keepVariety && (types.get(question.type) ?? 0) >= (typeCaps[question.type] ?? TYPE_CAP)) continue;
       picked.push(question);
       types.set(question.type, (types.get(question.type) ?? 0) + 1);
@@ -95,6 +99,8 @@ export function selectQuestions(pool: Question[], options: SelectOptions): Quest
       if (family) families.set(family, (families.get(family) ?? 0) + 1);
     }
   };
+  // Story questions first, up to `storyMin`, ahead of the type caps (they're mostly "object" questions, capped at one).
+  if (storyMin) pass(false, (question) => question.family === 'story' && !seenIds.has(question.id), Math.min(storyMin, count));
   pass(true);
   pass(false);
   for (const question of ranked) {

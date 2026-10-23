@@ -15,7 +15,7 @@ import {
 } from '@/games/lookRemember/ladder';
 import { DAILY_MULTIPLIER, dailySeed, localDay } from '@/games/lookRemember/daily';
 import { MAX_FIFTY, MAX_PEEKS, earnPeeks, fiftyHidden, peekSecondsFor, spendPeek, winPeeks, type PeekWallet } from '@/games/lookRemember/peeks';
-import { SPEED_QUESTIONS, speedPrize, speedQuestions, type SpeedPrize, type SpeedQuestion } from '@/games/lookRemember/speed';
+import { SPEED_QUESTIONS, speedPrize, speedKnobs, speedQuestions, type SpeedPrize, type SpeedQuestion } from '@/games/lookRemember/speed';
 import { placesOff } from '@/games/lookRemember/places';
 import { clearSavedRound, saveRound, slotFor, type SavedRound } from '@/games/lookRemember/savedRound';
 import { pointsFor, type PointsBreakdown } from '@/games/lookRemember/points';
@@ -96,6 +96,7 @@ function buildRound(
     count: ROUND_SIZE,
     preferredTypes: setup.knobs.preferredTypes,
     typeCaps: setup.knobs.typeCaps,
+    storyMin: setup.knobs.storyMin,
     seenIds,
     previousIds,
     previousTemplates,
@@ -204,7 +205,7 @@ export function useGameSession({ mode, ladder: startLadder, highScore: startHigh
   const startStage = useCallback(
     (index: number, ladderLevel: number, previousRecipeId?: string) => {
       const setup = setupFor(mode, ladderLevel);
-      const next = createStage(setup.knobs, size, previousRecipeId, undefined, { unlocked: tester ? undefined : setup.unlocked, off });
+      const next = createStage(speedKnobs(setup.knobs), size, previousRecipeId, undefined, { unlocked: tester ? undefined : setup.unlocked, off });
       seenIds.current = new Set();
       setStage(next);
       const nextRound = buildRound(setup, index, next.questions, seenIds.current, new Set(), extra, false, lastTemplates.current);

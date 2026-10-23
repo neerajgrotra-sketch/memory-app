@@ -24,13 +24,15 @@ const fail = (message: string) => {
   console.log('✗', message);
 };
 const SIZE = { width: 393, height: 640 };
-const HARD = new Set(['where', 'relation', 'detail']);
+// Harder through richer questions, not positions (docs/question-design.md): details, what was happening, two steps and sums.
+const HARD = new Set(['detail', 'story', 'two-step', 'altogether', 'difference', 'sharing']);
 /** The wordings Levels 1–3 are about: what colour, and what was there. */
 const CORE = new Set(['colour', 'what-here']);
+const BACKBONE = new Set(['count', 'colour']);
 
 const round = (level: number, pool: Question[], previousTemplates?: ReadonlySet<string>) => {
   const knobs = knobsForLevel(level);
-  return selectQuestions(pool, { count: ROUND_SIZE, preferredTypes: knobs.preferredTypes, typeCaps: knobs.typeCaps, seenIds: new Set(), previousIds: new Set(), previousTemplates });
+  return selectQuestions(pool, { count: ROUND_SIZE, preferredTypes: knobs.preferredTypes, typeCaps: knobs.typeCaps, storyMin: knobs.storyMin, seenIds: new Set(), previousIds: new Set(), previousTemplates });
 };
 
 // Something new on every level.
@@ -76,6 +78,7 @@ const variety: string[] = [];
 for (const level of [1, 2, 4, 9, 13, 18, 23, 30]) {
   let worst = 0;
   let worstOther = 0;
+  let worstCount = 0;
   let distinct = 0;
   for (let s = 0; s < SESSIONS; s++) {
     let place: string | undefined;
@@ -88,7 +91,11 @@ for (const level of [1, 2, 4, 9, 13, 18, 23, 30]) {
       last = new Set(picked.flatMap((q) => (q.template ? [q.template] : [])));
       for (const t of last) counts[t] = (counts[t] ?? 0) + 1;
     }
-    worst += Math.max(...Object.values(counts));
+    // "How many" and "what colour" are counted on their own, with one round more allowed: from Level 11 they carry
+    // the counting and colours alone ("more or fewer" and true or false have stopped), until each place has more
+    // "what was happening" questions to mix in (docs/question-design.md).
+    worst += Math.max(0, ...Object.entries(counts).filter(([t]) => !BACKBONE.has(t)).map(([, n]) => n));
+    worstCount += Math.max(counts.count ?? 0, counts.colour ?? 0);
     worstOther += Math.max(0, ...Object.entries(counts).filter(([t]) => !CORE.has(t)).map(([, n]) => n));
     distinct += Object.keys(counts).length;
   }
@@ -102,6 +109,7 @@ for (const level of [1, 2, 4, 9, 13, 18, 23, 30]) {
   const core = worst / SESSIONS;
   variety.push(`${level}: ${kinds.toFixed(1)} kinds, most ${(worst / SESSIONS).toFixed(1)}×`);
   if (most > limit) fail(`level ${level}: one wording is asked in ${most.toFixed(1)} of 10 rounds (an even share is ${share.toFixed(1)})`);
+  if (worstCount / SESSIONS > limit + 1) fail(`level ${level}: "how many" or "what colour" is asked in ${(worstCount / SESSIONS).toFixed(1)} of 10 rounds`);
   if (level <= 3 && core > 7.5) fail(`level ${level}: "what colour" or "what was there" is asked in ${core.toFixed(1)} of 10 rounds`);
 }
 console.log('  10-round sessions (different wordings asked, most-asked one):', variety.join(' · '));

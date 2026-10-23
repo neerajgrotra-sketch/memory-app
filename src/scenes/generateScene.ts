@@ -373,12 +373,14 @@ function build(recipe: Recipe, knobs: SceneKnobs, seed: number, rng: Rng, size: 
   // least its `minGroups`), so no band is left empty while another is crowded. The kinds are picked first,
   // then placed biggest first (furniture against the wall before the toys in front of it).
   const chosen: { item: ItemDef; zone: ZoneDef }[] = [];
+  // Things that may go in any of their zones pick one now (no random draws for recipes without them).
+  const homes = new Map(recipe.items.filter((i) => i.anyZone).map((i) => [i, rng.pick(i.zones)]));
   for (const { zone, quota } of shares(recipe, knobs.groups)) {
     let left = quota;
     let wide = false;
     // Anchors the band asks for come first (a room's furniture), always leaving room for at least one
     // thing out in front of them; the rest of the band's share goes to things that aren't anchors.
-    const here = pool.filter((i) => i.zones.includes(zone.id));
+    const here = pool.filter((i) => i.zones.includes(zone.id) && (homes.get(i) ?? zone.id) === zone.id);
     const isAnchor = (i: ItemDef) => !!(i.tall || i.backRow || i.wide);
     const anchorsFirst = [
       // Things a place usually has (pupils in a classroom) come first, when the band has room for something else too.

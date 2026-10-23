@@ -10,6 +10,25 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.15.0 (2026-10-23)
+
+Questions rethought after the owner's play-through of the Final Boss ("no fun in the questions at high levels"). The rules are in [docs/question-design.md](docs/question-design.md): ask what was happening and who was there, not where things were.
+
+- **No more "where" or "above / below" questions**, at any level or in the Super Speed Round: "Where was the row of seats?" was dull. The hiding animal's "Where was the fox hiding?" stays (it's a hunt, not a position).
+- **The easy kinds stop as you climb:** "more X or more Y" and "which was there the most of" after Level 10, true or false after Level 12 (two levels apart, so the step up stays small). The Super Speed Round keeps true or false, since it's all Yes or No.
+- **Every round asks what was happening**, when the picture has it: at least one question a round, two from Level 20 and in every boss round (`storyMin`). The type caps used to crowd them out: the Final Boss asked none.
+- **Sums only pair things that belong together** (from the same part of the picture): no more "How many more satellites than craters?".
+- **The airport, rebuilt as the pilot place:**
+  - someone at the information desk (about 3 in 4 pictures), in a uniform and a cap, a headset or nothing: "Was anyone at the information desk?", "What colour was their uniform?", "What were they wearing on their head?"
+  - someone serving at the coffee kiosk when it's open (an empty kiosk looked odd): "What colour was the coffee seller's top?"
+  - a country's flag on the parked plane's bigger tail: "Which country's flag was on the parked plane's tail?"
+  - the helicopter flying or parked on the airfield, with a number on its side: "Was the helicopter flying or on the ground?", "What number was on the helicopter?"
+  - a lone luggage trolley pushed by someone or left on its own: "Was someone pushing the luggage trolley?"
+  - something left on the seats (a handbag, flowers, a box, a teddy bear, a newspaper, or nothing): "What had been left on the seats?"
+  - pilots' uniforms in black, blue or grey: "What colour was the pilot's uniform?"
+- **Fixed:** "Count the more planes than potted plants: how many were there?", a rewording that didn't fit "How many more … than …?".
+- Facts about the same thing share a `subject`, so a round asks one of them; an item with `anyZone` picks its zone at random (the helicopter always took the sky). `check:levels` counts details, story, two-step and sums as hard questions, no longer where and above / below.
+
 ## 4.14.4 (2026-10-23)
 
 - **Fixed: the Final Boss's card showed the Moon** (tester feedback). Its stop took the picture of the last place reached (the Moon, Level 28) instead of the boss's own place, the airport. Boss stops now show their boss's place, and `check:journey` checks it.

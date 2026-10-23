@@ -7,6 +7,16 @@ Ideas we've agreed are worth doing but have parked for now, with enough detail t
 - **Real-phone builds.** Android test build (`--profile preview`) now; iPhone TestFlight once there's a personal Apple Developer account (not the Gildan one). See [building.md](building.md).
 - **Tests on every change.** Run the checks automatically on each push, and move the browser play-tests into the repo.
 
+## Place by place: more "what was happening" (started 4.15.0)
+
+The airport was rebuilt first (4.15.0) to the rules in [question-design.md](question-design.md). Next, the other 14 places one by one, using the owner's marks on the Question Review page.
+
+- **The Moon (next, owner's notes 23 Oct 2026):** liked "What number was the moon base on the sign?" and "What was the astronaut holding?". Disliked "How many more satellites than craters?" (sums now pair only things from the same part of the picture) and "Where did you see the boulders?" (where is retired). Ideas:
+  - a constellation in the sky: "Which star pattern was in the sky?" (the Big Dipper, Orion's belt, Cassiopeia's W…), or none
+  - a little green alien peeking from behind the solar panel, for fun (a hiding question)
+  - a flag on the rocket and on the astronaut's suit: "Which country's flag was on the rocket?"
+- **Then** the Final Boss's two other boss places (farm, snowy mountain), then the rest from Level 30 down.
+
 ## The journey (step 1 built in 4.13.0)
 
 Agreed with the tester feedback of 22 Oct 2026: every level is a stop on one trip; build it in steps.

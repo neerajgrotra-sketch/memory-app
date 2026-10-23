@@ -45,6 +45,8 @@ For every group in the scene (one per kind of thing), in this order:
 
 ### Where: "Where was the umbrella?" → "On the sand, on the left"
 
+> **Not asked from 4.15.0** (nor above / below): positions made dull questions, so no level asks them ([question-design.md](question-design.md)). The code stays, for Practice and in case a place finds a good use for one; the hiding animal's "Where was the fox hiding?" is a detail and still asked.
+
 - **Asked:** for every group except things spread across the picture (`spread` with 2 or more copies, e.g. street lamps along the pavement), which have no single side.
 - **Answer:** `"<band label>, <side>"`. The side is the third of the width the group's centre is in. Placement keeps centres 5% clear of the lines between thirds, so it's never borderline.
 - **Wrong options:** only the other sides of the bands this thing can go in ("In the sky" is never offered for a dog). A thing that only goes in one band gets three options: left, middle and right. Bands with no slot rows (the room's ceiling, the city's building fronts) are never offered.
@@ -82,10 +84,10 @@ These make you remember two things at once, or the whole picture, instead of one
 
 | Question | Asked when | Answer | Wrong options |
 | --- | --- | --- | --- |
-| **Compare:** "Were there more kites or more birds?" | two countable things (up to 2 pairs per picture) | the one with more, or **The same number** | always the three options in that order (`fixedOrder`) |
-| **Most:** "Which was there the most of?" | 4+ countable things, one clearly the most | its plural, "Kites" | the other countable things in the picture |
+| **Compare** (to Level 10): "Were there more kites or more birds?" | two countable things (up to 2 pairs per picture) | the one with more, or **The same number** | always the three options in that order (`fixedOrder`) |
+| **Most** (to Level 10): "Which was there the most of?" | 4+ countable things, one clearly the most | its plural, "Kites" | the other countable things in the picture |
 | **Just one:** "Which was there just one of?" | exactly one countable thing was on its own, and 2+ had several | "A palm tree" | things with several copies, then countable things not in the picture. Never another single thing (the sun, the sofa), which would also be "just one". |
-| **Above / below:** "What was in the sky, above the pumpkins?" | exactly one thing is in a higher (lower) band **in the same third**, and both it and the thing asked about are the only things in that third of their own band (in a deep band like the living room floor, an armchair at the back stands above crayons at the front, so "on the wall, above the crayons" would skip it); the question names that band, so "above the pumpkins" can't be read as the barn on the hill (plain "What was above the bench?" for the few bands whose names read oddly there: "Close by", "At the front", "Near the hills") | "Hot-air balloons" | things that can be in that band, from the picture or not in it, in the same singular or plural form; something that can't be there only to make up three choices, since it would give the answer away. Only the very next band up or down, never skipping one ("on the top shelf, above the milk" skipped an empty middle shelf, where players looked first). Never between two flat bands (the path and the grass, the sand and the sea at the beach): there the one lower down is nearer, not below, so "What was on the grass, below the dog?" made no sense. Bands are flat by default when they're ground, unless things stand flush on a line (shelves, roofs, the worktop); `flat` marks water that lies flat. Never into a band marked `inFront` (the supermarket floor stands in front of the shelves, so "What was on the floor, below the tins?" made no sense). |
+| **Above / below** (not asked from 4.15.0): "What was in the sky, above the pumpkins?" | exactly one thing is in a higher (lower) band **in the same third**, and both it and the thing asked about are the only things in that third of their own band (in a deep band like the living room floor, an armchair at the back stands above crayons at the front, so "on the wall, above the crayons" would skip it); the question names that band, so "above the pumpkins" can't be read as the barn on the hill (plain "What was above the bench?" for the few bands whose names read oddly there: "Close by", "At the front", "Near the hills") | "Hot-air balloons" | things that can be in that band, from the picture or not in it, in the same singular or plural form; something that can't be there only to make up three choices, since it would give the answer away. Only the very next band up or down, never skipping one ("on the top shelf, above the milk" skipped an empty middle shelf, where players looked first). Never between two flat bands (the path and the grass, the sand and the sea at the beach): there the one lower down is nearer, not below, so "What was on the grass, below the dog?" made no sense. Bands are flat by default when they're ground, unless things stand flush on a line (shelves, roofs, the worktop); `flat` marks water that lies flat. Never into a band marked `inFront` (the supermarket floor stands in front of the shelves, so "What was on the floor, below the tins?" made no sense). |
 | **In a band:** "Which of these was in the departure lounge?" | a band with two or more kinds | one of them | things that could be in that band but aren't in the picture at all, so exactly one choice is right |
 | **Anything there?** "Was there anything on the carpet?" / "…on the pond?" / "…on the bottom shelf?" | a band (or the rug) holds one kind of thing, or nothing; not a band with a sign or door drawn in it (`keepClear`), not an empty sky (clouds and stars could count), not when something is hiding in the picture | "Yes, a teddy bear" or "No, nothing" | "No, nothing" is always one of the four, right when it's empty and wrong when it isn't, so it's never a giveaway; the rest are "Yes, a …" with things that could be there (on the rug, things allowed on it). Same subject as "What was on the pond?", so a round asks one |
 | **Band:** "What was on the pond?" | only one kind of thing is in that whole band (not a rug's band, which has "What was on the carpet?") | "A swan" | things that can be in that band |
@@ -94,7 +96,7 @@ These make you remember two things at once, or the whole picture, instead of one
 | **How many more** (from Level 27): "How many more crows than pumpkins were there?" | two countable things with different counts | the difference (1 or more) | the nearest numbers |
 | **Sharing** (division, from Level 29): "If the fish were split into two equal groups, how many would be in each group?" | a countable thing whose count shares out exactly into 2 or 3 groups of 2 or more (4 or 6) | the share | the nearest numbers. The question never says how many there were: you remember it first |
 | **Colour twins:** "What else was the same colour as the kites?" | exactly one other thing has the same colour | "The hot-air balloons" | things of other colours, then things not in the picture |
-| **True or false:** "True or false? There were three kites." | up to 3 per picture, about counts, colours or things not in the picture | True or False (about half are false) | the other one, always True first |
+| **True or false** (to Level 12; any level in the Super Speed Round): "True or false? There were three kites." | up to 3 per picture, about counts, colours or things not in the picture | True or False (about half are false) | the other one, always True first |
 
 Rules that keep them fair:
 
@@ -123,13 +125,16 @@ Some facts are about something hiding in the picture: from Level 20 the snowy mo
 Optional fields:
 
 - `needs`: only asked when that kind of thing is in the picture
+- `subject`: facts about the same thing share one, so a round asks only one of them
+
+A recipe's `fitDetails` adds facts that depend on where things were put: the airport's "Was the helicopter flying or on the ground?" and "What number was on the helicopter?", and someone pushing a lone luggage trolley. The airport also asks "Which country's flag was on the parked plane's tail?" (Japan, Sweden, Switzerland, Germany, France, Canada: simple flags that stay different at a small size). An item with `anyZone` picks one of its zones at random before the bands are filled (the helicopter: sky or airfield); otherwise the first band with room always took it.
 - `everyLevel`: asked from Level 1, not just from Level 8
 - `spotlight`: asked first in a round when it can be
 - `fallback`: more wrong answers when `wrong` runs short.
 
 ### What was happening: story questions (4.5.0, 4.6.0)
 
-Things drawn differently per picture, about what was going on rather than reading a number or a sign. When the picture draws an extra one of something somewhere (a pupil at the piano, dogs pulling the sled, a rider on the snowmobile), that kind goes in `SceneDetails.uncounted`: "How many…?" and "What colour…?" aren't asked about it, since the extra one would make them arguable. They're facts with `family: 'story'`: asked from **Level 1** (reading clocks, numbers and signs waits for Level 3), at most one a round, and a round picks one whenever the picture has it, just after a spotlight question (they're the fun part of a picture, and rare). Two-choice ones (Yes / No, On / Off) are allowed, like true or false. Every answer really happens, "Nothing" and "None of them" included.
+Things drawn differently per picture, about what was going on rather than reading a number or a sign. When the picture draws an extra one of something somewhere (a pupil at the piano, dogs pulling the sled, a rider on the snowmobile), that kind goes in `SceneDetails.uncounted`: "How many…?" and "What colour…?" aren't asked about it, since the extra one would make them arguable. They're facts with `family: 'story'`: asked from **Level 1** (reading clocks, numbers and signs waits for Level 3). A round picks at least one whenever the picture has it, two from Level 20 and in boss rounds (`storyMin`, ahead of the type caps; until 4.15.0 the caps crowded them out at high levels). Facts about the same thing share a `subject` ("Was anyone at the information desk?" and "What colour was their uniform?"), so a round asks only one of them. Two-choice ones (Yes / No, On / Off) are allowed, like true or false. Every answer really happens, "Nothing" and "None of them" included.
 
 | Place | Question | Answers |
 | --- | --- | --- |
@@ -145,7 +150,13 @@ Things drawn differently per picture, about what was going on rather than readin
 | Classroom | "Was anyone playing the piano?" or "What colour was the piano player’s jumper?" (one of the two, so neither gives the other away) | Yes · No / the jumper colours |
 | Classroom | "How many fish were in the fish tank?" | 1 to 4 |
 | Train station | "How many people were looking out of the train’s windows?" (a passenger in each window or not) | None · 1 · 2 · 3 |
-| Airport | "Was the coffee kiosk open or closed?" (shut: its shutter down) | Open · Closed |
+| Airport | "Was the coffee kiosk open or closed?" (shut: its shutter down; open: someone serving) | Open · Closed |
+| Airport | "What colour was the coffee seller's top?" (open kiosk) | Green · Red · Yellow · Blue · Purple |
+| Airport | "Was anyone at the information desk?" (about 3 in 4 staffed) | Yes · No |
+| Airport | "What colour was the uniform of the person at the information desk?" / "What was the person at the information desk wearing on their head?" | Red · Green · Yellow · Purple · Orange / A cap · A headset · Nothing |
+| Airport | "Was the helicopter flying or on the ground?" | Flying · On the ground |
+| Airport | "Was someone pushing the luggage trolley?" (one trolley; the pusher isn't counted as a traveller) | Yes · No, it was left on its own |
+| Airport | "What had been left on the seats?" | A handbag · Flowers · A box · A teddy bear · A newspaper · Nothing |
 | Supermarket | "What was in the shopping basket?" (one basket; green apples in a red basket) · "What had spilled on the floor?" | Apples · A loaf of bread · Nothing, it was empty |
 | Living room | the TV, the lamps on or off, the pets' toys, where the cat was, "Was the cat asleep or awake?" (one cat; a sleeping cat has no toy), "Were the curtains open or closed?", and: | |
 | Living room | "What was in the picture frame?" (one frame; a second frame shows another picture, so no question) | Hills and a lake · A sailing boat · Flowers in a vase · A house and a tree |

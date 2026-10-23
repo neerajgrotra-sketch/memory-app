@@ -1,10 +1,11 @@
+import type { ReactElement } from 'react';
 import { Circle, Ellipse, G, Path, Polygon, Rect, Text as SvgText } from 'react-native-svg';
 
 import { C } from '../colours';
-import { bird, person, plane, plantPot } from '../items/common';
+import { SKINS, bird, person, plane, plantPot } from '../items/common';
 import { lineMarks } from '../marks';
 import type { Rng } from '../random';
-import type { ItemDef, Mark, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
+import type { DetailFact, ItemDef, Mark, PlacedGroup, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
 import { speckles } from '../texture';
 
 /**
@@ -30,6 +31,141 @@ const ON_AIRFIELD = ['airfield'];
 const IN_LOUNGE = ['lounge'];
 
 const UNIFORMS = [C.red, C.blue, C.purple, C.green];
+/** Pilots' uniforms: dark, as they are. */
+const PILOT_UNIFORMS = [C.black, C.blue, C.grey];
+/** The information desk's uniforms: never blue, which would vanish against the blue desk. */
+const DESK_UNIFORMS = [C.red, C.green, C.yellow, C.purple, C.orange];
+const KIOSK_APRONS = [C.green, C.red, C.yellow, C.blue, C.purple];
+const PUSHER_SHIRTS = [C.red, C.yellow, C.green, C.orange, C.pink];
+
+/**
+ * Flags on the parked plane's tail: simple ones that stay clearly different at a small size (never the French, Italian
+ * and Irish tricolours together). Drawn in a w × h box.
+ */
+const FLAGS: Record<string, { country: string; draw: (w: number, h: number) => ReactElement }> = {
+  japan: {
+    country: 'Japan',
+    draw: (w, h) => (
+      <G>
+        <Rect width={w} height={h} fill="#ffffff" stroke="#212529" strokeWidth={1.5} />
+        <Circle cx={w / 2} cy={h / 2} r={h * 0.3} fill="#bc002d" stroke="none" />
+      </G>
+    ),
+  },
+  sweden: {
+    country: 'Sweden',
+    draw: (w, h) => (
+      <G>
+        <Rect width={w} height={h} fill="#006aa7" stroke="#212529" strokeWidth={1.5} />
+        <Rect x={w * 0.3} width={h * 0.22} height={h} fill="#fecc00" stroke="none" />
+        <Rect y={h * 0.39} width={w} height={h * 0.22} fill="#fecc00" stroke="none" />
+      </G>
+    ),
+  },
+  switzerland: {
+    country: 'Switzerland',
+    draw: (w, h) => (
+      <G>
+        <Rect width={w} height={h} fill="#da291c" stroke="#212529" strokeWidth={1.5} />
+        <Rect x={w / 2 - h * 0.1} y={h * 0.18} width={h * 0.2} height={h * 0.64} fill="#ffffff" stroke="none" />
+        <Rect x={w / 2 - h * 0.32} y={h * 0.4} width={h * 0.64} height={h * 0.2} fill="#ffffff" stroke="none" />
+      </G>
+    ),
+  },
+  germany: {
+    country: 'Germany',
+    draw: (w, h) => (
+      <G>
+        <Rect width={w} height={h / 3} fill="#000000" stroke="none" />
+        <Rect y={h / 3} width={w} height={h / 3} fill="#dd0000" stroke="none" />
+        <Rect y={(2 * h) / 3} width={w} height={h / 3} fill="#ffce00" stroke="none" />
+        <Rect width={w} height={h} fill="none" stroke="#212529" strokeWidth={1.5} />
+      </G>
+    ),
+  },
+  france: {
+    country: 'France',
+    draw: (w, h) => (
+      <G>
+        <Rect width={w / 3} height={h} fill="#0055a4" stroke="none" />
+        <Rect x={w / 3} width={w / 3} height={h} fill="#ffffff" stroke="none" />
+        <Rect x={(2 * w) / 3} width={w / 3} height={h} fill="#ef4135" stroke="none" />
+        <Rect width={w} height={h} fill="none" stroke="#212529" strokeWidth={1.5} />
+      </G>
+    ),
+  },
+  canada: {
+    country: 'Canada',
+    draw: (w, h) => (
+      <G>
+        <Rect width={w} height={h} fill="#ffffff" stroke="none" />
+        <Rect width={w / 4} height={h} fill="#d80621" stroke="none" />
+        <Rect x={(3 * w) / 4} width={w / 4} height={h} fill="#d80621" stroke="none" />
+        {/* A simple maple leaf. */}
+        <Path d={`M${w / 2},${h * 0.16} L${w * 0.56},${h * 0.36} L${w * 0.66},${h * 0.32} L${w * 0.6},${h * 0.56} L${w * 0.53},${h * 0.56} L${w * 0.53},${h * 0.8} L${w * 0.47},${h * 0.8} L${w * 0.47},${h * 0.56} L${w * 0.4},${h * 0.56} L${w * 0.34},${h * 0.32} L${w * 0.44},${h * 0.36} Z`} fill="#d80621" stroke="none" />
+        <Rect width={w} height={h} fill="none" stroke="#212529" strokeWidth={1.5} />
+      </G>
+    ),
+  },
+};
+
+/** Things left on the seats, drawn on the second seat in a 40 × 44 box, with a dark outline to show on any seat colour. */
+const LEFT_ON_SEATS: Record<string, { name: string; draw: () => ReactElement }> = {
+  handbag: {
+    name: 'A handbag',
+    draw: () => (
+      <G stroke="#212529" strokeWidth={2.5}>
+        <Path d="M10,20 Q20,2 30,20" fill="none" />
+        <Rect x={4} y={18} width={32} height={24} rx={5} fill="#ffd60a" />
+        <Rect x={17} y={24} width={6} height={4} fill="#212529" stroke="none" />
+      </G>
+    ),
+  },
+  flowers: {
+    name: 'Flowers',
+    draw: () => (
+      <G stroke="#212529" strokeWidth={2}>
+        <Path d="M20,42 L12,18 M20,42 L20,14 M20,42 L28,18" fill="none" stroke="#2b9348" strokeWidth={3} />
+        <Circle cx={12} cy={14} r={6} fill="#ff5fa2" />
+        <Circle cx={20} cy={10} r={6} fill="#ffd60a" />
+        <Circle cx={28} cy={14} r={6} fill="#f8f9fa" />
+        <Path d="M12,32 L28,32 L24,42 H16 Z" fill="#f8f9fa" />
+      </G>
+    ),
+  },
+  box: {
+    name: 'A box',
+    draw: () => (
+      <G stroke="#212529" strokeWidth={2.5}>
+        <Rect x={4} y={14} width={32} height={28} rx={2} fill="#c08a4a" />
+        <Path d="M20,14 V42" stroke="#e9c46a" strokeWidth={5} />
+      </G>
+    ),
+  },
+  teddy: {
+    name: 'A teddy bear',
+    draw: () => (
+      <G stroke="#212529" strokeWidth={2}>
+        <Circle cx={10} cy={8} r={5} fill="#a0663a" />
+        <Circle cx={30} cy={8} r={5} fill="#a0663a" />
+        <Ellipse cx={20} cy={32} rx={13} ry={11} fill="#a0663a" />
+        <Circle cx={20} cy={14} r={10} fill="#a0663a" />
+        <Circle cx={16} cy={12} r={1.5} fill="#212529" stroke="none" />
+        <Circle cx={24} cy={12} r={1.5} fill="#212529" stroke="none" />
+        <Ellipse cx={20} cy={18} rx={4} ry={3} fill="#e9c9a3" />
+      </G>
+    ),
+  },
+  newspaper: {
+    name: 'A newspaper',
+    draw: () => (
+      <G stroke="#212529" strokeWidth={2}>
+        <Rect x={2} y={22} width={36} height={20} rx={1} fill="#f8f9fa" />
+        <Path d="M6,27 H34 M6,32 H20 M6,37 H20 M24,32 H34 M24,37 H34" stroke="#868e96" strokeWidth={2} />
+      </G>
+    ),
+  },
+};
 
 const items: ItemDef[] = [
   // ---- In the sky (through the window) ----
@@ -43,11 +179,14 @@ const items: ItemDef[] = [
     h: 80,
     tier: 'medium',
     size: 0.16,
-    zones: IN_SKY,
+    // Flying, or parked out on the airfield: "Was the helicopter flying or on the ground?" (see `fitDetails`).
+    zones: [...IN_SKY, ...ON_AIRFIELD],
+    anyZone: true,
     maxCount: 1,
     countable: false,
     colours: [C.red, C.yellow, C.orange, C.white],
-    draw: (colour) => (
+    // A big number on its side, chosen per picture: "What number was on the helicopter?".
+    draw: (colour, details) => (
       <G>
         <Path d="M20,8 H130" stroke="#495057" strokeWidth={4} strokeLinecap="round" />
         <Rect x={72} y={8} width={6} height={12} fill="#495057" stroke="none" />
@@ -64,6 +203,10 @@ const items: ItemDef[] = [
           <Circle cx={76} cy={62} r={3} fill="#e63946" />
           <Path d="M46,32 Q60,24 86,24" fill="none" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={3} strokeLinecap="round" />
         </G>
+        <Rect x={44} y={29} width={40} height={26} rx={5} fill="#ffffff" stroke="#212529" strokeWidth={2.5} />
+        <SvgText x={64} y={43} fontSize={20} fontWeight="bold" fontFamily="Arial" fill="#212529" textAnchor="middle" alignmentBaseline="central">
+          {details?.values?.heliNumber ?? '27'}
+        </SvgText>
       </G>
     ),
   },
@@ -87,9 +230,11 @@ const items: ItemDef[] = [
     // The stripe along the side is the airline's colour.
     colours: [C.red, C.blue, C.green, C.orange, C.purple],
     colourPrompt: () => 'What colour was the stripe on the parked plane?',
-    draw: (colour) => (
+    // A country's flag on its tail, chosen per picture: "Which country's flag was on the parked plane's tail?".
+    draw: (colour, details) => (
       <G>
-        <Path d="M240,46 L272,6 H290 L280,46 Z" fill={colour} />
+        <Path d="M226,48 L252,0 H298 L290,48 Z" fill={colour} />
+        <G transform="translate(252 4)">{FLAGS[details?.values?.planeFlag ?? 'japan']?.draw(40, 26)}</G>
         <Path d="M10,52 Q10,34 40,34 H262 Q296,34 296,52 Q296,64 262,66 H40 Q10,66 10,52 Z" fill="#f8f9fa" />
         <Rect x={30} y={52} width={250} height={6} fill={colour} stroke="none" />
         <Polygon points="120,58 180,58 150,86 128,86" fill="#ced4da" />
@@ -251,11 +396,12 @@ const items: ItemDef[] = [
     size: 0.1,
     zones: IN_LOUNGE,
     maxCount: 2,
-    tone: '#1f2a44',
-    // A pilot in a navy uniform with gold cuffs and a peaked cap; skin varies per copy.
-    draw: (_colour, details, copy = 0) => (
+    colours: PILOT_UNIFORMS,
+    colourPrompt: (plural) => (plural ? 'What colour were the pilots’ uniforms?' : 'What colour was the pilot’s uniform?'),
+    // A pilot in a dark uniform with gold cuffs and a peaked cap; skin varies per copy.
+    draw: (colour, details, copy = 0) => (
       <G>
-        {person.draw('#1f2a44', details, copy)}
+        {person.draw(colour, details, copy)}
         <G stroke="none">
           <Rect x={4} y={66} width={11} height={4} fill="#ffd60a" />
           <Rect x={49} y={66} width={11} height={4} fill="#ffd60a" />
@@ -265,7 +411,7 @@ const items: ItemDef[] = [
           <Circle cx={32} cy={56} r={1.5} fill="#ffd60a" />
           <Circle cx={32} cy={64} r={1.5} fill="#ffd60a" />
         </G>
-        <Path d="M15,10 Q32,-4 49,10 V13 H15 Z" fill="#1f2a44" />
+        <Path d="M15,10 Q32,-4 49,10 V13 H15 Z" fill={colour} />
         <Rect x={12} y={12} width={40} height={4} rx={2} fill="#212529" stroke="none" />
         <Circle cx={32} cy={6} r={3} fill="#ffd60a" stroke="none" />
       </G>
@@ -302,37 +448,48 @@ const items: ItemDef[] = [
     singular: 'luggage trolley',
     plural: 'luggage trolleys',
     article: 'a',
-    w: 140,
-    h: 110,
-    tier: 'medium',
-    // About 1.4 m long, piled with suitcases.
-    size: 0.16,
+    // The trolley (1.4 m long, piled with suitcases) with room on its left for someone pushing it, drawn at the
+    // shared person's size: "Was someone pushing the luggage trolley?" (see `fitDetails`).
+    w: 218,
+    h: 171,
+    tier: 'large',
+    size: 0.25,
     zones: IN_LOUNGE,
     maxCount: 2,
     colours: [C.red, C.blue, C.green, C.yellow, C.purple, C.orange],
     colourPrompt: (plural) => (plural ? 'What colour were the big suitcases on the trolleys?' : 'What colour was the big suitcase on the trolley?'),
-    draw: (colour) => (
+    draw: (colour, details, copy = 0) => (
       <G>
-        <Path d="M10,30 L24,90 H130" fill="none" stroke="#868e96" strokeWidth={5} strokeLinejoin="round" />
-        <Path d="M4,24 H16" stroke="#868e96" strokeWidth={6} strokeLinecap="round" />
-        <Rect x={32} y={34} width={90} height={52} rx={6} fill={colour} />
-        <Rect x={60} y={8} width={52} height={26} rx={5} fill="#495057" />
-        <Path d="M70,34 V86 M94,34 V86" stroke="#00000033" strokeWidth={3} />
-        <G stroke="none">
-          {/* A handle on each case, a luggage tag, a zip and a shine. */}
-          <Path d="M76,8 V3 H96 V8" fill="none" stroke="#212529" strokeWidth={3} />
-          <Path d="M110,34 L116,46" stroke="#868e96" strokeWidth={2} />
-          <Rect x={112} y={44} width={10} height={14} rx={2} fill="#f8f9fa" transform="rotate(-20 117 51)" />
-          <Path d="M64,14 H108" stroke="#212529" strokeWidth={1.5} strokeDasharray="3 2" />
-          <Path d="M38,40 V80" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={3} strokeLinecap="round" />
-        </G>
-        <G fill="#212529" stroke="none">
-          <Circle cx={36} cy={100} r={9} />
-          <Circle cx={120} cy={100} r={9} />
-        </G>
-        <G fill="#868e96" stroke="none">
-          <Circle cx={36} cy={100} r={3} />
-          <Circle cx={120} cy={100} r={3} />
+        {details?.values?.trolleyPushed === 'yes' && (
+          <G>
+            <G transform="scale(1.37)">{person.draw(details.values.pusherShirt ?? C.blue.hex, details, copy + 5)}</G>
+            {/* Both arms out to the trolley's handle. */}
+            <Path d="M72,72 L84,86" stroke={details.values.pusherShirt ?? C.blue.hex} strokeWidth={12} strokeLinecap="round" />
+            <Circle cx={84} cy={86} r={6} fill={SKINS[copy % SKINS.length]} stroke="none" />
+          </G>
+        )}
+        <G transform="translate(78 61)">
+          <Path d="M10,30 L24,90 H130" fill="none" stroke="#868e96" strokeWidth={5} strokeLinejoin="round" />
+          <Path d="M4,24 H16" stroke="#868e96" strokeWidth={6} strokeLinecap="round" />
+          <Rect x={32} y={34} width={90} height={52} rx={6} fill={colour} />
+          <Rect x={60} y={8} width={52} height={26} rx={5} fill="#495057" />
+          <Path d="M70,34 V86 M94,34 V86" stroke="#00000033" strokeWidth={3} />
+          <G stroke="none">
+            {/* A handle on each case, a luggage tag, a zip and a shine. */}
+            <Path d="M76,8 V3 H96 V8" fill="none" stroke="#212529" strokeWidth={3} />
+            <Path d="M110,34 L116,46" stroke="#868e96" strokeWidth={2} />
+            <Rect x={112} y={44} width={10} height={14} rx={2} fill="#f8f9fa" transform="rotate(-20 117 51)" />
+            <Path d="M64,14 H108" stroke="#212529" strokeWidth={1.5} strokeDasharray="3 2" />
+            <Path d="M38,40 V80" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={3} strokeLinecap="round" />
+          </G>
+          <G fill="#212529" stroke="none">
+            <Circle cx={36} cy={100} r={9} />
+            <Circle cx={120} cy={100} r={9} />
+          </G>
+          <G fill="#868e96" stroke="none">
+            <Circle cx={36} cy={100} r={3} />
+            <Circle cx={120} cy={100} r={3} />
+          </G>
         </G>
       </G>
     ),
@@ -351,7 +508,8 @@ const items: ItemDef[] = [
     maxCount: 1,
     countable: false,
     colours: [C.red, C.blue, C.green, C.orange, C.grey, C.purple],
-    draw: (colour) => (
+    // Something left on the second seat, or nothing, chosen per picture: "What had been left on the seats?".
+    draw: (colour, details) => (
       <G>
         <Rect x={0} y={58} width={200} height={6} fill="#868e96" />
         <Path d="M20,64 V80 M180,64 V80" stroke="#868e96" strokeWidth={6} />
@@ -373,6 +531,7 @@ const items: ItemDef[] = [
             <Rect key={x} x={x - 3} y={36} width={6} height={22} rx={2} fill="#868e96" />
           ))}
         </G>
+        {details?.values?.onSeats && <G transform="translate(56 6)">{LEFT_ON_SEATS[details.values.onSeats]?.draw()}</G>}
       </G>
     ),
   },
@@ -391,39 +550,48 @@ const items: ItemDef[] = [
     countable: false,
     colours: [C.red, C.green, C.blue, C.orange, C.purple],
     colourPrompt: () => 'What colour was the awning on the coffee kiosk?',
-    // Open, or shut with its shutter down, chosen per picture: "Was the coffee kiosk open or closed?".
-    draw: (colour, details) => (
-      <G>
-        <Rect x={10} y={60} width={150} height={90} rx={4} fill="#8b5a2b" />
-        <Rect x={20} y={70} width={130} height={14} fill="#f8f9fa" stroke="none" />
-        <Path d="M0,30 H170 L160,58 H10 Z" fill={colour} />
-        <G fill="#ffffff" stroke="none">
-          {[20, 60, 100, 140].map((x) => (
-            <Path key={x} d={`M${x},30 H${x + 18} L${x + 16},58 H${x + 2} Z`} />
-          ))}
-        </G>
-        <Path d="M30,0 V30 M140,0 V30" stroke="#868e96" strokeWidth={4} />
-        <G stroke="none">
-          <Path d="M70,100 H96 V120 Q96,128 88,128 H78 Q70,128 70,120 Z" fill="#f8f9fa" />
-          <Path d="M96,106 Q106,106 106,114 Q106,120 96,120" fill="none" stroke="#f8f9fa" strokeWidth={3} />
-          {/* Steam, a menu on the white board, a coffee machine, cups on the counter and planks below. */}
-          <Path d="M78,96 q-3,-5 0,-10 M88,96 q-3,-5 0,-10" fill="none" stroke="#f8f9fa" strokeOpacity={0.8} strokeWidth={2.5} strokeLinecap="round" />
-          <Path d="M28,77 h40 M80,77 h20 M110,77 h30" stroke="#868e96" strokeWidth={3} strokeLinecap="round" />
-          <Rect x={124} y={88} width={24} height={28} rx={3} fill="#adb5bd" />
-          <Rect x={130} y={94} width={12} height={6} rx={1} fill="#212529" />
-          <Path d="M26,96 l2,-8 h8 l2,8 Z M42,96 l2,-8 h8 l2,8 Z" fill="#f8f9fa" />
-          <Path d="M14,134 H156" stroke="#000000" strokeOpacity={0.2} strokeWidth={2.5} />
-        </G>
-        {details?.values?.kiosk === 'closed' && (
-          // The metal shutter pulled down over the whole front, with its slats and a handle.
-          <G>
-            <Rect x={12} y={60} width={146} height={88} rx={2} fill="#adb5bd" stroke="#495057" strokeWidth={3} />
-            <Path d={Array.from({ length: 8 }, (_, k) => `M14,${70 + k * 10} H156`).join(' ')} stroke="#868e96" strokeWidth={2} />
-            <Rect x={74} y={136} width={22} height={6} rx={3} fill="#495057" />
+    // Open with someone serving, or shut with its shutter down, chosen per picture: "Was the coffee kiosk open or
+    // closed?", "What colour was the coffee seller's top?" (an empty open kiosk looked odd).
+    draw: (colour, details) => {
+      const open = details?.values?.kiosk === 'open';
+      return (
+        <G>
+          <Rect x={10} y={26} width={150} height={74} fill="#5c3a1a" />
+          {open && (
+            // The coffee seller behind the counter, at a traveller's size, so their top's colour is easy to see.
+            <G>
+              <Rect x={104} y={36} width={46} height={22} rx={2} fill="#f8f9fa" stroke="none" />
+              <Path d="M110,43 h34 M110,51 h22" stroke="#868e96" strokeWidth={3} strokeLinecap="round" />
+              <G transform="translate(32 29) scale(0.94)">{person.draw(details?.values?.kioskApron ?? C.green.hex, undefined, 1)}</G>
+            </G>
+          )}
+          <Rect x={4} y={96} width={162} height={54} rx={4} fill="#8b5a2b" />
+          <Rect x={4} y={96} width={162} height={8} fill="#f8f9fa" stroke="none" />
+          <G stroke="none">
+            {/* A coffee machine and a steaming cup on the counter, and planks below. */}
+            <Rect x={128} y={70} width={24} height={26} rx={3} fill="#adb5bd" />
+            <Rect x={134} y={76} width={12} height={6} rx={1} fill="#212529" />
+            <Path d="M104,80 H120 V92 Q120,96 116,96 H108 Q104,96 104,92 Z" fill="#f8f9fa" />
+            <Path d="M109,76 q-2,-4 0,-8 M115,76 q-2,-4 0,-8" fill="none" stroke="#f8f9fa" strokeOpacity={0.8} strokeWidth={2} strokeLinecap="round" />
+            <Path d="M10,124 H160" stroke="#000000" strokeOpacity={0.2} strokeWidth={2.5} />
           </G>
-        )}
-      </G>
-    ),
+          <Path d="M0,0 H170 L160,26 H10 Z" fill={colour} />
+          <G fill="#ffffff" stroke="none">
+            {[20, 60, 100, 140].map((x) => (
+              <Path key={x} d={`M${x},0 H${x + 18} L${x + 16},26 H${x + 2} Z`} />
+            ))}
+          </G>
+          {!open && (
+            // The metal shutter pulled down over the opening, with its slats and a handle.
+            <G>
+              <Rect x={8} y={26} width={154} height={124} rx={2} fill="#adb5bd" stroke="#495057" strokeWidth={3} />
+              <Path d={Array.from({ length: 11 }, (_, k) => `M10,${37 + k * 10} H160`).join(' ')} stroke="#868e96" strokeWidth={2} />
+              <Rect x={74} y={138} width={22} height={6} rx={3} fill="#495057" />
+            </G>
+          )}
+        </G>
+      );
+    },
   },
   {
     kind: 'info-desk',
@@ -431,34 +599,59 @@ const items: ItemDef[] = [
     plural: 'information desks',
     article: 'an',
     w: 170,
-    h: 110,
+    h: 140,
     tier: 'large',
-    // About 2 m wide, with a big "i" sign, in the airport's blue.
+    // About 2 m wide, with a big "i" sign, in the airport's blue. Someone in uniform behind it, or nobody, chosen per
+    // picture: "Was anyone at the information desk?", "What colour was their uniform?", "What was on their head?".
     size: 0.23,
     zones: IN_LOUNGE,
     maxCount: 1,
     countable: false,
     tone: '#2f6fb3',
-    draw: () => (
-      <G>
-        <Path d="M85,0 V30" stroke="#868e96" strokeWidth={4} />
-        <Circle cx={85} cy={24} r={16} fill="#1d70d6" />
-        <Rect x={83} y={22} width={4} height={10} fill="#ffffff" stroke="none" />
-        <Circle cx={85} cy={17} r={2.5} fill="#ffffff" stroke="none" />
-        <Path d="M4,50 Q4,44 10,44 H160 Q166,44 166,50 V110 H4 Z" fill="#2f6fb3" />
-        <Rect x={4} y={58} width={162} height={8} fill="#f8f9fa" stroke="none" />
-        <G stroke="none">
-          {/* A computer screen and a bell on the counter, a leaflet stand and panels in the front. */}
-          <Rect x={30} y={30} width={30} height={14} rx={2} fill="#343a40" />
-          <Rect x={33} y={33} width={24} height={8} rx={1} fill="#74c0fc" />
-          <Path d="M120,44 Q120,36 128,36 Q136,36 136,44 Z" fill="#ffd60a" />
-          <Rect x={142} y={30} width={14} height={14} rx={1} fill="#f8f9fa" />
-          <Rect x={145} y={33} width={8} height={4} fill="#e63946" />
-          <Path d="M60,72 V106 M110,72 V106" stroke="#000000" strokeOpacity={0.15} strokeWidth={3} />
-          <Path d="M10,48 H160" stroke="#ffffff" strokeOpacity={0.3} strokeWidth={2.5} strokeLinecap="round" />
+    draw: (_colour, details) => {
+      const staff = details?.values?.deskStaff;
+      const hat = details?.values?.deskHat;
+      return (
+        <G>
+          <Path d="M20,10 V66" stroke="#868e96" strokeWidth={4} />
+          <Circle cx={20} cy={24} r={16} fill="#1d70d6" />
+          <Rect x={18} y={22} width={4} height={11} fill="#ffffff" stroke="none" />
+          <Circle cx={20} cy={16} r={2.5} fill="#ffffff" stroke="none" />
+          {staff && (
+            // Someone behind the desk at a traveller's size, so their uniform and hat are easy to see.
+            <G transform="translate(72 8)">
+              {person.draw(staff, undefined, 2)}
+              {hat === 'cap' && (
+                <G>
+                  <Path d="M15,10 Q32,-6 49,10 V13 H15 Z" fill={staff} />
+                  <Rect x={12} y={10} width={40} height={5} rx={2} fill="#212529" stroke="none" />
+                </G>
+              )}
+              {hat === 'headset' && (
+                <G stroke="none">
+                  <Path d="M15,16 Q15,-4 32,-4 Q49,-4 49,16" fill="none" stroke="#212529" strokeWidth={4} />
+                  <Rect x={10} y={10} width={9} height={14} rx={3} fill="#212529" />
+                  <Rect x={45} y={10} width={9} height={14} rx={3} fill="#212529" />
+                  <Path d="M14,22 Q18,30 26,28" fill="none" stroke="#212529" strokeWidth={2.5} />
+                </G>
+              )}
+            </G>
+          )}
+          <Path d="M4,74 Q4,66 12,66 H158 Q166,66 166,74 V140 H4 Z" fill="#2f6fb3" />
+          <Rect x={4} y={80} width={162} height={8} fill="#f8f9fa" stroke="none" />
+          <G stroke="none">
+            {/* A computer screen and a bell on the counter, a leaflet stand and panels in the front. */}
+            <Rect x={36} y={50} width={28} height={16} rx={2} fill="#343a40" />
+            <Rect x={39} y={53} width={22} height={10} rx={1} fill="#74c0fc" />
+            <Path d="M128,66 Q128,58 136,58 Q144,58 144,66 Z" fill="#ffd60a" />
+            <Rect x={148} y={52} width={14} height={14} rx={1} fill="#f8f9fa" />
+            <Rect x={151} y={55} width={8} height={4} fill="#e63946" />
+            <Path d="M60,94 V136 M110,94 V136" stroke="#000000" strokeOpacity={0.15} strokeWidth={3} />
+            <Path d="M10,70 H160" stroke="#ffffff" strokeOpacity={0.3} strokeWidth={2.5} strokeLinecap="round" />
+          </G>
         </G>
-      </G>
-    ),
+      );
+    },
   },
   { ...plantPot, zones: IN_LOUNGE, maxCount: 2 },
 ];
@@ -481,21 +674,76 @@ function flightLookalikes(code: string): string[] {
   return [...new Set([`${prefix} ${n + 1}`, `${prefix} ${n - 1}`, `${prefix} ${swapped}`, `${prefix} ${n + 10}`])].filter((c) => c !== code);
 }
 
-/** The flight on the screen: its number, where it's going and its gate, chosen per picture. */
+/** The helicopter's number, easy to mix up: one along, or the digits swapped. */
+function numberLookalikes(n: number): string[] {
+  const swapped = Number(String(n).split('').reverse().join(''));
+  return [...new Set([n + 1, n - 1, swapped, n + 10, n - 10])].filter((x) => x !== n && x >= 10 && x <= 99).map(String);
+}
+
+const DESK_HATS: Record<string, string> = { cap: 'A cap', headset: 'A headset', '': 'Nothing' };
+
+/**
+ * The flight on the screen (number, city, gate), and what's going on in the lounge, chosen per picture: who's at the
+ * information desk, whether the coffee kiosk is open, the flag on the parked plane, what's been left on the seats.
+ */
 function details(random: Rng): SceneDetails {
   const city = random.pick(CITIES);
   const gate = `${random.pick(['A', 'B', 'C', 'D'])}${random.int(2, 28)}`;
   const flight = `GL ${random.int(121, 879)}`;
   const kiosk = random.next() < 0.5 ? 'open' : 'closed';
+  const apron = random.pick(KIOSK_APRONS);
+  const desk = random.next() < 0.75 ? random.pick(DESK_UNIFORMS) : null;
+  const deskHat = random.pick(Object.keys(DESK_HATS));
+  const flag = random.pick(Object.keys(FLAGS));
+  const onSeats = random.next() < 0.2 ? '' : random.pick(Object.keys(LEFT_ON_SEATS));
+  const seatsName = onSeats ? LEFT_ON_SEATS[onSeats].name : 'Nothing';
+  const facts: DetailFact[] = [
+    { id: 'kiosk-open', subject: 'kiosk', family: 'story', type: 'object', prompt: 'Was the coffee kiosk open or closed?', answer: kiosk === 'open' ? 'Open' : 'Closed', wrong: [kiosk === 'open' ? 'Closed' : 'Open'], needs: 'coffee-kiosk' },
+    { id: 'desk-staffed', subject: 'desk', family: 'story', type: 'object', prompt: 'Was anyone at the information desk?', answer: desk ? 'Yes' : 'No', wrong: [desk ? 'No' : 'Yes'], needs: 'info-desk' },
+    { id: 'plane-flag', type: 'object', prompt: 'Which country’s flag was on the parked plane’s tail?', answer: FLAGS[flag].country, wrong: Object.values(FLAGS).map((f) => f.country).filter((c) => c !== FLAGS[flag].country), needs: 'jet' },
+    { id: 'on-seats', family: 'story', type: 'object', prompt: 'What had been left on the seats?', answer: seatsName, wrong: [...Object.values(LEFT_ON_SEATS).map((t) => t.name), 'Nothing'].filter((n) => n !== seatsName), needs: 'seats' },
+    { id: 'flight-city', type: 'object', prompt: 'Where was the flight on the screen going?', answer: city, wrong: CITIES.filter((c) => c !== city) },
+    { id: 'flight-gate', type: 'number', prompt: 'Which gate was the flight leaving from?', answer: gate, wrong: gateLookalikes(gate) },
+    { id: 'flight-number', type: 'number', prompt: 'What was the flight number?', answer: flight, wrong: flightLookalikes(flight) },
+  ];
+  if (kiosk === 'open') {
+    facts.push({ id: 'kiosk-apron', subject: 'kiosk', family: 'story', type: 'colour', prompt: 'What colour was the coffee seller’s top?', answer: apron.name, wrong: KIOSK_APRONS.filter((c) => c !== apron).map((c) => c.name), needs: 'coffee-kiosk' });
+  }
+  if (desk) {
+    facts.push(
+      { id: 'desk-uniform', subject: 'desk', family: 'story', type: 'colour', prompt: 'What colour was the uniform of the person at the information desk?', answer: desk.name, wrong: DESK_UNIFORMS.filter((c) => c !== desk).map((c) => c.name), needs: 'info-desk' },
+      { id: 'desk-hat', subject: 'desk', family: 'story', type: 'object', prompt: 'What was the person at the information desk wearing on their head?', answer: DESK_HATS[deskHat], wrong: Object.values(DESK_HATS).filter((n) => n !== DESK_HATS[deskHat]), needs: 'info-desk' },
+    );
+  }
   return {
-    values: { city, gate, flight, kiosk },
-    facts: [
-      { id: 'kiosk-open', family: 'story', type: 'object', prompt: 'Was the coffee kiosk open or closed?', answer: kiosk === 'open' ? 'Open' : 'Closed', wrong: [kiosk === 'open' ? 'Closed' : 'Open'], needs: 'coffee-kiosk' },
-      { id: 'flight-city', type: 'object', prompt: 'Where was the flight on the screen going?', answer: city, wrong: CITIES.filter((c) => c !== city) },
-      { id: 'flight-gate', type: 'number', prompt: 'Which gate was the flight leaving from?', answer: gate, wrong: gateLookalikes(gate) },
-      { id: 'flight-number', type: 'number', prompt: 'What was the flight number?', answer: flight, wrong: flightLookalikes(flight) },
-    ],
+    values: { city, gate, flight, kiosk, kioskApron: apron.hex, deskStaff: desk?.hex ?? '', deskHat, planeFlag: flag, onSeats, heliNumber: String(random.int(11, 89)) },
+    facts,
   };
+}
+
+/** What depends on where things were put: the helicopter flying or parked, and someone pushing a lone trolley. */
+function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
+  const values = { ...d.values };
+  const facts = [...(d.facts ?? [])];
+  const uncounted = [...(d.uncounted ?? [])];
+  const heli = groups.find((g) => g.kind === 'helicopter');
+  if (heli) {
+    const flying = heli.zoneId === 'sky';
+    const n = Number(values.heliNumber ?? 27);
+    facts.push(
+      { id: 'heli-flying', subject: 'helicopter-state', family: 'story', type: 'object', prompt: 'Was the helicopter flying or on the ground?', answer: flying ? 'Flying' : 'On the ground', wrong: [flying ? 'On the ground' : 'Flying'], needs: 'helicopter' },
+      { id: 'heli-number', type: 'number', prompt: 'What number was on the helicopter?', answer: String(n), wrong: numberLookalikes(n), needs: 'helicopter' },
+    );
+  }
+  if (groups.find((g) => g.kind === 'trolley')?.count === 1) {
+    const pushed = random.next() < 0.6;
+    values.trolleyPushed = pushed ? 'yes' : 'no';
+    values.pusherShirt = random.pick(PUSHER_SHIRTS).hex;
+    // Whoever is pushing it is a traveller too, so travellers aren't counted or asked the colour of.
+    if (pushed) uncounted.push('traveller');
+    facts.push({ id: 'trolley-pushed', family: 'story', type: 'object', prompt: 'Was someone pushing the luggage trolley?', answer: pushed ? 'Yes' : 'No, it was left on its own', wrong: [pushed ? 'No, it was left on its own' : 'Yes'], needs: 'trolley' });
+  }
+  return { ...d, values, facts, uncounted };
 }
 
 type Palette = Record<'sky' | 'airfield' | 'runway' | 'frame' | 'wall' | 'floor' | 'floorLine', string>;
@@ -590,6 +838,7 @@ export const airport: Recipe = {
   items,
   keepClear: [SCREEN],
   details,
+  fitDetails,
   // Light across the backdrop: see `LightBand`. The contrast rules take it into account.
   light: [
     // Haze over the far airfield.

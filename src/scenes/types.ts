@@ -104,6 +104,11 @@ export interface ItemDef {
   /** Width as a fraction of the picture width; must be inside the tier's range. */
   size: number;
   zones: string[];
+  /**
+   * Picks one of its zones at random before the bands are filled, instead of going to the first band with room: a
+   * helicopter flying or parked, which is itself a question.
+   */
+  anyZone?: boolean;
   /** The most you'd plausibly see: one sofa, one mirror, several cushions. */
   maxCount: number;
   /** Omit for things with a fixed colour (a crab is always red). */
@@ -240,6 +245,11 @@ export interface DetailFact {
    * holding): asked from Level 1, as its own kind of question. Otherwise a detail, from Level 3.
    */
   family?: 'story';
+  /**
+   * Facts about the same thing share a subject, so a round asks only one of them: "Was anyone at the information
+   * desk?" and "What colour was their uniform?" would give each other away. Missing means the fact's own id.
+   */
+  subject?: string;
 }
 
 /**

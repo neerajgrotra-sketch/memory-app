@@ -8,6 +8,11 @@ export interface LevelConfig {
   preferredTypes: QuestionType[];
   /** Fewer of a type than the usual two a round: a type on its way out, so the mix changes in two steps. */
   typeCaps?: Partial<Record<QuestionType, number>>;
+  /**
+   * At least this many "what was happening?" questions a round when the picture has them (the kiosk open, someone
+   * pushing the trolley), whatever the type caps say: they're the fun part, and preferred types crowded them out.
+   */
+  storyMin?: number;
   /** How long the picture is shown. */
   viewSeconds: number;
   /** How many different kinds of thing are in the picture. */

@@ -64,6 +64,7 @@ function newAttempt(boss: Boss, size: BossRoundProps['size'], extraSeconds: numb
     count: ROUND_SIZE,
     preferredTypes: knobs.preferredTypes,
     typeCaps: knobs.typeCaps,
+    storyMin: knobs.storyMin,
     seenIds: new Set(),
     previousIds: new Set(),
   });

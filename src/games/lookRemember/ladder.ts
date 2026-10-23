@@ -63,24 +63,30 @@ function steps<T>(level: number, table: [number, T][]): T {
 }
 
 /** The kinds of question, each from the level it starts at. Every early level brings one in. */
-const FAMILY_FROM: [QuestionFamily, number][] = [
+/** The last level for "more or fewer" and "the most of"; true or false stops two levels later, so they don't go at once. */
+export const EASY_KINDS_UNTIL = 10;
+export const TRUE_FALSE_UNTIL = 12;
+
+/**
+ * The level each kind of question starts at, and the last level it's asked on, if it stops (see
+ * docs/question-design.md). "Where was it?" and "what was above it?" aren't asked at all: positions made dull
+ * questions ("Where was the row of seats?"). The hiding animal's "where" is a detail, so it stays.
+ */
+const FAMILY_FROM: [QuestionFamily, number, number?][] = [
   ['what-here', 1],
   ['seen', 1],
   ['colour', 1],
-  ['true-false', 1],
+  // Quick, easy kinds for the first levels only: "True or false? There were two pilots." was silly at Level 30.
+  ['true-false', 1, TRUE_FALSE_UNTIL],
   ['twins', 1],
   // How many from the start: without it Level 1 had too few kinds of question to keep a session varied.
   ['count', 1],
-  ['compare', 1],
-  ['most', 1],
+  ['compare', 1, EASY_KINDS_UNTIL],
+  ['most', 1, EASY_KINDS_UNTIL],
   // What was happening: the kettle steaming, the person's hat, the dog's stick.
   ['story', 1],
   ['detail', 3],
-  // From Level 2, with the living room: the first levels have more kinds of question to mix, and the hard ones
-  // come in one at a time (where at 2, details at 3).
-  ['where', 2],
   ['two-step', 5],
-  ['relation', 9],
   ['altogether', 11],
   ['difference', 27],
   ['sharing', 29],
@@ -108,6 +114,7 @@ export function knobsForLevel(rawLevel: number): LevelConfig {
   return {
     preferredTypes,
     typeCaps,
+    storyMin: level >= 20 ? 2 : 1,
     // 9 s from Level 2: the living room has fewer things than the beach, so at 10 s Level 2 was easier than Level 1.
     viewSeconds: steps(level, [[1, 10], [2, 9], [8, 8], [12, 7], [16, 6], [21, 5], [25, 4]]),
     // The 8th kind comes with the supermarket, whose neat shelves hold fewer things than other places.
@@ -118,7 +125,7 @@ export function knobsForLevel(rawLevel: number): LevelConfig {
     houseNumbers: level >= 3,
     clockStep: steps<ClockStep>(level, [[1, 60], [7, 30], [17, 15]]),
     hidden: steps<0 | 1 | 2>(level, [[1, 0], [13, 1], [19, 2]]),
-    families: FAMILY_FROM.filter(([, from]) => level >= from).map(([family]) => family),
+    families: FAMILY_FROM.filter(([, from, until = Infinity]) => level >= from && level <= until).map(([family]) => family),
   };
 }
 
@@ -164,8 +171,6 @@ const streetHouses = (level: number) => knobsForLevel(level).houseNumbers && rec
 const FAMILY_NEWS: Partial<Record<QuestionFamily, string>> = {
   count: 'New questions: how many, and which there was more of',
   detail: 'New questions about details: clocks, numbers and signs',
-  where: 'New questions: where was it?',
-  relation: 'New questions: what was above or below something',
   'two-step': 'New questions in two steps: find the thing by where it was, then say its colour',
   altogether: 'Sums: how many of two things altogether?',
   difference: 'Sums: how many more of one thing than another?',
@@ -191,13 +196,17 @@ export function unlocksAt(level: number): string[] {
   if (now.maxCount > before.maxCount) news.push(`Pictures can now have up to ${now.maxCount} of one thing, like ${now.maxCount} kites`);
   if (now.viewSeconds < before.viewSeconds) news.push(`Pictures stay for ${now.viewSeconds} seconds`);
   for (const family of newFamilies(before, now)) news.push(FAMILY_NEWS[family]!);
+  if (before.families?.includes('compare') && !now.families?.includes('compare'))
+    news.push('No more "which was there more of": more questions on what was happening');
+  if (before.families?.includes('true-false') && !now.families?.includes('true-false'))
+    news.push('No more true or false: more questions on what was happening');
   const added = now.preferredTypes.filter((t) => !before.preferredTypes.includes(t));
   const dropped = before.preferredTypes.filter((t) => !now.preferredTypes.includes(t));
-  if (added.includes('count')) news.push('More questions on how many and where');
+  if (added.includes('count')) news.push('More questions on how many');
   if (added.includes('number')) news.push('More questions on numbers and times');
-  if (dropped.includes('colour')) news.push('Fewer colour questions, more on how many and where');
-  if (now.typeCaps?.object && !before.typeCaps?.object) news.push('Fewer "what was there" questions, more on how many and where');
-  if (dropped.includes('object')) news.push('Mostly harder questions: how many, where, and numbers');
+  if (dropped.includes('colour')) news.push('Fewer colour questions, more on how many and on numbers');
+  if (now.typeCaps?.object && !before.typeCaps?.object) news.push('Fewer "what was there" questions, more on how many and on numbers');
+  if (dropped.includes('object')) news.push('Mostly harder questions: how many, numbers and what was happening');
   news.push(`Each right answer now scores ${pointsPerAnswer(level)} points`);
   return news;
 }

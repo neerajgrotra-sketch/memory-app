@@ -6,7 +6,7 @@
  */
 import { MAX_FIFTY, fiftyHidden, fiftyOf, walletOf } from '@/games/lookRemember/peeks';
 import { knobsForLevel, recipesForLevel } from '@/games/lookRemember/ladder';
-import { SPEED_FROM_LEVEL, SPEED_QUESTIONS, speedCounterOf, speedDue, speedGap, speedPrize, speedQuestions } from '@/games/lookRemember/speed';
+import { SPEED_FROM_LEVEL, SPEED_QUESTIONS, speedCounterOf, speedDue, speedGap, speedPrize, speedKnobs, speedQuestions } from '@/games/lookRemember/speed';
 import { createStage } from '@/scenes/createStage';
 import type { RoundResult } from '@/types/stats';
 
@@ -30,7 +30,7 @@ const places: Record<string, number> = {};
 const kinds: Record<string, number> = {};
 for (let k = 0; k < PICTURES; k++) {
   const level = SPEED_FROM_LEVEL + (k % (31 - SPEED_FROM_LEVEL));
-  const stage = createStage(knobsForLevel(level), { width: 393, height: 640 }, undefined, 7919 * k + 31337, { unlocked: recipesForLevel(level) });
+  const stage = createStage(speedKnobs(knobsForLevel(level)), { width: 393, height: 640 }, undefined, 7919 * k + 31337, { unlocked: recipesForLevel(level) });
   const qs = speedQuestions(stage.questions, stage.scene.seed);
   if (qs.length === SPEED_QUESTIONS) full++;
   places[stage.scene.recipeId] = (places[stage.scene.recipeId] ?? 0) + 1;
@@ -59,10 +59,10 @@ for (let k = 0; k < PICTURES; k++) {
 // The app tries up to four pictures for a full round, so one in 30 falling short is plenty.
 if (full / PICTURES < 0.97) fail(`only ${full} of ${PICTURES} pictures have ${SPEED_QUESTIONS} quick questions`);
 if (Math.abs(yes / asked - 0.5) > 0.03) fail(`${Math.round((100 * yes) / asked)}% of answers are Yes`);
-// Speed rounds shouldn't feel alike: how many and what colour together under half, where-questions in the mix.
+// Speed rounds shouldn't feel alike: how many and what colour together under half (where-questions are retired).
 const share = (k: string) => (kinds[k] ?? 0) / asked;
 if (share('count') + share('colour') >= 0.5) fail(`how many and what colour are ${Math.round(100 * (share('count') + share('colour')))}% of speed questions`);
-if (share('where') < 0.08) fail(`where-questions are only ${Math.round(100 * share('where'))}% of speed questions`);
+if (share('where')) fail(`where-questions are ${Math.round(100 * share('where'))}% of speed questions (they're retired)`);
 console.log(`  mix: ${Object.entries(kinds).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${Math.round((100 * v) / asked)}%`).join(', ')}`);
 console.log(`  ${full} of ${PICTURES} pictures make a full round; ${Math.round((100 * yes) / asked)}% Yes; places: ${Object.keys(places).length}`);
 

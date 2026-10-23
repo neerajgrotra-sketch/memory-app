@@ -34,6 +34,7 @@ export function bossKnobs(boss: Boss): LevelConfig {
     viewSeconds: Math.max(MIN_BOSS_SECONDS, base.viewSeconds - 1),
     preferredTypes: ['count', 'position', 'number'],
     typeCaps: { object: 1 },
+    storyMin: 2,
   };
 }
 

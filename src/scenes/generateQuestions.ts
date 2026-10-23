@@ -135,7 +135,8 @@ const WORDINGS: [RegExp, (m: RegExpMatchArray) => string[]][] = [
   [/^Which of these was ((?:in|on) [^,?]+)\?$/, ([, x]) => [`Which of these was ${x}?`, `Which of these did you see ${x}?`]],
   [/^What was ((?:in|on) [^,?]+)\?$/, ([, x]) => [`What was ${x}?`, `What did you see ${x}?`, `Can you remember what was ${x}?`]],
   [/^What colour (was|were) the ([^,?]+)\?$/, ([, v, x]) => [`What colour ${v} the ${x}?`, `The ${x} ${v} what colour?`, `Think back: what colour ${v} the ${x}?`]],
-  [/^How many ([^,?]+) were there\?$/, ([, x]) => [`How many ${x} were there?`, `How many ${x} did you see?`, `Count the ${x}: how many were there?`]],
+  // Not "How many more ducks than boats were there?" ("Count the more ducks than boats" made no sense).
+  [/^How many (?!more )([^,?]+) were there\?$/, ([, x]) => [`How many ${x} were there?`, `How many ${x} did you see?`, `Count the ${x}: how many were there?`]],
   [/^What time was on the ([^,?]+)\?$/, ([, x]) => [`What time was on the ${x}?`, `What time did the ${x} show?`, `What time did the ${x} say?`]],
 ];
 
@@ -581,7 +582,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
         family: fact.family ?? 'detail',
         template: `fact:${fact.id}`,
         spotlight: fact.spotlight,
-        subject: fact.id,
+        subject: fact.subject ?? fact.id,
         prompt: fact.prompt,
         options: (fact.type === 'colour' ? withColourDistractors : withDistractors)(fact.answer, fact.wrong, fact.fallback ?? [], rng),
       });
@@ -635,8 +636,11 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   const PLAIN_BANDS = new Set(['Close by', 'At the front', 'Near the hills']);
 
   // Sums on what you saw: count two things, then add, take away or share. One pair each, chosen at random.
+  // Only things from the same part of the picture, which belong together: "How many more satellites than craters?" was
+  // silly, "How many more pilots than flight attendants?" isn't.
+  const together = ([a, b]: PlacedGroup[]) => a.zoneId === b.zoneId;
   // "How many cats and dogs were there altogether?": up to 12, so it stays a quick sum.
-  const sumPair = rng.shuffle(combinations(countable, 2)).find(([a, b]) => a.count + b.count <= 12);
+  const sumPair = rng.shuffle(combinations(countable, 2)).find(([a, b]) => together([a, b]) && a.count + b.count <= 12);
   if (sumPair) {
     const [a, b] = sumPair;
     add('altogether', null, {
@@ -647,7 +651,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
     });
   }
   // "How many more ducks than boats were there?": only when there were more, never "none more".
-  const diffPair = rng.shuffle(combinations(countable, 2)).find(([a, b]) => a.count !== b.count);
+  const diffPair = rng.shuffle(combinations(countable, 2)).find(([a, b]) => together([a, b]) && a.count !== b.count);
   if (diffPair) {
     const [more, fewer] = diffPair[0].count > diffPair[1].count ? diffPair : [diffPair[1], diffPair[0]];
     add('difference', null, {

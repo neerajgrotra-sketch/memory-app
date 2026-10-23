@@ -1,3 +1,4 @@
+import type { LevelConfig } from '@/game/difficulty';
 import { pointsPerAnswer } from '@/games/lookRemember/points';
 import { createRng } from '@/scenes/random';
 import type { Question } from '@/types/game';
@@ -27,12 +28,19 @@ export interface SpeedQuestion {
 
 const YES_NO = /^(Yes|No)\b/;
 /** Kinds of question quick enough to read and answer in a few seconds. */
-const QUICK = new Set(['true-false', 'count', 'colour', 'what-here', 'detail', 'story', 'seen', 'where']);
+const QUICK = new Set(['true-false', 'count', 'colour', 'what-here', 'detail', 'story', 'seen']);
 /**
  * At most this many of the commonest kinds a round, so speed rounds don't feel alike (how many and what colour were
  * over half of them). Lifted only if a picture can't make eight without.
  */
-const SPEED_CAPS: Record<string, number> = { count: 2, colour: 2, where: 2 };
+const SPEED_CAPS: Record<string, number> = { count: 2, colour: 2 };
+
+/**
+ * A speed round's picture asks what the level asks, plus true or false at any level: every speed question is a Yes
+ * or No, so a statement is what it's made of (normal rounds stop true or false after Level 10).
+ */
+export const speedKnobs = (knobs: LevelConfig): LevelConfig =>
+  knobs.families && !knobs.families.includes('true-false') ? { ...knobs, families: [...knobs.families, 'true-false'] } : knobs;
 /** "To the right of the plane": one a round, or the bird's and the plane's would answer each other. */
 const BESIDE = /^(To the (left|right) of|Between) /;
 /** Questions that pick one of several options ("Which of these…", "more boats or more kites?") make no sense with one guess. */
