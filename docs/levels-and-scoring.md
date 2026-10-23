@@ -102,9 +102,12 @@ A Peek is a second look at the picture while answering (`src/games/lookRemember/
 A new player's first **Play** in Levels starts with a practice round (`GuidedRound`, the `/guided` screen), once:
 
 1. **How to play** in three lines (look, it goes away, climb the levels), with **Try a practice round** or **Skip, I know how to play**.
-2. **A calm practice picture:** the beach with four kinds of thing, for 20 seconds (twice the usual), with a tip over it for its first 3.5 seconds ("Look closely: what's there, how many and what colour").
+2. **What to look for, then the picture.** First, on its own screen, **Look closely at** what's there, how many and what colour, and that you'll have 20 seconds. Then **Show me the picture**: a calm beach with four kinds of thing, for 20 seconds (twice the usual), with nothing over it. (Until 4.14.3 the tip sat over the bottom of the picture; testers looked at the picture and didn't read it.)
 3. **Three coached questions,** one at a time with a tip each: what was there, a colour, and how many (never of something there was just one of). The third offers **Try a Peek**. A wrong answer is explained kindly ("That's fine. In a real round you see the answer, then move on.").
-4. **You're ready!** What real rounds are like (5 questions, a shorter look, 3 good rounds to go up, Peeks, the surprises on the journey), then **Start Level 1**.
+4. **2 or 3 right: You're ready!** What real rounds are like (5 questions, a shorter look, 3 good rounds to go up, Peeks, the surprises on the journey), then **Start Level 1**.
+   **0 or 1 right: Let's practise once more** (tester feedback: "You're ready!" after 0 of 3 rang false). A tip that helps ("say what you see in your head: two kites, one boat, something red…") and **Practise again** with a new practice picture (four beaches, `PRACTICE_SEEDS`), so it's practice, not remembering the last answers. **Start Level 1 anyway** is always there: practice is never forced.
+
+**✕ during the practice** (the picture or the questions) asks **Leave the practice?**, with the countdown held: **Keep practising**, or **Leave** to go back where you came from. Leaving doesn't count as done, so the practice is offered again next time. (Until 4.14.2 the ✕ on the picture skipped straight to Level 1, which confused testers.)
 
 Nothing is saved, so it never counts towards a level. Playing or skipping it sets `profile.guided`, so it doesn't come again; **Play the practice round** in How to play replays it.
 

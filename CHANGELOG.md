@@ -10,6 +10,19 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.14.3 (2026-10-23)
+
+- **The practice tip comes before the picture, not on it** (tester feedback: the tip at the bottom of the picture went unread). A centred screen now says what to look for (what's there, how many, what colour) and that you'll have 20 seconds; **Show me the picture** starts the look, with nothing over the picture. The same screen comes before a second practice. `MemoriseStage` no longer shows tips.
+
+## 4.14.2 (2026-10-22)
+
+- **Leaving the practice asks first** (tester feedback: closing the practice picture jumped straight to Level 1). The ✕ during the practice, on the picture or the questions, now asks **Leave the practice?** with the countdown held: **Keep practising**, or **Leave** to go back to where you came from. Leaving doesn't count as done, so the practice is offered again next time. The questions had no ✕ before.
+- `MemoriseStage` can hold its countdown (`paused`).
+
+## 4.14.1 (2026-10-22)
+
+- **Practice again after a low practice score** (tester feedback: "You're ready!" after 0 of 3 rang false). With 0 or 1 of 3 right, the guided round now says **Let's practise once more**, gives a tip that helps ("say what you see in your head"), and offers **Practise again** with a new practice picture. **Start Level 1 anyway** is always there, so nobody is held back. 2 or 3 right still says **You're ready!**, and only then plays the good-round chime.
+
 ## 4.14.0 (2026-10-22)
 
 - **A guided first round.** A new player's first Play now starts with a short practice round instead of going straight into a timed picture:

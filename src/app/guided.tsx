@@ -27,7 +27,13 @@ export default function GuidedScreen() {
   };
   return (
     <View style={styles.screen}>
-      <GuidedRound size={size} onDone={finish} onSkip={finish} doneLabel={replay === '1' ? 'Back to the game' : 'Start Level 1'} />
+      <GuidedRound
+        size={size}
+        onDone={finish}
+        onSkip={finish}
+        onLeave={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+        doneLabel={replay === '1' ? 'Back to the game' : 'Start Level 1'}
+      />
     </View>
   );
 }
