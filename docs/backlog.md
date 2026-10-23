@@ -68,7 +68,7 @@ Not decided yet. These are the options on the table, to compare once there are r
 
 ## Sound
 
-- **A professional sound set.** One cohesive palette (soft marimba, kalimba, felt piano, light bells, all in one key), AAC at 128 kbps or more, matched loudness, no silence at the start. Includes the missing moments: Peek, a place unlocking, the streak, the daily challenge, level-up and milestone fanfares. Best done by a hired sound designer from a written brief, or from licensed libraries.
+- **A professional sound set** (prompts to generate one with an AI tool: [sound-prompts.md](sound-prompts.md)). One cohesive palette (soft marimba, kalimba, felt piano, light bells, all in one key), AAC at 128 kbps or more, matched loudness, no silence at the start. Includes the missing moments: Peek, a place unlocking, the streak, the daily challenge, level-up and milestone fanfares. Best done by a hired sound designer from a written brief, or from licensed libraries.
 - **Music (parked).** A relaxed loop for menus only, ducking under effects, with separate Music and Effects switches; no music while looking at a picture by default.
 - **Place ambiences.** Waves at the beach, birdsong in the park, a crackling campfire, station announcements.
 

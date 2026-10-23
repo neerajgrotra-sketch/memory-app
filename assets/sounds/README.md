@@ -1,6 +1,6 @@
 # Sounds
 
-Each file is one moment in the game. **To change a sound, replace the file with one of the same name** (MP3, short, with no silence at the start). No code changes are needed; volumes are set in `src/feedback/index.ts`.
+Each file is one moment in the game. **To change a sound, replace the file with one of the same name** (MP3, short, with no silence at the start). No code changes are needed; volumes are set in `src/feedback/index.ts`. Prompts for generating a matching set with an AI tool are in [docs/sound-prompts.md](../../docs/sound-prompts.md).
 
 | File | When it plays | Source |
 | --- | --- | --- |
