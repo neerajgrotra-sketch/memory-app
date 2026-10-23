@@ -146,6 +146,7 @@ Things drawn differently per picture, about what was going on rather than readin
 | Kitchen | "Was the kettle steaming?" · "Was there toast in the toaster?" · "What was in the fruit bowl?" | Yes · No |
 | Under the sea | "What was the diver holding?" (one diver) · "What was in the treasure chest?" | A torch · A net · A camera · Nothing |
 | Space | "Was there fire coming out of the rocket?" · "What was the astronaut holding?" (one astronaut; not a flag or a rock, which are things of their own there) | Yes · No / A camera · A torch · Nothing |
+| Space | "Was the astronaut floating above the ground or standing on it?" (one astronaut; about 2 in 5 hover on a jetpack) | Floating, with a jetpack · Standing on the ground |
 | Space | "Where was the little green alien hiding?" (in about 7 in 10 pictures, peeking out from behind the solar panel, the habitat pod or the lunar lander) | Behind the solar panel · Behind the habitat pod · Behind the lunar lander |
 | Space | "Which star pattern was in the sky?" | The Big Dipper (a ladle) · Orion's Belt (three in a row) · Cassiopeia (a W) · The Southern Cross (a cross) |
 | Snowy mountain | "What was the snowman wearing on its head?" (one snowman) · "Was anyone riding the snowmobile?" · "How many dogs were pulling the sled?" (a dog sled, extra wide so the dogs can be counted) | A top hat · A woolly hat · A bucket / Yes · No / 2 to 4 |

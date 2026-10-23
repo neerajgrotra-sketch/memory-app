@@ -471,9 +471,9 @@ const items: ItemDef[] = [
     plural: 'astronauts',
     article: 'an',
     w: 80,
-    h: 130,
+    h: 162,
     tier: 'medium',
-    // In a spacesuit, about 1.85 m tall.
+    // In a spacesuit, about 1.85 m tall, with room above for one hovering on a jetpack (see `fitDetails`).
     size: 0.13,
     zones: AT_FRONT,
     maxCount: 3,
@@ -486,7 +486,15 @@ const items: ItemDef[] = [
     colourPrompt: (plural) => (plural ? 'What colour were the astronauts’ backpacks?' : 'What colour was the astronaut’s backpack?'),
     // An astronaut on their own may hold a camera or a torch in the glove on the right (see `fitDetails`).
     draw: (colour, details) => (
-      <G>
+      <G transform={details?.values?.astronautFloat === 'yes' ? undefined : 'translate(0 32)'}>
+        {details?.values?.astronautFloat === 'yes' && (
+          // Jetpack flames under the backpack, and a faint shadow on the dust far below.
+          <G stroke="none">
+            <Ellipse cx={42} cy={158} rx={22} ry={4} fill="#000000" fillOpacity={0.25} />
+            <Path d="M5,88 Q18,142 31,88 Z" fill="#f77f00" stroke="#7a3e00" strokeWidth={2} />
+            <Path d="M11,88 Q18,122 25,88 Z" fill="#ffd60a" />
+          </G>
+        )}
         <Rect x={6} y={36} width={24} height={52} rx={6} fill={colour} />
         <Rect x={26} y={80} width={14} height={48} rx={6} fill="#f8f9fa" />
         <Rect x={44} y={80} width={14} height={48} rx={6} fill="#f8f9fa" />
@@ -702,6 +710,10 @@ function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneD
     const holds = random.next() < 0.25 ? '' : random.pick(Object.keys(ASTRONAUT_HOLDS));
     const answer = holds ? ASTRONAUT_HOLDS[holds].name : 'Nothing';
     values.astronautHolds = holds;
+    // Hovering on a jetpack, or standing on the dust (tester idea): "Was the astronaut floating or standing?".
+    const floating = random.next() < 0.4;
+    values.astronautFloat = floating ? 'yes' : 'no';
+    facts.push({ id: 'astronaut-float', family: 'story', type: 'object', prompt: 'Was the astronaut floating above the ground or standing on it?', answer: floating ? 'Floating, with a jetpack' : 'Standing on the ground', wrong: [floating ? 'Standing on the ground' : 'Floating, with a jetpack'], needs: 'astronaut' });
     facts.push({ id: 'astronaut-holds', family: 'story', type: 'object', prompt: 'What was the astronaut holding?', answer, wrong: [...Object.values(ASTRONAUT_HOLDS).map((h) => h.name), 'Nothing'].filter((n) => n !== answer), needs: 'astronaut' });
   }
   const spots = Object.keys(ALIEN_SPOTS).filter((k) => groups.some((g) => g.kind === k && g.count === 1));

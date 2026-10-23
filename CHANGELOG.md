@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.16.1 (2026-10-23)
+
+- **An astronaut can hover on a jetpack** (tester idea). When there's one astronaut, about 2 in 5 pictures show them floating above the dust, with jetpack flames and their shadow on the ground below: "Was the astronaut floating above the ground or standing on it?".
+
 ## 4.16.0 (2026-10-23)
 
 The Moon rebuilt, and no more sums of two things (tester feedback: "How many more astronauts than craters?", "How many astronauts and boulders altogether?": "why do we have these silly questions?").
