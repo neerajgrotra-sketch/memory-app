@@ -47,7 +47,8 @@ function practiceQuestions(stage: Stage): Coached[] {
   return coached.filter((c): c is Coached => c !== null);
 }
 
-type Step = 'intro' | 'look' | 'quiz' | 'ready';
+/** `brief`: what to look for, on its own before the picture (a tip over the picture went unread: testers looked at the picture). */
+type Step = 'intro' | 'brief' | 'look' | 'quiz' | 'ready';
 
 interface GuidedRoundProps {
   /** Picture size: the screen below the countdown bar. */
@@ -125,11 +126,47 @@ export function GuidedRound({ size, onDone, onSkip, onLeave, doneLabel }: Guided
             label="Try a practice round"
             onPress={() => {
               feedback('start');
-              setStep('look');
+              setStep('brief');
             }}
           />
           <Button label="Skip, I know how to play" variant="secondary" onPress={onSkip} />
         </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (step === 'brief') {
+    return (
+      <SafeAreaView style={styles.screen}>
+        <View style={styles.briefBar}>
+          <QuitButton onPress={() => setLeaving(true)} />
+        </View>
+        <ScrollView contentContainerStyle={styles.center}>
+          <Animated.View entering={FadeIn.duration(300)} style={styles.brief}>
+            <Text style={styles.kicker}>{attempt > 0 ? 'A new practice picture' : 'The practice picture'}</Text>
+            <Text style={styles.title}>Look closely at</Text>
+            <View style={styles.lookFor}>
+              {['What’s there', 'How many', 'What colour'].map((t) => (
+                <Text key={t} style={styles.lookForItem}>
+                  {t}
+                </Text>
+              ))}
+            </View>
+            <Text style={styles.note}>
+              You’ll have {PRACTICE_SECONDS} seconds. Tap I’m ready when you’ve got it, and the questions start.
+            </Text>
+          </Animated.View>
+        </ScrollView>
+        <View style={styles.actions}>
+          <Button
+            label="Show me the picture"
+            onPress={() => {
+              feedback('start');
+              setStep('look');
+            }}
+          />
+        </View>
+        {leaveDialog}
       </SafeAreaView>
     );
   }
@@ -141,7 +178,6 @@ export function GuidedRound({ size, onDone, onSkip, onLeave, doneLabel }: Guided
           key={stage.scene.id}
           scene={stage.scene}
           seconds={PRACTICE_SECONDS}
-          hint={`Look closely: what’s there, how many and what colour. You have ${PRACTICE_SECONDS} seconds, or tap I’m ready.`}
           onDone={() => setStep('quiz')}
           onQuit={() => setLeaving(true)}
           paused={leaving}
@@ -237,7 +273,7 @@ export function GuidedRound({ size, onDone, onSkip, onLeave, doneLabel }: Guided
       setRight(0);
       setPeeked(false);
       feedback('start');
-      setStep('look');
+      setStep('brief');
     };
     return (
       <SafeAreaView style={styles.screen}>
@@ -314,6 +350,10 @@ const styles = StyleSheet.create({
   note: { color: colors.textMuted, fontSize: 15, lineHeight: 21 },
   actions: { paddingHorizontal: 24, paddingTop: 8, paddingBottom: 24, gap: 12, width: '100%', maxWidth: 520, alignSelf: 'center', minHeight: 84 },
   quiz: { flexGrow: 1, width: '100%', maxWidth: 520, alignSelf: 'center', padding: 24, gap: 16 },
+  briefBar: { paddingHorizontal: 16, paddingTop: 16 },
+  brief: { gap: 16 },
+  lookFor: { gap: 10 },
+  lookForItem: { color: colors.text, fontSize: 22, fontWeight: '800', backgroundColor: colors.surface, borderRadius: radius.md, borderWidth: 1, borderColor: colors.accent, paddingVertical: 12, paddingHorizontal: 16, overflow: 'hidden' },
   quizHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   quizHeaderLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   practiceTag: { color: colors.accentText, backgroundColor: colors.accent, borderRadius: radius.pill, paddingHorizontal: 12, paddingVertical: 4, fontSize: 13, fontWeight: '900', overflow: 'hidden', textTransform: 'uppercase', letterSpacing: 1 },
