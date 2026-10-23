@@ -14,11 +14,44 @@ Agreed with the tester feedback of 22 Oct 2026: every level is a stop on one tri
 - **Step 2, story and travel:** short story lines between stops, and different ways of travelling on the map (a boat to under the sea, a train to the station, a rocket to the Moon); bosses drawn as landmarks.
 - **Step 3, new places, one per release,** each filling a stop that has no place yet (the odd levels), picked from user feedback: a bakery, a fairground, a harbour, a castle, a jungle, a toy shop.
 - **Step 4, collections:** a postcard album of the places visited, and the bosses' badges on the map.
-- **A paid "Unlock the whole journey"** (idea, 22 Oct 2026). A one-off purchase that opens every stop on the map, so a player can tap any stop and play that level in its place, as tester mode already does (4.13.2: every stop open, **Play Level N here**). To decide first:
-  - **What it unlocks:** every stop to visit and play, and all bosses? The climb (3 good rounds a level) should still count, with "your level" kept separate from "stops open", so the free path stays meaningful.
-  - **Price and shape:** one-off rather than a subscription suits a family game. Whether it joins the wider plan (more places, future games; see "A business model" below).
-  - **Building it:** App Store and Google Play in-app purchases (Expo's in-app purchase options or a service such as RevenueCat), restoring purchases on a new phone, and a store-safe screen saying what you get. No pressure tactics for children: never shown mid-round, and never as a "you lost, pay to continue".
-  - **Before then:** accounts or a purchase receipt to remember it; today progress lives only on the phone.
+- **Unlocking the whole journey** is one of the revenue options below.
+
+## The revenue model (to decide, 23 Oct 2026)
+
+Not decided yet. These are the options on the table, to compare once there are real players and some numbers (how far people get, how often they come back). Whatever we pick, these hold: no pressure on children, never mid-round, never "you lost, pay to continue", and the free game stays a good game.
+
+### Option A: 10 levels free, then $2.99 to unlock the rest (one-off)
+
+- **How it plays:** Levels 1–10 are free (6 places, the guided round, Speed Rounds from Level 5 and the Farm Boss at 10). After the Farm Boss, a friendly screen offers the rest of the journey: Levels 11–30, 9 more places, the Mountain and Final Bosses.
+- **Why 10:** it's a natural milestone (the first boss and the first title change), and it's long enough to know whether you like the game: at least 27 good rounds, roughly 30–50 rounds in all.
+- **Also unlocks:** every stop on the journey map to visit and play any time, as tester mode does today (4.13.2: every stop open, **Play Level N here**). Keep "your level" separate from "stops open", so the climb still counts.
+- **Good:** simple, honest, suits families and older players; one price, no subscriptions; a store "Free with in-app purchase" listing.
+- **Watch:** the first-boss wall must feel like an invitation, not a cut-off; a Daily Challenge should stay free for everyone, so lapsed players have a reason to come back.
+
+### Option B: rewarded ads only
+
+- **How it plays:** the player chooses to watch a short video for a reward: a Peek when they have none, another try at a boss, double points for a round. Never interstitials (ads that appear on their own between rounds): they drive casual players away, and in a memory game they'd land right before or after a picture.
+- **Earns:** roughly $5–20 per 1,000 rewarded views in the US, much less in many other countries (to check with real numbers). Needs a sizeable audience to matter.
+- **Needs:** Google AdMob (`react-native-google-mobile-ads`, which works with our Expo setup through a config setting, in our own build, not Expo Go or the web beta); Google's consent form for Europe and the UK; Apple's "allow tracking?" prompt if ads are personalised; the privacy policy and store privacy forms updated (ads collect device data, ending "nothing leaves the phone").
+
+### Option C: Peek packs (and other small purchases)
+
+- **How it plays:** buy Peeks or 50:50s in packs, for example 10 Peeks for $0.99.
+- **Conflicts with a decision on record:** Peeks are "never sold: for a family brain-training game, peeks stay earned only" (`docs/levels-and-scoring.md`). Selling help to answer also blurs what a score means. If we do this, revisit that decision deliberately, and keep the half-points cost so a bought Peek never buys a full score.
+- **Gentler variants:** cosmetic purchases (map themes, a marker character, postcard frames) that don't touch scores.
+
+### Combinations to consider
+
+- **A + B:** free to Level 10, optional rewarded ads for Peeks; the $2.99 unlock also removes the ad offers. Likely the best balance.
+- **A + more places:** later places sold as packs ("the seaside pack", "the city pack") once there are more than 15.
+- **A subscription** (all games, as more arrive): only once there are several games; a single game at $2.99 is easier to say yes to.
+
+### To decide first, whichever we choose
+
+- **Family game or children's app?** If children play, the strictest rules apply: COPPA (no personalised ads for under-13s), Apple's Kids category (no third-party ads in practice), Google's Families programme (certified ad networks only), and parental gates in front of any purchase. This shapes every option.
+- **Purchases need:** App Store and Google Play in-app purchases (Expo's in-app purchase options or a service such as RevenueCat), restoring a purchase on a new phone, a clear "what you get" screen, and a way to remember the purchase (a store receipt, or accounts later; today progress lives only on the phone).
+- **Store setup:** a paid Apple Developer account and a Google Play developer account, tax and banking details, the privacy policy (see "Store readiness" below), and the stores' privacy forms.
+- **Numbers before pricing:** crash reporting and analytics (with the privacy policy updated first) to see how many players reach Level 10, where they stop, and how often they come back. Then pick, and test the price.
 
 ## Games
 
@@ -72,5 +105,5 @@ Rules learned so far: every answer of a "which" or "what" question must really h
 - **Colour-blind mode and a text-size setting.**
 - **Reminders** and a weekly progress card.
 - **Crash reporting and analytics**, then tuning difficulty on real data.
-- **A business model:** a generous free tier; a subscription or one-off purchase for more places, unlimited Peeks and future games.
+- **A business model:** see "The revenue model" above.
 - **Store readiness:** privacy policy, listings, screenshots, removing the tester tools from store builds (done: `EXPO_PUBLIC_TESTER_TOOLS=off`).
