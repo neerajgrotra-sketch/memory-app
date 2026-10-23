@@ -153,6 +153,20 @@ export function reworded(prompt: string, id: string): string {
   return prompt;
 }
 
+/** Band names with no edge a player can see: never named in a question (see `generateQuestions`). */
+const VAGUE_BANDS = new Set([
+  'Close by',
+  'At the front',
+  'Near the hills',
+  'Near the surface',
+  'In the open water',
+  'By the trees',
+  'By the lodge',
+  'By the barn',
+  'At the front of the class',
+  'At the back of the class',
+]);
+
 /** Writes every question the scene can answer. Answers come straight from the scene, so they are always right. */
 export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: QuestionKnobs): Question[] {
   const rng = createRng(spec.seed ^ 0x9e3779b9);
@@ -460,6 +474,10 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   // of thing. "No, nothing" is the answer when it's empty and a wrong answer when it isn't, so it's never a giveaway;
   // the other answers are things that could have been there. Not where a sign or a door is drawn in the band (it could
   // count as "anything"), nor when something is hiding in the picture (a peeking crab).
+  // Bands with no edge you can see ("Near the hills", "Close by", "By the trees") are never named in a question: a player
+  // can't tell where they start, so "Which of these was near the hills?" couldn't be answered (tester feedback, 4.15.2).
+  // Bands that are a thing you can see (the sky, the pond, a shelf, the road) are fine.
+  const vague = (z: ZoneDef) => VAGUE_BANDS.has(z.label);
   if (!spec.details?.alsoSeen?.length) {
     const NOTHING = 'No, nothing';
     const yes = (item: ItemDef, plural: boolean) => `Yes, ${lower(nounPhrase(item, plural))}`;
@@ -489,7 +507,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
       }
       const here = spec.groups.filter((g) => g.zoneId === z.id);
       // An empty sky still has clouds or stars in it, which could be "something": only asked when a thing is there.
-      if (!here.length && z.surface === 'air') continue;
+      if ((!here.length && z.surface === 'air') || vague(z)) continue;
       anything(z.label, z.id, here, `band-${z.id}`);
     }
   }
@@ -497,7 +515,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   // "Which of these was in the departure lounge?": one thing that was in a band with several, against things that
   // could have been there but weren't in the picture at all, so exactly one choice is right. No side needed.
   for (const z of zones) {
-    if (z.faraway) continue;
+    if (z.faraway || vague(z)) continue;
     const here = spec.groups.filter((g) => g.zoneId === z.id && !(rug && z.id === rugZone && g.onRug === 'all'));
     if (here.length < 2) continue;
     const group = rng.pick(here);
@@ -515,7 +533,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   // "What was on the pond?": when only one kind of thing is in a whole band, no side needed. (A rug's band has its
   // own question, "What was on the carpet?".)
   for (const z of zones) {
-    if (rug && z.id === rugZone) continue;
+    if ((rug && z.id === rugZone) || vague(z)) continue;
     const here = spec.groups.filter((g) => g.zoneId === z.id);
     if (here.length !== 1) continue;
     const group = here[0];
@@ -679,7 +697,7 @@ export function generateQuestions(spec: SceneSpec, recipe: Recipe, knobs: Questi
   if (!spec.details?.alsoSeen?.length) {
     for (const z of zones) {
       const inBand = spec.groups.filter((g) => g.zoneId === z.id);
-      if (inBand.length !== 1 || PLAIN_BANDS.has(z.label)) continue;
+      if (inBand.length !== 1 || PLAIN_BANDS.has(z.label) || vague(z)) continue;
       const [g] = inBand;
       const item = itemOf(g.kind);
       if (!g.colour || !item.colours || item.colourPrompt || g.colours?.length || uncounted.has(g.kind)) continue;

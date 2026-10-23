@@ -51,6 +51,10 @@ Gates and flight numbers at an airport, a bib number on a ski racer, a sum on th
 | **More X or more Y?**, **Which was there the most / just one of?** | Up to Level 10, then not asked. |
 | **True or false** | Up to Level 12 (two levels after "more or fewer", so they don't both go at once). The Super Speed Round keeps it at every level: all its questions are Yes or No. |
 
+### 4b. Only name parts of the picture a player can see
+
+"Which of these was in the sky?" or "What was on the pond?" is fair: the sky and the pond are things you see. "Which of these was near the hills?" isn't: nobody can tell where "near the hills" starts. Bands like that (`VAGUE_BANDS` in generateQuestions.ts) are never named in a question.
+
 ### 5. Higher levels get harder through richer questions, not more inventory
 
 More people and more details to hold ("What colour was the uniform of the person at the desk?"), closer options, two steps, sums about the story, and a shorter look. Not more "how many" and "where".

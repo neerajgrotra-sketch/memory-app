@@ -10,6 +10,10 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.15.2 (2026-10-23)
+
+- **No questions about bands you can't see the edge of** (tester feedback: "Which of these was near the hills? How can a player even answer?"). "Near the hills" was the back strip of the Moon's ground, which a player can't pick out. "Which of these was…", "What was…" and "Was there anything…" now only name bands that are a thing you can see (the sky, the pond, a shelf, the road), never Close by, At the front, Near the hills, Near the surface, In the open water, By the trees, By the lodge, By the barn, or the front or back of the class (`VAGUE_BANDS`).
+
 ## 4.15.1 (2026-10-23)
 
 - **No number on the helicopter** (tester feedback: "impossible to read"). It's drawn about the size of a bird, so a number on its side was a few pixels tall on a phone. "What number was on the helicopter?" is gone; "Was the helicopter flying or on the ground?" stays.
