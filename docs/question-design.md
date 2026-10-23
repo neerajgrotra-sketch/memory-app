@@ -57,15 +57,19 @@ Gates and flight numbers at an airport, a bib number on a ski racer, a sum on th
 
 ### 5. Higher levels get harder through richer questions, not more inventory
 
-More people and more details to hold ("What colour was the uniform of the person at the desk?"), closer options, two steps, sums about the story, and a shorter look. Not more "how many" and "where".
+More people and more details to hold ("What colour was the uniform of the person at the desk?"), closer options, two steps, and a shorter look. Not more "how many" and "where".
 
 ### 6. Every round has something happening in it
 
 At least one "what was happening?" question in every round, and at least two from Level 20 and in every boss round (`storyMin`). A place without enough of them needs more drawn into it (rule 2).
 
-### 7. Sums pair things that belong together
+### 7. No sums of two things
 
-"How many more pilots than flight attendants?" makes sense; "How many more satellites than craters?" doesn't. Sums only pair things from the same part of the picture.
+"How many more astronauts than craters?" and "How many astronauts and boulders altogether?" are silly: nobody counts unrelated things together. Pairing things from the same part of the picture (4.15.0) wasn't enough, so sums of two things aren't asked at all (4.16.0). Sharing ("If the 6 apples were split into 2 equal groups…") is about one thing, so it stays, from Level 29.
+
+### 8. Nothing with writing or a flag is mirrored
+
+Pictures flip some things left to right for variety. A number reads backwards and France's flag comes out red-white-blue the wrong way, so anything with a number, words or a flag has `noFlip`.
 
 ## Checklist for a new place or thing
 

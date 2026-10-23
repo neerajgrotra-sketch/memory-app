@@ -109,7 +109,9 @@ for (const level of [1, 2, 4, 9, 13, 18, 23, 30]) {
   const core = worst / SESSIONS;
   variety.push(`${level}: ${kinds.toFixed(1)} kinds, most ${(worst / SESSIONS).toFixed(1)}×`);
   if (most > limit) fail(`level ${level}: one wording is asked in ${most.toFixed(1)} of 10 rounds (an even share is ${share.toFixed(1)})`);
-  if (worstCount / SESSIONS > limit + 1) fail(`level ${level}: "how many" or "what colour" is asked in ${(worstCount / SESSIONS).toFixed(1)} of 10 rounds`);
+  // One "how many" a round, on a different thing each time, is a question players like ("How many planes did you see?"):
+  // it may come up in most rounds once sums and "more or fewer" have stopped (4.16.0).
+  if (worstCount / SESSIONS > limit + 2) fail(`level ${level}: "how many" or "what colour" is asked in ${(worstCount / SESSIONS).toFixed(1)} of 10 rounds`);
   if (level <= 3 && core > 7.5) fail(`level ${level}: "what colour" or "what was there" is asked in ${core.toFixed(1)} of 10 rounds`);
 }
 console.log('  10-round sessions (different wordings asked, most-asked one):', variety.join(' · '));

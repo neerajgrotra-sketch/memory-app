@@ -129,7 +129,8 @@ function nearestColour(hex: string): string {
  * "NOT"), and a question picks its way from its id, so it always reads the same (a resumed round, Play again).
  */
 const WORDINGS: [RegExp, (m: RegExpMatchArray) => string[]][] = [
-  [/^Where (was|were) the ([^,?]+)\?$/, ([, v, x]) => [`Where ${v} the ${x}?`, `Where did you see the ${x}?`, `Where in the picture ${v} the ${x}?`, `Can you remember where the ${x} ${v}?`]],
+  // Not "Where was the crab hiding?" ("Can you remember where the crab hiding was?").
+  [/^Where (was|were) the (?!.* hiding\?$)([^,?]+)\?$/, ([, v, x]) => [`Where ${v} the ${x}?`, `Where did you see the ${x}?`, `Where in the picture ${v} the ${x}?`, `Can you remember where the ${x} ${v}?`]],
   [/^Which of these was in the picture\?$/, () => ['Which of these was in the picture?', 'Which of these did you see?', 'One of these was in the picture. Which one?']],
   [/^Which of these was NOT in the picture\?$/, () => ['Which of these was NOT in the picture?', 'Which of these did you NOT see?', 'One of these was NOT in the picture. Which one?']],
   [/^Which of these was ((?:in|on) [^,?]+)\?$/, ([, x]) => [`Which of these was ${x}?`, `Which of these did you see ${x}?`]],

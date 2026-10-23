@@ -11,11 +11,8 @@ Ideas we've agreed are worth doing but have parked for now, with enough detail t
 
 The airport was rebuilt first (4.15.0) to the rules in [question-design.md](question-design.md). Next, the other 14 places one by one, using the owner's marks on the Question Review page.
 
-- **The Moon (next, owner's notes 23 Oct 2026):** liked "What number was the moon base on the sign?" and "What was the astronaut holding?". Disliked "How many more satellites than craters?" (sums now pair only things from the same part of the picture) and "Where did you see the boulders?" (where is retired). Ideas:
-  - a constellation in the sky: "Which star pattern was in the sky?" (the Big Dipper, Orion's belt, Cassiopeia's W…), or none
-  - a little green alien peeking from behind the solar panel, for fun (a hiding question)
-  - a flag on the rocket and on the astronaut's suit: "Which country's flag was on the rocket?"
-- **Then** the Final Boss's two other boss places (farm, snowy mountain), then the rest from Level 30 down.
+- **The Moon** was rebuilt in 4.16.0 (alien, star patterns, flag, numbered rover). Still open from the owner's notes: a flag on the rocket and the astronaut's suit, only if it can be big enough to read on an iPhone SE.
+- **Next:** the two other boss places (farm, snowy mountain), then the rest from Level 30 down.
 
 ## The journey (step 1 built in 4.13.0)
 

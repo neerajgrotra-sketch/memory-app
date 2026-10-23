@@ -10,6 +10,20 @@ Numbers follow `MAJOR.MINOR.PATCH`:
 
 To release a change, bump `version` in both `app.json` and `package.json`, then add an entry at the top of this file.
 
+## 4.16.0 (2026-10-23)
+
+The Moon rebuilt, and no more sums of two things (tester feedback: "How many more astronauts than craters?", "How many astronauts and boulders altogether?": "why do we have these silly questions?").
+
+- **No sums of two things**, at any level: "How many … and … altogether?" and "How many more … than …?" are gone. Sharing ("If the 6 apples were split into 2 equal groups…") stays from Level 29: it's about one thing.
+- **More "what was happening?" questions instead:** two a round from Level 11 (with "more or fewer" stopping), three from Level 27. Level 27 is now that.
+- **The Moon:**
+  - the little rover is bigger, with its number on its side: "What number was on the rover?"
+  - the flag is a country's flag (Japan, Sweden, Switzerland, Germany, France, Canada): "Which country's flag was on the Moon?"
+  - a little green alien peeks out from behind the solar panel, the habitat pod or the lunar lander in most pictures: "Where was the little green alien hiding?"
+  - a star pattern in the sky (the Big Dipper, Orion's Belt, Cassiopeia's W or the Southern Cross): "Which star pattern was in the sky?"
+- **Fixed: flags and numbers were sometimes mirrored** (France came out the wrong way round, a rover's number backwards). The Moon's flag and rover and the airport's parked plane and information desk are never flipped.
+- **Fixed:** "Can you remember where the crab hiding was?", a rewording that didn't fit "Where was the crab hiding?".
+
 ## 4.15.2 (2026-10-23)
 
 - **No questions about bands you can't see the edge of** (tester feedback: "Which of these was near the hills? How can a player even answer?"). "Near the hills" was the back strip of the Moon's ground, which a player can't pick out. "Which of these was…", "What was…" and "Was there anything…" now only name bands that are a thing you can see (the sky, the pond, a shelf, the road), never Close by, At the front, Near the hills, Near the surface, In the open water, By the trees, By the lodge, By the barn, or the front or back of the class (`VAGUE_BANDS`).

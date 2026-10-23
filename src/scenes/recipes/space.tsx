@@ -6,6 +6,7 @@ import { lineMarks } from '../marks';
 import type { Rng } from '../random';
 import type { ItemDef, Mark, PlacedGroup, Recipe, Rect as Box, SceneDetails, VariantDef } from '../types';
 import { speckles } from '../texture';
+import { FLAGS } from '../items/flags';
 
 /**
  * Space, seen from the surface of the Moon: the black sky with the Earth, grey hills, then the dusty ground
@@ -33,7 +34,91 @@ const AT_FRONT = ['front'];
 
 const BRIGHT = [C.red, C.blue, C.yellow, C.green, C.orange, C.purple];
 
+/**
+ * A little green alien peeking out from behind something (drawn before it, so only the side towards `dir` shows):
+ * "Where was the little green alien hiding?". Head at (cx, cy), about 32 wide, antennae on top.
+ */
+function alienHead(cx: number, cy: number, dir: 1 | -1) {
+  const e = cx + dir * 6;
+  return (
+    <G>
+      <Path d={`M${cx - 6},${cy - 12} L${cx - 10},${cy - 24} M${cx + 6},${cy - 12} L${cx + 10},${cy - 24}`} stroke="#2b9348" strokeWidth={3} strokeLinecap="round" />
+      <Circle cx={cx - 10} cy={cy - 24} r={4} fill="#80ed99" stroke="#1b4332" strokeWidth={2} />
+      <Circle cx={cx + 10} cy={cy - 24} r={4} fill="#80ed99" stroke="#1b4332" strokeWidth={2} />
+      <Ellipse cx={cx} cy={cy} rx={16} ry={14} fill="#57cc99" stroke="#1b4332" strokeWidth={2.5} />
+      <Ellipse cx={e - 5} cy={cy - 2} rx={4.5} ry={6} fill="#ffffff" stroke="#1b4332" strokeWidth={1.5} />
+      <Ellipse cx={e + 5} cy={cy - 2} rx={4.5} ry={6} fill="#ffffff" stroke="#1b4332" strokeWidth={1.5} />
+      <Circle cx={e - 5 + dir} cy={cy - 1} r={2.2} fill="#111111" />
+      <Circle cx={e + 5 + dir} cy={cy - 1} r={2.2} fill="#111111" />
+    </G>
+  );
+}
+
+/** Where the alien can hide, by the kind it hides behind. */
+const ALIEN_SPOTS: Record<string, string> = {
+  'solar-panel': 'Behind the solar panel',
+  habitat: 'Behind the habitat pod',
+  lander: 'Behind the lunar lander',
+};
+
+/** Star patterns, drawn in a 150 × 90 box: bright stars joined by faint lines. */
+const star = (x: number, y: number) => (
+  <G key={`${x}-${y}`}>
+    <Circle cx={x} cy={y} r={9} fill="#ffffff" fillOpacity={0.18} stroke="none" />
+    <Circle cx={x} cy={y} r={5} fill="#ffffff" stroke="none" />
+  </G>
+);
+function drawPattern(points: [number, number][], lines: string) {
+  return (
+    <G>
+      <Path d={lines} fill="none" stroke="#ffffff" strokeOpacity={0.5} strokeWidth={2.5} />
+      {points.map(([x, y]) => star(x, y))}
+    </G>
+  );
+}
+const STAR_PATTERNS: Record<string, { name: string; points: [number, number][]; lines: string }> = {
+  dipper: {
+    name: 'The Big Dipper (a ladle)',
+    points: [[16, 34], [12, 62], [46, 70], [52, 42], [84, 34], [112, 28], [140, 12]],
+    lines: 'M16,34 L12,62 L46,70 L52,42 Z M52,42 L84,34 L112,28 L140,12',
+  },
+  belt: {
+    name: 'Orion’s Belt (three in a row)',
+    points: [[40, 62], [75, 45], [110, 28]],
+    lines: 'M40,62 L75,45 L110,28',
+  },
+  w: {
+    name: 'Cassiopeia (a W)',
+    points: [[10, 26], [40, 64], [75, 38], [108, 68], [140, 24]],
+    lines: 'M10,26 L40,64 L75,38 L108,68 L140,24',
+  },
+  cross: {
+    name: 'The Southern Cross (a cross)',
+    points: [[75, 8], [75, 82], [42, 40], [108, 48]],
+    lines: 'M75,8 L75,82 M42,40 L108,48',
+  },
+};
+
 const items: ItemDef[] = [
+  {
+    kind: 'star-pattern',
+    singular: 'star pattern',
+    plural: 'star patterns',
+    article: 'a',
+    w: 150,
+    h: 90,
+    tier: 'medium',
+    // Bright stars joined by faint lines, chosen per picture: "Which star pattern was in the sky?".
+    size: 0.18,
+    zones: IN_SPACE,
+    maxCount: 1,
+    countable: false,
+    tone: '#ffffff',
+    draw: (_colour, details) => {
+      const p = STAR_PATTERNS[details?.values?.stars ?? 'dipper'] ?? STAR_PATTERNS.dipper;
+      return drawPattern(p.points, p.lines);
+    },
+  },
   // ---- In space (far away) ----
   {
     kind: 'earth',
@@ -222,8 +307,9 @@ const items: ItemDef[] = [
     maxCount: 1,
     countable: false,
     tone: '#e0a526',
-    draw: () => (
+    draw: (_colour, details) => (
       <G>
+        {details?.values?.alien === 'lander' && alienHead(182, 72, 1)}
         <Path d="M40,96 L10,132 M160,96 L190,132" stroke="#adb5bd" strokeWidth={7} />
         <Path d="M0,132 H22 M178,132 H200" stroke="#adb5bd" strokeWidth={7} strokeLinecap="round" />
         <Polygon points="30,58 170,58 160,104 40,104" fill="#e0a526" />
@@ -261,8 +347,9 @@ const items: ItemDef[] = [
     countable: false,
     colours: [C.red, C.blue, C.orange, C.green],
     colourPrompt: () => 'What colour was the stripe on the habitat pod?',
-    draw: (colour) => (
+    draw: (colour, details) => (
       <G>
+        {details?.values?.alien === 'habitat' && alienHead(12, 64, -1)}
         <Path d="M20,104 V54 Q20,14 70,14 H150 Q200,14 200,54 V104 Z" fill="#f1f3f5" />
         <Rect x={20} y={72} width={180} height={12} fill={colour} stroke="none" />
         <Circle cx={160} cy={58} r={22} fill="#adb5bd" />
@@ -300,8 +387,9 @@ const items: ItemDef[] = [
     maxCount: 2,
     spread: true,
     tone: '#1d70d6',
-    draw: () => (
+    draw: (_colour, details) => (
       <G>
+        {details?.values?.alien === 'solar-panel' && alienHead(162, 28, 1)}
         <Path d="M85,70 V110 M60,110 H110" stroke="#adb5bd" strokeWidth={6} />
         <Polygon points="10,60 160,60 140,6 30,6" fill="#1d70d6" />
         <Path d="M48,6 L38,60 M85,6 V60 M122,6 L132,60 M20,33 H150" stroke="#a5d8ff" strokeWidth={2} />
@@ -355,20 +443,21 @@ const items: ItemDef[] = [
     tier: 'medium',
     // A flag about 1.2 m wide on a pole, held out by a bar at the top (there's no wind on the Moon).
     size: 0.14,
+    // Never mirrored: France's colours the other way round, Sweden's cross on the wrong side.
+    noFlip: true,
     zones: AT_BACK,
     maxCount: 1,
     countable: false,
-    colours: BRIGHT,
-    draw: (colour) => (
+    // A country's flag, chosen per picture: "Which country's flag was on the Moon?" (it was a coloured flag with a
+    // star, which only gave a colour question).
+    tone: '#f8f9fa',
+    draw: (_colour, details) => (
       <G>
         <Rect x={8} y={0} width={6} height={150} fill="#adb5bd" stroke="none" />
-        <Rect x={14} y={6} width={74} height={50} fill={colour} />
-        <Circle cx={51} cy={31} r={12} fill="#ffffff" stroke="none" opacity={0.9} />
+        <G transform="translate(14 6)">{FLAGS[details?.values?.flag ?? 'japan']?.draw(74, 50)}</G>
         <G stroke="none">
-          {/* A star in the circle, the bar along the top, ripples where the cloth hangs and a foot in the dust. */}
-          <Path d="M51,23 L53.5,29 L60,29.5 L55,33.5 L56.5,40 L51,36.5 L45.5,40 L47,33.5 L42,29.5 L48.5,29 Z" fill={colour} />
+          {/* The bar along the top and a foot in the dust. */}
           <Rect x={8} y={4} width={82} height={3} fill="#868e96" />
-          <Path d="M36,8 V54 M66,8 V54" stroke="#000000" strokeOpacity={0.12} strokeWidth={4} />
           <Ellipse cx={11} cy={148} rx={12} ry={3} fill="#5c5f66" fillOpacity={0.6} />
         </G>
       </G>
@@ -496,43 +585,48 @@ const items: ItemDef[] = [
   },
   {
     kind: 'robot',
-    singular: 'robot',
-    plural: 'robots',
+    singular: 'rover',
+    plural: 'rovers',
     article: 'a',
-    w: 100,
-    h: 100,
-    tier: 'small',
-    // A little six-wheeled explorer robot, about 0.9 m long.
-    size: 0.12,
+    w: 120,
+    h: 104,
+    tier: 'large',
+    // A six-wheeled explorer rover about 1.5 m long, with camera eyes and its number on its side, big enough to read
+    // on a phone: "What number was on the rover?" (tester feedback: make the rover bigger and give it a number).
+    size: 0.21,
+    // Never mirrored: its number would read backwards.
+    noFlip: true,
     zones: AT_FRONT,
     maxCount: 1,
     countable: false,
     tone: '#f8f9fa',
-    draw: () => (
+    draw: (_colour, details) => (
       <G>
-        <Rect x={14} y={50} width={72} height={26} rx={4} fill="#f8f9fa" />
-        <Path d="M50,50 V22" stroke="#868e96" strokeWidth={4} />
-        <Rect x={36} y={8} width={28} height={16} rx={4} fill="#495057" />
+        <Path d="M60,40 V22" stroke="#868e96" strokeWidth={4} />
+        <Rect x={44} y={6} width={32} height={18} rx={4} fill="#495057" />
         <G fill="#4dabf7" stroke="none">
-          <Circle cx={44} cy={16} r={4} />
-          <Circle cx={56} cy={16} r={4} />
+          <Circle cx={53} cy={15} r={4.5} />
+          <Circle cx={67} cy={15} r={4.5} />
         </G>
+        <Rect x={6} y={40} width={108} height={40} rx={5} fill="#f8f9fa" />
+        <Rect x={30} y={44} width={60} height={32} rx={4} fill="#ffffff" stroke="#212529" strokeWidth={3} />
+        <SvgText x={60} y={61} fontSize={28} fontWeight="bold" fontFamily="Arial" fill="#212529" textAnchor="middle" alignmentBaseline="central">
+          {details?.values?.rover ?? '12'}
+        </SvgText>
         <G fill="#343a40">
-          <Circle cx={22} cy={84} r={10} />
-          <Circle cx={50} cy={84} r={10} />
-          <Circle cx={78} cy={84} r={10} />
+          <Circle cx={20} cy={90} r={12} />
+          <Circle cx={60} cy={90} r={12} />
+          <Circle cx={100} cy={90} r={12} />
         </G>
         <G stroke="none">
-          {/* Hubs, glints in the camera eyes, an arm with a scoop, a small solar panel and a status light. */}
-          {[22, 50, 78].map((x) => (
-            <Circle key={x} cx={x} cy={84} r={3.5} fill="#868e96" />
+          {/* Hubs, glints in the camera eyes, a small solar panel on top and a status light. */}
+          {[20, 60, 100].map((x) => (
+            <Circle key={x} cx={x} cy={90} r={4} fill="#868e96" />
           ))}
-          <Circle cx={43} cy={15} r={1.5} fill="#ffffff" />
-          <Circle cx={55} cy={15} r={1.5} fill="#ffffff" />
-          <Path d="M86,60 L96,48 L98,58" fill="none" stroke="#868e96" strokeWidth={3} strokeLinejoin="round" />
-          <Rect x={18} y={44} width={28} height={6} fill="#1d70d6" />
-          <Circle cx={74} cy={63} r={2.5} fill="#69db7c" />
-          <Path d="M18,56 H82" stroke="#ced4da" strokeWidth={2} />
+          <Circle cx={52} cy={14} r={1.5} fill="#ffffff" />
+          <Circle cx={66} cy={14} r={1.5} fill="#ffffff" />
+          <Rect x={10} y={34} width={30} height={6} fill="#1d70d6" />
+          <Circle cx={104} cy={50} r={3} fill="#69db7c" />
         </G>
       </G>
     ),
@@ -597,28 +691,56 @@ const ASTRONAUT_HOLDS: Record<string, { name: string; draw: () => ReactElement }
   },
 };
 
-/** Once things are placed: with one astronaut, what they're holding (or nothing). */
+/**
+ * Once things are placed: with one astronaut, what they're holding (or nothing); and the little green alien peeking
+ * out from behind the solar panel (only one), the habitat pod or the lander, in most pictures that have one.
+ */
 function fitDetails(d: SceneDetails, groups: PlacedGroup[], random: Rng): SceneDetails {
-  if (groups.find((g) => g.kind === 'astronaut')?.count !== 1) return d;
-  const holds = random.next() < 0.25 ? '' : random.pick(Object.keys(ASTRONAUT_HOLDS));
-  const answer = holds ? ASTRONAUT_HOLDS[holds].name : 'Nothing';
-  return {
-    ...d,
-    values: { ...d.values, astronautHolds: holds },
-    facts: [
-      ...(d.facts ?? []),
-      { id: 'astronaut-holds', family: 'story', type: 'object', prompt: 'What was the astronaut holding?', answer, wrong: [...Object.values(ASTRONAUT_HOLDS).map((h) => h.name), 'Nothing'].filter((n) => n !== answer), needs: 'astronaut' },
-    ],
-  };
+  const values = { ...d.values };
+  const facts = [...(d.facts ?? [])];
+  if (groups.find((g) => g.kind === 'astronaut')?.count === 1) {
+    const holds = random.next() < 0.25 ? '' : random.pick(Object.keys(ASTRONAUT_HOLDS));
+    const answer = holds ? ASTRONAUT_HOLDS[holds].name : 'Nothing';
+    values.astronautHolds = holds;
+    facts.push({ id: 'astronaut-holds', family: 'story', type: 'object', prompt: 'What was the astronaut holding?', answer, wrong: [...Object.values(ASTRONAUT_HOLDS).map((h) => h.name), 'Nothing'].filter((n) => n !== answer), needs: 'astronaut' });
+  }
+  const spots = Object.keys(ALIEN_SPOTS).filter((k) => groups.some((g) => g.kind === k && g.count === 1));
+  if (spots.length && random.next() < 0.7) {
+    const spot = random.pick(spots);
+    values.alien = spot;
+    facts.push({
+      id: 'alien',
+      family: 'story',
+      type: 'position',
+      prompt: 'Where was the little green alien hiding?',
+      answer: ALIEN_SPOTS[spot],
+      // Other spots in the picture first, then the rest and a couple more.
+      wrong: [...spots.filter((k) => k !== spot), ...Object.keys(ALIEN_SPOTS).filter((k) => !spots.includes(k))].map((k) => ALIEN_SPOTS[k]),
+      fallback: ['Behind the radio dish', 'Behind a boulder'],
+    });
+  }
+  return { ...d, values, facts };
+}
+
+/** The rover's number, easy to mix up: one along, or the digits swapped. */
+function roverLookalikes(n: number): string[] {
+  const swapped = Number(String(n).split('').reverse().join(''));
+  return [...new Set([n + 1, n - 1, swapped, n + 10, n - 10])].filter((x) => x !== n && x >= 10 && x <= 99).map(String);
 }
 
 function details(random: Rng): SceneDetails {
   const mission = random.pick(MISSIONS);
   const base = random.int(1, 49);
   const engine = random.next() < 0.5 ? 'on' : 'off';
+  const rover = random.int(11, 98);
+  const flag = random.pick(Object.keys(FLAGS));
+  const stars = random.pick(Object.keys(STAR_PATTERNS));
   return {
-    values: { mission, base: String(base), engine },
+    values: { mission, base: String(base), engine, rover: String(rover), flag, stars },
     facts: [
+      { id: 'rover-number', type: 'number', prompt: 'What number was on the rover?', answer: String(rover), wrong: roverLookalikes(rover), needs: 'robot' },
+      { id: 'flag-country', type: 'object', prompt: 'Which country’s flag was on the Moon?', answer: FLAGS[flag].country, wrong: Object.values(FLAGS).map((f) => f.country).filter((c) => c !== FLAGS[flag].country), needs: 'flag' },
+      { id: 'star-pattern', family: 'story', type: 'object', prompt: 'Which star pattern was in the sky?', answer: STAR_PATTERNS[stars].name, wrong: Object.values(STAR_PATTERNS).map((p) => p.name).filter((n) => n !== STAR_PATTERNS[stars].name), needs: 'star-pattern' },
       { id: 'rocket-fire', family: 'story', type: 'object', prompt: 'Was there fire coming out of the rocket?', answer: engine === 'on' ? 'Yes' : 'No', wrong: [engine === 'on' ? 'No' : 'Yes'], needs: 'rocket' },
       { id: 'mission', type: 'object', prompt: 'What was the mission called on the sign?', answer: mission, wrong: MISSIONS.filter((m) => m !== mission) },
       { id: 'base-number', type: 'number', prompt: 'What number was the moon base on the sign?', answer: String(base), wrong: baseLookalikes(base) },

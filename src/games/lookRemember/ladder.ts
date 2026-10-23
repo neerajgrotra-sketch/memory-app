@@ -87,8 +87,8 @@ const FAMILY_FROM: [QuestionFamily, number, number?][] = [
   ['story', 1],
   ['detail', 3],
   ['two-step', 5],
-  ['altogether', 11],
-  ['difference', 27],
+  // No sums of two things ("How many astronauts and boulders altogether?", "How many more astronauts than craters?"):
+  // two unrelated things added up made silly questions (tester feedback, 4.16.0). Sharing is about one thing.
   ['sharing', 29],
 ];
 
@@ -114,7 +114,7 @@ export function knobsForLevel(rawLevel: number): LevelConfig {
   return {
     preferredTypes,
     typeCaps,
-    storyMin: level >= 20 ? 2 : 1,
+    storyMin: steps(level, [[1, 1], [11, 2], [27, 3]]),
     // 9 s from Level 2: the living room has fewer things than the beach, so at 10 s Level 2 was easier than Level 1.
     viewSeconds: steps(level, [[1, 10], [2, 9], [8, 8], [12, 7], [16, 6], [21, 5], [25, 4]]),
     // The 8th kind comes with the supermarket, whose neat shelves hold fewer things than other places.
@@ -172,8 +172,6 @@ const FAMILY_NEWS: Partial<Record<QuestionFamily, string>> = {
   count: 'New questions: how many, and which there was more of',
   detail: 'New questions about details: clocks, numbers and signs',
   'two-step': 'New questions in two steps: find the thing by where it was, then say its colour',
-  altogether: 'Sums: how many of two things altogether?',
-  difference: 'Sums: how many more of one thing than another?',
   sharing: 'Sharing: split them into equal groups, how many in each?',
 };
 const newFamilies = (before: LevelConfig, now: LevelConfig) =>
@@ -196,6 +194,7 @@ export function unlocksAt(level: number): string[] {
   if (now.maxCount > before.maxCount) news.push(`Pictures can now have up to ${now.maxCount} of one thing, like ${now.maxCount} kites`);
   if (now.viewSeconds < before.viewSeconds) news.push(`Pictures stay for ${now.viewSeconds} seconds`);
   for (const family of newFamilies(before, now)) news.push(FAMILY_NEWS[family]!);
+  if ((now.storyMin ?? 0) > (before.storyMin ?? 0)) news.push(`${now.storyMin === 2 ? 'Two' : 'Three'} questions a round on what was happening`);
   if (before.families?.includes('compare') && !now.families?.includes('compare'))
     news.push('No more "which was there more of": more questions on what was happening');
   if (before.families?.includes('true-false') && !now.families?.includes('true-false'))
